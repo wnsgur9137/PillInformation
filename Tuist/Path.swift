@@ -18,10 +18,13 @@ public extension ProjectDescription.Path {
     static func relativeToXCConfig(name: String, path: String) -> Self {
         return .relativeToRoot("XCConfig/\(path)/\(name).xcconfig")
     }
+    static func relative(to layer: ProjectLayer) -> Self {
+        return .relativeToRoot("Projects/\(layer.rawValue)/\(layer.rawValue)")
+    }
     static func relative(to layer: ProjectLayer, name: String) -> Self {
-        return .relativeToRoot("Projects/\(layer)/\(name)")
+        return .relativeToRoot("Projects/\(layer.rawValue)/\(name)")
     }
     static func relative(to layer: ProjectLayer, view: ProjectView) -> Self {
-        return .relativeToRoot("Projects/\(layer)/\(view)")
+        return .relativeToRoot("Projects/\(layer.rawValue)/\(view)")
     }
 }

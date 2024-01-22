@@ -24,48 +24,61 @@ public enum ProjectView: String {
     case myPage = "MyPage"
 }
 
+// MARK: - Projects
+extension TargetDependency {
+    public struct Project {
+        public struct Presentations {
+            public struct Home { }
+            public struct Search { }
+            public struct Alarm { }
+            public struct MyPage { }
+        }
+        public struct Domain {
+            public struct Home { }
+            public struct Search { }
+            public struct Alarm { }
+            public struct MyPage { }
+        }
+        public struct Data {
+            public struct Home { }
+            public struct Search { }
+            public struct Alarm { }
+            public struct MyPage { }
+        }
+        public struct Infrastructure {
+            public struct `Enum` { }
+            public struct Network { }
+            public struct `Protocol` { }
+            public struct `Extension` { }
+        }
+        public struct Common {
+            public struct Builder { }
+            public struct ReuseableView { }
+            public struct Constants { }
+        }
+    }
+}
+extension TargetDependency.Project.Presentations {
+    static let Presentations: TargetDependency = .project(layer: .presentation)
+}
+extension TargetDependency.Project.Domain {
+    static let Domains: TargetDependency = .project(layer: .domain)
+}
+extension TargetDependency.Project.Data {
+    static let Data: TargetDependency = .project(layer: .data)
+}
+extension TargetDependency.Project.Infrastructure {
+    static let Infrastructure: TargetDependency = .project(layer: .infrastructure)
+}
+extension TargetDependency.Project.Common {
+    static let Common: TargetDependency = .project(layer: .common)
+}
+
 // MARK: - TargetDependency
 public extension TargetDependency {
-    static var presentations: [Self] {
-        return [
-            .project(layer: .presentation, view: .home),
-            .project(layer: .presentation, view: .search),
-            .project(layer: .presentation, view: .alarm),
-            .project(layer: .presentation, view: .myPage),
-        ]
+    static func project(layer: ProjectLayer) -> Self {
+        return .project(target: layer.rawValue, path: .relative(to: layer))
     }
-    static var domains: [Self] {
-        return [
-            .project(layer: .domain, view: .home),
-            .project(layer: .domain, view: .search),
-            .project(layer: .domain, view: .alarm),
-            .project(layer: .domain, view: .myPage),
-        ]
-    }
-    static var data: [Self] {
-        return [
-            .project(layer: .data, view: .home),
-            .project(layer: .data, view: .search),
-            .project(layer: .data, view: .alarm),
-            .project(layer: .data, view: .myPage),
-        ]
-    }
-    static var infrastructures: [Self] {
-        return [
-            .project(layer: .infrastructure, name: "Enum"),
-            .project(layer: .infrastructure, name: "Network"),
-            .project(layer: .infrastructure, name: "Protocol"),
-            .project(layer: .infrastructure, name: "Extension"),
-        ]
-    }
-    static var commons: [Self] {
-        return [
-            .project(layer: .common, name: "Builder"),
-            .project(layer: .common, name: "ReuseableView"),
-            .project(layer: .common, name: "Constants"),
-        ]
-    }
-    
     static func project(layer: ProjectLayer, view: ProjectView) -> Self {
         return .project(target: view.rawValue, path: .relative(to: layer, view: view))
     }
