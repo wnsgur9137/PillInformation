@@ -61,7 +61,7 @@ extension TargetDependency {
 
 // MARK: - Presentation
 public extension TargetDependency.Project.Presentations {
-    static let Presentations: TargetDependency = .project(layer: .presentation)
+    static let Presentations: TargetDependency = .project(layer: .presentation, name: "Presentations")
     
     struct BaseDependency {
         

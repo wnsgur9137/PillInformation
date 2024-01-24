@@ -68,7 +68,7 @@ let targets: [Target] = [
            ]),
     Target(name: "\(projectName)_DevAppTests",
            destinations: .iOS,
-           product: .app,
+           product: .unitTests,
            productName: "\(projectName)_DevAppTests",
            bundleId: "com.junhyeok.dev-PillInformationTests",
            deploymentTargets: deploymentTarget,
