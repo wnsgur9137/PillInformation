@@ -8,6 +8,7 @@
 import Foundation
 import ProjectDescription
 import ProjectDescriptionHelpers
+import UtilityPlugin
 
 let projectName = "PillInformation"
 let organizationName = "com.junhyeok.PillInformation"
@@ -25,10 +26,10 @@ let settings: Settings = .settings(
     configurations: [
         .debug(name: .dev, xcconfig: XCConfig.Application.devApp(.dev)),
         .debug(name: .test, xcconfig: XCConfig.Application.devApp(.test)),
-        .release(name: .release, xcconfig: XCConfig.Application.devApp(.release)),
+        .release(name: .prod, xcconfig: XCConfig.Application.devApp(.prod)),
         .debug(name: .dev, xcconfig: XCConfig.Application.app(.dev)),
         .debug(name: .test, xcconfig: XCConfig.Application.app(.test)),
-        .release(name: .release, xcconfig: XCConfig.Application.app(.release))
+        .release(name: .prod, xcconfig: XCConfig.Application.app(.prod))
     ]
 )
 
@@ -39,34 +40,56 @@ let scripts: [TargetScript] = [
 
 // MARK: - Targets
 let targets: [Target] = [
-    Target(
-        name: projectName,
-        destinations: .iOS,
-        product: .app,
-        productName: projectName,
-        bundleId: organizationName,
-        deploymentTargets: deploymentTarget,
-        infoPlist: .extendingDefault(with: defaultInfoPlist),
-        sources: .sources,
-        resources: .resources,
-        scripts: scripts,
-        dependencies: [
+    Target(name: projectName,
+           destinations: .iOS,
+           product: .app,
+           productName: projectName,
+           bundleId: organizationName,
+           deploymentTargets: deploymentTarget,
+           infoPlist: .extendingDefault(with: defaultInfoPlist),
+           sources: .sources,
+           resources: .resources,
+           scripts: scripts,
+           dependencies: [
             .Project.Presentations.Presentations
-        ]
-    )
+           ]),
+    Target(name: "\(projectName)_DevApp",
+           destinations: .iOS,
+           product: .app,
+           productName: "\(projectName)_DevApp",
+           bundleId: "com.junhyeok.dev-PillInformation",
+           deploymentTargets: deploymentTarget,
+           infoPlist: .extendingDefault(with: defaultInfoPlist),
+           sources: ["Sources/**", "DevSources"],
+           resources: ["Resources/**"],
+           scripts: scripts,
+           dependencies: [
+            
+           ]),
+    Target(name: "\(projectName)_DevAppTests",
+           destinations: .iOS,
+           product: .app,
+           productName: "\(projectName)_DevAppTests",
+           bundleId: "com.junhyeok.dev-PillInformationTests",
+           deploymentTargets: deploymentTarget,
+           infoPlist: .default,
+           sources: "Tests/**",
+           dependencies: [
+            .target(name: "\(projectName)_DevApp"),
+           ])
 ]
 
 // MARK: - Schemes
 let schemes: [Scheme] = [
     Scheme(
-        name: "\(projectName)_DevApp-Release",
+        name: "\(projectName)_DevApp-Prod",
         shared: true,
         buildAction: .buildAction(targets: ["\(projectName)"]),
         testAction: nil,
-        runAction: .runAction(configuration: .release),
-        archiveAction: .archiveAction(configuration: .release),
-        profileAction: .profileAction(configuration: .release),
-        analyzeAction: .analyzeAction(configuration: .release)
+        runAction: .runAction(configuration: .prod),
+        archiveAction: .archiveAction(configuration: .prod),
+        profileAction: .profileAction(configuration: .prod),
+        analyzeAction: .analyzeAction(configuration: .prod)
     ),
     Scheme(
         name: "\(projectName)_DevApp-Develop",

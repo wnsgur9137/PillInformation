@@ -1,74 +1,147 @@
 import ProjectDescription
-
-/// Project helpers are functions that simplify the way you define your project.
-/// Share code to create targets, settings, dependencies,
-/// Create your own conventions, e.g: a func that makes sure all shared targets are "static frameworks"
-/// See https://docs.tuist.io/guides/helpers/
+import UtilityPlugin
 
 extension Project {
-    /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, destinations: Destinations, additionalTargets: [String]) -> Project {
-        var targets = makeAppTargets(name: name,
-                                     destinations: destinations,
-                                     dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-        targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, destinations: destinations) })
+    public static func staticLibrary(name: String,
+                                     destinations: Destinations = .iOS,
+                                     packages: [Package] = [],
+                                     dependencies: [TargetDependency] = [],
+                                     hasDemoApp: Bool = false) -> Self {
+        return project(name: name,
+                       destinations: destinations,
+                       packages: packages,
+                       product: .staticLibrary,
+                       dependencies: dependencies,
+                       hasDemoApp: hasDemoApp)
+    }
+    
+    public static func staticFramework(name: String,
+                                       destinations: Destinations = .iOS,
+                                       packages: [Package] = [],
+                                       dependencies: [TargetDependency] = [],
+                                       hasDemoApp: Bool = false) -> Self {
+        return project(name: name,
+                       destinations: destinations,
+                       packages: packages,
+                       product: .staticFramework,
+                       dependencies: dependencies,
+                       hasDemoApp: hasDemoApp)
+    }
+    
+    public static func framework(name: String,
+                                 destinations: Destinations = .iOS,
+                                 packages: [Package] = [],
+                                 dependencies: [TargetDependency] = [],
+                                 hasDemoApp: Bool = false) -> Self {
+        return project(name: name,
+                       destinations: destinations,
+                       packages: packages,
+                       product: .framework,
+                       dependencies: dependencies,
+                       hasDemoApp: hasDemoApp)
+    }
+}
+
+extension Project {
+    public static func project(name: String,
+                               destinations: Destinations = .iOS,
+                               organizationName: String = "com.junhyeok.PillInformation",
+                               packages: [Package] = [],
+                               product: Product,
+                               deploymentTarget: DeploymentTargets? = .iOS("14.0"),
+                               dependencies: [TargetDependency] = [],
+                               infoPlist: [String: Plist.Value] = [:],
+                               hasDemoApp: Bool = false) -> Project {
+        let settings: Settings = .settings(base: ["CODE_SIGN_IDENTITY": "",
+                                                  "CODE_SIGNING_REQUIRED": "NO"],
+                                           configurations: [
+                                            .debug(name: .dev, xcconfig: .relativeToXCConfig(.dev, path: name)),
+                                            .debug(name: .test, xcconfig: .relativeToXCConfig(.test, path: name)),
+                                            .release(name: .prod, xcconfig: .relativeToXCConfig(.prod, path: name))
+                                           ])
+        let target = Target(name: name,
+                            destinations: destinations,
+                            product: product,
+                            productName: name,
+                            bundleId: "com.junhyeok.\(name)",
+                            deploymentTargets: deploymentTarget,
+                            infoPlist: .extendingDefault(with: infoPlist),
+                            sources: ["Sources/**"],
+                            resources: ["Resources/**"],
+                            dependencies: dependencies)
+        
+        let demoAppTarget = Target(name: name,
+                                   destinations: destinations,
+                                   product: .app,
+                                   productName: name,
+                                   bundleId: "com.junhyeok.\(name)DemoApp",
+                                   deploymentTargets: deploymentTarget,
+                                   infoPlist: .extendingDefault(with: [
+                                    "UILaunchStoryboardName": "LaunchScreen"
+                                   ]),
+                                   sources: ["Demo/**"],
+                                   resources: ["Demo/Resources/**"],
+                                   dependencies: [
+                                    .target(name: "\(name)")
+                                   ])
+        
+        let testTargetDependencies: [TargetDependency] = hasDemoApp
+            ? [.target(name: "\(name)DemoApp")]
+            : [.target(name: "\(name)")]
+        
+        let testTarget = Target(name: "\(name)Tests",
+                                destinations: destinations,
+                                product: .unitTests,
+                                bundleId: "com.junhyeok.\(name)Tests",
+                                deploymentTargets: deploymentTarget,
+                                infoPlist: .default,
+                                sources: "Tests/**",
+                                dependencies: testTargetDependencies)
+        
+        let schemes: [Scheme] = hasDemoApp
+            ? [.makeScheme(target: .dev, name: name), .makeDemoScheme(target: .dev, name: name)]
+            : [.makeScheme(target: .dev, name: name)]
+        
+        let targets: [Target] = hasDemoApp
+            ? [target, testTarget, demoAppTarget]
+            : [target, testTarget]
+        
         return Project(name: name,
-                       organizationName: "tuist.io",
-                       targets: targets)
+                       organizationName: organizationName,
+                       packages: packages,
+                       settings: settings,
+                       targets: targets,
+                       schemes: schemes)
+    }
+}
+
+extension Scheme {
+    static func makeScheme(target: AppConfiguration, name: String) -> Self {
+        return Scheme(name: "\(name)",
+                      shared: true,
+                      buildAction: .buildAction(targets: ["\(name)"]),
+                      testAction: .targets(["\(name)Tests"],
+                                           arguments: nil,
+                                           configuration: target.configurationName,
+                                           options: .options(coverage: true)),
+                      runAction: .runAction(configuration: target.configurationName),
+                      archiveAction: .archiveAction(configuration: target.configurationName),
+                      profileAction: .profileAction(configuration: target.configurationName),
+                      analyzeAction: .analyzeAction(configuration: target.configurationName))
     }
 
-    // MARK: - Private
-
-    /// Helper function to create a framework target and an associated unit test target
-    private static func makeFrameworkTargets(name: String, destinations: Destinations) -> [Target] {
-        let sources = Target(name: name,
-                destinations: destinations,
-                product: .framework,
-                bundleId: "io.tuist.\(name)",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Sources/**"],
-                resources: [],
-                dependencies: [])
-        let tests = Target(name: "\(name)Tests",
-                destinations: destinations,
-                product: .unitTests,
-                bundleId: "io.tuist.\(name)Tests",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Tests/**"],
-                resources: [],
-                dependencies: [.target(name: name)])
-        return [sources, tests]
-    }
-
-    /// Helper function to create the application target and the unit test target.
-    private static func makeAppTargets(name: String, destinations: Destinations, dependencies: [TargetDependency]) -> [Target] {
-        let infoPlist: [String: Plist.Value] = [
-            "CFBundleShortVersionString": "1.0",
-            "CFBundleVersion": "1",
-            "UILaunchStoryboardName": "LaunchScreen"
-            ]
-
-        let mainTarget = Target(
-            name: name,
-            destinations: destinations,
-            product: .app,
-            bundleId: "io.tuist.\(name)",
-            infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Targets/\(name)/Sources/**"],
-            resources: ["Targets/\(name)/Resources/**"],
-            dependencies: dependencies
-        )
-
-        let testTarget = Target(
-            name: "\(name)Tests",
-            destinations: destinations,
-            product: .unitTests,
-            bundleId: "io.tuist.\(name)Tests",
-            infoPlist: .default,
-            sources: ["Targets/\(name)/Tests/**"],
-            dependencies: [
-                .target(name: "\(name)")
-        ])
-        return [mainTarget, testTarget]
+    static func makeDemoScheme(target: AppConfiguration, name: String) -> Self {
+        return Scheme(name: "\(name)DemoApp",
+                      shared: true,
+                      buildAction: .buildAction(targets: ["\(name)DemoApp"]),
+                      testAction: .targets(["\(name)Tests"],
+                                           arguments: nil,
+                                           configuration: target.configurationName,
+                                           options: .options(coverage: true)),
+                      runAction: .runAction(configuration: target.configurationName),
+                      archiveAction: .archiveAction(configuration: target.configurationName),
+                      profileAction: .profileAction(configuration: target.configurationName),
+                      analyzeAction: .analyzeAction(configuration: target.configurationName))
+        
     }
 }

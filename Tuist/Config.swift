@@ -2,6 +2,8 @@ import ProjectDescription
 
 let config = Config(
     plugins: [
-        .local(path: .relativeToManifest("../../Plugins/PillInformation")),
-    ]
+        .local(path:
+                .relativeToRoot("Plugins/UtilityPlugin"))
+    ],
+    generationOptions: .options(staticSideEffectsWarningTargets: .all)
 )

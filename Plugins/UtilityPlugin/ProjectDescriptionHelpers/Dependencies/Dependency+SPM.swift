@@ -8,6 +8,15 @@
 import Foundation
 import ProjectDescription
 
+// MARK: - Group
+extension TargetDependency {
+    public struct SwiftPM {
+    }
+}
+extension Package {
+    
+}
+
 // MARK: - Packages
 public extension TargetDependency {
     static let alamofire: TargetDependency = .package(product: "Alamofire")
@@ -23,7 +32,6 @@ public extension TargetDependency {
     
     static let rxBlocking: TargetDependency = .package(product: "RxBlocking")
     static let rxTest: TargetDependency = .package(product: "RxTest")
-    
 }
 
 public extension Package {

@@ -58,19 +58,45 @@ extension TargetDependency {
         }
     }
 }
-extension TargetDependency.Project.Presentations {
+
+// MARK: - Presentation
+public extension TargetDependency.Project.Presentations {
     static let Presentations: TargetDependency = .project(layer: .presentation)
+    
+    struct BaseDependency {
+        
+    }
 }
-extension TargetDependency.Project.Domain {
+public extension TargetDependency.Project.Presentations.Home {
+    static let Package: [TargetDependency] = []
+}
+public extension TargetDependency.Project.Presentations.Search {
+    static let Package: [TargetDependency] = []
+}
+public extension TargetDependency.Project.Presentations.Alarm {
+    static let Package: [TargetDependency] = []
+}
+public extension TargetDependency.Project.Presentations.MyPage {
+    static let Package: [TargetDependency] = []
+}
+
+// MARK: - Domain
+public extension TargetDependency.Project.Domain {
     static let Domains: TargetDependency = .project(layer: .domain)
 }
-extension TargetDependency.Project.Data {
+
+// MARK: - Data
+public extension TargetDependency.Project.Data {
     static let Data: TargetDependency = .project(layer: .data)
 }
-extension TargetDependency.Project.Infrastructure {
+
+// MARK: - Infrastructure
+public extension TargetDependency.Project.Infrastructure {
     static let Infrastructure: TargetDependency = .project(layer: .infrastructure)
 }
-extension TargetDependency.Project.Common {
+
+// MARK: - Common
+public extension TargetDependency.Project.Common {
     static let Common: TargetDependency = .project(layer: .common)
 }
 
