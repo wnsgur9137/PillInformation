@@ -46,14 +46,15 @@ extension TargetDependency {
             public struct MyPage { }
         }
         public struct Infrastructure {
-            public struct `Enum` { }
             public struct Network { }
-            public struct `Protocol` { }
-            public struct `Extension` { }
+            public struct Builder { }
+            public struct Adapter { }
+            public struct ReuseableView { }
         }
         public struct Common {
-            public struct Builder { }
-            public struct ReuseableView { }
+            public struct `Enum` { }
+            public struct `Protocol` { }
+            public struct `Extension` { }
             public struct Constants { }
         }
     }
@@ -64,20 +65,24 @@ public extension TargetDependency.Project.Presentations {
     static let Presentations: TargetDependency = .project(layer: .presentation, name: "Presentations")
     
     struct BaseDependency {
-        
+        public static let Flow: TargetDependency = .project(layer: .presentation, name: "Base/Flow")
     }
 }
 public extension TargetDependency.Project.Presentations.Home {
-    static let Package: [TargetDependency] = []
+    static let Home: TargetDependency = .project(layer: .presentation, name: "Home")
+    static let Package: [TargetDependency] = [Home]
 }
 public extension TargetDependency.Project.Presentations.Search {
-    static let Package: [TargetDependency] = []
+    static let Search: TargetDependency = .project(layer: .presentation, name: "Search")
+    static let Package: [TargetDependency] = [Search]
 }
 public extension TargetDependency.Project.Presentations.Alarm {
-    static let Package: [TargetDependency] = []
+    static let Alarm: TargetDependency = .project(layer: .presentation, name: "Alarm")
+    static let Package: [TargetDependency] = [Alarm]
 }
 public extension TargetDependency.Project.Presentations.MyPage {
-    static let Package: [TargetDependency] = []
+    static let MyPage: TargetDependency = .project(layer: .presentation, name: "MyPage")
+    static let Package: [TargetDependency] = [MyPage]
 }
 
 // MARK: - Domain
@@ -94,10 +99,26 @@ public extension TargetDependency.Project.Data {
 public extension TargetDependency.Project.Infrastructure {
     static let Infrastructure: TargetDependency = .project(layer: .infrastructure)
 }
+public extension TargetDependency.Project.Infrastructure.Builder {
+    static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
+    static let Package: [TargetDependency] = [Builder]
+}
+public extension TargetDependency.Project.Infrastructure.Adapter {
+    static let Adapter: TargetDependency = .project(layer: .infrastructure, name: "Adapter")
+    static let Package: [TargetDependency] = [Adapter]
+}
+public extension TargetDependency.Project.Infrastructure.Network {
+    static let Network: TargetDependency = .project(layer: .infrastructure, name: "Network")
+    static let Package: [TargetDependency] = [Network]
+}
+public extension TargetDependency.Project.Infrastructure.ReuseableView {
+    static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
+    static let Package: [TargetDependency] = [ReuseableView]
+}
 
 // MARK: - Common
 public extension TargetDependency.Project.Common {
-    static let Common: TargetDependency = .project(layer: .common)
+    static let Common: TargetDependency = .common()
 }
 
 // MARK: - TargetDependency
@@ -110,6 +131,10 @@ public extension TargetDependency {
     }
     static func project(layer: ProjectLayer, name: String) -> Self {
         return .project(target: name, path: .relative(to: layer, name: name))
+    }
+    static func common() -> Self {
+        let common = ProjectLayer.common.rawValue
+        return .project(target: common, path: .relativeToProject(name: common))
     }
 }
 
