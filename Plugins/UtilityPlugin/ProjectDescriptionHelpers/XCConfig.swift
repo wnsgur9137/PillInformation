@@ -18,5 +18,8 @@ public extension XCConfig {
         public static func devApp(_ configuration: AppConfiguration) -> Path {
             "//XCConfig/Application/Application-\(configuration.rawValue).xcconfig"
         }
+        public static func xcconfig(_ configuration: AppConfiguration) -> Path {
+            "//XCConfig/\(configuration.rawValue).xcconfig"
+        }
     }
 }
