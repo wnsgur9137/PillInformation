@@ -62,11 +62,8 @@ extension TargetDependency {
 
 // MARK: - Presentation
 public extension TargetDependency.Project.Presentations {
+    static let BaseTab: TargetDependency = .project(layer: .presentation, name: "BaseTab")
     static let Presentations: TargetDependency = .project(layer: .presentation, name: "Presentations")
-    
-    struct BaseDependency {
-        public static let Flow: TargetDependency = .project(layer: .presentation, name: "Base/Flow")
-    }
 }
 public extension TargetDependency.Project.Presentations.Home {
     static let Home: TargetDependency = .project(layer: .presentation, name: "Home")
@@ -97,7 +94,7 @@ public extension TargetDependency.Project.Data {
 
 // MARK: - Infrastructure
 public extension TargetDependency.Project.Infrastructure {
-    static let Infrastructure: TargetDependency = .project(layer: .infrastructure)
+    static let Infrastructures: TargetDependency = .project(layer: .infrastructure, name: "Infrastructures")
 }
 public extension TargetDependency.Project.Infrastructure.Builder {
     static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")

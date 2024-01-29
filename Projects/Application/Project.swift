@@ -62,7 +62,7 @@ let targets: [Target] = [
            resources: .resources,
            scripts: scripts,
            dependencies: [
-            .Project.Presentations.Presentations
+            .Project.Presentations.BaseTab,
            ]),
     Target(name: "\(projectName)_DevApp",
            destinations: .iOS,
@@ -75,7 +75,7 @@ let targets: [Target] = [
            resources: ["Resources/**"],
            scripts: scripts,
            dependencies: [
-            
+            .Project.Presentations.BaseTab,
            ]),
     Target(name: "\(projectName)_DevAppTests",
            destinations: .iOS,
