@@ -9,14 +9,23 @@ import Foundation
 import ProjectDescription
 
 public extension ProjectDescription.Path {
-    static var application: Self {
-        return .relativeToRoot("Projects/Application")
-    }
+//    static var application: Self {
+//        return .relativeToRoot("Projects/Application")
+//    }
+}
+
+public extension ProjectDescription.Path {
     static func relativeToXCConfig(_ scheme: AppConfiguration, path: String) -> Self {
         return .relativeToRoot("XCConfig/\(path)/\(scheme.rawValue).xcconfig")
     }
     static func relativeToXCConfig(name: String, path: String) -> Self {
         return .relativeToRoot("XCConfig/\(path)/\(name).xcconfig")
+    }
+    static func relativeToXCConfig(_ scheme: AppConfiguration) -> Self {
+        return .relativeToRoot("XCConfig/\(scheme.rawValue).xcconfig")
+    }
+    static func relativeToProject(name: String) -> Self {
+        return .relativeToRoot("Projects/\(name)")
     }
     static func relative(to layer: ProjectLayer) -> Self {
         return .relativeToRoot("Projects/\(layer.rawValue)/\(layer.rawValue)")

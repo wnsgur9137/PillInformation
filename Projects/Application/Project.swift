@@ -14,7 +14,18 @@ let projectName = "PillInformation"
 let organizationName = "com.junhyeok.PillInformation"
 let deploymentTarget: DeploymentTargets = .iOS("14.0")
 let defaultInfoPlist: [String: Plist.Value] = [
-    "UILaunchStoryboardName": "LaunchScreen"
+    "UILaunchStoryboardName": "LaunchScreen",
+    "UIApplicationSceneManifest": [
+        "UIApplicationSupportsMultipleScenes": false,
+        "UISceneConfigurations": [
+            "UIWindowSceneSessionRoleApplication": [
+                [
+                    "UISceneConfigurationName": "Default Configuration",
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                ]
+            ]
+        ]
+    ]
 ]
 
 // MARK: - Settings

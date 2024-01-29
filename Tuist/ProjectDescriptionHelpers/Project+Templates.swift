@@ -55,9 +55,12 @@ extension Project {
         let settings: Settings = .settings(base: ["CODE_SIGN_IDENTITY": "",
                                                   "CODE_SIGNING_REQUIRED": "NO"],
                                            configurations: [
-                                            .debug(name: .dev, xcconfig: .relativeToXCConfig(.dev, path: name)),
-                                            .debug(name: .test, xcconfig: .relativeToXCConfig(.test, path: name)),
-                                            .release(name: .prod, xcconfig: .relativeToXCConfig(.prod, path: name))
+                                            .debug(name: .dev, xcconfig: .relativeToXCConfig(.dev)),
+                                            .debug(name: .test, xcconfig: .relativeToXCConfig(.test)),
+                                            .release(name: .prod, xcconfig: .relativeToXCConfig(.prod))
+//                                            .debug(name: .dev, xcconfig: .relativeToXCConfig(.dev, path: name)),
+//                                            .debug(name: .test, xcconfig: .relativeToXCConfig(.test, path: name)),
+//                                            .release(name: .prod, xcconfig: .relativeToXCConfig(.prod, path: name))
                                            ])
         let target = Target(name: name,
                             destinations: destinations,
