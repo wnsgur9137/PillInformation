@@ -13,13 +13,13 @@ public extension TargetDependency {
 }
 
 public extension TargetDependency.Framework {
-    static let FlexLayout = TargetDependency.designSystem(name: "FlexLayout")
-    static let PinLayout = TargetDependency.designSystem(name: "PinLayout")
-    static let SkeletonView = TargetDependency.designSystem(name: "SkeletonView")
+    static let FlexLayout = TargetDependency.layout(name: "FlexLayout")
+    static let PinLayout = TargetDependency.layout(name: "PinLayout")
+    static let SkeletonView = TargetDependency.layout(name: "SkeletonView")
 }
 
 public extension TargetDependency {
-    static func designSystem(name: String) -> Self {
-        return .xcframework(path: .relativeToRoot("Vendor/DesignSystem/\(name).xcframework"))
+    static func layout(name: String) -> Self {
+        return .xcframework(path: .relativeToRoot("Vendor/Layout/\(name).xcframework"))
     }
 }

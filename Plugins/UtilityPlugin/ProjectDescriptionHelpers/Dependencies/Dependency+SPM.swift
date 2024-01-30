@@ -11,27 +11,40 @@ import ProjectDescription
 // MARK: - Group
 extension TargetDependency {
     public struct SwiftPM {
+        public struct Network { }
+        public struct Reactive { }
+        public struct Layout { }
+        public struct UI { }
+        public struct Test { }
     }
 }
 extension Package {
     
 }
 
-// MARK: - Packages
-public extension TargetDependency {
+public extension TargetDependency.SwiftPM.Network {
     static let alamofire: TargetDependency = .package(product: "Alamofire")
     static let moya: TargetDependency = .package(product: "Moya")
-    
+    static let package: [TargetDependency] = [alamofire, moya]
+}
+public extension TargetDependency.SwiftPM.Reactive {
     static let rxSwift: TargetDependency = .package(product: "RxSwift")
     static let rxCocoa: TargetDependency = .package(product: "RxCocoa")
     static let rxGesture: TargetDependency = .package(product: "RxGesture")
-    
-    static let kingFisher: TargetDependency = .package(product: "Kingfisher")
+    static let package: [TargetDependency] = [rxSwift, rxCocoa, rxGesture]
+}
+public extension TargetDependency.SwiftPM.Layout {
     static let flexLayout: TargetDependency = .package(product: "FlexLayout")
     static let pinLayout: TargetDependency = .package(product: "PinLayout")
-    
+}
+public extension TargetDependency.SwiftPM.UI {
+    static let skeletonView: TargetDependency = .package(product: "SkeletonView")
+    static let kingFisher: TargetDependency = .package(product: "Kingfisher")
+}
+public extension TargetDependency.SwiftPM.Test {
     static let rxBlocking: TargetDependency = .package(product: "RxBlocking")
     static let rxTest: TargetDependency = .package(product: "RxTest")
+    static let package: [TargetDependency] = [rxBlocking, rxTest]
 }
 
 public extension Package {
