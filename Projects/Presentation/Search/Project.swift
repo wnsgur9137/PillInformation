@@ -11,5 +11,6 @@ import UtilityPlugin
 
 let project: Project = .framework(name: "Search",
                                    dependencies: [
-                                    TargetDependency.Project.Common.Common
+                                    TargetDependency.Project.Common.Common,
+                                    TargetDependency.Project.Infrastructure.Infrastructures
                                    ])

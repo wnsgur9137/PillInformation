@@ -10,15 +10,20 @@ import UIKit
 import Presentations
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
     var window: UIWindow?
+    let appDIContainer = AppDIContainer()
+    var appFlowCoordinator: AppFlowCoordinator?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = viewController
+        
+        let tabBarController = UITabBarController()
+        window?.rootViewController = tabBarController
+        appFlowCoordinator = AppFlowCoordinator(tabBarController: tabBarController, appDIContainer: appDIContainer)
+        appFlowCoordinator?.start()
         window?.makeKeyAndVisible()
+        return
     }
-    
 }

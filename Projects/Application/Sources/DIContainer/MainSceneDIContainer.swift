@@ -7,14 +7,52 @@
 //
 
 import UIKit
-import Presentations
+import BaseTab
+import Home
+import Search
+import Alarm
+import MyPage
 
 final class MainSceneDIContainer {
     init() {
         
     }
     
-//    func makeTabBarFlowCoordinator(tabBarController: UITabBarController) -> TabBarFlowCoordinator {
-//        return TabBarFlowCoordinator(tabBarController: tabBarController)
-//    }
+    func makeTabBarCoordinator(tabBarController: UITabBarController) -> TabBarCoordinator {
+        return DefaultTabBarCoordinator(
+            tabBarController: tabBarController,
+            homeDependencies: self,
+            searchDependencies: self,
+            alarmDependencies: self,
+            myPageDependencies: self
+        )
+    }
+}
+
+// MARK: - Home
+extension MainSceneDIContainer: HomeCoordinatorDependencies {
+    func makeHomeViewController() -> Home.HomeViewController {
+        return HomeViewController()
+    }
+}
+
+// MARK: - Search
+extension MainSceneDIContainer: SearchCoordinatorDependencies {
+    func makeSearchViewController() -> Search.SearchViewController {
+        return SearchViewController()
+    }
+}
+
+// MARK: - Alarm
+extension MainSceneDIContainer: AlarmCoordinatorDependencies {
+    func makeAlarmViewController() -> Alarm.AlarmViewController {
+        return AlarmViewController()
+    }
+}
+
+// MARK: - MyPage
+extension MainSceneDIContainer: MyPageCoordinatorDependencies {
+    func makeMyPageViewController() -> MyPage.MyPageViewController {
+        return MyPageViewController()
+    }
 }
