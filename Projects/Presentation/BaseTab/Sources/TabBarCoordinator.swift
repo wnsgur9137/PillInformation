@@ -49,11 +49,9 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     }
     
     public func start() {
-        print("start")
         let pages: [TabBarPage] = [.home, .search, .alarm, .myPage]
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
-        print("controllers: \(controllers)")
     }
     
     private func getNavigationController(_ page: TabBarPage) -> UINavigationController {
