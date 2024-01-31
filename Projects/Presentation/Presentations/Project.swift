@@ -11,8 +11,9 @@ import UtilityPlugin
 
 let project: Project = .framework(name: "Presentations",
                                    dependencies: [
-                                    TargetDependency.Project.Presentations.Home.Package,
-                                    TargetDependency.Project.Presentations.Search.Package,
-                                    TargetDependency.Project.Presentations.Alarm.Package,
-                                    TargetDependency.Project.Presentations.MyPage.Package
-                                   ].flatMap { $0 })
+                                    TargetDependency.Project.Presentations.Home,
+                                    TargetDependency.Project.Presentations.Search,
+                                    TargetDependency.Project.Presentations.Alarm,
+                                    TargetDependency.Project.Presentations.MyPage
+                                   ] + TargetDependency.Project.LibraryManager.PresentationLibrarys
+)

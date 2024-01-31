@@ -15,6 +15,7 @@ public enum ProjectLayer: String {
     case data = "Data"
     case infrastructure = "Infrastructure"
     case common = "Common"
+    case libraryManager = "LibraryManager"
 }
 
 public enum ProjectView: String {
@@ -27,24 +28,9 @@ public enum ProjectView: String {
 // MARK: - Projects
 extension TargetDependency {
     public struct Project {
-        public struct Presentations {
-            public struct Home { }
-            public struct Search { }
-            public struct Alarm { }
-            public struct MyPage { }
-        }
-        public struct Domain {
-            public struct Home { }
-            public struct Search { }
-            public struct Alarm { }
-            public struct MyPage { }
-        }
-        public struct Data {
-            public struct Home { }
-            public struct Search { }
-            public struct Alarm { }
-            public struct MyPage { }
-        }
+        public struct Presentations { }
+        public struct Domain { }
+        public struct Data { }
         public struct Infrastructure {
             public struct Network { }
             public struct Builder { }
@@ -57,29 +43,18 @@ extension TargetDependency {
             public struct `Extension` { }
             public struct Constants { }
         }
+        public struct LibraryManager { }
     }
 }
 
 // MARK: - Presentation
 public extension TargetDependency.Project.Presentations {
     static let BaseTab: TargetDependency = .project(layer: .presentation, name: "BaseTab")
-    static let Presentations: TargetDependency = .project(layer: .presentation, name: "Presentations")
-}
-public extension TargetDependency.Project.Presentations.Home {
     static let Home: TargetDependency = .project(layer: .presentation, name: "Home")
-    static let Package: [TargetDependency] = [Home]
-}
-public extension TargetDependency.Project.Presentations.Search {
     static let Search: TargetDependency = .project(layer: .presentation, name: "Search")
-    static let Package: [TargetDependency] = [Search]
-}
-public extension TargetDependency.Project.Presentations.Alarm {
     static let Alarm: TargetDependency = .project(layer: .presentation, name: "Alarm")
-    static let Package: [TargetDependency] = [Alarm]
-}
-public extension TargetDependency.Project.Presentations.MyPage {
     static let MyPage: TargetDependency = .project(layer: .presentation, name: "MyPage")
-    static let Package: [TargetDependency] = [MyPage]
+    static let All: TargetDependency = .project(layer: .presentation, name: "Presentations")
 }
 
 // MARK: - Domain
@@ -116,6 +91,15 @@ public extension TargetDependency.Project.Infrastructure.ReuseableView {
 // MARK: - Common
 public extension TargetDependency.Project.Common {
     static let Common: TargetDependency = .common()
+}
+
+// MARK: - LibraryManager
+public extension TargetDependency.Project.LibraryManager {
+    static let Network: TargetDependency = .project(layer: .libraryManager, name: "Network")
+    static let Reactive: TargetDependency = .project(layer: .libraryManager, name: "Reactive")
+    static let Layout: TargetDependency = .project(layer: .libraryManager, name: "Layout")
+    static let UI: TargetDependency = .project(layer: .libraryManager, name: "UI")
+    static let PresentationLibrarys: [TargetDependency] = [Reactive, Layout, UI]
 }
 
 // MARK: - TargetDependency

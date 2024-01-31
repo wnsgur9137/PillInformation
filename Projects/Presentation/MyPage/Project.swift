@@ -9,8 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(name: "MyPage",
-                                   dependencies: [
-                                    TargetDependency.Project.Common.Common,
-                                    TargetDependency.Project.Infrastructure.Infrastructures
-                                   ])
+let project: Project = .framework(
+    name: "MyPage",
+    dependencies: [
+        .Project.Common.Common,
+        .Project.Infrastructure.Infrastructures
+    ]
+)

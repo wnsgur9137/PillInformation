@@ -15,7 +15,6 @@ public extension TargetDependency {
 public extension TargetDependency.Framework {
     static let FlexLayout = TargetDependency.layout(name: "FlexLayout")
     static let PinLayout = TargetDependency.layout(name: "PinLayout")
-    static let SkeletonView = TargetDependency.layout(name: "SkeletonView")
 }
 
 public extension TargetDependency {

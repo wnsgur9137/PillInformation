@@ -15,6 +15,9 @@ public extension ProjectDescription.Path {
 }
 
 public extension ProjectDescription.Path {
+    static func relativeToCarthage(_ path: String) -> Self {
+        return .relativeToRoot("Tuist/Dependencies/Carthage/Build/\(path)")
+    }
     static func relativeToXCConfig(_ scheme: AppConfiguration, path: String) -> Self {
         return .relativeToRoot("XCConfig/\(path)/\(scheme.rawValue).xcconfig")
     }

@@ -11,7 +11,7 @@ import UtilityPlugin
 
 let project: Project = .framework(name: "BaseTab",
                                    dependencies: [
-                                    TargetDependency.Project.Common.Common,
-                                    TargetDependency.Project.Infrastructure.Infrastructures,
-                                    TargetDependency.Project.Presentations.Presentations
+                                    .Project.Common.Common,
+                                    .Project.Infrastructure.Infrastructures,
+                                    .Project.Presentations.All
                                    ])

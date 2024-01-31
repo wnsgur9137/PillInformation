@@ -2,17 +2,14 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by JunHyeok Lee on 1/30/24.
+//  Created by JunHyeok Lee on 1/31/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project: Project = .framework(name: "Reactive",
-                                  packages: [
-                                  ],
-                                  dependencies: [
-                                    .SwiftPM.Reactive.rxSwift,
-                                    .SwiftPM.Reactive.rxCocoa,
-                                    .SwiftPM.Reactive.rxGesture
-                                  ])
+let project: Project = .framework(
+    name: "Reactive",
+    packages: Package.Reactive.package,
+    dependencies: TargetDependency.SwiftPM.Reactive.package
+)
