@@ -28,6 +28,7 @@ extension Package {
 
 // MARK: - TargetDependency SwiftPM
 public extension TargetDependency.SwiftPM {
+    static let all: [TargetDependency] = TargetDependency.SwiftPM.Network.package + TargetDependency.SwiftPM.Layout.package + TargetDependency.SwiftPM.Reactive.package + TargetDependency.SwiftPM.UI.package
     static let presentationPackage: [TargetDependency] = TargetDependency.SwiftPM.Layout.package + TargetDependency.SwiftPM.Reactive.package + TargetDependency.SwiftPM.UI.package
 }
 public extension TargetDependency.SwiftPM.Network {
@@ -39,7 +40,8 @@ public extension TargetDependency.SwiftPM.Reactive {
     static let rxSwift: TargetDependency = .package(product: "RxSwift")
     static let rxCocoa: TargetDependency = .package(product: "RxCocoa")
     static let rxGesture: TargetDependency = .package(product: "RxGesture")
-    static let package: [TargetDependency] = [rxSwift, rxCocoa, rxGesture]
+    static let reactorKit: TargetDependency = .package(product: "ReactorKit")
+    static let package: [TargetDependency] = [rxSwift, rxCocoa, rxGesture, reactorKit]
 }
 public extension TargetDependency.SwiftPM.Layout {
     static let flexLayout: TargetDependency = .package(product: "FlexLayout")
@@ -58,6 +60,10 @@ public extension TargetDependency.SwiftPM.Test {
 }
 
 // MARK: - Package
+public extension Package {
+    static let presentationPackage: [Package] = Package.Reactive.package + Package.Layout.package + Package.UI.package
+}
+
 public extension Package.Network {
     static let alamofire: Package = .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: "5.0.0"))
     static let moya: Package = .package(url: "https://github.com/Moya/Moya", .upToNextMajor(from: "15.0.0"))
@@ -66,7 +72,8 @@ public extension Package.Network {
 public extension Package.Reactive {
     static let rxSwift: Package = .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMajor(from: "6.0.0"))
     static let rxGesture: Package = .package(url: "https://github.com/RxSwiftCommunity/RxGesture", .upToNextMajor(from: "4.0.0"))
-    static let package: [Package] = [rxSwift, rxGesture]
+    static let reactorKit: Package = .package(url: "https://github.com/ReactorKit/ReactorKit", .upToNextMajor(from: "3.0.0"))
+    static let package: [Package] = [rxSwift, rxGesture, reactorKit]
 }
 public extension Package.Layout {
     static let flexLayout: Package = .package(url: "https://github.com/layoutBox/FlexLayout", .branch("master"))

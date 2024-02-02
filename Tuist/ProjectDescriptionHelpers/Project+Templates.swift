@@ -70,7 +70,7 @@ extension Project {
                             resources: ["Resources/**"],
                             dependencies: dependencies)
         
-        let demoAppTarget = Target(name: name,
+        let demoAppTarget = Target(name: "\(name)DemoApp",
                                    destinations: destinations,
                                    product: .app,
                                    productName: name,

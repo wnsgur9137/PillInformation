@@ -13,7 +13,7 @@ let project = Project.staticFramework(
     dependencies: [
         TargetDependency.Project.Infrastructure.Adapter.Package,
         TargetDependency.Project.Infrastructure.Builder.Package,
-        TargetDependency.Project.Infrastructure.Network.Package,
+        TargetDependency.Project.Infrastructure.NetworkInfra.Package,
         TargetDependency.Project.Infrastructure.ReuseableView.Package,
     ].flatMap{ $0 }
 )

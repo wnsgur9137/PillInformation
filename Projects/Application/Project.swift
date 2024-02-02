@@ -63,7 +63,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ]),
+           ] + TargetDependency.SwiftPM.all),
     Target(name: "\(projectName)_DevApp",
            destinations: .iOS,
            product: .app,
@@ -76,7 +76,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ]),
+           ] + TargetDependency.SwiftPM.all),
     Target(name: "\(projectName)_DevAppTests",
            destinations: .iOS,
            product: .unitTests,

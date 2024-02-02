@@ -9,10 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .framework(
-    name: "Layout",
+    name: "LayoutLibraries",
     packages: Package.Layout.package,
-    dependencies: [
-        .SwiftPM.Layout.flexLayout,
-        .SwiftPM.Layout.pinLayout
-    ]
+    dependencies: TargetDependency.SwiftPM.Layout.package
 )

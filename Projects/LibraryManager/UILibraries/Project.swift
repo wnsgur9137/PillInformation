@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .framework(
-    name: "Network",
-    packages: Package.Network.package,
-    dependencies: TargetDependency.SwiftPM.Network.package
+    name: "UILibraries",
+    packages: Package.UI.package,
+    dependencies: TargetDependency.SwiftPM.UI.package
 )

@@ -32,7 +32,7 @@ extension TargetDependency {
         public struct Domain { }
         public struct Data { }
         public struct Infrastructure {
-            public struct Network { }
+            public struct NetworkInfra { }
             public struct Builder { }
             public struct Adapter { }
             public struct ReuseableView { }
@@ -79,9 +79,9 @@ public extension TargetDependency.Project.Infrastructure.Adapter {
     static let Adapter: TargetDependency = .project(layer: .infrastructure, name: "Adapter")
     static let Package: [TargetDependency] = [Adapter]
 }
-public extension TargetDependency.Project.Infrastructure.Network {
-    static let Network: TargetDependency = .project(layer: .infrastructure, name: "Network")
-    static let Package: [TargetDependency] = [Network]
+public extension TargetDependency.Project.Infrastructure.NetworkInfra {
+    static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
+    static let Package: [TargetDependency] = [NetworkInfra]
 }
 public extension TargetDependency.Project.Infrastructure.ReuseableView {
     static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
@@ -95,11 +95,11 @@ public extension TargetDependency.Project.Common {
 
 // MARK: - LibraryManager
 public extension TargetDependency.Project.LibraryManager {
-    static let Network: TargetDependency = .project(layer: .libraryManager, name: "Network")
-    static let Reactive: TargetDependency = .project(layer: .libraryManager, name: "Reactive")
-    static let Layout: TargetDependency = .project(layer: .libraryManager, name: "Layout")
-    static let UI: TargetDependency = .project(layer: .libraryManager, name: "UI")
-    static let PresentationLibrarys: [TargetDependency] = [Reactive, Layout, UI]
+    static let NetworkLibraries: TargetDependency = .project(layer: .libraryManager, name: "NetworkLibraries")
+    static let ReactiveLibraries: TargetDependency = .project(layer: .libraryManager, name: "ReactiveLibraries")
+    static let LayoutLibraries: TargetDependency = .project(layer: .libraryManager, name: "LayoutLibraries")
+    static let UILibraries: TargetDependency = .project(layer: .libraryManager, name: "UILibraries")
+    static let PresentationLibrarys: [TargetDependency] = [ReactiveLibraries, LayoutLibraries, UILibraries]
 }
 
 // MARK: - TargetDependency

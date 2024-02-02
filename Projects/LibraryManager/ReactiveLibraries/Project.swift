@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .framework(
-    name: "Reactive",
+    name: "ReactiveLibraries",
     packages: Package.Reactive.package,
     dependencies: TargetDependency.SwiftPM.Reactive.package
 )

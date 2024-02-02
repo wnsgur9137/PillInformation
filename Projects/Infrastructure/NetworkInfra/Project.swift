@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.staticFramework(
-    name: "Network",
+    name: "NetworkInfra",
     dependencies: [
     ]
 )
