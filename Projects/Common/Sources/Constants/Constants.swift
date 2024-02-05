@@ -2,61 +2,12 @@
 //  Constants.swift
 //  Common
 //
-//  Created by JunHyeok Lee on 2/1/24.
+//  Created by JUNHYEOK LEE on 2/5/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 public struct Constants {
-    // MARK: - Font
-    public struct Font {
-        static let headlineBold1: UIFont = .systemFont(ofSize: 35.0, weight: .bold)
-        static let headlineBold2: UIFont = .systemFont(ofSize: 30.0, weight: .bold)
-        static let headlineBold3: UIFont = .systemFont(ofSize: 24.0, weight: .bold)
-        static let headlineSemibold1: UIFont = .systemFont(ofSize: 28.0, weight: .semibold)
-        static let headlineSemibold2: UIFont = .systemFont(ofSize: 22.0, weight: .semibold)
-        
-        static let subtitleBold1: UIFont = .systemFont(ofSize: 18.0, weight: .bold)
-        static let subtitleBold2: UIFont = .systemFont(ofSize: 16.0, weight: .bold)
-        static let subtitleSemiBold1: UIFont = .systemFont(ofSize: 26.0, weight: .semibold)
-        static let subtitleSemiBold2: UIFont = .systemFont(ofSize: 20.0, weight: .semibold)
-        static let subtitleSemiBold3: UIFont = .systemFont(ofSize: 18.0, weight: .semibold)
-        static let subtitleSemiBold4: UIFont = .systemFont(ofSize: 15.0, weight: .semibold)
-        
-        static let body1: UIFont = .systemFont(ofSize: 20.0, weight: .medium)
-        static let body2: UIFont = .systemFont(ofSize: 18.0, weight: .medium)
-        static let body3: UIFont = .systemFont(ofSize: 17.0, weight: .medium)
-        static let body4: UIFont = .systemFont(ofSize: 15.0, weight: .medium)
-        static let body5: UIFont = .systemFont(ofSize: 18.0, weight: .regular)
-        static let body6: UIFont = .systemFont(ofSize: 17.0, weight: .regular)
-        
-        static let button1: UIFont = .systemFont(ofSize: 17.0, weight: .semibold)
-        static let button2: UIFont = .systemFont(ofSize: 13.0, weight: .semibold)
-        static let button3: UIFont = .systemFont(ofSize: 13.0, weight: .medium)
-        
-        static let captionSemibold1: UIFont = .systemFont(ofSize: 14.0, weight: .semibold)
-        static let captionSemibold2: UIFont = .systemFont(ofSize: 12.0, weight: .semibold)
-        static let captionMedium1: UIFont = .systemFont(ofSize: 13.0, weight: .medium)
-        static let captionRegular1: UIFont = .systemFont(ofSize: 15.0, weight: .regular)
-        static let captionRegular2: UIFont = .systemFont(ofSize: 14.0, weight: .regular)
-        static let captionRegular3: UIFont = .systemFont(ofSize: 13.0, weight: .regular)
-        static let captionRegular4: UIFont = .systemFont(ofSize: 12.0, weight: .regular)
-    }
-    
-    // MARK: - Color
-    public struct Color {
-        public static let systemBlack: UIColor = .black
-        public static let systemWhite: UIColor = .white
-        public static let systemLabel: UIColor = .label
-        public static let systemBackground: UIColor = .systemBackground
-        public static let systemGray: UIColor = .gray
-        public static let systemLightGray: UIColor = .lightGray
-        public static let systemDarkGray: UIColor = .darkGray
-    }
-    
-    // MARK: - Image
-    public struct Image {
-        
-    }
+    static let warningMessage: String = "이 앱은 사용자에게 약물 섭취를 권장하거나 대체로 해석하지 않습니다. 알약 정보는 일반적인 참고 목적으로만 제공되며, 의료 전문가의 조언을 대체할 수 없습니다. 어떠한 상황에서도 약물을 복용하기 전에는 반드시 자격 있는 의료 전문가와 상담하시기를 권장합니다. 앱 내에서 제공되는 정보는 의료 전문가의 진단, 치료 또는 조언을 대체하지 않으며, 전문 의료 도움이 필요한 경우 즉시 의사와 상담하십시오."
 }
