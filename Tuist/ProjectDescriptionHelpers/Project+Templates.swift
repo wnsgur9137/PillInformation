@@ -55,7 +55,10 @@ extension Project {
         let settings: Settings = .settings(base: ["CODE_SIGN_IDENTITY": "",
                                                   "CODE_SIGNING_REQUIRED": "NO"],
                                            configurations: [
-                                            .debug(name: .dev, settings: ["GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]], xcconfig: .relativeToXCConfig(.dev)),
+                                            .debug(name: .dev, settings: [
+                                                "GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
+//                                                "OTHER_LDFLAGS": "$(inherited) -all_load"
+                                            ], xcconfig: .relativeToXCConfig(.dev)),
                                             .debug(name: .test, settings: ["GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]], xcconfig: .relativeToXCConfig(.test)),
                                             .release(name: .prod, settings: ["GCC_PREPROCESSOR_DEFINITIONS": ["RELEASE=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]], xcconfig: .relativeToXCConfig(.prod))
                                            ])

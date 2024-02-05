@@ -11,5 +11,6 @@ import ProjectDescriptionHelpers
 let project = Project.staticFramework(
     name: "Adapter",
     dependencies: [
-    ]
+        .Project.Common.Common
+    ] + TargetDependency.SwiftPM.presentationPackage
 )

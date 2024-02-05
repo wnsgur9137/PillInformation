@@ -18,5 +18,6 @@ extension Constants {
         public static let systemGray: UIColor = .gray
         public static let systemLightGray: UIColor = .lightGray
         public static let systemDarkGray: UIColor = .darkGray
+        public static let darkBackground: UIColor = UIColor(hex: "2E2E2E") ?? .darkGray
     }
 }

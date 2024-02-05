@@ -13,6 +13,7 @@ import ReactorKit
 import FlexLayout
 import PinLayout
 import Common
+import ReuseableView
 
 public final class HomeViewController: UIViewController {
     
@@ -49,6 +50,11 @@ public final class HomeViewController: UIViewController {
         return tableView
     }()
     
+    private let footerView: FooterView = {
+        let footerView = FooterView()
+        return footerView
+    }()
+    
     private let viewModel: HomeViewModel
     private let reactor: HomeReactor
     private let disposeBag = DisposeBag()
@@ -73,7 +79,6 @@ public final class HomeViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.systemBackground
-        
         setupLayout()
     }
     
