@@ -9,8 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(name: "Alarm",
-                                   dependencies: [
-                                    .Project.Common.Common,
-                                    .Project.Infrastructure.Infrastructures
-                                   ])
+let project: Project = .framework(
+    name: "Alarm",
+    dependencies: [
+        .Project.Common.Common,
+        .Project.Infrastructure.Infrastructures,
+        .Project.Domain.AlarmDomain
+    ]
+)

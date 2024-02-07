@@ -36,10 +36,16 @@ public final class FooterView: UIView {
     }
 }
 
+// MARK: - Layout
 extension FooterView {
     private func setupLayout() {
         addSubview(rootFlexContainerView)
         
+        rootFlexContainerView.flex
+            .height(100)
+            .define { rootView in
+            
+        }
     }
     
     private func setupSubviewLayout() {

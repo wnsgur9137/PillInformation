@@ -31,12 +31,7 @@ extension TargetDependency {
         public struct Presentations { }
         public struct Domain { }
         public struct Data { }
-        public struct Infrastructure {
-            public struct NetworkInfra { }
-            public struct Builder { }
-            public struct Adapter { }
-            public struct ReuseableView { }
-        }
+        public struct Infrastructure { }
         public struct Common {
             public struct `Enum` { }
             public struct `Protocol` { }
@@ -59,33 +54,29 @@ public extension TargetDependency.Project.Presentations {
 
 // MARK: - Domain
 public extension TargetDependency.Project.Domain {
-    static let Domains: TargetDependency = .project(layer: .domain)
+    static let Domains: TargetDependency = .project(layer: .domain, name: "Domains")
+    static let HomeDomain: TargetDependency = .project(layer: .domain, name: "HomeDomain")
+    static let SearchDomain: TargetDependency = .project(layer: .domain, name: "SearchDomain")
+    static let AlarmDomain: TargetDependency = .project(layer: .domain, name: "AlarmDomain")
+    static let MyPageDomain: TargetDependency = .project(layer: .domain, name: "MyPageDomain")
 }
 
 // MARK: - Data
 public extension TargetDependency.Project.Data {
-    static let Data: TargetDependency = .project(layer: .data)
+    static let Data: TargetDependency = .project(layer: .data, name: "Data")
+    static let HomeData: TargetDependency = .project(layer: .data, name: "HomeData")
+    static let SearchData: TargetDependency = .project(layer: .data, name: "SearchData")
+    static let AlarmData: TargetDependency = .project(layer: .data, name: "AlarmData")
+    static let MyPageData: TargetDependency = .project(layer: .data, name: "MyPageData")
 }
 
 // MARK: - Infrastructure
 public extension TargetDependency.Project.Infrastructure {
     static let Infrastructures: TargetDependency = .project(layer: .infrastructure, name: "Infrastructures")
-}
-public extension TargetDependency.Project.Infrastructure.Builder {
     static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
-    static let Package: [TargetDependency] = [Builder]
-}
-public extension TargetDependency.Project.Infrastructure.Adapter {
     static let Adapter: TargetDependency = .project(layer: .infrastructure, name: "Adapter")
-    static let Package: [TargetDependency] = [Adapter]
-}
-public extension TargetDependency.Project.Infrastructure.NetworkInfra {
     static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
-    static let Package: [TargetDependency] = [NetworkInfra]
-}
-public extension TargetDependency.Project.Infrastructure.ReuseableView {
     static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
-    static let Package: [TargetDependency] = [ReuseableView]
 }
 
 // MARK: - Common

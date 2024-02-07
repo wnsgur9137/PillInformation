@@ -14,5 +14,6 @@ let project: Project = .framework(
     dependencies: [
         .Project.Common.Common,
         .Project.Infrastructure.Infrastructures,
+        .Project.Domain.HomeDomain
     ] + TargetDependency.SwiftPM.presentationPackage
 )

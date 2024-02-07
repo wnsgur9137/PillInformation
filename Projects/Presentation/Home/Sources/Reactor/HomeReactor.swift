@@ -11,50 +11,36 @@ import RxSwift
 import RxCocoa
 import ReactorKit
 
-public protocol HomeReactorAction {
-    
-}
-
-public protocol HomeReactorMutation {
-    
-}
-
-public protocol HomeReactorState {
-    
-}
-
-public protocol HomeReactor: HomeReactorAction, HomeReactorMutation, HomeReactorState {
-    
-}
-
-public final class DefaultHomeReactor: Reactor, HomeReactor {
+public final class HomeReactor: Reactor {
     public enum Action {
-        
+        case didTapTestButton
     }
     
     public enum Mutation {
-        
+        case didTappedTestButton
     }
     
     public struct State {
-        
+        var isLoading: Bool = false
     }
     
     public var initialState = State()
 }
 
-public final class HomeReactorMock: HomeReactor {
-    public enum Action {
-        
+extension HomeReactor {
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .didTapTestButton:
+            return Observable.just(.didTappedTestButton)
+        }
     }
     
-    public enum Mutation {
-        
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var state = state
+        switch mutation {
+        case .didTappedTestButton:
+            state.isLoading = true
+        }
+        return state
     }
-    
-    public struct State {
-        
-    }
-    
-    public var initialState = State()
 }
