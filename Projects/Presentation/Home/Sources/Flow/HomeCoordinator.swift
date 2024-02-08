@@ -10,7 +10,7 @@ import UIKit
 import Common
 
 public protocol HomeCoordinatorDependencies {
-    func makeHomeViewController(action: HomeViewModelAction) -> HomeViewController
+    func makeHomeViewController() -> HomeViewController
 }
 
 public protocol HomeCoordinator: Coordinator {
@@ -37,8 +37,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     }
     
     public func showHomeViewController() {
-        let action = HomeViewModelAction()
-        let viewController = dependencies.makeHomeViewController(action: action)
+        let viewController = dependencies.makeHomeViewController()
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController
     }

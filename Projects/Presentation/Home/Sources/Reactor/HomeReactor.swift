@@ -25,6 +25,10 @@ public final class HomeReactor: Reactor {
     }
     
     public var initialState = State()
+    
+    public init() {
+        
+    }
 }
 
 extension HomeReactor {

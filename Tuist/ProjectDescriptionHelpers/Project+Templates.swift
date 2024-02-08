@@ -6,12 +6,14 @@ extension Project {
                                      destinations: Destinations = .iOS,
                                      packages: [Package] = [],
                                      dependencies: [TargetDependency] = [],
+                                     infoPlist: [String: Plist.Value] = [:],
                                      hasDemoApp: Bool = false) -> Self {
         return project(name: name,
                        destinations: destinations,
                        packages: packages,
                        product: .staticLibrary,
                        dependencies: dependencies,
+                       infoPlist: infoPlist,
                        hasDemoApp: hasDemoApp)
     }
     
@@ -19,12 +21,14 @@ extension Project {
                                        destinations: Destinations = .iOS,
                                        packages: [Package] = [],
                                        dependencies: [TargetDependency] = [],
+                                       infoPlist: [String: Plist.Value] = [:],
                                        hasDemoApp: Bool = false) -> Self {
         return project(name: name,
                        destinations: destinations,
                        packages: packages,
                        product: .staticFramework,
                        dependencies: dependencies,
+                       infoPlist: infoPlist,
                        hasDemoApp: hasDemoApp)
     }
     
@@ -32,12 +36,14 @@ extension Project {
                                  destinations: Destinations = .iOS,
                                  packages: [Package] = [],
                                  dependencies: [TargetDependency] = [],
+                                 infoPlist: [String: Plist.Value] = [:],
                                  hasDemoApp: Bool = false) -> Self {
         return project(name: name,
                        destinations: destinations,
                        packages: packages,
                        product: .framework,
                        dependencies: dependencies,
+                       infoPlist: infoPlist,
                        hasDemoApp: hasDemoApp)
     }
 }
@@ -55,12 +61,37 @@ extension Project {
         let settings: Settings = .settings(base: ["CODE_SIGN_IDENTITY": "",
                                                   "CODE_SIGNING_REQUIRED": "NO"],
                                            configurations: [
-                                            .debug(name: .dev, settings: [
-                                                "GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"],
-//                                                "OTHER_LDFLAGS": "$(inherited) -all_load"
-                                            ], xcconfig: .relativeToXCConfig(.dev)),
-                                            .debug(name: .test, settings: ["GCC_PREPROCESSOR_DEFINITIONS": ["DEBUG=1", "OTHER_MACRO=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]], xcconfig: .relativeToXCConfig(.test)),
-                                            .release(name: .prod, settings: ["GCC_PREPROCESSOR_DEFINITIONS": ["RELEASE=1", "FLEXLAYOUT_SWIFT_PACKAGE=1"]], xcconfig: .relativeToXCConfig(.prod))
+                                            .debug(
+                                                name: .dev,
+                                                settings: [
+                                                    "GCC_PREPROCESSOR_DEFINITIONS": [
+                                                        "DEBUG=1", "OTHER_MACRO=1",
+                                                        "FLEXLAYOUT_SWIFT_PACKAGE=1"
+                                                    ],
+//                                                  "OTHER_LDFLAGS": "$(inherited) -all_load"
+                                                ],
+                                                xcconfig: .relativeToXCConfig(.dev)
+                                            ),
+                                            .debug(
+                                                name: .test,
+                                                settings: [
+                                                    "GCC_PREPROCESSOR_DEFINITIONS": [
+                                                        "DEBUG=1", "OTHER_MACRO=1",
+                                                        "FLEXLAYOUT_SWIFT_PACKAGE=1"
+                                                    ]
+                                                ],
+                                                xcconfig: .relativeToXCConfig(.test)
+                                            ),
+                                            .release(
+                                                name: .prod,
+                                                settings: [
+                                                    "GCC_PREPROCESSOR_DEFINITIONS": [
+                                                        "RELEASE=1",
+                                                        "FLEXLAYOUT_SWIFT_PACKAGE=1"
+                                                    ]
+                                                ],
+                                                xcconfig: .relativeToXCConfig(.prod)
+                                            )
                                            ])
         let target = Target(name: name,
                             destinations: destinations,
@@ -89,8 +120,8 @@ extension Project {
                                    ])
         
         let testTargetDependencies: [TargetDependency] = hasDemoApp
-            ? [.target(name: "\(name)DemoApp")]
-            : [.target(name: "\(name)")]
+        ? [.target(name: "\(name)DemoApp")]
+        : [.target(name: "\(name)")]
         
         let testTarget = Target(name: "\(name)Tests",
                                 destinations: destinations,
@@ -102,12 +133,12 @@ extension Project {
                                 dependencies: testTargetDependencies)
         
         let schemes: [Scheme] = hasDemoApp
-            ? [.makeScheme(target: .dev, name: name), .makeDemoScheme(target: .dev, name: name)]
-            : [.makeScheme(target: .dev, name: name)]
+        ? [.makeScheme(target: .dev, name: name), .makeDemoScheme(target: .dev, name: name)]
+        : [.makeScheme(target: .dev, name: name)]
         
         let targets: [Target] = hasDemoApp
-            ? [target, testTarget, demoAppTarget]
-            : [target, testTarget]
+        ? [target, testTarget, demoAppTarget]
+        : [target, testTarget]
         
         return Project(name: name,
                        organizationName: organizationName,
@@ -132,7 +163,7 @@ extension Scheme {
                       profileAction: .profileAction(configuration: target.configurationName),
                       analyzeAction: .analyzeAction(configuration: target.configurationName))
     }
-
+    
     static func makeDemoScheme(target: AppConfiguration, name: String) -> Self {
         return Scheme(name: "\(name)DemoApp",
                       shared: true,

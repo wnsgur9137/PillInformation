@@ -25,6 +25,15 @@ let defaultInfoPlist: [String: Plist.Value] = [
                 ]
             ]
         ]
+    ],
+    "UIAppFonts": [
+        "SUITE-Bold.otf",
+        "SUITE-ExtraBold.otf",
+        "SUITE-Heavy.otf",
+        "SUITE-Light.otf",
+        "SUITE-Medium.otf",
+        "SUITE-Regular.otf",
+        "SUITE-SemiBold.otf"
     ]
 ]
 

@@ -9,4 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .staticFramework(name: "Common", dependencies: [])
+let project: Project = .staticFramework(
+    name: "Common", 
+    dependencies: []
+)
