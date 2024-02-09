@@ -34,16 +34,6 @@ public final class HomeViewController: UIViewController, View {
         return label
     }()
     
-//    private let searchPicktureButton: UIButton = {
-//        let button = UIButton()
-//        let title = Constants.HomeViewController.searchPillByPhoto
-//        let titleColor = Constants.Color.systemLabel
-//        button.setTitle(title, for: .normal)
-//        button.setTitleColor(titleColor, for: .normal)
-//        button.titleLabel?.font = Constants.Font.button1
-//        return button
-//    }()
-    
     private let noticeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.notice
