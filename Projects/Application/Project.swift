@@ -25,6 +25,15 @@ let defaultInfoPlist: [String: Plist.Value] = [
                 ]
             ]
         ]
+    ],
+    "UIAppFonts": [
+        "SUITE-Bold.otf",
+        "SUITE-ExtraBold.otf",
+        "SUITE-Heavy.otf",
+        "SUITE-Light.otf",
+        "SUITE-Medium.otf",
+        "SUITE-Regular.otf",
+        "SUITE-SemiBold.otf"
     ]
 ]
 
@@ -36,11 +45,11 @@ let settings: Settings = .settings(
     ],
     configurations: [
         .debug(name: .dev, xcconfig: XCConfig.Application.devApp(.dev)),
-        .debug(name: .test, xcconfig: XCConfig.Application.devApp(.test)),
-        .release(name: .prod, xcconfig: XCConfig.Application.devApp(.prod)),
+        .debug(name: .test, settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], xcconfig: XCConfig.Application.devApp(.test)),
+        .release(name: .prod, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE"], xcconfig: XCConfig.Application.devApp(.prod)),
         .debug(name: .dev, xcconfig: XCConfig.Application.app(.dev)),
-        .debug(name: .test, xcconfig: XCConfig.Application.app(.test)),
-        .release(name: .prod, xcconfig: XCConfig.Application.app(.prod))
+        .debug(name: .test, settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], xcconfig: XCConfig.Application.app(.test)),
+        .release(name: .prod, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE"], xcconfig: XCConfig.Application.app(.prod))
     ]
 )
 
@@ -63,7 +72,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ]),
+           ] + TargetDependency.SwiftPM.all),
     Target(name: "\(projectName)_DevApp",
            destinations: .iOS,
            product: .app,
@@ -76,7 +85,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ]),
+           ] + TargetDependency.SwiftPM.all),
     Target(name: "\(projectName)_DevAppTests",
            destinations: .iOS,
            product: .unitTests,

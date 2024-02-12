@@ -31,8 +31,14 @@ final class MainSceneDIContainer {
 
 // MARK: - Home
 extension MainSceneDIContainer: HomeCoordinatorDependencies {
+    // Reactor
+    func makeHomeReactor() -> Home.HomeReactor {
+        return HomeReactor()
+    }
+    
+    // ViewController
     func makeHomeViewController() -> Home.HomeViewController {
-        return HomeViewController()
+        return HomeViewController.create(with: makeHomeReactor())
     }
 }
 

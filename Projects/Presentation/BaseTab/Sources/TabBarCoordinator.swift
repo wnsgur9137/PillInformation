@@ -91,6 +91,8 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         tabBarController?.setViewControllers(controllers, animated: true)
         tabBarController?.selectedIndex = TabBarPage.home.orderNumber()
         tabBarController?.tabBar.isTranslucent = false
+        tabBarController?.tabBar.barTintColor = Constants.Color.systemBackground
+        tabBarController?.view.backgroundColor = Constants.Color.systemBackground
     }
 }
 

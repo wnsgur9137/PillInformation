@@ -7,13 +7,14 @@
 
 import ProjectDescription
 import ProjectDescriptionHelpers
+import UtilityPlugin
 
 let project = Project.staticFramework(
     name: "Infrastructures",
     dependencies: [
-        TargetDependency.Project.Infrastructure.Adapter.Package,
-        TargetDependency.Project.Infrastructure.Builder.Package,
-        TargetDependency.Project.Infrastructure.Network.Package,
-        TargetDependency.Project.Infrastructure.ReuseableView.Package,
-    ].flatMap{ $0 }
+        TargetDependency.Project.Infrastructure.Adapter,
+        TargetDependency.Project.Infrastructure.Builder,
+        TargetDependency.Project.Infrastructure.NetworkInfra,
+        TargetDependency.Project.Infrastructure.ReuseableView,
+    ]
 )
