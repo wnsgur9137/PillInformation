@@ -156,6 +156,7 @@ extension HomeViewController {
                     contentView.addItem(noticeLabel)
                         .margin(contentMargin)
                         .marginTop(48.0)
+                        .marginLeft(36.0)
                     contentView.addItem(noticeTableView)
                         .margin(contentMargin)
                         .marginBottom(24.0)
