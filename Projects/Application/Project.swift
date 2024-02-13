@@ -34,6 +34,9 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-Medium.otf",
         "SUITE-Regular.otf",
         "SUITE-SemiBold.otf"
+    ],
+    "AppConfigurations": [
+        "API_BASE_URL": "${API_BASE_URL}"
     ]
 ]
 
@@ -44,12 +47,9 @@ let settings: Settings = .settings(
         "CODE_SIGNING_REQUIRED": "NO",
     ],
     configurations: [
-        .debug(name: .dev, xcconfig: XCConfig.Application.devApp(.dev)),
-        .debug(name: .test, settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], xcconfig: XCConfig.Application.devApp(.test)),
-        .release(name: .prod, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE"], xcconfig: XCConfig.Application.devApp(.prod)),
-        .debug(name: .dev, xcconfig: XCConfig.Application.app(.dev)),
-        .debug(name: .test, settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], xcconfig: XCConfig.Application.app(.test)),
-        .release(name: .prod, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE"], xcconfig: XCConfig.Application.app(.prod))
+        .debug(name: .dev),
+        .debug(name: .test),
+        .release(name: .prod),
     ]
 )
 
@@ -72,7 +72,21 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ] + TargetDependency.SwiftPM.all),
+           ] + TargetDependency.SwiftPM.all,
+           settings: .settings(configurations: [
+            .debug(name: .dev, 
+                   settings: [
+                    "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer"
+                   ],
+                   xcconfig: XCConfig.Application.app(.dev)),
+            .release(name: .prod, 
+                     settings: [
+                        "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon"
+                     ],
+                     xcconfig: XCConfig.Application.app(.prod))
+           ])
+          ),
     Target(name: "\(projectName)_DevApp",
            destinations: .iOS,
            product: .app,
@@ -85,7 +99,21 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-           ] + TargetDependency.SwiftPM.all),
+           ] + TargetDependency.SwiftPM.all,
+           settings: .settings(configurations: [
+            .debug(name: .dev, 
+                   settings: [
+                    "ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIconDevServer"
+                   ],
+                   xcconfig: XCConfig.Application.devApp(.dev)),
+            .release(name: .prod,
+                     settings: [
+                        "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIcon"
+                     ],
+                     xcconfig: XCConfig.Application.devApp(.prod)),
+           ])
+          ),
     Target(name: "\(projectName)_DevAppTests",
            destinations: .iOS,
            product: .unitTests,
@@ -96,7 +124,16 @@ let targets: [Target] = [
            sources: "Tests/**",
            dependencies: [
             .target(name: "\(projectName)_DevApp"),
+           ], 
+           settings: .settings(configurations: [
+            .debug(name: .test, 
+                   settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], 
+                   xcconfig: XCConfig.Application.devApp(.test)),
+            .debug(name: .test,
+                   settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"],
+                   xcconfig: XCConfig.Application.app(.test)),
            ])
+          )
 ]
 
 // MARK: - Schemes
@@ -133,5 +170,8 @@ let project: Project = .init(
     organizationName: organizationName,
     settings: settings,
     targets: targets,
-    schemes: schemes
+    schemes: schemes,
+    additionalFiles: [
+        "//XCConfig/Application/Application-\(AppConfiguration.shared).xcconfig"
+    ]
 )

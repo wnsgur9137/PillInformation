@@ -9,9 +9,11 @@
 import Foundation
 
 final class AppDIContainer {
-//    lazy var appConfiguration = AppConfiguration()
+    lazy var appConfiguration = AppConfiguration()
     
     func makeMainSceneDIContainer() -> MainSceneDIContainer {
+        let test = appConfiguration.apiBaseURL
+        print("🚨test: \(test)")
         return MainSceneDIContainer()
     }
 }
