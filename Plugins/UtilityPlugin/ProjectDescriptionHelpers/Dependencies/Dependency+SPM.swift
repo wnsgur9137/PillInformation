@@ -33,7 +33,7 @@ public extension TargetDependency.SwiftPM {
 }
 public extension TargetDependency.SwiftPM.Network {
     static let alamofire: TargetDependency = .package(product: "Alamofire")
-    static let moya: TargetDependency = .package(product: "Moya")
+    static let moya: TargetDependency = .package(product: "RxMoya")
     static let package: [TargetDependency] = [alamofire, moya]
 }
 public extension TargetDependency.SwiftPM.Reactive {

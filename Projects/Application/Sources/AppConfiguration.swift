@@ -20,7 +20,6 @@ final class AppConfiguration {
         guard let apiBaseURL = appConfigurations["API_BASE_URL"] else {
             fatalError("API_BASE_URL must not be empty in plist")
         }
-        print("API_BASE_URL: \(apiBaseURL)")
         return apiBaseURL
     }()
 }
