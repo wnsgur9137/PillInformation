@@ -13,7 +13,6 @@ final class AppDIContainer {
     
     func makeMainSceneDIContainer() -> MainSceneDIContainer {
         let test = appConfiguration.apiBaseURL
-        print("🚨test: \(test)")
         return MainSceneDIContainer()
     }
 }
