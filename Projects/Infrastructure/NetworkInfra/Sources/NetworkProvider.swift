@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Moya
 import RxSwift
+import Moya
+import RxMoya
 
 final class NetworkProvider<Target> where Target: MoyaErrorHandleable {
     fileprivate let provider: MoyaProvider<Target>
@@ -46,7 +47,7 @@ extension NetworkProvider {
                         print("NetworkError: TimedOut")
                     case NetworkError.internetConnection:
                         print("NetworkError: internetConnection")
-                    case NetworkError.rest(error, _, _, _):
+                    case NetworkError.rest(let error, _, _, _):
                         print("NetworkError: rest(\(error))")
                     default:
                         break

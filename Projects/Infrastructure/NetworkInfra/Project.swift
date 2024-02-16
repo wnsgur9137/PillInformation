@@ -12,6 +12,7 @@ import UtilityPlugin
 let project = Project.staticFramework(
     name: "NetworkInfra",
     dependencies: [
+        .Project.Common.Common
     ] + TargetDependency.SwiftPM.Network.package
     + TargetDependency.SwiftPM.Reactive.package
 )
