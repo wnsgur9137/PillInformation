@@ -11,5 +11,8 @@ import UtilityPlugin
 
 let project: Project = .staticFramework(
     name: "Common", 
-    dependencies: []
+    dependencies: [
+        .SwiftPM.Reactive.rxSwift,
+        .SwiftPM.Reactive.rxCocoa,
+    ]
 )

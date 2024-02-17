@@ -12,7 +12,7 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "HomeDomain",
     dependencies: [
-        .Project.Data.HomeData,
+//        .Project.Data.HomeData,
         .SwiftPM.Reactive.rxSwift,
         .SwiftPM.Reactive.rxCocoa
     ]

@@ -72,6 +72,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
+            .Project.Domain.Domains
            ] + TargetDependency.SwiftPM.all,
            settings: .settings(configurations: [
             .debug(name: .dev, 
@@ -99,6 +100,7 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
+            .Project.Domain.Domains,
            ] + TargetDependency.SwiftPM.all,
            settings: .settings(configurations: [
             .debug(name: .dev, 

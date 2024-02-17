@@ -12,6 +12,7 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "HomeData",
     dependencies: [
+        .Project.Domain.HomeDomain,
         .Project.Infrastructure.NetworkInfra,
         .Project.LibraryManager.NetworkLibraries,
         .Project.LibraryManager.ReactiveLibraries,

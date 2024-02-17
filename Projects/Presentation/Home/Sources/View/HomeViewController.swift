@@ -49,7 +49,6 @@ public final class HomeViewController: UIViewController, View {
     }()
     
     private let footerView = FooterView()
-    
     public var disposeBag = DisposeBag()
     
     // MARK: - LifeCycle
@@ -98,6 +97,10 @@ extension HomeViewController {
     }
     
     private func bindAction(_ reactor: HomeReactor) {
+        self.rx.viewWillAppear
+            .map { Reactor.Action.willAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
 //        searchPicktureButton.rx.tap
 //            .map { Reactor.Action.didTapTestButton }
 //            .bind(to: reactor.action)
@@ -105,13 +108,14 @@ extension HomeViewController {
     }
     
     private func bindState(_ reactor: HomeReactor) {
-//        reactor.state
-//            .map { $0.isLoading }
-//            .distinctUntilChanged()
-////            .bind(to: testButton.rx.isEnabled )
-//            .bind(onNext: { isLoading in
-//            })
-//            .disposed(by: disposeBag)
+        reactor.state
+            .map { $0.notices }
+            .distinctUntilChanged()
+            .filter { $0 != nil }
+            .bind(onNext: { notices in
+                print("🥺 \(notices)")
+            })
+            .disposed(by: disposeBag)
     }
 }
 

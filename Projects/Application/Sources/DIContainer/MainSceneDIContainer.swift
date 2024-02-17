@@ -13,6 +13,8 @@ import Search
 import Alarm
 import MyPage
 
+import HomeDomain
+
 final class MainSceneDIContainer {
     init() {
         
@@ -31,9 +33,14 @@ final class MainSceneDIContainer {
 
 // MARK: - Home
 extension MainSceneDIContainer: HomeCoordinatorDependencies {
+    // UseCase
+    func makeHomeUseCase() -> HomeDomain.HomeUseCase {
+        return HomeUseCase()
+    }
+    
     // Reactor
     func makeHomeReactor() -> Home.HomeReactor {
-        return HomeReactor()
+        return HomeReactor(with: makeHomeUseCase())
     }
     
     // ViewController
