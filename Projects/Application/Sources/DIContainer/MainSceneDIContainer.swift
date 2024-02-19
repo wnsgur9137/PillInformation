@@ -14,10 +14,20 @@ import Alarm
 import MyPage
 
 import HomeDomain
+import HomeData
+
+import NetworkInfra
 
 final class MainSceneDIContainer {
-    init() {
-        
+    
+    struct Dependencies {
+        let networkManager: NetworkInfra.NetworkManager
+    }
+    
+    let dependencies: Dependencies
+    
+    init(dependencies: Dependencies) {
+        self.dependencies = dependencies
     }
     
     func makeTabBarCoordinator(tabBarController: UITabBarController) -> TabBarCoordinator {
@@ -33,39 +43,43 @@ final class MainSceneDIContainer {
 
 // MARK: - Home
 extension MainSceneDIContainer: HomeCoordinatorDependencies {
+    func makeHomeRepository() -> HomeDomain.HomeRepository {
+        return HomeData.DefaultHomeRepository(networkManager: dependencies.networkManager)
+    }
+    
     // UseCase
     func makeHomeUseCase() -> HomeDomain.HomeUseCase {
-        return HomeUseCase()
+        return HomeDomain.DefaultHomeUseCase(with: makeHomeRepository())
     }
     
     // Reactor
     func makeHomeReactor() -> Home.HomeReactor {
-        return HomeReactor(with: makeHomeUseCase())
+        return Home.HomeReactor(with: makeHomeUseCase())
     }
     
     // ViewController
     func makeHomeViewController() -> Home.HomeViewController {
-        return HomeViewController.create(with: makeHomeReactor())
+        return Home.HomeViewController.create(with: makeHomeReactor())
     }
 }
 
 // MARK: - Search
 extension MainSceneDIContainer: SearchCoordinatorDependencies {
     func makeSearchViewController() -> Search.SearchViewController {
-        return SearchViewController()
+        return Search.SearchViewController()
     }
 }
 
 // MARK: - Alarm
 extension MainSceneDIContainer: AlarmCoordinatorDependencies {
     func makeAlarmViewController() -> Alarm.AlarmViewController {
-        return AlarmViewController()
+        return Alarm.AlarmViewController()
     }
 }
 
 // MARK: - MyPage
 extension MainSceneDIContainer: MyPageCoordinatorDependencies {
     func makeMyPageViewController() -> MyPage.MyPageViewController {
-        return MyPageViewController()
+        return MyPage.MyPageViewController()
     }
 }

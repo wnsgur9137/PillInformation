@@ -14,26 +14,21 @@ struct UserNetworkType: NetworkType {
     typealias T = UserTargetType
     let provider: NetworkProvider<T>
     
-    static func defaultNetworking() -> UserNetworkType {
-        return UserNetworkType(provider: NetworkProvider(endpointClosure: UserNetworkType.endpointsClosure(),
+    static func defaultNetworking(baseURL: String) -> UserNetworkType {
+        return UserNetworkType(provider: NetworkProvider(endpointClosure: UserNetworkType.endpointsClosure(baseURL: baseURL),
                                                          requestClosure: UserNetworkType.endpointResolver(),
                                                          stubClosure: UserNetworkType.APIKeysBasedStubBehaviour,
                                                          plugins: plugins))
     }
     
-    static func stubbingNetworking(needFail: Bool) -> UserNetworkType {
+    static func stubbingNetworking(baseURL: String, needFail: Bool) -> UserNetworkType {
         if needFail {
-            return UserNetworkType(provider: NetworkProvider(endpointClosure: failEndPointsClosure(),
+            return UserNetworkType(provider: NetworkProvider(endpointClosure: failEndPointsClosure(baseURL: baseURL),
                                                              requestClosure: UserNetworkType.endpointResolver(),
                                                              stubClosure: MoyaProvider.immediatelyStub))
         }
-        return UserNetworkType(provider: NetworkProvider(endpointClosure: endpointsClosure(),
+        return UserNetworkType(provider: NetworkProvider(endpointClosure: endpointsClosure(baseURL: baseURL),
                                                          requestClosure: UserNetworkType.endpointResolver(),
                                                          stubClosure: MoyaProvider.immediatelyStub))
-    }
-    
-    func request(_ route: T) -> Single<Moya.Response> {
-        let actualRequest = self.provider.request(route)
-        return actualRequest
     }
 }

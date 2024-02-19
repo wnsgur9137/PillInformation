@@ -14,18 +14,19 @@ import HomeDomain
 
 public final class HomeReactor: Reactor {
     public enum Action {
-        case willAppear
-        case didTapTestButton
+        case loadNotices
+        case loadTestData
     }
     
     public enum Mutation {
-        case willAppear(String)
-        case didTappedTestButton
+        case notices([Notice])
+        case testData([String])
     }
     
     public struct State {
         var isLoading: Bool = true
-        var notices: String?
+        var notices: [Notice]?
+        var testData: [String]?
     }
     
     public var initialState = State()
@@ -40,34 +41,40 @@ public final class HomeReactor: Reactor {
 extension HomeReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .willAppear:
+        case .loadNotices:
             return loadNotice()
-                .flatMap { notice -> Observable<Mutation> in
-                    return .just(.willAppear(notice))
+                .flatMap { notices -> Observable<Mutation> in
+                    return .just(.notices(notices))
                 }
             
-        case .didTapTestButton:
-            return Observable.just(.didTappedTestButton)
+        case .loadTestData:
+            return loadTest()
+                .flatMap { testData -> Observable<Mutation> in
+                    return .just(.testData(testData))
+                }
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .willAppear(notices):
+        case let .notices(notices):
             state.notices = notices
-            state.isLoading = false
-        case .didTappedTestButton:
-            break
+            
+        case let .testData(testData):
+            state.testData = testData
         }
         return state
     }
 }
 
 extension HomeReactor {
-    private func loadNotice() -> Observable<String> {
-        return homeUseCase.getNotice()
-            .delay(.seconds(2), scheduler: MainScheduler.instance)
+    private func loadNotice() -> Observable<[Notice]> {
+        return homeUseCase.executeNotice()
+            .asObservable()
+    }
+    private func loadTest() -> Observable<[String]> {
+        return homeUseCase.executeTestData()
             .asObservable()
     }
 }

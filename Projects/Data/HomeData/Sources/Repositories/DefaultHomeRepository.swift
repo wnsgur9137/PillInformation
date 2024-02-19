@@ -6,15 +6,28 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
 import HomeDomain
 import NetworkInfra
 
+import Foundation
+import RxSwift
+import RxCocoa
+
 public final class DefaultHomeRepository: HomeRepository {
+    private let networkManager: NetworkManager
+    private let disposeBag = DisposeBag()
     
-    private let network: NetworkInfra
+    public init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
+    }
     
-    public func executeNotices() -> [HomeDomain.Notice] {
-        
+    public func executeNotices() -> Single<[Notice]> {
+        return networkManager.requestNotices().map { noticeListResponseDTO in
+            return noticeListResponseDTO.noticeList.map { $0.toDomain() }
+        }
+    }
+    
+    public func executeTest() -> Single<[String]> {
+        return networkManager.requestTest()
     }
 }

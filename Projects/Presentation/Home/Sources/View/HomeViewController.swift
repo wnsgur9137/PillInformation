@@ -97,23 +97,31 @@ extension HomeViewController {
     }
     
     private func bindAction(_ reactor: HomeReactor) {
-        self.rx.viewWillAppear
-            .map { Reactor.Action.willAppear }
+        self.rx.viewDidLoad
+            .map { Reactor.Action.loadNotices }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-//        searchPicktureButton.rx.tap
-//            .map { Reactor.Action.didTapTestButton }
-//            .bind(to: reactor.action)
-//            .disposed(by: disposeBag)
+        
+        self.rx.viewWillAppear
+            .map { Reactor.Action.loadTestData }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeReactor) {
         reactor.state
             .map { $0.notices }
-            .distinctUntilChanged()
             .filter { $0 != nil }
             .bind(onNext: { notices in
                 print("🥺 \(notices)")
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.testData }
+            .filter { $0 != nil }
+            .bind(onNext: { testData in
+                print("testData: \(testData)")
             })
             .disposed(by: disposeBag)
     }

@@ -7,7 +7,10 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 public protocol HomeRepository {
-    func executeNotices() -> [Notice]
+    func executeNotices() -> Single<[Notice]>
+    func executeTest() -> Single<[String]>
 }

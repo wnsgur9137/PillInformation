@@ -9,7 +9,12 @@
 import Foundation
 import RxSwift
 
-public final class HomeUseCase {
+public protocol HomeUseCase {
+    func executeNotice() -> Single<[Notice]>
+    func executeTestData() -> Single<[String]>
+}
+
+public final class DefaultHomeUseCase: HomeUseCase {
     
     private let homeRepository: HomeRepository
     
@@ -18,8 +23,12 @@ public final class HomeUseCase {
     }
 }
 
-public extension HomeUseCase {
-    func getNotice() -> Single<String> {
-        return .just("Notices")
+public extension DefaultHomeUseCase {
+    func executeNotice() -> Single<[Notice]> {
+        return homeRepository.executeNotices()
+    }
+    
+    func executeTestData() -> Single<[String]> {
+        return homeRepository.executeTest()
     }
 }

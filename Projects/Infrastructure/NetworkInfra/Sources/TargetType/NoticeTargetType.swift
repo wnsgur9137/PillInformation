@@ -9,7 +9,7 @@
 import Foundation
 import Moya
 
-enum NoticeTargetType {
+public enum NoticeTargetType {
     case getAllNotices
     case getNotice(noticeID: Int)
     case setNotice(title: String, writer: String, content: String)
@@ -18,11 +18,11 @@ enum NoticeTargetType {
 }
 
 extension NoticeTargetType: MoyaErrorHandleable {
-    var baseURL: URL {
+    public var baseURL: URL {
         return URL(string: "")!
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .getAllNotices: return "/getAllNotices/"
         case .getNotice: return "/getNotice/"
@@ -32,7 +32,7 @@ extension NoticeTargetType: MoyaErrorHandleable {
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         // GET
         case .getAllNotices: return .get
@@ -44,11 +44,11 @@ extension NoticeTargetType: MoyaErrorHandleable {
         }
     }
     
-    var headers: [String : String]? {
+    public var headers: [String : String]? {
         return nil
     }
     
-    var parameters: [String: Any]? {
+    public var parameters: [String: Any]? {
         switch self {
         case .getAllNotices:
             return nil
@@ -71,7 +71,7 @@ extension NoticeTargetType: MoyaErrorHandleable {
         }
     }
     
-    var task: Moya.Task {
+    public var task: Moya.Task {
         if method == .get {
             let encoding: URLEncoding = .queryString
             if let parameters = parameters {
@@ -87,7 +87,7 @@ extension NoticeTargetType: MoyaErrorHandleable {
 }
 
 extension NoticeTargetType {
-    var dummyData: Data {
+    public var sampleData: Data {
         switch self {
         case .getAllNotices:
             return Data(

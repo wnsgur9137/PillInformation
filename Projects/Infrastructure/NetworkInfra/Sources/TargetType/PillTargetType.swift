@@ -9,18 +9,18 @@
 import Foundation
 import Moya
 
-enum PillTargetType {
+public enum PillTargetType {
     case getPillList(name: String)
     case getPillShapeList(shape: String, color: String, line: String)
     case getPillInfo(name: String)
 }
 
 extension PillTargetType: MoyaErrorHandleable {
-    var baseURL: URL {
+    public var baseURL: URL {
         return URL(string: "")!
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .getPillList: return "/getMedicineListName"
         case .getPillShapeList: return "/getMedicineListShape/"
@@ -28,7 +28,7 @@ extension PillTargetType: MoyaErrorHandleable {
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         // GET
         case .getPillList: return .get
@@ -37,11 +37,11 @@ extension PillTargetType: MoyaErrorHandleable {
         }
     }
     
-    var headers: [String : String]? {
+    public var headers: [String : String]? {
         return nil
     }
     
-    var parameters: [String: Any]? {
+    public var parameters: [String: Any]? {
         switch self {
         case let .getPillList(name):
             return ["medicineName": name]
@@ -56,7 +56,7 @@ extension PillTargetType: MoyaErrorHandleable {
         }
     }
     
-    var task: Moya.Task {
+    public var task: Moya.Task {
         if method == .get {
             let encoding: URLEncoding = .queryString
             if let parameters = parameters {
@@ -72,7 +72,7 @@ extension PillTargetType: MoyaErrorHandleable {
 }
 
 extension PillTargetType {
-    var dummyData: Data {
+    public var sampleData: Data {
         switch self {
         case .getPillList:
             return Data(

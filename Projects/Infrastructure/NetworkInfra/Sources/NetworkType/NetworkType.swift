@@ -15,24 +15,31 @@ protocol NetworkType {
     associatedtype T: MoyaErrorHandleable
     var provider: NetworkProvider<T> { get }
     
-    static func defaultNetworking() -> Self
-    static func stubbingNetworking(needFail: Bool) -> Self
+    static func defaultNetworking(baseURL: String) -> Self
+    static func stubbingNetworking(baseURL: String, needFail: Bool) -> Self
 }
 
 extension NetworkType {
-    static func endpointsClosure<T>() -> (T) -> Endpoint where T: TargetType {
+    static func endpointsClosure<T>(baseURL: String) -> (T) -> Endpoint where T: TargetType {
         return { target in
-            let endpoint = MoyaProvider.defaultEndpointMapping(for: target)
-            return endpoint
+            let url = baseURL + target.path
+            print("🚨url: \(url)")
+            return Endpoint(url: url,
+                                    sampleResponseClosure: { .networkResponse(200, target.sampleData )},
+                                    method: target.method,
+                                    task: target.task,
+                                    httpHeaderFields: target.headers)
         }
     }
     
-    static func failEndPointsClosure<T>() -> (T) -> Endpoint where T: TargetType {
+    static func failEndPointsClosure<T>(baseURL: String) -> (T) -> Endpoint where T: TargetType {
         return { target in
+            let url = baseURL + target.path
+            print("🚨url: \(url)")
             let sampleResponseClosure: () -> EndpointSampleResponse = {
                 EndpointSampleResponse.networkResponse(999, target.sampleData)
             }
-            return .init(url: URL(target: target).absoluteString,
+            return .init(url: url,
                          sampleResponseClosure: sampleResponseClosure,
                          method: target.method,
                          task: target.task,
@@ -63,5 +70,10 @@ extension NetworkType {
     // TODO: - Slack 등의 API를 이용한 로그 출력 구현 예정
     private static func getneratePlugIn() -> [PluginType] {
         return []
+    }
+    
+    func request(_ route: T) -> Single<Moya.Response> {
+        let actualRequest = self.provider.request(route)
+        return actualRequest
     }
 }

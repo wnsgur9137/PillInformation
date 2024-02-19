@@ -37,6 +37,9 @@ let defaultInfoPlist: [String: Plist.Value] = [
     ],
     "AppConfigurations": [
         "API_BASE_URL": "${API_BASE_URL}"
+    ],
+    "NSAppTransportSecurity": [
+        "NSAllowsArbitraryLoads": true
     ]
 ]
 
@@ -72,7 +75,8 @@ let targets: [Target] = [
            scripts: scripts,
            dependencies: [
             .Project.Presentations.BaseTab,
-            .Project.Domain.Domains
+            .Project.Domain.Domains,
+            .Project.Data.Data
            ] + TargetDependency.SwiftPM.all,
            settings: .settings(configurations: [
             .debug(name: .dev, 
@@ -101,6 +105,7 @@ let targets: [Target] = [
            dependencies: [
             .Project.Presentations.BaseTab,
             .Project.Domain.Domains,
+            .Project.Data.Data
            ] + TargetDependency.SwiftPM.all,
            settings: .settings(configurations: [
             .debug(name: .dev, 
