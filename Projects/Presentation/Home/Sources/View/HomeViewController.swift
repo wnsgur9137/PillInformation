@@ -49,6 +49,8 @@ public final class HomeViewController: UIViewController, View {
     }()
     
     private let footerView = FooterView()
+    
+    private var adapter: HomeAdapter?
     public var disposeBag = DisposeBag()
     
     // MARK: - LifeCycle
@@ -62,7 +64,11 @@ public final class HomeViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.systemBackground
-        setupTableView()
+        if let reactor = reactor {
+            adapter = HomeAdapter(tableView: noticeTableView,
+                                  dataSource: reactor,
+                                  delegate: self)
+        }
         
         setupLayout()
     }
@@ -80,12 +86,6 @@ public final class HomeViewController: UIViewController, View {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
-    }
-    
-    private func setupTableView() {
-        noticeTableView.dataSource = self
-        noticeTableView.delegate = self
-        noticeTableView.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
     }
 }
 
@@ -110,10 +110,9 @@ extension HomeViewController {
     
     private func bindState(_ reactor: HomeReactor) {
         reactor.state
-            .map { $0.notices }
-            .filter { $0 != nil }
-            .bind(onNext: { notices in
-                print("🥺 \(notices)")
+            .map { $0.isLoadedNotices }
+            .bind(onNext: { isLoadedNotices in
+                self.noticeTableView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -127,23 +126,9 @@ extension HomeViewController {
     }
 }
 
-// MARK: - UITableView DataSource
-extension HomeViewController: UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeTableViewCell.identifier, for: indexPath) as? NoticeTableViewCell else { return .init() }
-        cell.configure(title: "TEST")
-        cell.selectionStyle = .none
-        return cell
-    }
-}
-
-// MARK: - UITableView Delegate
-extension HomeViewController: UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+// MARK: - HomeAdapter Delegate
+extension HomeViewController: HomeAdapterDelegate {
+    public func didSelectRow(at indexPath: IndexPath) {
         let viewController = UIViewController()
         viewController.view.backgroundColor = .systemBackground
         navigationController?.pushViewController(viewController, animated: true)
@@ -156,8 +141,10 @@ extension HomeViewController {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
         view.addSubview(scrollView)
         
+        print("UIScreen.main.bounds.height: \(UIScreen.main.bounds.height)")
         scrollView.flex.define { scrollView in
             scrollView.addItem(contentView)
+                .minHeight(UIScreen.main.bounds.height - 200)
                 .define { contentView in
                     contentView.addItem(titleImageView)
                         .height(120)
@@ -172,6 +159,7 @@ extension HomeViewController {
                     contentView.addItem(noticeTableView)
                         .margin(contentMargin)
                         .marginBottom(24.0)
+                        .grow(1)
             }
             scrollView.addItem(footerView)
         }

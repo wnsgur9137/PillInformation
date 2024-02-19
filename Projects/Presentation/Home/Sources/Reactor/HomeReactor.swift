@@ -19,13 +19,13 @@ public final class HomeReactor: Reactor {
     }
     
     public enum Mutation {
-        case notices([Notice])
+        case loadNotices
         case testData([String])
     }
     
     public struct State {
         var isLoading: Bool = true
-        var notices: [Notice]?
+        var isLoadedNotices: Bool = false
         var testData: [String]?
     }
     
@@ -33,18 +33,31 @@ public final class HomeReactor: Reactor {
     private let disposeBag = DisposeBag()
     private let homeUseCase: HomeUseCase
     
+    private var notices: [Notice] = []
+    
     public init(with useCase: HomeUseCase) {
         self.homeUseCase = useCase
     }
+    
+    private func loadNotice() -> Observable<[Notice]> {
+        return homeUseCase.executeNotice()
+            .asObservable()
+    }
+    private func loadTest() -> Observable<[String]> {
+        return homeUseCase.executeTestData()
+            .asObservable()
+    }
 }
 
+// MARK: - React
 extension HomeReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .loadNotices:
             return loadNotice()
-                .flatMap { notices -> Observable<Mutation> in
-                    return .just(.notices(notices))
+                .flatMap { [weak self] notice -> Observable<Mutation> in
+                    self?.notices = notice
+                    return .just(.loadNotices)
                 }
             
         case .loadTestData:
@@ -58,8 +71,8 @@ extension HomeReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .notices(notices):
-            state.notices = notices
+        case .loadNotices:
+            state.isLoadedNotices = true
             
         case let .testData(testData):
             state.testData = testData
@@ -68,13 +81,15 @@ extension HomeReactor {
     }
 }
 
-extension HomeReactor {
-    private func loadNotice() -> Observable<[Notice]> {
-        return homeUseCase.executeNotice()
-            .asObservable()
+// MARK: - HomeAdapter DataSource
+extension HomeReactor: HomeAdapterDataSource {
+    public func numberOfRowsIn(section: Int) -> Int {
+        return notices.count
     }
-    private func loadTest() -> Observable<[String]> {
-        return homeUseCase.executeTestData()
-            .asObservable()
+    
+    public func cellForRow(at indexPath: IndexPath) -> HomeDomain.Notice? {
+        return notices[indexPath.row]
     }
+    
+    
 }

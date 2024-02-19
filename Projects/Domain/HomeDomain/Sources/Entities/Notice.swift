@@ -9,10 +9,10 @@
 import Foundation
 
 public struct Notice {
-    let title: String
-    let writer: String
-    let content: String
-    let writedDate: Date?
+    public let title: String
+    public let writer: String
+    public let content: String
+    public let writedDate: Date?
     
     public init(title: String, writer: String, content: String, writedDate: Date?) {
         self.title = title
