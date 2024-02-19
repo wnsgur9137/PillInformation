@@ -7,12 +7,19 @@
 //
 
 import Foundation
+import NetworkInfra
 
 final class AppDIContainer {
     lazy var appConfiguration = AppConfiguration()
     
+    lazy var networkManager: NetworkInfra.NetworkManager = {
+        return NetworkInfra.NetworkManager(withTest: false,
+                                           withFail: false,
+                                           baseURL: appConfiguration.apiBaseURL)
+    }()
+    
     func makeMainSceneDIContainer() -> MainSceneDIContainer {
-        let test = appConfiguration.apiBaseURL
-        return MainSceneDIContainer()
+        let dependencies = MainSceneDIContainer.Dependencies(networkManager: networkManager)
+        return MainSceneDIContainer(dependencies: dependencies)
     }
 }

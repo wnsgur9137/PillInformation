@@ -14,20 +14,20 @@ struct NoticeNetworkType: NetworkType {
     typealias T = NoticeTargetType
     let provider: NetworkProvider<T>
     
-    static func defaultNetworking() -> NoticeNetworkType {
-        return NoticeNetworkType(provider: NetworkProvider(endpointClosure: NoticeNetworkType.endpointsClosure(),
+    static func defaultNetworking(baseURL: String) -> NoticeNetworkType {
+        return NoticeNetworkType(provider: NetworkProvider(endpointClosure: NoticeNetworkType.endpointsClosure(baseURL: baseURL),
                                                            requestClosure: NoticeNetworkType.endpointResolver(),
                                                            stubClosure: NoticeNetworkType.APIKeysBasedStubBehaviour,
                                                            plugins: plugins))
     }
     
-    static func stubbingNetworking(needFail: Bool) -> NoticeNetworkType {
+    static func stubbingNetworking(baseURL: String, needFail: Bool) -> NoticeNetworkType {
         if needFail {
-            return NoticeNetworkType(provider: NetworkProvider(endpointClosure: failEndPointsClosure(),
+            return NoticeNetworkType(provider: NetworkProvider(endpointClosure: failEndPointsClosure(baseURL: baseURL),
                                                                requestClosure: NoticeNetworkType.endpointResolver(),
                                                                stubClosure: MoyaProvider.immediatelyStub))
         }
-        return NoticeNetworkType(provider: NetworkProvider(endpointClosure: endpointsClosure(),
+        return NoticeNetworkType(provider: NetworkProvider(endpointClosure: endpointsClosure(baseURL: baseURL),
                                                            requestClosure: NoticeNetworkType.endpointResolver(),
                                                            stubClosure: MoyaProvider.immediatelyStub))
     }

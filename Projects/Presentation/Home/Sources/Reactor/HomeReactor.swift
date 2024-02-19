@@ -10,41 +10,71 @@ import Foundation
 import RxSwift
 import RxCocoa
 import ReactorKit
+import HomeDomain
 
 public final class HomeReactor: Reactor {
     public enum Action {
-        case didTapTestButton
+        case loadNotices
+        case loadTestData
     }
     
     public enum Mutation {
-        case didTappedTestButton
+        case notices([Notice])
+        case testData([String])
     }
     
     public struct State {
-        var isLoading: Bool = false
+        var isLoading: Bool = true
+        var notices: [Notice]?
+        var testData: [String]?
     }
     
     public var initialState = State()
+    private let disposeBag = DisposeBag()
+    private let homeUseCase: HomeUseCase
     
-    public init() {
-        
+    public init(with useCase: HomeUseCase) {
+        self.homeUseCase = useCase
     }
 }
 
 extension HomeReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .didTapTestButton:
-            return Observable.just(.didTappedTestButton)
+        case .loadNotices:
+            return loadNotice()
+                .flatMap { notices -> Observable<Mutation> in
+                    return .just(.notices(notices))
+                }
+            
+        case .loadTestData:
+            return loadTest()
+                .flatMap { testData -> Observable<Mutation> in
+                    return .just(.testData(testData))
+                }
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .didTappedTestButton:
-            state.isLoading = true
+        case let .notices(notices):
+            state.notices = notices
+            
+        case let .testData(testData):
+            state.testData = testData
         }
         return state
+    }
+}
+
+extension HomeReactor {
+    private func loadNotice() -> Observable<[Notice]> {
+        return homeUseCase.executeNotice()
+            .asObservable()
+    }
+    private func loadTest() -> Observable<[String]> {
+        return homeUseCase.executeTestData()
+            .asObservable()
     }
 }

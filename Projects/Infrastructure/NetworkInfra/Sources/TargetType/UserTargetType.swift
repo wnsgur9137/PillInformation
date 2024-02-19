@@ -9,7 +9,7 @@
 import Foundation
 import Moya
 
-enum UserTargetType {
+public enum UserTargetType {
     case getUserInfo(email: String)
     case getNicknameCheck(nickname: String)
     case postUserInfo(email: String, nickname: String, updateDate: String)
@@ -18,11 +18,11 @@ enum UserTargetType {
 }
 
 extension UserTargetType: MoyaErrorHandleable {
-    var baseURL: URL {
+    public var baseURL: URL {
         return URL(string: "")!
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .getUserInfo: return "/getUserInfo/"
         case .getNicknameCheck: return "/getNicknameCheck/"
@@ -32,7 +32,7 @@ extension UserTargetType: MoyaErrorHandleable {
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         // GET
         case .getUserInfo: return .get
@@ -44,11 +44,11 @@ extension UserTargetType: MoyaErrorHandleable {
         }
     }
     
-    var headers: [String : String]? {
+    public var headers: [String : String]? {
         return nil
     }
     
-    var parameters: [String: Any]? {
+    public var parameters: [String: Any]? {
         switch self {
         case let .getUserInfo(email): 
             return ["email": email]
@@ -71,7 +71,7 @@ extension UserTargetType: MoyaErrorHandleable {
         }
     }
     
-    var task: Moya.Task {
+    public var task: Moya.Task {
         if method == .get {
             let encoding: URLEncoding = .queryString
             if let parameters = parameters {
@@ -87,7 +87,7 @@ extension UserTargetType: MoyaErrorHandleable {
 }
 
 extension UserTargetType {
-    var dummyData: Data {
+    public var sampleData: Data {
         switch self {
         case .getUserInfo:
             return Data(

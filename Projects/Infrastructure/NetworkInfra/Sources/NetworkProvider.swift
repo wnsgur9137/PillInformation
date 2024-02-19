@@ -39,7 +39,7 @@ extension NetworkProvider {
             .catch(route.rest)
             .do (
                 onSuccess: { response in
-                    print("response: \(response)")
+//                    print("response: \(String(describing: String(data: response.data, encoding: .utf8)))")
                 },
                 onError: { rawError in
                     switch rawError {

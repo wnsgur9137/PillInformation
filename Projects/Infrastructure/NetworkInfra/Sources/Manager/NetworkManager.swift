@@ -11,21 +11,22 @@ import RxSwift
 import RxCocoa
 import Moya
 
-final class NetworkManager {
+public final class NetworkManager {
     let userProvider: UserNetworkType
     let pillProvider: PillNetworkType
     let noticeProvider: NoticeNetworkType
     
-    init(withTest: Bool = false,
-         withFail: Bool = false) {
+    public init(withTest: Bool,
+         withFail: Bool,
+         baseURL: String) {
         if withTest {
-            self.userProvider = .stubbingNetworking(needFail: withFail)
-            self.pillProvider = .stubbingNetworking(needFail: withFail)
-            self.noticeProvider = .stubbingNetworking(needFail: withFail)
+            self.userProvider = .stubbingNetworking(baseURL: baseURL, needFail: withFail)
+            self.pillProvider = .stubbingNetworking(baseURL: baseURL, needFail: withFail)
+            self.noticeProvider = .stubbingNetworking(baseURL: baseURL, needFail: withFail)
         } else {
-            self.userProvider = .defaultNetworking()
-            self.pillProvider = .defaultNetworking()
-            self.noticeProvider = .defaultNetworking()
+            self.userProvider = .defaultNetworking(baseURL: baseURL)
+            self.pillProvider = .defaultNetworking(baseURL: baseURL)
+            self.noticeProvider = .defaultNetworking(baseURL: baseURL)
         }
     }
 }
