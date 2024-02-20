@@ -11,7 +11,6 @@ import RxSwift
 
 public protocol HomeUseCase {
     func executeNotice() -> Single<[Notice]>
-    func executeTestData() -> Single<[String]>
 }
 
 public final class DefaultHomeUseCase: HomeUseCase {
@@ -26,9 +25,5 @@ public final class DefaultHomeUseCase: HomeUseCase {
 public extension DefaultHomeUseCase {
     func executeNotice() -> Single<[Notice]> {
         return homeRepository.executeNotices()
-    }
-    
-    func executeTestData() -> Single<[String]> {
-        return homeRepository.executeTest()
     }
 }

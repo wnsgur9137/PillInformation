@@ -74,7 +74,6 @@ public extension TargetDependency.Project.Data {
 public extension TargetDependency.Project.Infrastructure {
     static let Infrastructures: TargetDependency = .project(layer: .infrastructure, name: "Infrastructures")
     static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
-    static let Adapter: TargetDependency = .project(layer: .infrastructure, name: "Adapter")
     static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
     static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
 }

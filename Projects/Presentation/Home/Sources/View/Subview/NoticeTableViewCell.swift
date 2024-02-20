@@ -43,7 +43,6 @@ extension NoticeTableViewCell {
         
         rootFlexContainerView.flex
             .justifyContent(.center)
-            .alignItems(.start)
             .define { rootView in
             rootView.addItem(titleLabel)
                     .margin(UIEdgeInsets(top: 0, left: 24.0, bottom: 0, right: 24.0))
