@@ -12,7 +12,6 @@ import UtilityPlugin
 let project = Project.staticFramework(
     name: "Infrastructures",
     dependencies: [
-        TargetDependency.Project.Infrastructure.Adapter,
         TargetDependency.Project.Infrastructure.Builder,
         TargetDependency.Project.Infrastructure.NetworkInfra,
         TargetDependency.Project.Infrastructure.ReuseableView,

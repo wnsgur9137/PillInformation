@@ -101,11 +101,6 @@ extension HomeViewController {
             .map { Reactor.Action.loadNotices }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        self.rx.viewWillAppear
-            .map { Reactor.Action.loadTestData }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeReactor) {
@@ -113,14 +108,7 @@ extension HomeViewController {
             .map { $0.isLoadedNotices }
             .bind(onNext: { isLoadedNotices in
                 self.noticeTableView.reloadData()
-            })
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.testData }
-            .filter { $0 != nil }
-            .bind(onNext: { testData in
-                print("testData: \(testData)")
+                self.updateSubviewLayout()
             })
             .disposed(by: disposeBag)
     }
@@ -141,11 +129,8 @@ extension HomeViewController {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
         view.addSubview(scrollView)
         
-        print("UIScreen.main.bounds.height: \(UIScreen.main.bounds.height)")
         scrollView.flex.define { scrollView in
-            scrollView.addItem(contentView)
-                .minHeight(UIScreen.main.bounds.height - 200)
-                .define { contentView in
+            scrollView.addItem(contentView).define { contentView in
                     contentView.addItem(titleImageView)
                         .height(120)
                     contentView.addItem(titleLabel)
@@ -160,10 +145,9 @@ extension HomeViewController {
                         .margin(contentMargin)
                         .marginBottom(24.0)
                         .grow(1)
+                    contentView.addItem(footerView)
             }
-            scrollView.addItem(footerView)
         }
-        
     }
     
     private func setupSubviewLayout() {
@@ -172,7 +156,15 @@ extension HomeViewController {
         
         contentView.flex.layout()
         let scrollViewContentSize: CGSize = CGSize(width: contentView.frame.width,
-                                                   height: contentView.frame.height + footerView.frame.height)
+                                                   height: contentView.frame.height)
+        scrollView.contentSize = scrollViewContentSize
+    }
+    
+    private func updateSubviewLayout() {
+        contentView.flex.layout(mode: .adjustHeight)
+        scrollView.flex.layout()
+        let scrollViewContentSize: CGSize = CGSize(width: contentView.frame.width,
+                                                   height: contentView.frame.height)
         scrollView.contentSize = scrollViewContentSize
     }
 }

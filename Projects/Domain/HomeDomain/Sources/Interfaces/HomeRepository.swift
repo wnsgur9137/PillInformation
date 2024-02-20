@@ -12,5 +12,4 @@ import RxCocoa
 
 public protocol HomeRepository {
     func executeNotices() -> Single<[Notice]>
-    func executeTest() -> Single<[String]>
 }

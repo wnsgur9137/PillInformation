@@ -18,8 +18,4 @@ public extension NetworkManager {
     func requestNotices() -> Single<NoticeListResponseDTO> {
         return requestObject(.getAllNotices, type: NoticeListResponseDTO.self)
     }
-    
-    func requestTest() -> Single<[String]> {
-        return .just(["Test", "1", "2"])
-    }
 }

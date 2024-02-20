@@ -26,8 +26,4 @@ public final class DefaultHomeRepository: HomeRepository {
             return noticeListResponseDTO.noticeList.map { $0.toDomain() }
         }
     }
-    
-    public func executeTest() -> Single<[String]> {
-        return networkManager.requestTest()
-    }
 }

@@ -15,18 +15,15 @@ import HomeDomain
 public final class HomeReactor: Reactor {
     public enum Action {
         case loadNotices
-        case loadTestData
     }
     
     public enum Mutation {
         case loadNotices
-        case testData([String])
     }
     
     public struct State {
         var isLoading: Bool = true
         var isLoadedNotices: Bool = false
-        var testData: [String]?
     }
     
     public var initialState = State()
@@ -43,10 +40,6 @@ public final class HomeReactor: Reactor {
         return homeUseCase.executeNotice()
             .asObservable()
     }
-    private func loadTest() -> Observable<[String]> {
-        return homeUseCase.executeTestData()
-            .asObservable()
-    }
 }
 
 // MARK: - React
@@ -59,12 +52,6 @@ extension HomeReactor {
                     self?.notices = notice
                     return .just(.loadNotices)
                 }
-            
-        case .loadTestData:
-            return loadTest()
-                .flatMap { testData -> Observable<Mutation> in
-                    return .just(.testData(testData))
-                }
         }
     }
     
@@ -73,9 +60,6 @@ extension HomeReactor {
         switch mutation {
         case .loadNotices:
             state.isLoadedNotices = true
-            
-        case let .testData(testData):
-            state.testData = testData
         }
         return state
     }
