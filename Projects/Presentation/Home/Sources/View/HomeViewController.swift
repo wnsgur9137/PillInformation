@@ -34,6 +34,20 @@ public final class HomeViewController: UIViewController, View {
         return label
     }()
     
+    private let searchPillByShapeButtonView: SearchPillButtonView = {
+        let image = Constants.HomeViewController.Image.pills
+        let title = Constants.HomeViewController.searchPillByShape
+        let view = SearchPillButtonView(image: image, title: title)
+        return view
+    }()
+    
+    private let searchPillByPhotoButtonView: SearchPillButtonView = {
+        let image = Constants.HomeViewController.Image.camera
+        let title = Constants.HomeViewController.searchPillByPhoto
+        let view = SearchPillButtonView(image: image, title: title)
+        return view
+    }()
+    
     private let noticeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.notice
@@ -136,6 +150,16 @@ extension HomeViewController {
                     contentView.addItem(titleLabel)
                         .marginTop(24.0)
                         .alignSelf(.center)
+                
+                    contentView.addItem()
+                        .direction(.row)
+                        .justifyContent(.center)
+                        .define { buttonStack in
+                            buttonStack.addItem(searchPillByShapeButtonView)
+                                .margin(8.0)
+                            buttonStack.addItem(searchPillByPhotoButtonView)
+                                .margin(8.0)
+                        }
                     
                     contentView.addItem(noticeLabel)
                         .margin(contentMargin)
