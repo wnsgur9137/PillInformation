@@ -15,5 +15,6 @@ let project = Project.staticFramework(
         TargetDependency.Project.Infrastructure.Builder,
         TargetDependency.Project.Infrastructure.NetworkInfra,
         TargetDependency.Project.Infrastructure.ReuseableView,
+        TargetDependency.Project.Infrastructure.Service
     ]
 )
