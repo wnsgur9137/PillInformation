@@ -6,9 +6,10 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Common
 
-extension Constants.Image {
-    
+extension Constants.HomeViewController.Image {
+    static let pills: UIImage = .init(systemName: "pills.fill") ?? UIImage()
+    static let camera: UIImage = .init(systemName: "camera") ?? UIImage()
 }

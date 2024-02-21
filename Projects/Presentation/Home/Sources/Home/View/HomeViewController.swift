@@ -34,6 +34,20 @@ public final class HomeViewController: UIViewController, View {
         return label
     }()
     
+    private let searchPillByShapeButtonView: SearchPillButtonView = {
+        let image = Constants.HomeViewController.Image.pills
+        let title = Constants.HomeViewController.searchPillByShape
+        let view = SearchPillButtonView(image: image, title: title)
+        return view
+    }()
+    
+    private let searchPillByPhotoButtonView: SearchPillButtonView = {
+        let image = Constants.HomeViewController.Image.camera
+        let title = Constants.HomeViewController.searchPillByPhoto
+        let view = SearchPillButtonView(image: image, title: title)
+        return view
+    }()
+    
     private let noticeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.notice
@@ -69,7 +83,7 @@ public final class HomeViewController: UIViewController, View {
                                   dataSource: reactor,
                                   delegate: self)
         }
-        
+        setupSearchButtons()
         setupLayout()
     }
     
@@ -86,6 +100,25 @@ public final class HomeViewController: UIViewController, View {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
+    }
+}
+
+// MARK: - Functions
+extension HomeViewController {
+    private func setupSearchButtons() {
+        searchPillByShapeButtonView.button.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                print("Search Pill by Shape")
+            })
+            .disposed(by: disposeBag)
+        
+        searchPillByPhotoButtonView.button.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                print("Search Pill by Photo")
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -117,9 +150,7 @@ extension HomeViewController {
 // MARK: - HomeAdapter Delegate
 extension HomeViewController: HomeAdapterDelegate {
     public func didSelectRow(at indexPath: IndexPath) {
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .systemBackground
-        navigationController?.pushViewController(viewController, animated: true)
+        reactor?.didSelectNoticeRow(at: indexPath.row)
     }
 }
 
@@ -136,10 +167,21 @@ extension HomeViewController {
                     contentView.addItem(titleLabel)
                         .marginTop(24.0)
                         .alignSelf(.center)
+                
+                    contentView.addItem()
+                        .direction(.row)
+                        .justifyContent(.center)
+                        .marginTop(24.0)
+                        .define { buttonStack in
+                            buttonStack.addItem(searchPillByShapeButtonView)
+                                .margin(8.0)
+                            buttonStack.addItem(searchPillByPhotoButtonView)
+                                .margin(8.0)
+                        }
                     
                     contentView.addItem(noticeLabel)
                         .margin(contentMargin)
-                        .marginTop(48.0)
+                        .marginTop(24.0)
                         .marginLeft(36.0)
                     contentView.addItem(noticeTableView)
                         .margin(contentMargin)
@@ -155,16 +197,14 @@ extension HomeViewController {
         scrollView.flex.layout()
         
         contentView.flex.layout()
-        let scrollViewContentSize: CGSize = CGSize(width: contentView.frame.width,
-                                                   height: contentView.frame.height)
-        scrollView.contentSize = scrollViewContentSize
+        scrollView.contentSize = CGSize(width: contentView.frame.width,
+                                        height: contentView.frame.height)
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.flex.layout()
-        let scrollViewContentSize: CGSize = CGSize(width: contentView.frame.width,
-                                                   height: contentView.frame.height)
-        scrollView.contentSize = scrollViewContentSize
+        scrollView.contentSize = CGSize(width: contentView.frame.width,
+                                        height: contentView.frame.height)
     }
 }

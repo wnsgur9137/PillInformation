@@ -9,21 +9,21 @@
 import Foundation
 import RxSwift
 
-public protocol HomeUseCase {
+public protocol NoticeUseCase {
     func executeNotice() -> Single<[Notice]>
 }
 
-public final class DefaultHomeUseCase: HomeUseCase {
+public final class DefaultNoticeUseCase: NoticeUseCase {
     
-    private let homeRepository: HomeRepository
+    private let noticeRepository: NoticeRepository
     
-    public init(with repository: HomeRepository) {
-        self.homeRepository = repository
+    public init(with repository: NoticeRepository) {
+        self.noticeRepository = repository
     }
 }
 
-public extension DefaultHomeUseCase {
+public extension DefaultNoticeUseCase {
     func executeNotice() -> Single<[Notice]> {
-        return homeRepository.executeNotices()
+        return noticeRepository.executeNotices()
     }
 }

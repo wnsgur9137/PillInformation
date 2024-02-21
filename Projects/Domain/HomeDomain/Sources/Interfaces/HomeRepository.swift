@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public protocol HomeRepository {
+public protocol NoticeRepository {
     func executeNotices() -> Single<[Notice]>
 }

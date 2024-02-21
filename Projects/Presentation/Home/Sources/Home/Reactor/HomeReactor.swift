@@ -12,6 +12,10 @@ import RxCocoa
 import ReactorKit
 import HomeDomain
 
+public struct HomeFlowAction {
+    let showNoticeDetailViewController: (Notice) -> Void
+}
+
 public final class HomeReactor: Reactor {
     public enum Action {
         case loadNotices
@@ -27,17 +31,20 @@ public final class HomeReactor: Reactor {
     }
     
     public var initialState = State()
+    public let flowAction: HomeFlowAction
     private let disposeBag = DisposeBag()
-    private let homeUseCase: HomeUseCase
+    private let noticeUseCase: NoticeUseCase
     
     private var notices: [Notice] = []
     
-    public init(with useCase: HomeUseCase) {
-        self.homeUseCase = useCase
+    public init(with useCase: NoticeUseCase,
+                flowAction: HomeFlowAction) {
+        self.noticeUseCase = useCase
+        self.flowAction = flowAction
     }
     
     private func loadNotice() -> Observable<[Notice]> {
-        return homeUseCase.executeNotice()
+        return noticeUseCase.executeNotice()
             .asObservable()
     }
 }
@@ -65,6 +72,13 @@ extension HomeReactor {
     }
 }
 
+// MARK: - Flow Action
+extension HomeReactor {
+    func didSelectNoticeRow(at index: Int) {
+        flowAction.showNoticeDetailViewController(self.notices[index])
+    }
+}
+
 // MARK: - HomeAdapter DataSource
 extension HomeReactor: HomeAdapterDataSource {
     public func numberOfRowsIn(section: Int) -> Int {
@@ -74,6 +88,4 @@ extension HomeReactor: HomeAdapterDataSource {
     public func cellForRow(at indexPath: IndexPath) -> HomeDomain.Notice? {
         return notices[indexPath.row]
     }
-    
-    
 }

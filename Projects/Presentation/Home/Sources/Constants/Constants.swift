@@ -10,9 +10,11 @@ import Foundation
 import Common
 
 extension Constants {
-    public struct HomeViewController {
-        public static let title = "PillInformation"
-        public static let searchPillByPhoto = "사진으로 검색하기"
-        public static let notice = "공지"
+    struct HomeViewController {
+        struct Image { }
+    }
+    
+    struct NoticeDetailViewController {
+        struct Image { }
     }
 }

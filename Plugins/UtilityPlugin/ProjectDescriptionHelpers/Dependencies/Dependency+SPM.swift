@@ -51,7 +51,8 @@ public extension TargetDependency.SwiftPM.Layout {
 public extension TargetDependency.SwiftPM.UI {
     static let skeletonView: TargetDependency = .package(product: "SkeletonView")
     static let kingFisher: TargetDependency = .package(product: "Kingfisher")
-    static let package: [TargetDependency] = [skeletonView, kingFisher]
+    static let dropDown: TargetDependency = .package(product: "DropDown")
+    static let package: [TargetDependency] = [skeletonView, kingFisher, dropDown]
 }
 public extension TargetDependency.SwiftPM.Test {
     static let rxBlocking: TargetDependency = .package(product: "RxBlocking")
@@ -78,7 +79,8 @@ public extension Package.Reactive {
 public extension Package.Layout {
     static let flexLayout: Package = .package(url: "https://github.com/layoutBox/FlexLayout", .branch("master"))
     static let pinLayout: Package = .package(url: "https://github.com/layoutBox/PinLayout", .branch("master"))
-    static let package: [Package] = [flexLayout, pinLayout]
+    static let dropDown: Package = .package(url: "https://github.com/AssistoLab/DropDown", .branch("master"))
+    static let package: [Package] = [flexLayout, pinLayout, dropDown]
 }
 public extension Package.UI {
     static let skeletonView: Package = .package(url: "https://github.com/Juanpe/SkeletonView", .upToNextMajor(from: "1.0.0"))
