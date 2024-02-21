@@ -76,6 +76,7 @@ public extension TargetDependency.Project.Infrastructure {
     static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
     static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
     static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
+    static let Service: TargetDependency = .project(layer: .infrastructure, name: "Service")
 }
 
 // MARK: - Common
