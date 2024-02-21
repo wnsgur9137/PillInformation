@@ -13,4 +13,8 @@ extension Constants {
     struct HomeViewController {
         struct Image { }
     }
+    
+    struct NoticeDetailViewController {
+        struct Image { }
+    }
 }

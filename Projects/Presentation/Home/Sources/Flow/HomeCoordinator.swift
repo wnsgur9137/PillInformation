@@ -8,9 +8,11 @@
 
 import UIKit
 import Common
+import HomeDomain
 
 public protocol HomeCoordinatorDependencies {
-    func makeHomeViewController() -> HomeViewController
+    func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController
+    func makeNoticeDetailViewController(notice: Notice, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
 }
 
 public protocol HomeCoordinator: Coordinator {
@@ -25,6 +27,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     
     private let dependencies: HomeCoordinatorDependencies
     private weak var homeViewController: HomeViewController?
+    private weak var noticeDetailViewController: NoticeDetailViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: HomeCoordinatorDependencies) {
@@ -37,8 +40,16 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     }
     
     public func showHomeViewController() {
-        let viewController = dependencies.makeHomeViewController()
+        let flowAction = HomeFlowAction(showNoticeDetailViewController: showNoticeDetailViewController)
+        let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController
+    }
+    
+    private func showNoticeDetailViewController(notice: Notice) {
+        let flowAction = NoticeDetailFlowAction(showNoticeDetailViewController: showNoticeDetailViewController)
+        let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        noticeDetailViewController = viewController
     }
 }

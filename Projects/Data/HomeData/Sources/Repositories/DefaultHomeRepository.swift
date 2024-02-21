@@ -13,7 +13,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public final class DefaultHomeRepository: HomeRepository {
+public final class DefaultNoticeRepository: NoticeRepository {
     private let networkManager: NetworkManager
     private let disposeBag = DisposeBag()
     

@@ -43,23 +43,33 @@ final class MainSceneDIContainer {
 
 // MARK: - Home
 extension MainSceneDIContainer: HomeCoordinatorDependencies {
-    func makeHomeRepository() -> HomeDomain.HomeRepository {
-        return HomeData.DefaultHomeRepository(networkManager: dependencies.networkManager)
+    // Notice
+    func makeNoticeRepository() -> HomeDomain.NoticeRepository {
+        return HomeData.DefaultNoticeRepository(networkManager: dependencies.networkManager)
+    }
+    func makeNoticeUseCase() -> HomeDomain.NoticeUseCase {
+        return HomeDomain.DefaultNoticeUseCase(with: makeNoticeRepository())
     }
     
-    // UseCase
-    func makeHomeUseCase() -> HomeDomain.HomeUseCase {
-        return HomeDomain.DefaultHomeUseCase(with: makeHomeRepository())
+    // Home
+    func makeHomeReactor(flowAction: HomeFlowAction) -> Home.HomeReactor {
+        return Home.HomeReactor(with: makeNoticeUseCase(),
+                                flowAction: flowAction)
+    }
+    func makeHomeViewController(flowAction: HomeFlowAction) -> Home.HomeViewController {
+        return Home.HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
     }
     
-    // Reactor
-    func makeHomeReactor() -> Home.HomeReactor {
-        return Home.HomeReactor(with: makeHomeUseCase())
+    // NoticeDetail
+    func makeNoticeDetailReactor(notice: Notice, 
+                                 flowAction: NoticeDetailFlowAction) -> NoticeDetailReactor {
+        return NoticeDetailReactor(notice: notice,
+                                   noticeUseCase: makeNoticeUseCase(),
+                                   flowAction: flowAction)
     }
-    
-    // ViewController
-    func makeHomeViewController() -> Home.HomeViewController {
-        return Home.HomeViewController.create(with: makeHomeReactor())
+    func makeNoticeDetailViewController(notice: Notice, 
+                                        flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController {
+        return NoticeDetailViewController.create(with: makeNoticeDetailReactor(notice: notice, flowAction: flowAction))
     }
 }
 
