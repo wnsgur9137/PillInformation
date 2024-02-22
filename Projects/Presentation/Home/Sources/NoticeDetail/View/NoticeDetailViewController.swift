@@ -21,6 +21,8 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
+    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: navigationController)
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.suiteBold(32.0)
@@ -141,10 +143,11 @@ extension NoticeDetailViewController {
     private func setupLayout() {
         let defaultMargin = UIEdgeInsets(top: 24.0, left: 12.0, bottom: 0, right: 12.0)
         view.addSubview(scrollView)
+        view.addSubview(navigationView)
         
         scrollView.flex.define { scrollView in
             scrollView.addItem(contentView)
-                .marginTop(self.view.safeAreaInsets.top)
+                .marginTop(navigationView.height)
                 .define { contentView in
                     contentView.addItem(titleLabel)
                         .margin(defaultMargin)
@@ -184,6 +187,8 @@ extension NoticeDetailViewController {
     }
     
     private func setupSubviewLayout() {
+        navigationView.pin.top().left().right()
+        navigationView.flex.layout()
         scrollView.pin.all()
         scrollView.flex.layout()
         contentView.flex.layout()

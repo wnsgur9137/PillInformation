@@ -15,6 +15,8 @@ extension Constants {
         public static let systemWhite: UIColor = .white
         public static let systemLabel: UIColor = .label
         public static let systemBackground: UIColor = .systemBackground
+        public static let systemRed: UIColor = .systemRed
+        public static let systemBlue: UIColor = .systemBlue
         public static let systemGray: UIColor = .gray
         public static let systemLightGray: UIColor = .lightGray
         public static let systemDarkGray: UIColor = .darkGray
