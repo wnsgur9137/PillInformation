@@ -13,21 +13,59 @@ import Common
 
 public final class NavigationView: UIView {
     private let rootFlexContainerView = UIView()
-    private lazy var textField: UITextField = {
-        let textField = UITextField()
-        return textField
+    
+    private let backwardButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.NavigationView.Image.backward, for: .normal)
+        button.tintColor = Constants.Color.systemBlue
+        return button
     }()
+    
+    private let titleView = UIView()
     
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.image = Constants.Image.
+        imageView.backgroundColor = .darkGray
+        imageView.image = Constants.NavigationView.Image.titleImage
         return imageView
     }()
     
-    public init() {
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.appName
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteBold(24.0)
+        return label
+    }()
+    
+    private lazy var textField: UITextField = {
+        let textField = UITextField()
+        textField.backgroundColor = Constants.Color.systemLightGray
+        return textField
+    }()
+    
+    private lazy var searchButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Constants.NavigationView.search, for: .normal)
+        button.setTitleColor(Constants.Color.systemLabel, for: .normal)
+        return button
+    }()
+    
+    private let useTextField: Bool
+    private weak var navigationController: UINavigationController?
+    private let titleHeight: CGFloat = 45.0
+    private let titleMarginTop: CGFloat = 20.0
+    private let searchHeight: CGFloat = 40.0
+    public private(set) lazy var height: CGFloat = safeAreaInsets.top + titleMarginTop + titleHeight
+    
+    public init(useTextField: Bool,
+                isShowBackwardButton navigationController: UINavigationController? = nil) {
+        self.useTextField = useTextField
+        self.navigationController = navigationController
         super.init(frame: .zero)
-        backgroundColor = Constants.Color.systemBackground
+        if useTextField { self.height += searchHeight }
         setupLayout()
+        setupBackwardButtonAction()
     }
     
     required init?(coder: NSCoder) {
@@ -38,21 +76,70 @@ public final class NavigationView: UIView {
         super.layoutSubviews()
         setupSubviewLayout()
     }
+    
+    private func setupBackwardButtonAction() {
+        backwardButton.addAction(UIAction { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }, for: .touchUpInside)
+    }
 }
 
 // MARK: - Layout
 extension NavigationView {
     private func setupLayout() {
         addSubview(rootFlexContainerView)
-        
-        rootFlexContainerView.flex.define { rootView in
-            
+        if navigationController != nil {
+            addSubview(backwardButton)
         }
+        
+        rootFlexContainerView.flex
+            .backgroundColor(Constants.Color.systemBackground)
+            .define { rootView in
+                rootView.addItem(titleView)
+                    .direction(.row)
+                    .marginTop(safeAreaInsets.top + titleMarginTop)
+                    .height(titleHeight)
+                    .justifyContent(.center)
+                    .define { titleStack in
+                        titleStack.addItem(titleImageView)
+                            .height(24.0)
+                            .width(24.0)
+                            .margin(8.0)
+                        titleStack.addItem(titleLabel)
+                            .margin(8.0)
+                            .marginLeft(0)
+                    }
+                
+                if useTextField {
+                    rootView.addItem()
+                        .direction(.row)
+                        .height(searchHeight)
+                        .define { searchStack in
+                            searchStack.addItem(textField)
+                                .margin(UIEdgeInsets(top: 4.0, left: 8.0, bottom: 8.0, right: 4.0))
+                                .grow(1.0)
+                            searchStack.addItem(searchButton)
+                                .margin(UIEdgeInsets(top: 4.0, left: 4.0, bottom: 8.0, right: 8.0))
+                        }
+                }
+                
+                rootView.addItem()
+                    .height(1)
+                    .backgroundColor(Constants.Color.systemBlack)
+            }
     }
     
     private func setupSubviewLayout() {
         rootFlexContainerView.pin.all()
         rootFlexContainerView.flex.layout()
+        pin.height(height)
+        if navigationController != nil {
+            backwardButton.pin
+                .centerLeft(to: titleView.anchor.centerLeft)
+                .marginLeft(8.0)
+                .width(24.0)
+                .height(24.0)
+        }
     }
 }
 
@@ -60,7 +147,7 @@ extension NavigationView {
 import SwiftUI
 struct Preview: PreviewProvider {
     static var previews: some View {
-        NavigationView().toPreview()
+        NavigationView(useTextField: true).toPreview()
     }
 }
 #endif

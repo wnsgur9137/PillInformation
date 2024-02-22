@@ -19,20 +19,14 @@ public final class HomeViewController: UIViewController, View {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private let navigationView = NavigationView()
+    private lazy var navigationView = NavigationView(useTextField: true)
     
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.Color.systemLightGray
         return imageView
     }()
-
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = Constants.HomeViewController.title
-        label.font = Constants.Font.suiteBold(35.0)
-        return label
-    }()
+    
     
     private let searchPillByShapeButtonView: SearchPillButtonView = {
         let image = Constants.HomeViewController.Image.pills
@@ -94,7 +88,7 @@ public final class HomeViewController: UIViewController, View {
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+//        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -159,15 +153,15 @@ extension HomeViewController {
     private func setupLayout() {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
         view.addSubview(scrollView)
+        view.addSubview(navigationView)
         
         scrollView.flex.define { scrollView in
-            scrollView.addItem(contentView).define { contentView in
+            scrollView.addItem(contentView)
+                .marginTop(navigationView.height)
+                .define { contentView in
                     contentView.addItem(titleImageView)
                         .height(120)
-                    contentView.addItem(titleLabel)
-                        .marginTop(24.0)
-                        .alignSelf(.center)
-                
+                    
                     contentView.addItem()
                         .direction(.row)
                         .justifyContent(.center)
@@ -193,6 +187,9 @@ extension HomeViewController {
     }
     
     private func setupSubviewLayout() {
+        navigationView.pin.top().left().right()
+        navigationView.flex.layout()
+        
         scrollView.pin.all()
         scrollView.flex.layout()
         
