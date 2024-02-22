@@ -21,7 +21,7 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
-    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: navigationController)
+    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: true)
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -81,12 +81,19 @@ public final class NoticeDetailViewController: UIViewController, View {
                                                dataSource: reactor,
                                                delegate: self)
         }
+        setupBackwardButtonAction()
         setupLayout()
     }
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
+    }
+    
+    private func setupBackwardButtonAction() {
+        navigationView.setupBackwardButton(UIAction { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
     }
 }
 
@@ -193,13 +200,13 @@ extension NoticeDetailViewController {
         scrollView.flex.layout()
         contentView.flex.layout()
         scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height)
+                                        height: contentView.frame.height + navigationView.height)
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.flex.layout()
         scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height)
+                                        height: contentView.frame.height + navigationView.height)
     }
 }

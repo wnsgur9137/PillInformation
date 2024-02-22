@@ -52,20 +52,19 @@ public final class NavigationView: UIView {
     }()
     
     private let useTextField: Bool
-    private weak var navigationController: UINavigationController?
+    private let isShowBackwardButton: Bool
     private let titleHeight: CGFloat = 45.0
     private let titleMarginTop: CGFloat = 20.0
     private let searchHeight: CGFloat = 40.0
     public private(set) lazy var height: CGFloat = safeAreaInsets.top + titleMarginTop + titleHeight
     
     public init(useTextField: Bool,
-                isShowBackwardButton navigationController: UINavigationController? = nil) {
+                isShowBackwardButton: Bool = false) {
         self.useTextField = useTextField
-        self.navigationController = navigationController
+        self.isShowBackwardButton = isShowBackwardButton
         super.init(frame: .zero)
         if useTextField { self.height += searchHeight }
         setupLayout()
-        setupBackwardButtonAction()
     }
     
     required init?(coder: NSCoder) {
@@ -77,10 +76,9 @@ public final class NavigationView: UIView {
         setupSubviewLayout()
     }
     
-    private func setupBackwardButtonAction() {
-        backwardButton.addAction(UIAction { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        }, for: .touchUpInside)
+    public func setupBackwardButton(_ action: UIAction) {
+        guard isShowBackwardButton else { return }
+        backwardButton.addAction(action, for: .touchUpInside)
     }
 }
 
@@ -88,7 +86,7 @@ public final class NavigationView: UIView {
 extension NavigationView {
     private func setupLayout() {
         addSubview(rootFlexContainerView)
-        if navigationController != nil {
+        if isShowBackwardButton {
             addSubview(backwardButton)
         }
         
@@ -133,7 +131,7 @@ extension NavigationView {
         rootFlexContainerView.pin.all()
         rootFlexContainerView.flex.layout()
         pin.height(height)
-        if navigationController != nil {
+        if isShowBackwardButton {
             backwardButton.pin
                 .centerLeft(to: titleView.anchor.centerLeft)
                 .marginLeft(8.0)

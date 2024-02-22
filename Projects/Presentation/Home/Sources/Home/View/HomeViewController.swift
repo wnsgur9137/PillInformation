@@ -86,11 +86,6 @@ public final class HomeViewController: UIViewController, View {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-    }
-    
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
@@ -195,13 +190,13 @@ extension HomeViewController {
         
         contentView.flex.layout()
         scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height)
+                                        height: contentView.frame.height + navigationView.height)
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.flex.layout()
         scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height)
+                                        height: contentView.frame.height + navigationView.height)
     }
 }
