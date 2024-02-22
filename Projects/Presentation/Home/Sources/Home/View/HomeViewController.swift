@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxGesture
 import ReactorKit
 import FlexLayout
 import PinLayout
@@ -20,6 +21,12 @@ public final class HomeViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private lazy var navigationView = NavigationView(useTextField: true)
+    
+    private let keyboardBackgroundView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
     
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
@@ -78,6 +85,7 @@ public final class HomeViewController: UIViewController, View {
                                   delegate: self)
         }
         setupSearchButtons()
+        setupKeyboard()
         setupLayout()
     }
     
@@ -106,6 +114,29 @@ extension HomeViewController {
             .asDriver()
             .drive(onNext: {
                 print("Search Pill by Photo")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setupKeyboard() {
+        keyboardBackgroundView.rx.tapGesture()
+            .asDriver()
+            .drive(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+        
+        rx.showKeyboard
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { [weak self] _ in
+                self?.keyboardBackgroundView.isHidden = false
+            })
+            .disposed(by: disposeBag)
+        
+        rx.hideKeyboard
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { [weak self] _ in
+                self?.keyboardBackgroundView.isHidden = true
             })
             .disposed(by: disposeBag)
     }
@@ -148,6 +179,7 @@ extension HomeViewController {
     private func setupLayout() {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
         view.addSubview(scrollView)
+        view.addSubview(keyboardBackgroundView)
         view.addSubview(navigationView)
         
         scrollView.flex.define { scrollView in
@@ -182,12 +214,11 @@ extension HomeViewController {
     }
     
     private func setupSubviewLayout() {
+        keyboardBackgroundView.pin.all()
         navigationView.pin.top().left().right()
         navigationView.flex.layout()
-        
         scrollView.pin.all()
         scrollView.flex.layout()
-        
         contentView.flex.layout()
         scrollView.contentSize = CGSize(width: contentView.frame.width,
                                         height: contentView.frame.height + navigationView.height)
