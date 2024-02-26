@@ -10,7 +10,7 @@ import UIKit
 import Common
 
 public protocol SearchCoordinatorDependencies {
-    func makeSearchViewController() -> SearchViewController
+    func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController
 }
 
 public protocol SearchCoordinator: Coordinator {
@@ -37,7 +37,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     }
     
     public func showSearchViewController() {
-        let viewController = dependencies.makeSearchViewController()
+        let flowAction = SearchFlowAction()
+        let viewController = dependencies.makeSearchViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         searchViewController = viewController
     }

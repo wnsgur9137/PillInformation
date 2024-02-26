@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import ReactorKit
 import RxSwift
 import RxCocoa
 import RxGesture
-import ReactorKit
 import FlexLayout
 import PinLayout
+
 import Common
 import ReuseableView
 

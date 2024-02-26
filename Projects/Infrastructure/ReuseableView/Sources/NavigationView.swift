@@ -38,7 +38,7 @@ public final class NavigationView: UIView {
         return label
     }()
     
-    private lazy var textField: UITextField = {
+    public lazy var textField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants.Color.systemLightGray
         textField.autocorrectionType = .no

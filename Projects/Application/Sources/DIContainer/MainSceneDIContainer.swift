@@ -75,8 +75,12 @@ extension MainSceneDIContainer: HomeCoordinatorDependencies {
 
 // MARK: - Search
 extension MainSceneDIContainer: SearchCoordinatorDependencies {
-    func makeSearchViewController() -> Search.SearchViewController {
-        return Search.SearchViewController()
+    func makeSearchReactor(flowAction: SearchFlowAction) -> Search.SearchReactor {
+        return SearchReactor(flowAction: flowAction)
+    }
+    
+    func makeSearchViewController(flowAction: SearchFlowAction) -> Search.SearchViewController {
+        return Search.SearchViewController().create(with: makeSearchReactor(flowAction: flowAction))
     }
 }
 

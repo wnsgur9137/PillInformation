@@ -15,5 +15,5 @@ let project: Project = .framework(
         .Project.Common.Common,
         .Project.Infrastructure.Infrastructures,
         .Project.Domain.SearchDomain
-    ]
+    ] + TargetDependency.SwiftPM.presentationPackage
 )
