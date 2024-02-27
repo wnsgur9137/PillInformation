@@ -14,8 +14,8 @@ import RxSwift
 import RxCocoa
 import Moya
 
-public extension NetworkManager {
-    func requestNotices() -> Single<NoticeListResponseDTO> {
+extension NetworkManager {
+    public func requestNotices() -> Single<NoticeListResponseDTO> {
         return requestObject(.getAllNotices, type: NoticeListResponseDTO.self)
     }
 }

@@ -22,4 +22,32 @@ final class AppConfiguration {
         }
         return apiBaseURL
     }()
+    
+    lazy var medicineApiURL: String = {
+        guard let medicineApiURL = appConfigurations["MEDICINE_API_URL"] else {
+            fatalError("MEDICINE_API_URL must not be empty in plist")
+        }
+        return medicineApiURL
+    }()
+    
+    lazy var medicineApiKey: String = {
+        guard let medicineApiKey = appConfigurations["MEDICINE_API_KEY"] else {
+            fatalError("MEDICINE_API_KEY must not be empty in plist")
+        }
+        return medicineApiKey
+    }()
+    
+    lazy var medicineInfoApiURL: String = {
+        guard let medicineInfoApiURL = appConfigurations["MEDICINE_INFO_API_URL"] else {
+            fatalError("MEDICINE_INFO_API_URL must not be empty in plist")
+        }
+        return medicineInfoApiURL
+    }()
+    
+    lazy var medicineInfoApiKey: String = {
+        guard let medicineInfoApiKey = appConfigurations["MEDICINE_INFO_API_KEY"] else {
+            fatalError("MEDICINE_INFO_API_KEY must not be empty in plist")
+        }
+        return medicineInfoApiKey
+    }()
 }

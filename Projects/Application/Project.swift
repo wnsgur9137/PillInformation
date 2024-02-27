@@ -36,7 +36,11 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-SemiBold.otf"
     ],
     "AppConfigurations": [
-        "API_BASE_URL": "${API_BASE_URL}"
+        "API_BASE_URL": "${API_BASE_URL}",
+        "MEDICINE_API_URL": "${MEDICINE_API_URL}",
+        "MEDICINE_API_KEY": "${MEDICINE_KEY}",
+        "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
+        "MEDICINE_INFO_API_KEY": "${MEDICINE_INFO_API_KEY}"
     ],
     "NSAppTransportSecurity": [
         "NSAllowsArbitraryLoads": true
@@ -74,10 +78,11 @@ let targets: [Target] = [
            resources: .resources,
            scripts: scripts,
            dependencies: [
+            .Project.Presentations.Onboarding,
             .Project.Presentations.BaseTab,
-            .Project.Domain.Domains,
-            .Project.Data.Data
-           ] + TargetDependency.SwiftPM.all,
+           ] + TargetDependency.SwiftPM.all
+           + TargetDependency.Project.Data.All
+           + TargetDependency.Project.Domain.All,
            settings: .settings(configurations: [
             .debug(name: .dev, 
                    settings: [
@@ -103,10 +108,11 @@ let targets: [Target] = [
            resources: ["Resources/**"],
            scripts: scripts,
            dependencies: [
+            .Project.Presentations.Onboarding,
             .Project.Presentations.BaseTab,
-            .Project.Domain.Domains,
-            .Project.Data.Data
-           ] + TargetDependency.SwiftPM.all,
+           ] + TargetDependency.SwiftPM.all
+           + TargetDependency.Project.Data.All
+           + TargetDependency.Project.Domain.All,
            settings: .settings(configurations: [
             .debug(name: .dev, 
                    settings: [

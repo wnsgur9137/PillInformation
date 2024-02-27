@@ -15,7 +15,8 @@ import MyPage
 
 import HomeDomain
 import HomeData
-
+import SearchDomain
+import SearchData
 import NetworkInfra
 
 final class MainSceneDIContainer {
@@ -48,16 +49,16 @@ extension MainSceneDIContainer: HomeCoordinatorDependencies {
         return HomeData.DefaultNoticeRepository(networkManager: dependencies.networkManager)
     }
     func makeNoticeUseCase() -> HomeDomain.NoticeUseCase {
-        return HomeDomain.DefaultNoticeUseCase(with: makeNoticeRepository())
+        return DefaultNoticeUseCase(with: makeNoticeRepository())
     }
     
     // Home
     func makeHomeReactor(flowAction: HomeFlowAction) -> Home.HomeReactor {
-        return Home.HomeReactor(with: makeNoticeUseCase(),
+        return HomeReactor(with: makeNoticeUseCase(),
                                 flowAction: flowAction)
     }
     func makeHomeViewController(flowAction: HomeFlowAction) -> Home.HomeViewController {
-        return Home.HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
+        return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
     }
     
     // NoticeDetail
@@ -75,21 +76,30 @@ extension MainSceneDIContainer: HomeCoordinatorDependencies {
 
 // MARK: - Search
 extension MainSceneDIContainer: SearchCoordinatorDependencies {
-    func makeSearchViewController() -> Search.SearchViewController {
-        return Search.SearchViewController()
+    func makeSearchRepository() -> SearchDomain.SearchRepository {
+        return SearchData.DefaultSearchRepository(networkManager: dependencies.networkManager)
+    }
+    func makeSearchUseCase() -> SearchDomain.SearchUseCase {
+        return DefaultSearchUseCase(with: makeSearchRepository())
+    }
+    func makeSearchReactor(flowAction: SearchFlowAction) -> Search.SearchReactor {
+        return SearchReactor(with: makeSearchUseCase(), flowAction: flowAction)
+    }
+    func makeSearchViewController(flowAction: SearchFlowAction) -> Search.SearchViewController {
+        return SearchViewController().create(with: makeSearchReactor(flowAction: flowAction))
     }
 }
 
 // MARK: - Alarm
 extension MainSceneDIContainer: AlarmCoordinatorDependencies {
     func makeAlarmViewController() -> Alarm.AlarmViewController {
-        return Alarm.AlarmViewController()
+        return AlarmViewController()
     }
 }
 
 // MARK: - MyPage
 extension MainSceneDIContainer: MyPageCoordinatorDependencies {
     func makeMyPageViewController() -> MyPage.MyPageViewController {
-        return MyPage.MyPageViewController()
+        return MyPageViewController()
     }
 }

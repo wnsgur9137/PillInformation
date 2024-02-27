@@ -15,6 +15,10 @@ public protocol HomeCoordinatorDependencies {
     func makeNoticeDetailViewController(notice: Notice, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
 }
 
+public protocol HomeTabDependencies {
+    func changeTab(index: Int)
+}
+
 public protocol HomeCoordinator: Coordinator {
     func showHomeViewController()
 }
@@ -26,13 +30,16 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     public var type: CoordinatorType { .home }
     
     private let dependencies: HomeCoordinatorDependencies
+    private let tabDependencies: HomeTabDependencies
     private weak var homeViewController: HomeViewController?
     private weak var noticeDetailViewController: NoticeDetailViewController?
     
     public init(navigationController: UINavigationController,
-                dependencies: HomeCoordinatorDependencies) {
+                dependencies: HomeCoordinatorDependencies,
+                tabDependencies: HomeTabDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        self.tabDependencies = tabDependencies
     }
     
     public func start() {
@@ -40,7 +47,10 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     }
     
     public func showHomeViewController() {
-        let flowAction = HomeFlowAction(showNoticeDetailViewController: showNoticeDetailViewController)
+        let flowAction = HomeFlowAction(
+            showNoticeDetailViewController: showNoticeDetailViewController,
+            changeTabIndex: tabDependencies.changeTab
+        )
         let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController

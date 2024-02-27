@@ -12,7 +12,6 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "AlarmDomain",
     dependencies: [
-        .Project.Data.AlarmData,
         .SwiftPM.Reactive.rxSwift,
         .SwiftPM.Reactive.rxCocoa
     ]

@@ -13,7 +13,7 @@ let project: Project = .framework(
     name: "Search",
     dependencies: [
         .Project.Common.Common,
-        .Project.Infrastructure.Infrastructures,
         .Project.Domain.SearchDomain
-    ]
+    ] + TargetDependency.SwiftPM.presentationPackage
+    + TargetDependency.Project.Infrastructure.All
 )

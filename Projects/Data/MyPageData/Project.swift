@@ -12,6 +12,7 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "MyPageData",
     dependencies: [
+        .Project.Domain.MyPageDomain,
         .Project.Infrastructure.NetworkInfra,
         .Project.LibraryManager.NetworkLibraries,
         .Project.LibraryManager.ReactiveLibraries,

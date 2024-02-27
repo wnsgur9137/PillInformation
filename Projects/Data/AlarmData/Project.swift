@@ -12,6 +12,7 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "AlarmData",
     dependencies: [
+        .Project.Domain.AlarmDomain,
         .Project.Infrastructure.NetworkInfra,
         .Project.LibraryManager.NetworkLibraries,
         .Project.LibraryManager.ReactiveLibraries,

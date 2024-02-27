@@ -16,7 +16,7 @@ public struct NoticeResponseDTO: Decodable {
     let writedDate: Date?
 }
 
-public extension NoticeResponseDTO {
+extension NoticeResponseDTO {
     func toDomain() -> Notice {
         .init(title: self.title, writer: self.writer, content: self.content, writedDate: self.writedDate)
     }
