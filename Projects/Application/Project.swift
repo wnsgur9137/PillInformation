@@ -78,10 +78,11 @@ let targets: [Target] = [
            resources: .resources,
            scripts: scripts,
            dependencies: [
+            .Project.Presentations.Onboarding,
             .Project.Presentations.BaseTab,
-            .Project.Domain.Domains,
-            .Project.Data.Data
-           ] + TargetDependency.SwiftPM.all,
+           ] + TargetDependency.SwiftPM.all
+           + TargetDependency.Project.Data.All
+           + TargetDependency.Project.Domain.All,
            settings: .settings(configurations: [
             .debug(name: .dev, 
                    settings: [
@@ -107,10 +108,11 @@ let targets: [Target] = [
            resources: ["Resources/**"],
            scripts: scripts,
            dependencies: [
+            .Project.Presentations.Onboarding,
             .Project.Presentations.BaseTab,
-            .Project.Domain.Domains,
-            .Project.Data.Data
-           ] + TargetDependency.SwiftPM.all,
+           ] + TargetDependency.SwiftPM.all
+           + TargetDependency.Project.Data.All
+           + TargetDependency.Project.Domain.All,
            settings: .settings(configurations: [
             .debug(name: .dev, 
                    settings: [

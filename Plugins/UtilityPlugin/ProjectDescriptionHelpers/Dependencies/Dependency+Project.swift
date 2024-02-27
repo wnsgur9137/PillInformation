@@ -45,38 +45,38 @@ extension TargetDependency {
 // MARK: - Presentation
 public extension TargetDependency.Project.Presentations {
     static let BaseTab: TargetDependency = .project(layer: .presentation, name: "BaseTab")
+    static let Onboarding: TargetDependency = .project(layer: .presentation, name: "Onboarding")
     static let Home: TargetDependency = .project(layer: .presentation, name: "Home")
     static let Search: TargetDependency = .project(layer: .presentation, name: "Search")
     static let Alarm: TargetDependency = .project(layer: .presentation, name: "Alarm")
     static let MyPage: TargetDependency = .project(layer: .presentation, name: "MyPage")
-    static let All: TargetDependency = .project(layer: .presentation, name: "Presentations")
 }
 
 // MARK: - Domain
 public extension TargetDependency.Project.Domain {
-    static let Domains: TargetDependency = .project(layer: .domain, name: "Domains")
     static let HomeDomain: TargetDependency = .project(layer: .domain, name: "HomeDomain")
     static let SearchDomain: TargetDependency = .project(layer: .domain, name: "SearchDomain")
     static let AlarmDomain: TargetDependency = .project(layer: .domain, name: "AlarmDomain")
     static let MyPageDomain: TargetDependency = .project(layer: .domain, name: "MyPageDomain")
+    static let All: [TargetDependency] = [HomeDomain, SearchDomain, AlarmDomain, MyPageDomain]
 }
 
 // MARK: - Data
 public extension TargetDependency.Project.Data {
-    static let Data: TargetDependency = .project(layer: .data, name: "Data")
     static let HomeData: TargetDependency = .project(layer: .data, name: "HomeData")
     static let SearchData: TargetDependency = .project(layer: .data, name: "SearchData")
     static let AlarmData: TargetDependency = .project(layer: .data, name: "AlarmData")
     static let MyPageData: TargetDependency = .project(layer: .data, name: "MyPageData")
+    static let All: [TargetDependency] = [HomeData, SearchData, AlarmData, MyPageData]
 }
 
 // MARK: - Infrastructure
 public extension TargetDependency.Project.Infrastructure {
-    static let Infrastructures: TargetDependency = .project(layer: .infrastructure, name: "Infrastructures")
     static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
     static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
     static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
     static let Service: TargetDependency = .project(layer: .infrastructure, name: "Service")
+    static let All: [TargetDependency] = [Builder, NetworkInfra, ReuseableView, Service]
 }
 
 // MARK: - Common

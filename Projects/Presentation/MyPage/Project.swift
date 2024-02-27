@@ -13,7 +13,6 @@ let project: Project = .framework(
     name: "MyPage",
     dependencies: [
         .Project.Common.Common,
-        .Project.Infrastructure.Infrastructures,
         .Project.Domain.MyPageDomain
-    ]
+    ] + TargetDependency.Project.Infrastructure.All
 )

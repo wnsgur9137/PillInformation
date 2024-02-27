@@ -2,7 +2,7 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by JunHyeok Lee on 1/24/24.
+//  Created by JunHyeok Lee on 2/27/24.
 //
 
 import ProjectDescription
@@ -10,7 +10,7 @@ import ProjectDescriptionHelpers
 import UtilityPlugin
 
 let project: Project = .framework(
-    name: "Alarm",
+    name: "Onboarding",
     dependencies: [
         .Project.Common.Common,
         .Project.Domain.AlarmDomain
