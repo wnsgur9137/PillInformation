@@ -12,6 +12,7 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "SearchData",
     dependencies: [
+        .Project.Domain.SearchDomain,
         .Project.Infrastructure.NetworkInfra,
         .Project.LibraryManager.NetworkLibraries,
         .Project.LibraryManager.ReactiveLibraries,

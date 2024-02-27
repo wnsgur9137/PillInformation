@@ -60,25 +60,38 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         
         switch page {
         case .home:
-            let homeCoordinator = DefaultHomeCoordinator(navigationController: navigationController, dependencies: homeDependencies)
+            let homeCoordinator = DefaultHomeCoordinator(
+                navigationController: navigationController, 
+                dependencies: homeDependencies,
+                tabDependencies: self
+            )
             homeCoordinator.finishDelegate = self
             homeCoordinator.start()
             childCoordinators.append(homeCoordinator)
             
         case .search:
-            let searchCoordinator = DefaultSearchCoordinator(navigationController: navigationController, dependencies: searchDependencies)
+            let searchCoordinator = DefaultSearchCoordinator(
+                navigationController: navigationController,
+                dependencies: searchDependencies
+            )
             searchCoordinator.finishDelegate = self
             searchCoordinator.start()
             childCoordinators.append(searchCoordinator)
             
         case .alarm:
-            let alarmCoordinator = DefaultAlarmCoordinator(navigationController: navigationController, dependencies: alarmDependencies)
+            let alarmCoordinator = DefaultAlarmCoordinator(
+                navigationController: navigationController,
+                dependencies: alarmDependencies
+            )
             alarmCoordinator.finishDelegate = self
             alarmCoordinator.start()
             childCoordinators.append(alarmCoordinator)
             
         case .myPage:
-            let myPageCoordinator = DefaultMyPageCoordinator(navigationController: navigationController, dependencies: myPageDependencies)
+            let myPageCoordinator = DefaultMyPageCoordinator(
+                navigationController: navigationController,
+                dependencies: myPageDependencies
+            )
             myPageCoordinator.finishDelegate = self
             myPageCoordinator.start()
             childCoordinators.append(myPageCoordinator)
@@ -112,5 +125,11 @@ extension DefaultTabBarCoordinator: CoordinatorFinishDelegate {
 //        default:
 //            break
 //        }
+    }
+}
+
+extension DefaultTabBarCoordinator: HomeTabDependencies {
+    public func changeTab(index: Int) {
+        tabBarController?.selectedIndex = index
     }
 }

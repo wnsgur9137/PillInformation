@@ -12,7 +12,6 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "MyPageDomain",
     dependencies: [
-        .Project.Data.MyPageData,
         .SwiftPM.Reactive.rxSwift,
         .SwiftPM.Reactive.rxCocoa
     ]

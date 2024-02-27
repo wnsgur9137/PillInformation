@@ -20,7 +20,9 @@ public final class DefaultNoticeRepository: NoticeRepository {
     public init(networkManager: NetworkManager) {
         self.networkManager = networkManager
     }
-    
+}
+
+extension DefaultNoticeRepository {
     public func executeNotices() -> Single<[Notice]> {
         return networkManager.requestNotices().map { noticeListResponseDTO in
             return noticeListResponseDTO.noticeList.map { $0.toDomain() }

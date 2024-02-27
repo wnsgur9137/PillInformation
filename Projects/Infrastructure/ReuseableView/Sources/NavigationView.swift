@@ -46,7 +46,7 @@ public final class NavigationView: UIView {
         return textField
     }()
     
-    private lazy var searchButton: UIButton = {
+    public lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setTitle(Constants.NavigationView.search, for: .normal)
         button.setTitleColor(Constants.Color.systemLabel, for: .normal)

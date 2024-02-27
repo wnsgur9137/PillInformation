@@ -36,7 +36,11 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-SemiBold.otf"
     ],
     "AppConfigurations": [
-        "API_BASE_URL": "${API_BASE_URL}"
+        "API_BASE_URL": "${API_BASE_URL}",
+        "MEDICINE_API_URL": "${MEDICINE_API_URL}",
+        "MEDICINE_API_KEY": "${MEDICINE_KEY}",
+        "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
+        "MEDICINE_INFO_API_KEY": "${MEDICINE_INFO_API_KEY}"
     ],
     "NSAppTransportSecurity": [
         "NSAllowsArbitraryLoads": true

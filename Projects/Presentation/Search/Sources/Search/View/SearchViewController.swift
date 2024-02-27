@@ -66,7 +66,10 @@ public final class SearchViewController: UIViewController, View {
         }
         setupKeyboard()
         setupLayout()
-        
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationView.textField.becomeFirstResponder()
     }
     
@@ -110,7 +113,10 @@ extension SearchViewController {
     }
     
     private func bindAction(_ reactor: SearchReactor) {
-        
+        navigationView.searchButton.rx.tapGesture()
+            .map { _ in Reactor.Action.search(self.navigationView.textField.text ?? "") }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchReactor) {

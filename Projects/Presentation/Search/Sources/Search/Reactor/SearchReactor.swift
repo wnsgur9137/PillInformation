@@ -11,29 +11,39 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import SearchDomain
+
 public struct SearchFlowAction {
     
 }
 
 public final class SearchReactor: Reactor {
     public enum Action {
-        case viewDidLoad
+        case search(String)
     }
     
     public enum Mutation {
-        case test
+        case loadPill([String])
     }
     
     public struct State {
-        var test: Int?
+        var pillList: [String]?
     }
     
     public var initialState = State()
     public let flowAction: SearchFlowAction
     private let disposeBag = DisposeBag()
+    private let searchUseCase: SearchUseCase
     
-    public init(flowAction: SearchFlowAction) {
+    public init(with useCase: SearchUseCase,
+                flowAction: SearchFlowAction) {
+        self.searchUseCase = useCase
         self.flowAction = flowAction
+    }
+    
+    private func loadPillList(keyword: String) -> Observable<[String]> {
+        return searchUseCase.executePill(keyword: keyword)
+            .asObservable()
     }
 }
 
@@ -41,16 +51,19 @@ public final class SearchReactor: Reactor {
 extension SearchReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .viewDidLoad:
-                return .just(.test)
+        case let .search(keyword):
+            return loadPillList(keyword: keyword)
+                .flatMap { pillList -> Observable<Mutation> in
+                    return .just(.loadPill(pillList))
+                }
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .test:
-            state.test = 1
+        case let .loadPill(pillList):
+            state.pillList = pillList
         }
         return state
     }

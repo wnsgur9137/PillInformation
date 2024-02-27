@@ -14,6 +14,7 @@ import HomeDomain
 
 public struct HomeFlowAction {
     let showNoticeDetailViewController: (Notice) -> Void
+    let changeTabIndex: (Int) -> Void
 }
 
 public final class HomeReactor: Reactor {
@@ -76,6 +77,10 @@ extension HomeReactor {
 extension HomeReactor {
     func didSelectNoticeRow(at index: Int) {
         flowAction.showNoticeDetailViewController(self.notices[index])
+    }
+    
+    func changeTab(index: Int) {
+        flowAction.changeTabIndex(index)
     }
 }
 

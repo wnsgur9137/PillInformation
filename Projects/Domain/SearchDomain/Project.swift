@@ -12,7 +12,6 @@ import UtilityPlugin
 let project: Project = .staticFramework(
     name: "SearchDomain",
     dependencies: [
-        .Project.Data.SearchData,
         .SwiftPM.Reactive.rxSwift,
         .SwiftPM.Reactive.rxCocoa
     ]
