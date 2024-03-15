@@ -9,8 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(
+let project: Project = .project(
     name: "LayoutLibraries",
-    packages: Package.Layout.package,
-    dependencies: TargetDependency.SwiftPM.Layout.package
+    product: .framework,
+    dependencies: [
+        .Carthage.FlexLayout,
+        .Carthage.PinLayout
+    ]
 )

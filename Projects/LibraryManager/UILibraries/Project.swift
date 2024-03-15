@@ -9,8 +9,18 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(
+let project: Project = .project(
     name: "UILibraries",
-    packages: Package.UI.package,
-    dependencies: TargetDependency.SwiftPM.UI.package
+    product: .framework,
+    packages: [
+        .UI.KingFihser,
+        .UI.SkeletonView,
+        .UI.DropDown,
+    ],
+    dependencies: [
+        .SwiftPM.UI.KingFisher,
+        .SwiftPM.UI.SkeletonView,
+        .SwiftPM.UI.DropDown
+    ]
 )
+

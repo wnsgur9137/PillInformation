@@ -8,16 +8,8 @@
 import Foundation
 import ProjectDescription
 
+// MARK: - XCConfig
 public extension ProjectDescription.Path {
-//    static var application: Self {
-//        return .relativeToRoot("Projects/Application")
-//    }
-}
-
-public extension ProjectDescription.Path {
-    static func relativeToCarthage(_ path: String) -> Self {
-        return .relativeToRoot("Tuist/Dependencies/Carthage/Build/\(path)")
-    }
     static func relativeToXCConfig(_ scheme: AppConfiguration, path: String) -> Self {
         return .relativeToRoot("XCConfig/\(path)/\(scheme.rawValue).xcconfig")
     }
@@ -27,6 +19,10 @@ public extension ProjectDescription.Path {
     static func relativeToXCConfig(_ scheme: AppConfiguration) -> Self {
         return .relativeToRoot("XCConfig/\(scheme.rawValue).xcconfig")
     }
+}
+
+// MARK: - Project
+public extension ProjectDescription.Path {
     static func relativeToProject(name: String) -> Self {
         return .relativeToRoot("Projects/\(name)")
     }
@@ -35,8 +31,5 @@ public extension ProjectDescription.Path {
     }
     static func relative(to layer: ProjectLayer, name: String) -> Self {
         return .relativeToRoot("Projects/\(layer.rawValue)/\(name)")
-    }
-    static func relative(to layer: ProjectLayer, view: ProjectView) -> Self {
-        return .relativeToRoot("Projects/\(layer.rawValue)/\(view)")
     }
 }

@@ -9,10 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project = Project.staticFramework(
+let project: Project = .project(
     name: "NetworkInfra",
+    product: .staticFramework,
     dependencies: [
-        .Project.Common.Common
-    ] + TargetDependency.SwiftPM.Network.package
-    + TargetDependency.SwiftPM.Reactive.package
+        
+    ]
 )

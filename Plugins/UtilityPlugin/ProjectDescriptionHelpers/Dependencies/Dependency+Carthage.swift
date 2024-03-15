@@ -14,12 +14,6 @@ public extension TargetDependency {
 }
 
 public extension TargetDependency.Carthage {
-    static let FlexLayout: TargetDependency = .carthage(name: "FlexLayout")
-    static let PinLayout: TargetDependency = .carthage(name: "PinLayout")
-}
-
-public extension TargetDependency {
-    static func carthage(name: String) -> Self {
-        return .xcframework(path: .relativeToCarthage("\(name).xcframework"))
-    }
+    static let FlexLayout: TargetDependency = .external(name: "FlexLayout")
+    static let PinLayout: TargetDependency = .external(name: "PinLayout")
 }

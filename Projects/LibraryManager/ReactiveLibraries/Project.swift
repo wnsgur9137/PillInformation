@@ -9,8 +9,13 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(
+let project: Project = .project(
     name: "ReactiveLibraries",
-    packages: Package.Reactive.package,
-    dependencies: TargetDependency.SwiftPM.Reactive.package
+    product: .framework,
+    dependencies: [
+        .SwiftPM.Reactive.ReactorKit,
+        .SwiftPM.Reactive.RxSwift,
+        .SwiftPM.Reactive.RxCocoa,
+        .SwiftPM.Reactive.RxGesture
+    ]
 )

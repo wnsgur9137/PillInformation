@@ -9,16 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .staticFramework(
+let project: Project = .project(
     name: "MyPageData",
+    product: .staticFramework,
     dependencies: [
-        .Project.Domain.MyPageDomain,
-        .Project.Infrastructure.NetworkInfra,
-        .Project.LibraryManager.NetworkLibraries,
-        .Project.LibraryManager.ReactiveLibraries,
-        .SwiftPM.Network.alamofire,
-        .SwiftPM.Network.moya,
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa
+        .Project.Feature.Domain.MyPage
     ]
 )

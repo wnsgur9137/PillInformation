@@ -9,10 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .staticFramework(
+let project: Project = .project(
     name: "MyPageDomain",
+    product: .staticFramework,
     dependencies: [
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa
+        .Project.Feature.Presentation.MyPage
     ]
 )

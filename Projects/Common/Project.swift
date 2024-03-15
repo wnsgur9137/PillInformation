@@ -9,10 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .staticFramework(
-    name: "Common", 
+let project: Project = .project(
+    name: "Common",
+    product: .framework,
     dependencies: [
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa,
+        
     ]
 )

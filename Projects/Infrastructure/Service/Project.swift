@@ -9,9 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project = Project.staticFramework(
+let project: Project = .project(
     name: "Service",
+    product: .staticFramework,
     dependencies: [
-        .Project.Common.Common
+        
     ]
 )

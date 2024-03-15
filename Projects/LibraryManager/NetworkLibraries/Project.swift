@@ -9,8 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 import UtilityPlugin
 
-let project: Project = .framework(
+let project: Project = .project(
     name: "NetworkLibraries",
-    packages: Package.Network.package,
-    dependencies: TargetDependency.SwiftPM.Network.package
+    product: .framework,
+    dependencies: [
+        .SwiftPM.Network.Alamofire,
+        .SwiftPM.Network.Moya
+    ]
 )

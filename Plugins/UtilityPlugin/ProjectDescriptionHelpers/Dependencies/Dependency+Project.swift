@@ -9,88 +9,86 @@ import Foundation
 import ProjectDescription
 
 public enum ProjectLayer: String {
-    case application = "Application"
-    case presentation = "Presentation"
-    case domain = "Domain"
-    case data = "Data"
-    case infrastructure = "Infrastructure"
-    case common = "Common"
-    case libraryManager = "LibraryManager"
-}
-
-public enum ProjectView: String {
-    case home = "Home"
-    case search = "Search"
-    case alarm = "Alarm"
-    case myPage = "MyPage"
+    case Application
+    case InjectionManager
+    case Feature
+    case Presentation
+    case Domain
+    case Data
+    case Infrastructure
+    case LibraryManager
 }
 
 // MARK: - Projects
 extension TargetDependency {
     public struct Project {
-        public struct Presentations { }
-        public struct Domain { }
-        public struct Data { }
-        public struct Infrastructure { }
-        public struct Common {
-            public struct `Enum` { }
-            public struct `Protocol` { }
-            public struct `Extension` { }
-            public struct Constants { }
+        public struct InjectionManager { }
+        public struct Feature {
+            public struct Presentation { }
+            public struct Domain { }
+            public struct Data { }
         }
+        public struct Infrastructure { }
         public struct LibraryManager { }
     }
 }
 
+// MARK: - Project
+public extension TargetDependency.Project {
+    static let BaseTab: TargetDependency = .project(target: "BaseTab", path: .relativeToProject(name: "BaseTab"))
+    static let Common: TargetDependency = .project(target: "Common", path: .relativeToProject(name: "Common"))
+}
+
+// MARK: - Feature
+public extension TargetDependency.Project.Feature {
+    static let Features: TargetDependency = .project(layer: .Feature, name: "Features")
+    static let Onboarding: TargetDependency = .project(layer: .Feature, name: "Onboarding")
+    static let Home: TargetDependency = .project(layer: .Feature, name: "Home")
+    static let Search: TargetDependency = .project(layer: .Feature, name: "Search")
+    static let Alarm: TargetDependency = .project(layer: .Feature, name: "Alarm")
+    static let MyPage: TargetDependency = .project(layer: .Feature, name: "MyPage")
+}
+
 // MARK: - Presentation
-public extension TargetDependency.Project.Presentations {
-    static let BaseTab: TargetDependency = .project(layer: .presentation, name: "BaseTab")
-    static let Onboarding: TargetDependency = .project(layer: .presentation, name: "Onboarding")
-    static let Home: TargetDependency = .project(layer: .presentation, name: "Home")
-    static let Search: TargetDependency = .project(layer: .presentation, name: "Search")
-    static let Alarm: TargetDependency = .project(layer: .presentation, name: "Alarm")
-    static let MyPage: TargetDependency = .project(layer: .presentation, name: "MyPage")
+public extension TargetDependency.Project.Feature.Presentation {
+    static let Onboarding: TargetDependency = .project(layer: .Presentation, name: "OnboardingPresentation")
+    static let Home: TargetDependency = .project(layer: .Presentation, name: "HomePresentation")
+    static let Search: TargetDependency = .project(layer: .Presentation, name: "SearchPresentation")
+    static let Alarm: TargetDependency = .project(layer: .Presentation, name: "AlarmPresentation")
+    static let MyPage: TargetDependency = .project(layer: .Presentation, name: "MyPagePresentation")
 }
 
 // MARK: - Domain
-public extension TargetDependency.Project.Domain {
-    static let HomeDomain: TargetDependency = .project(layer: .domain, name: "HomeDomain")
-    static let SearchDomain: TargetDependency = .project(layer: .domain, name: "SearchDomain")
-    static let AlarmDomain: TargetDependency = .project(layer: .domain, name: "AlarmDomain")
-    static let MyPageDomain: TargetDependency = .project(layer: .domain, name: "MyPageDomain")
-    static let All: [TargetDependency] = [HomeDomain, SearchDomain, AlarmDomain, MyPageDomain]
+public extension TargetDependency.Project.Feature.Domain {
+    static let Onboarding: TargetDependency = .project(layer: .Domain, name: "OnboardingDomain")
+    static let Home: TargetDependency = .project(layer: .Domain, name: "HomeDomain")
+    static let Search: TargetDependency = .project(layer: .Domain, name: "SearchDomain")
+    static let Alarm: TargetDependency = .project(layer: .Domain, name: "AlarmDomain")
+    static let MyPage: TargetDependency = .project(layer: .Domain, name: "MyPageDomain")
 }
 
 // MARK: - Data
-public extension TargetDependency.Project.Data {
-    static let HomeData: TargetDependency = .project(layer: .data, name: "HomeData")
-    static let SearchData: TargetDependency = .project(layer: .data, name: "SearchData")
-    static let AlarmData: TargetDependency = .project(layer: .data, name: "AlarmData")
-    static let MyPageData: TargetDependency = .project(layer: .data, name: "MyPageData")
-    static let All: [TargetDependency] = [HomeData, SearchData, AlarmData, MyPageData]
+public extension TargetDependency.Project.Feature.Data {
+    static let Onboarding: TargetDependency = .project(layer: .Data, name: "OnboardingData")
+    static let Home: TargetDependency = .project(layer: .Data, name: "HomeData")
+    static let Search: TargetDependency = .project(layer: .Data, name: "SearchData")
+    static let Alarm: TargetDependency = .project(layer: .Data, name: "AlarmData")
+    static let MyPage: TargetDependency = .project(layer: .Data, name: "MyPageData")
 }
 
 // MARK: - Infrastructure
 public extension TargetDependency.Project.Infrastructure {
-    static let Builder: TargetDependency = .project(layer: .infrastructure, name: "Builder")
-    static let NetworkInfra: TargetDependency = .project(layer: .infrastructure, name: "NetworkInfra")
-    static let ReuseableView: TargetDependency = .project(layer: .infrastructure, name: "ReuseableView")
-    static let Service: TargetDependency = .project(layer: .infrastructure, name: "Service")
-    static let All: [TargetDependency] = [Builder, NetworkInfra, ReuseableView, Service]
-}
-
-// MARK: - Common
-public extension TargetDependency.Project.Common {
-    static let Common: TargetDependency = .common()
+    static let NetworkInfra: TargetDependency = .project(layer: .Infrastructure, name: "NetworkInfra")
+    static let ReuseableView: TargetDependency = .project(layer: .Infrastructure, name: "ReuseableView")
+    static let Service: TargetDependency = .project(layer: .Infrastructure, name: "Service")
 }
 
 // MARK: - LibraryManager
 public extension TargetDependency.Project.LibraryManager {
-    static let NetworkLibraries: TargetDependency = .project(layer: .libraryManager, name: "NetworkLibraries")
-    static let ReactiveLibraries: TargetDependency = .project(layer: .libraryManager, name: "ReactiveLibraries")
-    static let LayoutLibraries: TargetDependency = .project(layer: .libraryManager, name: "LayoutLibraries")
-    static let UILibraries: TargetDependency = .project(layer: .libraryManager, name: "UILibraries")
-    static let PresentationLibrarys: [TargetDependency] = [ReactiveLibraries, LayoutLibraries, UILibraries]
+    static let NetworkLibraries: TargetDependency = .project(layer: .LibraryManager, name: "NetworkLibraries")
+    static let ReactiveLibraries: TargetDependency = .project(layer: .LibraryManager, name: "ReactiveLibraries")
+    static let LayoutLibraries: TargetDependency = .project(layer: .LibraryManager, name: "LayoutLibraries")
+    static let UILibraries: TargetDependency = .project(layer: .LibraryManager, name: "UILibraries")
 }
 
 // MARK: - TargetDependency
@@ -98,15 +96,11 @@ public extension TargetDependency {
     static func project(layer: ProjectLayer) -> Self {
         return .project(target: layer.rawValue, path: .relative(to: layer))
     }
-    static func project(layer: ProjectLayer, view: ProjectView) -> Self {
-        return .project(target: view.rawValue, path: .relative(to: layer, view: view))
-    }
     static func project(layer: ProjectLayer, name: String) -> Self {
         return .project(target: name, path: .relative(to: layer, name: name))
     }
-    static func common() -> Self {
-        let common = ProjectLayer.common.rawValue
-        return .project(target: common, path: .relativeToProject(name: common))
+    static func project(name: String) -> Self {
+        return .project(target: name, path: .relativeToProject(name: name))
     }
 }
 
