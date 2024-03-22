@@ -118,7 +118,7 @@ extension SearchResultViewController {
     
     private func setupSubviewLayout() {
         keyboardBackgroundView.pin.all()
-        navigationView.pin.top().left().right()
+        navigationView.pin.left().right().top(view.safeAreaInsets.top)
         navigationView.flex.layout()
         collectionView.pin.all()
         collectionView.flex.layout()

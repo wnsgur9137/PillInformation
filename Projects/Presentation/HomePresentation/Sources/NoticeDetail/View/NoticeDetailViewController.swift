@@ -193,7 +193,7 @@ extension NoticeDetailViewController {
     }
     
     private func setupSubviewLayout() {
-        navigationView.pin.top().left().right()
+        navigationView.pin.left().right().top(view.safeAreaInsets.top)
         navigationView.flex.layout()
         scrollView.pin.all()
         scrollView.flex.layout()
