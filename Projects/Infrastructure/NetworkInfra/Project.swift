@@ -1,18 +1,18 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JunHyeok Lee on 1/25/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
-let project = Project.staticFramework(
+let project: Project = .project(
     name: "NetworkInfra",
+    product: .framework,
     dependencies: [
-        .Project.Common.Common
-    ] + TargetDependency.SwiftPM.Network.package
-    + TargetDependency.SwiftPM.Reactive.package
+        .Project.LibraryManager.ReactiveLibraries,
+        .Project.LibraryManager.NetworkLibraries
+    ]
 )

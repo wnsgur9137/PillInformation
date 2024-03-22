@@ -1,13 +1,12 @@
 //
 //  SceneDelegate.swift
-//  Application
+//  PillInformation
 //
-//  Created by JunHyeok Lee on 1/25/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import UIKit
-import Presentations
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import HomePresentation
 
 public struct Notice {
     public let title: String
@@ -19,5 +20,14 @@ public struct Notice {
         self.writer = writer
         self.content = content
         self.writedDate = writedDate
+    }
+}
+
+extension Notice {
+    public func toModel() -> NoticeModel {
+        return .init(title: self.title,
+                     writer: self.writer,
+                     content: self.content,
+                     writedDate: self.writedDate)
     }
 }

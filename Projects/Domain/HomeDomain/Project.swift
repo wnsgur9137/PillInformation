@@ -1,19 +1,18 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JunHyeok Lee on 2/6/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
-let project: Project = .staticFramework(
+let project: Project = .project(
     name: "HomeDomain",
+    product: .staticFramework,
     dependencies: [
-//        .Project.Data.HomeData,
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa
+        .Project.Feature.Domain.Base,
+        .Project.Feature.Presentation.Home
     ]
 )

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 import HomeDomain
 
 public struct NoticeResponseDTO: Decodable {

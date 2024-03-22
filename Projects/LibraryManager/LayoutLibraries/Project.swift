@@ -1,16 +1,18 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JunHyeok Lee on 1/31/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
-let project: Project = .framework(
+let project: Project = .project(
     name: "LayoutLibraries",
-    packages: Package.Layout.package,
-    dependencies: TargetDependency.SwiftPM.Layout.package
+    product: .framework,
+    dependencies: [
+        .SPM.Layout.FlexLayout,
+        .SPM.Layout.PinLayout
+    ]
 )

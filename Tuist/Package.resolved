@@ -1,0 +1,113 @@
+{
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "723fa5a6c65812aec4a0d7cc432ee198883b6e00",
+        "version" : "5.9.0"
+      }
+    },
+    {
+      "identity" : "dropdown",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AssistoLab/DropDown",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2ab6f6ce19f0117d1a76ea043ef8f57722c65d16"
+      }
+    },
+    {
+      "identity" : "flexlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/layoutBox/FlexLayout",
+      "state" : {
+        "branch" : "master",
+        "revision" : "ad20f2874f0fe87300e89caed2f03d5c9525c3c0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
+        "version" : "7.11.0"
+      }
+    },
+    {
+      "identity" : "moya",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Moya/Moya",
+      "state" : {
+        "revision" : "c263811c1f3dbf002be9bd83107f7cdc38992b26",
+        "version" : "15.0.3"
+      }
+    },
+    {
+      "identity" : "pinlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/layoutBox/PinLayout",
+      "state" : {
+        "branch" : "master",
+        "revision" : "babea9c8e821dfb0687e66c123fed2006e688929"
+      }
+    },
+    {
+      "identity" : "reactiveswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveCocoa/ReactiveSwift.git",
+      "state" : {
+        "revision" : "c43bae3dac73fdd3cb906bd5a1914686ca71ed3c",
+        "version" : "6.7.0"
+      }
+    },
+    {
+      "identity" : "reactorkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactorKit/ReactorKit.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a16329a2036269fc6fce482c041b2b07a59f3800"
+      }
+    },
+    {
+      "identity" : "rxgesture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxGesture.git",
+      "state" : {
+        "revision" : "1b137c576b4aaaab949235752278956697c9e4a0",
+        "version" : "4.0.4"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift.git",
+      "state" : {
+        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
+        "version" : "6.6.0"
+      }
+    },
+    {
+      "identity" : "skeletonview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Juanpe/SkeletonView",
+      "state" : {
+        "revision" : "739a4f5d78731bebc48811c75fa9e1f4c4cef23e",
+        "version" : "1.30.4"
+      }
+    },
+    {
+      "identity" : "weakmaptable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactorKit/WeakMapTable.git",
+      "state" : {
+        "revision" : "cb05d64cef2bbf51e85c53adee937df46540a74e",
+        "version" : "1.2.1"
+      }
+    }
+  ],
+  "version" : 2
+}
