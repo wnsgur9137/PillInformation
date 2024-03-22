@@ -1,24 +1,18 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JunHyeok Lee on 2/6/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
-let project: Project = .staticFramework(
+let project: Project = .project(
     name: "AlarmData",
+    product: .staticFramework,
     dependencies: [
-        .Project.Domain.AlarmDomain,
-        .Project.Infrastructure.NetworkInfra,
-        .Project.LibraryManager.NetworkLibraries,
-        .Project.LibraryManager.ReactiveLibraries,
-        .SwiftPM.Network.alamofire,
-        .SwiftPM.Network.moya,
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa
+        .Project.Feature.Data.Base,
+        .Project.Feature.Domain.Alarm
     ]
 )

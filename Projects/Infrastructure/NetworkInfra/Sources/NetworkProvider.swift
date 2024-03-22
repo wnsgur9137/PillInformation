@@ -48,7 +48,7 @@ extension NetworkProvider {
                     case NetworkError.internetConnection:
                         print("NetworkError: internetConnection")
                     case NetworkError.rest(let error, _, _, _):
-                        print("NetworkError: rest(\(error))")
+                        print("NetworkError: rest(\(error)\n\t\(error.localizedDescription)")
                     default:
                         break
                     }

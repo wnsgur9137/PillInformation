@@ -1,18 +1,17 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JunHyeok Lee on 1/25/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
-let project: Project = .staticFramework(
-    name: "Common", 
+let project: Project = .project(
+    name: "Common",
+    product: .framework,
     dependencies: [
-        .SwiftPM.Reactive.rxSwift,
-        .SwiftPM.Reactive.rxCocoa,
+        
     ]
 )

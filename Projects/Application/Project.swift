@@ -1,18 +1,19 @@
 //
-//  Project.swift
-//  ProjectDescriptionHelpers
+//  Project1.swift
+//  ApplicationManifests
 //
-//  Created by JUNHYEOK LEE on 1/22/24.
+//  Created by JunHyeok Lee on 3/19/24.
 //
 
-import Foundation
 import ProjectDescription
 import ProjectDescriptionHelpers
-import UtilityPlugin
 
 let projectName = "PillInformation"
+
 let organizationName = "com.junhyeok.PillInformation"
-let deploymentTarget: DeploymentTargets = .iOS("14.0")
+
+let deploymentTargets: DeploymentTargets = .iOS("14.0")
+
 let defaultInfoPlist: [String: Plist.Value] = [
     "UILaunchStoryboardName": "LaunchScreen",
     "UIApplicationSceneManifest": [
@@ -49,132 +50,96 @@ let defaultInfoPlist: [String: Plist.Value] = [
 
 // MARK: - Settings
 let settings: Settings = .settings(
-    base: [
-        "CODE_SIGN_IDENTITY": "",
-        "CODE_SIGNING_REQUIRED": "NO",
-    ],
+//    base: [
+//        "OTHER_LDFLAGS": ["-lc++", "-Objc"]
+//    ],
     configurations: [
-        .debug(name: .dev),
-        .debug(name: .test),
-        .release(name: .prod),
-    ]
+        .debug(name: .DEV),
+        .debug(name: .TEST_DEV),
+        .debug(name: .TEST_PROD),
+        .release(name: .PROD)
+    ],
+    defaultSettings: .recommended
 )
 
 // MARK: - Scripts
-let scripts: [TargetScript] = [
-    
-]
+let scripts: [TargetScript] = []
 
 // MARK: - Targets
 let targets: [Target] = [
-    Target(name: projectName,
-           destinations: .iOS,
-           product: .app,
-           productName: projectName,
-           bundleId: organizationName,
-           deploymentTargets: deploymentTarget,
-           infoPlist: .extendingDefault(with: defaultInfoPlist),
-           sources: .sources,
-           resources: .resources,
-           scripts: scripts,
-           dependencies: [
-            .Project.Presentations.Onboarding,
-            .Project.Presentations.BaseTab,
-           ] + TargetDependency.SwiftPM.all
-           + TargetDependency.Project.Data.All
-           + TargetDependency.Project.Domain.All,
-           settings: .settings(configurations: [
-            .debug(name: .dev, 
-                   settings: [
-                    "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer"
-                   ],
-                   xcconfig: XCConfig.Application.app(.dev)),
-            .release(name: .prod, 
-                     settings: [
+    .target(
+        name: projectName,
+        destinations: .iOS,
+        product: .app,
+        productName: projectName,
+        bundleId: organizationName,
+        deploymentTargets: deploymentTargets,
+        infoPlist: .extendingDefault(with: defaultInfoPlist),
+        sources: ["Sources/**"],
+        resources: ["Resources/**"],
+        scripts: scripts,
+        dependencies: [
+            .Project.Feature.Features,
+            .Project.InjectionManager.Infrastructure
+        ],
+        settings: .settings(
+            base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+            configurations: [
+                .debug(
+                    name: .DEV,
+                    settings: [
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer"
+                    ],
+                    xcconfig: .XCConfig.app(.DEV)
+                ),
+                .release(
+                    name: .PROD,
+                    settings: [
                         "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
                         "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon"
-                     ],
-                     xcconfig: XCConfig.Application.app(.prod))
-           ])
-          ),
-    Target(name: "\(projectName)_DevApp",
-           destinations: .iOS,
-           product: .app,
-           productName: "\(projectName)_DevApp",
-           bundleId: "com.junhyeok.dev-PillInformation",
-           deploymentTargets: deploymentTarget,
-           infoPlist: .extendingDefault(with: defaultInfoPlist),
-           sources: ["Sources/**", "DevSources"],
-           resources: ["Resources/**"],
-           scripts: scripts,
-           dependencies: [
-            .Project.Presentations.Onboarding,
-            .Project.Presentations.BaseTab,
-           ] + TargetDependency.SwiftPM.all
-           + TargetDependency.Project.Data.All
-           + TargetDependency.Project.Domain.All,
-           settings: .settings(configurations: [
-            .debug(name: .dev, 
-                   settings: [
-                    "ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIconDevServer"
-                   ],
-                   xcconfig: XCConfig.Application.devApp(.dev)),
-            .release(name: .prod,
-                     settings: [
-                        "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
-                        "ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIcon"
-                     ],
-                     xcconfig: XCConfig.Application.devApp(.prod)),
-           ])
-          ),
-    Target(name: "\(projectName)_DevAppTests",
-           destinations: .iOS,
-           product: .unitTests,
-           productName: "\(projectName)_DevAppTests",
-           bundleId: "com.junhyeok.dev-PillInformationTests",
-           deploymentTargets: deploymentTarget,
-           infoPlist: .default,
-           sources: "Tests/**",
-           dependencies: [
-            .target(name: "\(projectName)_DevApp"),
-           ], 
-           settings: .settings(configurations: [
-            .debug(name: .test, 
-                   settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"], 
-                   xcconfig: XCConfig.Application.devApp(.test)),
-            .debug(name: .test,
-                   settings: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"],
-                   xcconfig: XCConfig.Application.app(.test)),
-           ])
-          )
+                    ],
+                    xcconfig: .XCConfig.app(.PROD)
+                )
+            ]
+        )
+    ),
+    .target(
+        name: "\(projectName)Tests",
+        destinations: .iOS,
+        product: .unitTests,
+        productName: "\(projectName)Tests",
+        bundleId: "\(organizationName)Tests",
+        deploymentTargets: deploymentTargets,
+        infoPlist: .default,
+        sources: ["Tests/**"],
+        dependencies: [
+            .target(name: projectName)
+        ],
+        settings: .settings(
+            base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+            configurations: [
+                .debug(
+                    name: .TEST_DEV,
+//                    settings: [
+//                        "OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"
+//                    ],
+                    xcconfig: .XCConfig.app(.TEST_DEV)
+                ),
+                .debug(
+                    name: .TEST_PROD,
+//                    settings: [
+//                        "OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"
+//                    ],
+                    xcconfig: .XCConfig.app(.TEST_PROD)
+                ),
+            ]
+        )
+    )
 ]
 
 // MARK: - Schemes
 let schemes: [Scheme] = [
-    Scheme(
-        name: "\(projectName)_DevApp-Prod",
-        shared: true,
-        buildAction: .buildAction(targets: ["\(projectName)"]),
-        testAction: nil,
-        runAction: .runAction(configuration: .prod),
-        archiveAction: .archiveAction(configuration: .prod),
-        profileAction: .profileAction(configuration: .prod),
-        analyzeAction: .analyzeAction(configuration: .prod)
-    ),
-    Scheme(
-        name: "\(projectName)_DevApp-Develop",
-        shared: true,
-        buildAction: .buildAction(targets: ["\(projectName)_DevApp"]),
-        testAction: .targets(
-            ["\(projectName)_DevAppTests"],
-            configuration: .dev,
-            options: .options(coverage: true)
-        ),
-        runAction: .runAction(configuration: .dev),
-        archiveAction: .archiveAction(configuration: .dev),
-        profileAction: .profileAction(configuration: .dev),
-        analyzeAction: .analyzeAction(configuration: .dev)
-    )
+    
 ]
 
 // MARK: - Project
@@ -185,6 +150,6 @@ let project: Project = .init(
     targets: targets,
     schemes: schemes,
     additionalFiles: [
-        "//XCConfig/Application/Application-\(AppConfiguration.shared).xcconfig"
+        "//XCConfig/Application/Application-\(AppConfiguration.SHARED).xcconfig"
     ]
 )

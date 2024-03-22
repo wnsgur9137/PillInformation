@@ -70,3 +70,4 @@ Derived/
 Tuist/Dependencies
 
 **.xcconfig
+**.build

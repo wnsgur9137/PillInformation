@@ -9,7 +9,7 @@
 import Foundation
 
 public func Log<T>(_ object: T?, filename: String = #file, line: Int = #line, funcName: String = #function) {
-//    #if !RELEASE
+#if !RELEASE
     let date = Date()
     let dateFormmat = DateFormatter()
     dateFormmat.calendar = .current
@@ -20,5 +20,5 @@ public func Log<T>(_ object: T?, filename: String = #file, line: Int = #line, fu
     } else {
         print("\(formatDate) \(filename.components(separatedBy: "/").last ?? "")(\(line)) : \(funcName) : nil")
     }
-//    #endif
+#endif
 }

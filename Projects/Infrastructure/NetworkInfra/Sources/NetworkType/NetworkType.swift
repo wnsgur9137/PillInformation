@@ -9,6 +9,7 @@
 import Foundation
 import Moya
 import RxSwift
+
 import Common
 
 protocol NetworkType {
@@ -23,7 +24,6 @@ extension NetworkType {
     static func endpointsClosure<T>(baseURL: String) -> (T) -> Endpoint where T: TargetType {
         return { target in
             let url = baseURL + target.path
-            print("🚨url: \(url)")
             return Endpoint(url: url,
                                     sampleResponseClosure: { .networkResponse(200, target.sampleData )},
                                     method: target.method,
@@ -35,7 +35,6 @@ extension NetworkType {
     static func failEndPointsClosure<T>(baseURL: String) -> (T) -> Endpoint where T: TargetType {
         return { target in
             let url = baseURL + target.path
-            print("🚨url: \(url)")
             let sampleResponseClosure: () -> EndpointSampleResponse = {
                 EndpointSampleResponse.networkResponse(999, target.sampleData)
             }

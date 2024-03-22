@@ -50,18 +50,18 @@ extension UserTargetType: MoyaErrorHandleable {
     
     public var parameters: [String: Any]? {
         switch self {
-        case let .getUserInfo(email): 
+        case let .getUserInfo(email):
             return ["email": email]
             
-        case let .getNicknameCheck(nickname): 
+        case let .getNicknameCheck(nickname):
             return ["nickname": nickname]
             
-        case let .postUserInfo(email, nickname, updateDate): 
+        case let .postUserInfo(email, nickname, updateDate):
             return ["email": email,
                     "nickname": nickname,
                     "updateDate": updateDate]
             
-        case let .updateUserInfo(email, nickname, updateDate): 
+        case let .updateUserInfo(email, nickname, updateDate):
             return ["email": email,
                     "nickname": nickname,
                     "updateDate": updateDate]

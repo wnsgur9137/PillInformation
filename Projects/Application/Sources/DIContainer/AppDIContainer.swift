@@ -7,13 +7,14 @@
 //
 
 import Foundation
+
 import NetworkInfra
 
 final class AppDIContainer {
     lazy var appConfiguration = AppConfiguration()
     
-    lazy var networkManager: NetworkInfra.NetworkManager = {
-        return NetworkInfra.NetworkManager(withTest: false,
+    lazy var networkManager: NetworkManager = {
+        return NetworkManager(withTest: false,
                                            withFail: false,
                                            baseURL: appConfiguration.apiBaseURL)
     }()

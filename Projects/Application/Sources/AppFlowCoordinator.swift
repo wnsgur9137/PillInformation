@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Features
+
 final class AppFlowCoordinator {
     var tabBarController: UITabBarController
     private let appDIContainer: AppDIContainer

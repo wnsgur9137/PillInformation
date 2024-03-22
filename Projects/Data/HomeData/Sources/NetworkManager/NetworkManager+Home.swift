@@ -6,16 +6,16 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import NetworkInfra
-import HomeDomain
-
 import Foundation
 import RxSwift
 import RxCocoa
 import Moya
 
+import NetworkInfra
+import HomeDomain
+
 extension NetworkManager {
-    public func requestNotices() -> Single<NoticeListResponseDTO> {
-        return requestObject(.getAllNotices, type: NoticeListResponseDTO.self)
+    public func requestNotices() -> Single<[NoticeResponseDTO]> {
+        return requestObject(.getAllNotices, type: NoticeListResponseDTO.self).map { $0.noticeList }
     }
 }
