@@ -33,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/Moya/Moya", from: "15.0.0"),
         .package(url: "https://github.com/Juanpe/SkeletonView", from: "1.0.0"),
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.11.0"),
-        .package(url: "https://github.com/AssistoLab/DropDown", branch: "master")
+        .package(url: "https://github.com/AssistoLab/DropDown", branch: "master"),
+        .package(url: "https://github.com/airbnb/lottie-ios", from: "4.4.1")
     ]
 )

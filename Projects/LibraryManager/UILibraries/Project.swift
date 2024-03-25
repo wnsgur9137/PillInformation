@@ -14,6 +14,7 @@ let project: Project = .project(
     dependencies: [
         .SPM.UI.DropDown,
         .SPM.UI.KingFisher,
-        .SPM.UI.SkeletonView
+        .SPM.UI.SkeletonView,
+        .SPM.UI.Lottie
     ]
 )
