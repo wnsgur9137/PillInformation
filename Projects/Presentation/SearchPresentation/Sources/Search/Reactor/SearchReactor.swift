@@ -32,12 +32,12 @@ public final class SearchReactor: Reactor {
     }
     
     public enum Mutation {
-        case loadPill([String])
+        case loadPill(PillInfoListModel)
         case error(Error)
     }
     
     public struct State {
-        var pillList: [String]?
+        var pillList: PillInfoListModel?
         var alertContents: AlertContents?
     }
     
@@ -52,7 +52,7 @@ public final class SearchReactor: Reactor {
         self.flowAction = flowAction
     }
     
-    private func loadPillList(keyword: String) -> Observable<[String]> {
+    private func loadPillList(keyword: String) -> Observable<PillInfoListModel> {
         return searchUseCase.executePill(keyword: keyword)
             .asObservable()
     }

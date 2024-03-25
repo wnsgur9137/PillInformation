@@ -22,7 +22,7 @@ public final class DefaultSearchRepository: SearchRepository {
 }
 
 extension DefaultSearchRepository {
-    public func executePill(keyword: String) -> RxSwift.Single<[String]> {
-        return networkManager.requestPill(keyword: keyword)
+    public func executePill(keyword: String) -> Single<PillInfoList> {
+        return networkManager.requestPill(keyword: keyword).map { $0.toDomain() }
     }
 }

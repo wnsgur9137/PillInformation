@@ -157,6 +157,13 @@ extension SearchViewController {
                 self.present(alert, animated: true)
             })
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.pillList }
+            .bind(onNext: { list in
+                print("list: \(list)")
+            })
+            .disposed(by: disposeBag)
     }
 }
 
