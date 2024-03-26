@@ -37,14 +37,14 @@ public final class AlertView: UIView {
         return imageView
     }()
     
-    let confirmButton: UIButton = {
-        let button = UIButton()
+    let confirmButton: FilledButton = {
+        let button = FilledButton(style: .large)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    lazy var cancelButton: UIButton = {
-        let button = UIButton()
+    lazy var cancelButton: OutlineButton = {
+        let button = OutlineButton(style: .defaultLarge)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -68,6 +68,12 @@ public final class AlertView: UIView {
 }
 
 extension AlertView {
+    func setup(popupImageName: String) {
+        guard let image = UIImage(named: popupImageName) else { return }
+        popupImageView.image = image
+        setupPopupImageLayout()
+    }
+    
     func setup(popupImage: UIImage) {
         popupImageView.image = popupImage
         setupPopupImageLayout()
@@ -81,11 +87,25 @@ extension AlertView {
         labelContainerView.flex.addItem(titleLabel)
     }
     
+    func addTitleLabel(_ attributedString: NSAttributedString) {
+        let titleLabel = UILabel()
+        titleLabel.numberOfLines = 0
+        titleLabel.attributedText = attributedString
+        labelContainerView.flex.addItem(titleLabel)
+    }
+    
     func addMessageLabel(_ text: String) {
         let messageLabel = UILabel()
         messageLabel.numberOfLines = 0
         messageLabel.text = text
         messageLabel.font = Constants.Font.suiteRegular(12.0)
+        labelContainerView.flex.addItem(messageLabel)
+    }
+    
+    func addMessageLabel(_ attributedString: NSAttributedString) {
+        let messageLabel = UILabel()
+        messageLabel.numberOfLines = 0
+        messageLabel.attributedText = attributedString
         labelContainerView.flex.addItem(messageLabel)
     }
     

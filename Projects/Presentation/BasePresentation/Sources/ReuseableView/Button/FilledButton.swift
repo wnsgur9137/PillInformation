@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum FilledButtonStyle {
+public enum FilledButtonStyle {
     case large
     case medium
     
@@ -114,21 +114,79 @@ public final class FilledButton: UIButton {
         }
     }
     
+    lazy var cornerRadius: CGFloat = self.style == .large ? .largeButton : .mediumButton {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
+    
+    var title: String {
+        get {
+            "\(self.titleLabel?.attributedText ?? .init(string: ""))"
+        }
+        set {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .left
+            let font = Constants.Font.suiteSemiBold(17.0)
+            let attributedTitle = NSAttributedString(string: newValue, attributes: [
+                .paragraphStyle: paragraphStyle,
+                .foregroundColor: self.titleColor,
+                .font: font,
+                .kern: -0.4
+            ])
+            self.setAttributedTitle(attributedTitle, for: .normal)
+        }
+    }
+    
+    // MARK: - init
+    
     public init(style: FilledButtonStyle) {
         self.style = style
         super.init(frame: .zero)
+        setupButton()
     }
     
     public override init(frame: CGRect) {
         self.style = .large
         super.init(frame: frame)
-        
+        setupButton()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         self.style = .large
         super.init(coder: aDecoder)
+        setupButton()
     }
     
+    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        UIView.animate(withDuration: 0.3,
+                       delay: 0,
+                       options: .allowUserInteraction,
+                       animations: {
+            self.buttonShadow = false
+        })
+        return super.beginTracking(touch, with: event)
+    }
     
+    public override func cancelTracking(with event: UIEvent?) {
+        super.cancelTracking(with: event)
+        animatedToNormal()
+    }
+    
+    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        super.endTracking(touch, with: event)
+        animatedToNormal()
+    }
+    
+    private func setupButton() {
+        backgroundColor = buttonBackgroundColor
+        self.layer.cornerRadius = self.frame.height / 2
+        self.buttonShadow = isEnabled
+    }
+    
+    private func animatedToNormal() {
+        UIView.animate(withDuration: 0.3) {
+            self.buttonShadow = self.isEnabled
+        }
+    }
 }
