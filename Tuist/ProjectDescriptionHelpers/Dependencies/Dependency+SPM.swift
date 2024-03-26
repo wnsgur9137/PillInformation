@@ -39,21 +39,12 @@ public extension TargetDependency.SPM.Reactive {
     static let ReactorKit: TargetDependency = .external(name: "ReactorKit")
 }
 public extension TargetDependency.SPM.UI {
-//    static let SkeletonView: TargetDependency = .package(product: "SkeletonView")
-//    static let KingFisher: TargetDependency = .package(product: "Kingfisher")
-//    static let DropDown: TargetDependency = .package(product: "DropDown")
     static let SkeletonView: TargetDependency = .external(name: "SkeletonView")
     static let KingFisher: TargetDependency = .external(name: "Kingfisher")
     static let DropDown: TargetDependency = .external(name: "DropDown")
+    static let Lottie: TargetDependency = .external(name: "Lottie")
 }
 public extension TargetDependency.SPM.Test {
     static let RxBlocking: TargetDependency = .external(name: "RxBlocking")
     static let RxTest: TargetDependency = .external(name: "RxTest")
-}
-
-// MARK: - Package
-public extension Package.UI {
-//    static let SkeletonView: Package = .package(url: "https://github.com/Juanpe/SkeletonView", from: "1.0.0")
-//    static let KingFihser: Package = .package(url: "https://github.com/onevcat/Kingfisher", from: "7.0.0")
-//    static let DropDown: Package = .package(url: "https://github.com/AssistoLab/DropDown", .branch("master"))
 }
