@@ -52,6 +52,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     
     private func getNavigationController(_ page: TabBarPage) -> UINavigationController {
         let navigationController = UINavigationController()
+        navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.tabBarItem = UITabBarItem(title: page.title(),
                                                        image: page.image(),
                                                        selectedImage: page.selectedImage())

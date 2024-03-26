@@ -12,7 +12,7 @@ import AlarmPresentation
 import BasePresentation
 
 public protocol AlarmCoordinatorDependencies {
-    func makeAlarmViewController() -> AlarmViewController
+    func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController
 }
 
 public protocol AlarmCoordinator: Coordinator {
@@ -39,7 +39,8 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
     }
     
     public func showAlarmViewController() {
-        let viewController = dependencies.makeAlarmViewController()
+        let flowAction = AlarmFlowAction()
+        let viewController =  dependencies.makeAlarmViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         alarmViewController = viewController
     }
