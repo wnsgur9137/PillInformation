@@ -31,8 +31,12 @@ public final class AlarmDIContainer {
 
 // MARK: - AlarmCoordinatorDependencies
 extension AlarmDIContainer: AlarmCoordinatorDependencies {
-    public func makeAlarmViewController() -> AlarmViewController {
-        return AlarmViewController()
+    public func makeAlarmReactor(flowAction: AlarmFlowAction) -> AlarmReactor {
+        return AlarmReactor(flowAction: flowAction)
+    }
+    
+    public func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController {
+        return AlarmViewController.create(with: makeAlarmReactor(flowAction: flowAction))
     }
 }
 
