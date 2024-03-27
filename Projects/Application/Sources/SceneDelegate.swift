@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
 #endif
         
-        let tabBarController = UITabBarController()
+        let tabBarController = MainTabBarController.create()
         window?.rootViewController = tabBarController
         appFlowCoordinator = AppFlowCoordinator(tabBarController: tabBarController, appDIContainer: appDIContainer)
         appFlowCoordinator?.start()
