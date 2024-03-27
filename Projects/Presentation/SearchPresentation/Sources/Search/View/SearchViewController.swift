@@ -18,6 +18,8 @@ import BasePresentation
 
 public final class SearchViewController: UIViewController, View {
     
+    // MARK: - UI Instances
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private lazy var navigationView = NavigationView(useTextField: true)
@@ -44,8 +46,12 @@ public final class SearchViewController: UIViewController, View {
     
     private let footerView = FooterView()
     
+    // MARK: - Properties
+    
     public var disposeBag = DisposeBag()
     private var adapter: SearchAdapter?
+    
+    private let searchRelay: PublishRelay<String?> = .init()
     
     // MARK: - LifeCycle
     
@@ -78,9 +84,10 @@ public final class SearchViewController: UIViewController, View {
     }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension SearchViewController {
     private func setupKeyboard() {
+        navigationView.textField.delegate = self
         keyboardBackgroundView.rx.tapGesture()
             .asDriver()
             .drive(onNext: { [weak self] _ in
@@ -112,14 +119,61 @@ extension SearchViewController {
     }
     
     private func bindAction(_ reactor: SearchReactor) {
+        searchRelay
+            .map { text in
+                Reactor.Action.search(text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        navigationView.searchButton.rx.tap
+            .map { _ in
+                self.navigationView.textField.text
+            }
+            .bind(to: searchRelay)
+            .disposed(by: disposeBag)
+        
         navigationView.searchButton.rx.tapGesture()
-            .map { _ in Reactor.Action.search(self.navigationView.textField.text ?? "") }
+            .map { _ in Reactor.Action.search(self.navigationView.textField.text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchReactor) {
+        reactor.state
+            .map { $0.alertContents }
+            .bind(onNext: { contents in
+                guard let contents = contents else { return }
+                let alert = UIAlertController(
+                    title: contents.title,
+                    message: contents.message,
+                    preferredStyle: .alert
+                )
+                let confirm = UIAlertAction(
+                    title: "확인",
+                    style: .default
+                )
+                alert.addAction(confirm)
+                self.present(alert, animated: true)
+            })
+            .disposed(by: disposeBag)
         
+        reactor.state
+            .map { $0.pillList }
+            .bind(onNext: { list in
+                print("list: \(list)")
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension SearchViewController: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == navigationView.textField {
+            searchRelay.accept(textField.text)
+        }
+        return true
     }
 }
 
