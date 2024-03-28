@@ -10,7 +10,6 @@ import UIKit
 
 import Features
 import NetworkInfra
-import Onboarding
 import Home
 import Search
 import Alarm
@@ -31,10 +30,18 @@ final class MainSceneDIContainer {
 
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
-        self.homeDIContainer = HomeDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
-        self.searchDIContainer = SearchDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
-        self.alarmDIContainer = AlarmDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
-        self.myPageDIContainer = MyPageDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
+        self.homeDIContainer = HomeDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
+        self.searchDIContainer = SearchDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
+        self.alarmDIContainer = AlarmDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
+        self.myPageDIContainer = MyPageDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
     }
     
     func makeTabBarCoordinator(tabBarController: UITabBarController) -> TabBarCoordinator {

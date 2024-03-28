@@ -43,6 +43,19 @@ extension MainTabBarController: UITabBarControllerDelegate {
     }
     
     public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        
+        print("🚨fromVC: \(fromVC)")
+        print("🚨toVC: \(toVC)")
+        print("🚨previousSelectedIndex: \(self.previousSelectedIndex)")
+        
+        if let previousSelectedIndex = self.previousSelectedIndex {
+            
+        } else {
+            
+        }
+        
+        
+        
         guard let previousSelectedIndex = self.previousSelectedIndex else { return nil }
         let toNavigationViewController = toVC as? UINavigationController
         var toIndex: Int?

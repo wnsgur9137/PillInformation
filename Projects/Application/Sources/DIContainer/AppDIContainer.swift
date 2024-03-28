@@ -23,4 +23,9 @@ final class AppDIContainer {
         let dependencies = MainSceneDIContainer.Dependencies(networkManager: networkManager)
         return MainSceneDIContainer(dependencies: dependencies)
     }
+    
+    func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
+        let dependencies = OnboardingSceneDIContainer.Dependencies(networkManager: networkManager)
+        return OnboardingSceneDIContainer(dependencies: dependencies)
+    }
 }

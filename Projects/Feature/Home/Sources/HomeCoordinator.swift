@@ -45,6 +45,10 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     
     public func start() {
         showHomeViewController()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            NotificationCenter.default.post(name: Notification.Name("showOnboardingScene"), object: nil)
+        }
     }
     
     public func showHomeViewController() {

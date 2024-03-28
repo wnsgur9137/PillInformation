@@ -10,7 +10,7 @@ import QuartzCore
 import UIKit
 
 extension CALayer {
-    func addShadow(x: CGFloat = 6.0,
+    public func addShadow(x: CGFloat = 6.0,
                      y: CGFloat = 6.0,
                      color: UIColor = Constants.Color.systemBlack,
                      alpha: Float = 0.06,
