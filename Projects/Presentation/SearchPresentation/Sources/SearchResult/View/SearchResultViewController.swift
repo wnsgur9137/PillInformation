@@ -55,9 +55,14 @@ public final class SearchResultViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: SearchResultReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension SearchResultViewController {
     private func setupKeyboard() {
         keyboardBackgroundView.rx.tapGesture()
@@ -85,11 +90,6 @@ extension SearchResultViewController {
 
 // MARK: - Binding
 extension SearchResultViewController {
-    public func bind(reactor: SearchResultReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: SearchResultReactor) {
         
     }

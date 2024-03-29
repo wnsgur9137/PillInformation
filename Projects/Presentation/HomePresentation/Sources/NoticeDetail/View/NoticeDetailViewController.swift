@@ -94,15 +94,15 @@ public final class NoticeDetailViewController: UIViewController, View {
             self?.navigationController?.popViewController(animated: true)
         })
     }
-}
-
-// MARK: - Binding
-extension NoticeDetailViewController {
+    
     public func bind(reactor: NoticeDetailReactor) {
         bindAction(reactor)
         bindState(reactor)
     }
-    
+}
+
+// MARK: - Binding
+extension NoticeDetailViewController {
     private func bindAction(_ reactor: NoticeDetailReactor) {
         self.rx.viewDidLoad
             .flatMap { _ in

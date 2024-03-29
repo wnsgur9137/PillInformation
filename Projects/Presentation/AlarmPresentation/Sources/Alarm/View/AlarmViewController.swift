@@ -46,20 +46,20 @@ public final class AlarmViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: AlarmReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension AlarmViewController {
     
 }
 
 // MARK: - Binding
 extension AlarmViewController {
-    public func bind(reactor: AlarmReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: AlarmReactor) {
         
     }

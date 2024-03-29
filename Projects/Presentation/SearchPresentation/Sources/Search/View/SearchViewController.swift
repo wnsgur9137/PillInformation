@@ -82,6 +82,11 @@ public final class SearchViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: SearchReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
 // MARK: - Methods
@@ -113,11 +118,6 @@ extension SearchViewController {
 
 // MARK: - Binding
 extension SearchViewController {
-    public func bind(reactor: SearchReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: SearchReactor) {
         searchRelay
             .map { text in

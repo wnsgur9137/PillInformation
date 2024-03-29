@@ -14,4 +14,8 @@ extension Constants {
     struct SignIn {
         struct Image { }
     }
+    
+    struct OnboardingPolicy {
+        struct Image { }
+    }
 }

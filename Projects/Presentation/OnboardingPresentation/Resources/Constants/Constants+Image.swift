@@ -16,3 +16,8 @@ extension Constants.SignIn.Image {
     static let kakaoLogo: UIImage = UIImage(named: "kakaoLogo") ?? UIImage()
     static let googleLogo: UIImage = UIImage(named: "googleLogo") ?? UIImage()
 }
+
+// MARK: - OnboardingPolicy
+extension Constants.OnboardingPolicy.Image {
+    static let backward: UIImage = .init(systemName: "chevron.backward") ?? UIImage()
+}

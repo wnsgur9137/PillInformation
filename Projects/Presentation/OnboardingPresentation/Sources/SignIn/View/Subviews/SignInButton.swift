@@ -52,7 +52,11 @@ final class SignInButton: UIButton {
     
     // MARK: - UI Instances
     
-    private let rootFlexConatainerView = UIView()
+    private let rootFlexConatainerView: UIView = {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        return view
+    }()
     
     private let buttonWidth = (CGSize.deviceSize.width / 5) * 4
     private let buttonHeight = 40.0
@@ -61,12 +65,14 @@ final class SignInButton: UIButton {
         let label = UILabel()
         label.font = Constants.Font.button1
         label.textAlignment = .center
+        label.isUserInteractionEnabled = false
         return label
     }()
     
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.isUserInteractionEnabled = false
         return imageView
     }()
     
@@ -95,7 +101,7 @@ final class SignInButton: UIButton {
     }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension SignInButton {
     private func setupTitleLabel() {
         label.text = signInType.text
@@ -118,7 +124,6 @@ extension SignInButton {
             .width(buttonWidth)
             .height(buttonHeight)
             .cornerRadius(buttonHeight / 3)
-//            .border(1, Constants.Color.dimBlack)
             .define { rootView in
                 rootView.addItem()
                     .direction(.row)

@@ -46,20 +46,9 @@ public final class SignInViewController: UIViewController, View {
         return label
     }()
     
-    private let appleLoginButton: SignInButton = {
-        let button = SignInButton(type: .apple)
-        return button
-    }()
-    
-    private let kakaoLoginButton: SignInButton = {
-        let button = SignInButton(type: .kakao)
-        return button
-    }()
-    
-    private let googleLoginButton: SignInButton = {
-        let button = SignInButton(type: .google)
-        return button
-    }()
+    private let appleLoginButton = SignInButton(type: .apple)
+    private let kakaoLoginButton = SignInButton(type: .kakao)
+    private let googleLoginButton = SignInButton(type: .google)
     
     // 사용할지 안할지 고민중
     private let lookaroundButton: UIButton = {
@@ -79,6 +68,7 @@ public final class SignInViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = Constants.Color.background
         setupLayout()
     }
     
@@ -86,22 +76,35 @@ public final class SignInViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: SignInReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension SignInViewController {
     
 }
 
 // MARK: - Binding
 extension SignInViewController {
-    public func bind(reactor: SignInReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: SignInReactor) {
+        appleLoginButton.rx.tap
+            .map { Reactor.Action.didTapAppleLoginButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        kakaoLoginButton.rx.tap
+            .map { Reactor.Action.didTapKakaoLoginButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        googleLoginButton.rx.tap
+            .map { Reactor.Action.didTapGoogleLoginButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SignInReactor) {
@@ -112,6 +115,7 @@ extension SignInViewController {
 // MARK: - Layout
 extension SignInViewController {
     private func setupLayout() {
+        let deviceSize = CGSize.deviceSize
         view.addSubview(rootFlexContainerView)
         
         rootFlexContainerView.flex
@@ -119,15 +123,15 @@ extension SignInViewController {
             .alignItems(.center)
             .define { rootView in
                 rootView.addItem(titleImageView)
-                    .width(CGSize.deviceSize.width / 4)
-                    .height(CGSize.deviceSize.width / 4)
+                    .width(deviceSize.width / 4)
+                    .height(deviceSize.width / 4)
                 rootView.addItem(titleLabel)
                 rootView.addItem(descriptionLabel)
                     .marginLeft(20.0)
                     .marginTop(24.0)
                     .marginRight(20.0)
                 rootView.addItem()
-                    .marginTop(CGSize.deviceSize.height / 4.5)
+                    .marginTop(deviceSize.height / 4.5)
                     .define { buttonStack in
                         buttonStack.addItem(appleLoginButton)
                         buttonStack.addItem(kakaoLoginButton)

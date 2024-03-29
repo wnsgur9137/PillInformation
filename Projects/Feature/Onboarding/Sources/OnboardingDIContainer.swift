@@ -31,15 +31,22 @@ public final class OnboardingDIContainer {
 
 // MARK: - OnboardingCoordinator Dependencies
 extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
-    public func showMainScene() {
-        
+    
+    // MARK: - SignIn
+    public func makeSignInReactor(flowAction: SignInFlowAction) -> SignInReactor {
+        return SignInReactor(flowAction: flowAction)
     }
     
-    public func makeSignInReactor() -> SignInReactor {
-        return SignInReactor()
+    public func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController {
+        return SignInViewController.create(with: makeSignInReactor(flowAction: flowAction))
     }
     
-    public func makeSignInViewController() -> SignInViewController {
-        return SignInViewController.create(with: makeSignInReactor())
+    // MARK: - OnboardingPolicy
+    public func makeOnboardingPolicyReactor(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
+        return OnboardingPolicyReactor(flowAction: flowAction)
+    }
+    
+    public func makeOnboardingPolicyViewController(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {
+        return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(flowAction: flowAction))
     }
 }
