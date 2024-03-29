@@ -41,7 +41,7 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
                                                dataSource: reactor,

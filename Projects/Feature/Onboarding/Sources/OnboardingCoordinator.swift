@@ -33,14 +33,15 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
                 dependencies: OnboardingCoordinatorDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        navigationController.view.backgroundColor = Constants.Color.background
     }
     
     public func start() {
         showSignInViewController()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
+//        }
     }
     
     public func showSignInViewController() {

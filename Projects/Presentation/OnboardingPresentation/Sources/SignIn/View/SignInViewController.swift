@@ -23,16 +23,26 @@ public final class SignInViewController: UIViewController, View {
     
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = Constants.Image.appLogo
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.text = Constants.appName
+        label.textColor = Constants.Color.systemBlue
+        label.font = Constants.Font.suiteExtraBold(36.0)
+        label.numberOfLines = 0
         return label
     }()
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
+        label.text = Constants.warningMessage
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteLight(12.0)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -69,7 +79,6 @@ public final class SignInViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
         setupLayout()
     }
     
@@ -105,16 +114,28 @@ extension SignInViewController {
     private func setupLayout() {
         view.addSubview(rootFlexContainerView)
         
-        rootFlexContainerView.flex.define { rootView in
-            rootView.addItem(titleImageView)
-            rootView.addItem(titleLabel)
-            rootView.addItem(descriptionLabel)
-            rootView.addItem().define { buttonStack in
-                buttonStack.addItem(appleLoginButton)
-                buttonStack.addItem(kakaoLoginButton)
-                buttonStack.addItem(googleLoginButton)
+        rootFlexContainerView.flex
+            .justifyContent(.center)
+            .alignItems(.center)
+            .define { rootView in
+                rootView.addItem(titleImageView)
+                    .width(CGSize.deviceSize.width / 4)
+                    .height(CGSize.deviceSize.width / 4)
+                rootView.addItem(titleLabel)
+                rootView.addItem(descriptionLabel)
+                    .marginLeft(20.0)
+                    .marginTop(24.0)
+                    .marginRight(20.0)
+                rootView.addItem()
+                    .marginTop(CGSize.deviceSize.height / 4.5)
+                    .define { buttonStack in
+                        buttonStack.addItem(appleLoginButton)
+                        buttonStack.addItem(kakaoLoginButton)
+                            .marginTop(10.0)
+                        buttonStack.addItem(googleLoginButton)
+                            .marginTop(10.0)
+                    }
             }
-        }
     }
     
     private func setupSubviewLayout() {

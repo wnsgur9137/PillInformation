@@ -21,15 +21,15 @@ final class SignInButton: UIButton {
             switch self {
             case .apple: return Constants.Color.systemLabel
             case .kakao: return Constants.Color.kakaoYellow
-            case .google: return Constants.Color.googleBlue
+            case .google: return Constants.Color.systemBackground
             }
         }
         
         var textColor: UIColor {
             switch self {
             case .apple: return Constants.Color.systemBackground
-            case .kakao: return Constants.Color.systemWhite
-            case .google: return Constants.Color.systemBlack
+            case .kakao: return Constants.Color.systemBlack
+            case .google: return Constants.Color.systemLabel
             }
         }
         
@@ -54,9 +54,13 @@ final class SignInButton: UIButton {
     
     private let rootFlexConatainerView = UIView()
     
+    private let buttonWidth = (CGSize.deviceSize.width / 5) * 4
+    private let buttonHeight = 40.0
+    
     private let label: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.button1
+        label.textAlignment = .center
         return label
     }()
     
@@ -75,7 +79,10 @@ final class SignInButton: UIButton {
     init(type: SignInType) {
         self.signInType = type
         super.init(frame: .zero)
+        layer.addShadow()
         setupTitleLabel()
+        setupIconImageView()
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -84,17 +91,12 @@ final class SignInButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        setupSubviewLayout()
     }
 }
 
 // MARK: - Functions
 extension SignInButton {
-    private func setupButton() {
-        backgroundColor = signInType.backGroundColor
-        layer.cornerRadius = 24.0
-        layer.addShadow()
-    }
-    
     private func setupTitleLabel() {
         label.text = signInType.text
         label.textColor = signInType.textColor
@@ -109,19 +111,27 @@ extension SignInButton {
 // MARK: - Layout
 extension SignInButton {
     private func setupLayout() {
-        let width = (UIScreen.main.bounds.width / 4) * 3
-        self.widthAnchor.constraint(equalToConstant: width).isActive = true
-        self.heightAnchor.constraint(equalToConstant: 48.0).isActive = true
-        
         addSubview(rootFlexConatainerView)
         
-        rootFlexConatainerView.flex.define { rootView in
-            rootView.addItem()
-                .direction(.row)
-                .define { contentStack in
-                    contentStack.addItem(iconImageView)
-                    contentStack.addItem(label)
-            }
+        rootFlexConatainerView.flex
+            .backgroundColor(signInType.backGroundColor)
+            .width(buttonWidth)
+            .height(buttonHeight)
+            .cornerRadius(buttonHeight / 3)
+//            .border(1, Constants.Color.dimBlack)
+            .define { rootView in
+                rootView.addItem()
+                    .direction(.row)
+                    .justifyContent(.center)
+                    .alignItems(.center)
+                    .define { contentStack in
+                        contentStack.addItem(iconImageView)
+                            .width(18.0)
+                            .height(18.0)
+                        contentStack.addItem(label)
+                            .marginLeft(10.0)
+                            .height(buttonHeight)
+                    }
         }
     }
     

@@ -51,7 +51,7 @@ extension SearchRecentCollectionViewCell {
         rootFlexContainerView.flex
             .height(height)
             .cornerRadius(height / 2)
-            .backgroundColor(Constants.Color.systemBackground)
+            .backgroundColor(Constants.Color.background)
             .justifyContent(.center)
             .define { rootView in
             rootView.addItem(label)
