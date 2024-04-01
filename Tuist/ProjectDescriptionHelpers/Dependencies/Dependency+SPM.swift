@@ -12,6 +12,7 @@ import ProjectDescription
 extension TargetDependency {
     public struct SPM {
         public struct Network { }
+        public struct Data { }
         public struct Layout { }
         public struct Reactive { }
         public struct UI { }
@@ -27,6 +28,9 @@ extension Package {
 public extension TargetDependency.SPM.Network {
     static let Alamofire: TargetDependency = .external(name: "Alamofire")
     static let Moya: TargetDependency = .external(name: "RxMoya")
+}
+public extension TargetDependency.SPM.Data {
+    static let Realm: TargetDependency = .external(name: "Realm")
 }
 public extension TargetDependency.SPM.Layout {
     static let FlexLayout: TargetDependency = .external(name: "FlexLayout")
