@@ -19,5 +19,8 @@ extension Constants.SignIn.Image {
 
 // MARK: - OnboardingPolicy
 extension Constants.OnboardingPolicy.Image {
-    static let backward: UIImage = .init(systemName: "chevron.backward") ?? UIImage()
+    static let backward: UIImage = UIImage(systemName: "chevron.backward") ?? UIImage()
+    static let forward: UIImage = UIImage(systemName: "chevron.forward") ?? UIImage()
+    static let checkboxOn: UIImage = UIImage(named: "checkboxOn") ?? UIImage()
+    static let checkboxOff: UIImage = UIImage(named: "checkboxOff") ?? UIImage()
 }

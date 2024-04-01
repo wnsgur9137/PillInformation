@@ -30,11 +30,11 @@ public enum FilledButtonStyle {
     }
     
     var selectedBackgroundColor: UIColor {
-        return Constants.Color.systemBlue // TODO: - 조금 더 어두운 블루로 변경
+        return Constants.Color.buttonHighlightBlue
     }
     
     var selectedTitleColor: UIColor {
-        return Constants.Color.systemWhite // TODO: - 하얀색에 가까운 하늘색으로 변경
+        return Constants.Color.systemWhite
     }
     
     var enableBorderColor: CGColor {

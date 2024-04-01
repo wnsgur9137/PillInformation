@@ -41,10 +41,6 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     
     public func start() {
         showSignInViewController()
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
-//        }
     }
     
     public func showSignInViewController() {
@@ -55,7 +51,10 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     }
     
     public func showOnboardingPolicyViewController() {
-        let flowAction = OnboardingPolicyFlowAction(popViewController: self.popViewController)
+        let flowAction = OnboardingPolicyFlowAction(
+            popViewController: self.popViewController,
+            showMainScene: self.showMainScene
+        )
         let viewController = dependencies.makeOnboardingPolicyViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         onboardingPolicyViewController = viewController
@@ -63,5 +62,9 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     
     private func popViewController(animated: Bool = true) {
         navigationController?.popViewController(animated: animated)
+    }
+    
+    private func showMainScene() {
+        NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
     }
 }
