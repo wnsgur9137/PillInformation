@@ -61,6 +61,12 @@ public final class OnboardingPolicyViewController: UIViewController, View {
         return view
     }()
     
+    private let privacyPolicyCheckBoxView: PolicyCheckboxView = {
+        let view = PolicyCheckboxView(hasMoreButton: true)
+        view.title = Constants.OnboardingPolicy.privacyPolicy
+        return view
+    }()
+    
     private let daytimeNotiPolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: false)
         view.title = Constants.OnboardingPolicy.daytimeNotificationPolicy
@@ -142,6 +148,12 @@ extension OnboardingPolicyViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        privacyPolicyCheckBoxView.rx.tapGesture()
+            .skip(1)
+            .map { _ in Reactor.Action.didTapPrivacyPolicy }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         daytimeNotiPolicyCheckBoxView.rx.tapGesture()
             .skip(1)
             .map { _ in Reactor.Action.didTapDaytimeNotiPolicy }
@@ -151,6 +163,16 @@ extension OnboardingPolicyViewController {
         nighttimeNotiPolicyCheckBoxView.rx.tapGesture()
             .skip(1)
             .map { _ in Reactor.Action.didTapNighttimeNotiPolicy }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        appPolicyCheckBoxView.seeMoreButton.rx.tap
+            .map { Reactor.Action.didTapAppPolicyMoreButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        privacyPolicyCheckBoxView.seeMoreButton.rx.tap
+            .map { Reactor.Action.didTapPrivacyPolicyMoreButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -177,6 +199,13 @@ extension OnboardingPolicyViewController {
             .map { $0.isCheckedAppPolicy }
             .bind(onNext: { [weak self] isChecked in
                 self?.appPolicyCheckBoxView.isChecked = isChecked
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.isCheckedPrivacyPolicy }
+            .bind(onNext: { [weak self] isChecked in
+                self?.privacyPolicyCheckBoxView.isChecked = isChecked
             })
             .disposed(by: disposeBag)
         
@@ -212,35 +241,36 @@ extension OnboardingPolicyViewController {
         rootFlexContainerView.flex
             .margin(20, 10, 10, 10)
             .define { rootView in
-            rootView.addItem(titleLabel)
+                rootView.addItem(titleLabel)
                     .marginLeft(20.0)
-            rootView.addItem(descriptionLabel)
+                rootView.addItem(descriptionLabel)
                     .marginLeft(20.0)
-            
-            rootView.addItem(agePolicyCheckBoxView)
-                .marginTop(30.0)
-            rootView.addItem(appPolicyCheckBoxView)
-            rootView.addItem(daytimeNotiPolicyCheckBoxView)
-            rootView.addItem(nighttimeNotiPolicyCheckBoxView)
-            rootView.addItem()
-                .grow(1)
-            
-            rootView.addItem()
-                .direction(.row)
-                .justifyContent(.start)
-                .marginTop(30.0)
-                .marginLeft(10.0)
-                .marginRight(10.0)
-                .height(.largeButton)
-                .define { buttonStack in
-                    buttonStack.addItem(confirmButton)
-                        .grow(0.8)
-                        .marginRight(5.0)
-                    buttonStack.addItem(allAgreeButton)
-                        .marginLeft(5.0)
-                        .grow(1)
-                }
-        }
+                
+                rootView.addItem(agePolicyCheckBoxView)
+                    .marginTop(30.0)
+                rootView.addItem(appPolicyCheckBoxView)
+                rootView.addItem(privacyPolicyCheckBoxView)
+                rootView.addItem(daytimeNotiPolicyCheckBoxView)
+                rootView.addItem(nighttimeNotiPolicyCheckBoxView)
+                rootView.addItem()
+                    .grow(1)
+                
+                rootView.addItem()
+                    .direction(.row)
+                    .justifyContent(.start)
+                    .marginTop(30.0)
+                    .marginLeft(10.0)
+                    .marginRight(10.0)
+                    .height(.largeButton)
+                    .define { buttonStack in
+                        buttonStack.addItem(confirmButton)
+                            .grow(0.8)
+                            .marginRight(5.0)
+                        buttonStack.addItem(allAgreeButton)
+                            .marginLeft(5.0)
+                            .grow(1)
+                    }
+            }
     }
     
     private func setupSubviewLayout() {
@@ -250,7 +280,9 @@ extension OnboardingPolicyViewController {
             .width(70.0)
             .height(30.0)
         rootFlexContainerView.pin
-            .topLeft(to: backwardButton.anchor.bottomLeft).marginVertical(10.0).marginHorizontal(-20.0)
+            .topLeft(to: backwardButton.anchor.bottomLeft)
+            .marginVertical(10.0)
+            .marginHorizontal(-20.0)
             .right(20)
             .bottom(view.safeAreaInsets.bottom)
         rootFlexContainerView.flex.layout()

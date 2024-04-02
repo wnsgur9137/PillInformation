@@ -59,7 +59,7 @@ final class SignInButton: UIButton {
     }()
     
     private let buttonWidth = (CGSize.deviceSize.width / 5) * 4
-    private let buttonHeight = 40.0
+    private let buttonHeight = 50.0
     
     private let label: UILabel = {
         let label = UILabel()

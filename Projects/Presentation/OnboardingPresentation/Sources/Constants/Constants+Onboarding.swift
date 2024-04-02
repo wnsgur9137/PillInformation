@@ -18,4 +18,6 @@ extension Constants {
     struct OnboardingPolicy {
         struct Image { }
     }
+    
+    struct Policy { }
 }

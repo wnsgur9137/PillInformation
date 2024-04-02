@@ -30,6 +30,7 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     private let dependencies: OnboardingCoordinatorDependencies
     private weak var signInViewController: SignInViewController?
     private weak var onboardingPolicyViewController: OnboardingPolicyViewController?
+    private weak var policyViewController: PolicyViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: OnboardingCoordinatorDependencies) {
@@ -53,7 +54,8 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     public func showOnboardingPolicyViewController() {
         let flowAction = OnboardingPolicyFlowAction(
             popViewController: self.popViewController,
-            showMainScene: self.showMainScene
+            showMainScene: self.showMainScene,
+            showPolicyViewController: self.showPolicyViewController
         )
         let viewController = dependencies.makeOnboardingPolicyViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -66,5 +68,13 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     
     private func showMainScene() {
         NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
+    }
+    
+    private func showPolicyViewController(type: PolicyReactor.PolicyType) {
+        let flowAction = PolicyFlowAction(popViewController: self.popViewController)
+        let reactor = PolicyReactor(policyType: type, flowAction: flowAction)
+        let viewController = PolicyViewController.create(with: reactor)
+        navigationController?.pushViewController(viewController, animated: true)
+        self.policyViewController = viewController
     }
 }
