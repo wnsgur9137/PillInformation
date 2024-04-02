@@ -30,7 +30,7 @@ public extension TargetDependency.SPM.Network {
     static let Moya: TargetDependency = .external(name: "RxMoya")
 }
 public extension TargetDependency.SPM.Data {
-    static let Realm: TargetDependency = .external(name: "Realm")
+    static let RealmSwift: TargetDependency = .external(name: "RealmSwift")
 }
 public extension TargetDependency.SPM.Layout {
     static let FlexLayout: TargetDependency = .external(name: "FlexLayout")

@@ -12,6 +12,6 @@ let project: Project = .project(
     name: "DataLibraries",
     product: .framework,
     dependencies: [
-        .SPM.Data.Realm
+        .SPM.Data.RealmSwift
     ]
 )
