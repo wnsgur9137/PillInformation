@@ -92,6 +92,7 @@ public extension TargetDependency.Project.Infrastructure {
 public extension TargetDependency.Project.LibraryManager {
     static let NetworkLibraries: TargetDependency = .project(layer: .LibraryManager, name: "NetworkLibraries")
     static let DataLibraries: TargetDependency = .project(layer: .LibraryManager, name: "DataLibraries")
+    static let KakaoLibraries: TargetDependency = .project(layer: .LibraryManager, name: "KakaoLibraries")
     static let ReactiveLibraries: TargetDependency = .project(layer: .LibraryManager, name: "ReactiveLibraries")
     static let LayoutLibraries: TargetDependency = .project(layer: .LibraryManager, name: "LayoutLibraries")
     static let UILibraries: TargetDependency = .project(layer: .LibraryManager, name: "UILibraries")

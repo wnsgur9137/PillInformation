@@ -11,6 +11,12 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+enum SignInType {
+    case apple
+    case kakao
+    case google
+}
+
 public struct SignInFlowAction {
     let showOnboardingPolicyViewController: () -> Void
     
@@ -21,14 +27,14 @@ public struct SignInFlowAction {
 
 public final class SignInReactor: Reactor {
     public enum Action {
-        case didTapAppleLoginButton
-        case didTapKakaoLoginButton
+        case didTapAppleLoginButton(String)
+        case didTapKakaoLoginButton(String)
         case didTapGoogleLoginButton
     }
     
     public enum Mutation {
-        case appleLogin
-        case kakaoLogin
+        case appleLogin(String)
+        case kakaoLogin(String)
         case googleLogin
     }
     
@@ -49,10 +55,10 @@ public final class SignInReactor: Reactor {
 extension SignInReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .didTapAppleLoginButton:
-            return .just(.appleLogin)
-        case .didTapKakaoLoginButton:
-            return .just(.kakaoLogin)
+        case let .didTapAppleLoginButton(token):
+            return .just(.appleLogin(token))
+        case let .didTapKakaoLoginButton(token):
+            return .just(.kakaoLogin(token))
         case .didTapGoogleLoginButton:
             return .just(.googleLogin)
         }
@@ -61,8 +67,10 @@ extension SignInReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .appleLogin: showOnboardingPolicyViewController()
-        case .kakaoLogin: break
+        case let .appleLogin(token):
+            showOnboardingPolicyViewController()
+            
+        case let .kakaoLogin(token): break
         case .googleLogin: break
         }
         return state

@@ -13,6 +13,7 @@ extension TargetDependency {
     public struct SPM {
         public struct Network { }
         public struct Data { }
+        public struct Kakao { }
         public struct Layout { }
         public struct Reactive { }
         public struct UI { }
@@ -31,6 +32,12 @@ public extension TargetDependency.SPM.Network {
 }
 public extension TargetDependency.SPM.Data {
     static let RealmSwift: TargetDependency = .external(name: "RealmSwift")
+}
+public extension TargetDependency.SPM.Kakao {
+    static let KakaoSDKCommon: TargetDependency = .external(name: "KakaoSDKCommon")
+    static let KakaoSDKAuth: TargetDependency = .external(name: "KakaoSDKAuth")
+    static let KakaoSDKUser: TargetDependency = .external(name: "KakaoSDKUser")
+    static let KakaoSDKTalk: TargetDependency = .external(name: "KakaoSDKTalk")
 }
 public extension TargetDependency.SPM.Layout {
     static let FlexLayout: TargetDependency = .external(name: "FlexLayout")

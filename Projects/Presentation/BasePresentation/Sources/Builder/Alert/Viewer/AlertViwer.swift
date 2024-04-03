@@ -29,6 +29,10 @@ public struct AlertViewer {
         
         alert.widthAnchor.constraint(equalTo: viewController.view.widthAnchor, multiplier: 0.8).isActive = true
     }
+    
+    public init() {
+        
+    }
 }
 
 // MARK: - SingleButton Alert
@@ -42,7 +46,7 @@ extension AlertViewer {
     ///   - title: 타이틀
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
-    func showSingleButtonAlert(_ viewController: UIViewController,
+    public func showSingleButtonAlert(_ viewController: UIViewController,
                                image: UIImage? = nil,
                                title: AlertText?,
                                message: AlertText? = nil,
@@ -61,7 +65,7 @@ extension AlertViewer {
         attachAlert(viewController: viewController, alert: alertBuilder.alert)
     }
     
-    func showSingleButtonAlert(_ viewController: UIViewController,
+    public func showSingleButtonAlert(_ viewController: UIViewController,
                                image: UIImage? = nil,
                                title: AlertText?,
                                message: AlertAttributedText,
@@ -92,7 +96,7 @@ extension AlertViewer {
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
     ///   - cancelButtonInfo: 취소 버튼 설정 정보
-    func showDualButtonAlert(_ viewController: UIViewController,
+    public func showDualButtonAlert(_ viewController: UIViewController,
                              image: UIImage? = nil,
                              title: AlertText?,
                              message: AlertText? = nil,
@@ -126,7 +130,7 @@ extension AlertViewer {
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
     ///   - cancelButtonInfo: 취소 버튼 설정 정보
-    func showDualButtonAlet(_ viewController: UIViewController,
+    public func showDualButtonAlet(_ viewController: UIViewController,
                             image: UIImage? = nil,
                             title: AlertText?,
                             message: AlertAttributedText? = nil,

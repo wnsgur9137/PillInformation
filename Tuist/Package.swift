@@ -35,6 +35,7 @@ let package = Package(
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.11.0"),
         .package(url: "https://github.com/AssistoLab/DropDown", branch: "master"),
         .package(url: "https://github.com/airbnb/lottie-ios", from: "4.4.1"),
-        .package(url: "https://github.com/realm/realm-swift", branch: "master")
+        .package(url: "https://github.com/realm/realm-swift", branch: "master"),
+        .package(url: "https://github.com/kakao/kakao-ios-sdk", branch: "master")
     ]
 )

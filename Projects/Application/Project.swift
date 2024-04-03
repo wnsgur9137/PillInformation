@@ -45,6 +45,18 @@ let defaultInfoPlist: [String: Plist.Value] = [
     ],
     "NSAppTransportSecurity": [
         "NSAllowsArbitraryLoads": true
+    ],
+    "LSApplicationQueriesSchemes": [
+        "kakaokompassauth",
+        "kakaolink"
+    ],
+    "CFBundleURLTypes": [
+        [
+            "CFBundleTypeRole": "Editor",
+            "CFBundleURLSchemes": [
+                "\(String.kakaoNativeAppKey)"
+            ]
+        ]
     ]
 ]
 

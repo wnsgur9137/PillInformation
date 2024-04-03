@@ -17,8 +17,8 @@ public struct AlertText {
     let alignment: NSTextAlignment
     
     public init(text: String,
-         color: UIColor,
-         alignment: NSTextAlignment) {
+                color: UIColor = .label,
+                alignment: NSTextAlignment = .center) {
         self.text = text
         self.color = color
         self.alignment = alignment
@@ -30,7 +30,7 @@ public struct AlertAttributedText {
     let alignment: NSTextAlignment
     
     public init(attributedText: NSAttributedString,
-         alignment: NSTextAlignment) {
+                alignment: NSTextAlignment = .center) {
         self.attributedText = attributedText
         self.alignment = alignment
     }
@@ -42,8 +42,8 @@ public struct AlertButtonInfo {
     let action: () -> Void
     
     public init(title: String?,
-         isEnabled: Bool,
-         action: @escaping () -> Void) {
+                isEnabled: Bool = true,
+                action: @escaping () -> Void = {}) {
         self.title = title
         self.isEnabled = isEnabled
         self.action = action
