@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 
 public protocol UserRepository {
-    func fetchUser() -> Single<User>
+    func fetchUser(userID: Int) -> Single<User>
     func save(_ user: User) -> Single<Void>
 }

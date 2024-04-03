@@ -77,12 +77,15 @@ public final class OnboardingPolicyReactor: Reactor {
     }
     
     public var initialState = State()
+    private let userUseCase: UserUseCase
     public let flowAction: OnboardingPolicyFlowAction
     private let disposeBag = DisposeBag()
     
     private var policys = PolicyChecked()
     
-    public init(flowAction: OnboardingPolicyFlowAction) {
+    public init(userUseCase: UserUseCase,
+                flowAction: OnboardingPolicyFlowAction) {
+        self.userUseCase = userUseCase
         self.flowAction = flowAction
     }
     

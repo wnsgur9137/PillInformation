@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 public protocol UserStorage {
-    func getUserResponse() -> Single<UserDTO>
     func save(response: UserDTO) -> Single<Void>
+    func get(userID: Int) -> Single<UserDTO>
+    func update(userID: Int, updatedResponse: UserDTO) -> Single<UserDTO>
+    func delete(userID: Int) -> Single<Void>
 }

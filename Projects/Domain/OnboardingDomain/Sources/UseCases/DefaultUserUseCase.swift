@@ -21,8 +21,8 @@ public final class DefaultUserUseCase: UserUseCase {
 }
 
 extension DefaultUserUseCase {
-    public func executeUser() -> Single<UserModel> {
-        return userRepository.fetchUser().map { $0.toModel() }
+    public func executeUser(userID: Int) -> Single<UserModel> {
+        return userRepository.fetchUser(userID: userID).map { $0.toModel() }
     }
     
     public func save(_ userModel: UserModel) -> Single<Void> {

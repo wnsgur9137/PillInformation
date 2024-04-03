@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 
 public protocol UserUseCase {
-    func executeUser() -> Single<UserModel>
-    func save(_ user: User) -> Single<Void>
+    func executeUser(userID: Int) -> Single<UserModel>
+    func save(_ user: UserModel) -> Single<Void>
 }

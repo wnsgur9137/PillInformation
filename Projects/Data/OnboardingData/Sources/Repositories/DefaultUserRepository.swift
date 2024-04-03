@@ -15,14 +15,14 @@ public struct DefaultUserRepository: UserRepository {
     
     private let userStorage: UserStorage
     
-    public init(userStorage: UserStorage) {
+    public init(userStorage: UserStorage = RealmUserStorage()) {
         self.userStorage = userStorage
     }
 }
 
 extension DefaultUserRepository {
-    public func fetchUser() -> Single<User> {
-        return userStorage.getUserResponse().map { $0.toDomain() }
+    public func fetchUser(userID: Int) -> Single<User> {
+        return userStorage.get(userID: userID).map { $0.toDomain() }
     }
     
     public func save(_ user: User) -> Single<Void> {

@@ -42,8 +42,17 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     }
     
     // MARK: - OnboardingPolicy
+    public func makeUserRepository() -> UserRepository {
+        return DefaultUserRepository()
+    }
+    
+    public func makeUserUseCase() -> UserUseCase {
+        return DefaultUserUseCase(with: makeUserRepository())
+    }
+    
     public func makeOnboardingPolicyReactor(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
-        return OnboardingPolicyReactor(flowAction: flowAction)
+        return OnboardingPolicyReactor(userUseCase: makeUserUseCase(),
+                                       flowAction: flowAction)
     }
     
     public func makeOnboardingPolicyViewController(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {

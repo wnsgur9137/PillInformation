@@ -93,7 +93,6 @@ extension PolicyCheckboxView {
                 if hasMoreButton {
                     rootView.addItem(seeMoreButton)
                         .width(48.0)
-                        .height(48.0)
                 }
         }
     }

@@ -88,7 +88,9 @@ let targets: [Target] = [
                 .debug(
                     name: .DEV,
                     settings: [
-                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer"
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)-Dev",
+                        "PRODUCT_NAME": "PillInformation-Dev"
                     ],
                     xcconfig: .XCConfig.app(.DEV)
                 ),
@@ -96,7 +98,9 @@ let targets: [Target] = [
                     name: .PROD,
                     settings: [
                         "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
-                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon"
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)",
+                        "PRODUCT_NAME": "PillInformation"
                     ],
                     xcconfig: .XCConfig.app(.PROD)
                 )
