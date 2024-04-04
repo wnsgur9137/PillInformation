@@ -15,6 +15,8 @@ extension Constants.SignIn {
     static let kakaoLogin: String = "Kakao 로그인"
     static let googleLogin: String = "Google 로그인"
     static let canNotAppleSignInTitle: String = "일시적으로 애플 로그인을 사용할 수 없습니다."
+    static let canNotKakaoSignInTitle: String = "일시적으로 카카오 로그인을 사용할 수 없습니다."
+    static let canNotGoogleSignInTitle: String = "일시적으로 구글 로그인을 사용할 수 없습니다."
     static let tryAgainLater: String = "잠시 후 다시 시도해주세요."
     static let ok: String = "확인"
 }

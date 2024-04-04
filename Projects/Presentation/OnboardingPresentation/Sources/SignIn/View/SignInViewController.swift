@@ -13,7 +13,9 @@ import RxCocoa
 import FlexLayout
 import PinLayout
 import AuthenticationServices
+import KakaoSDKCommon
 import KakaoSDKUser
+import RxKakaoSDKUser
 
 import BasePresentation
 
@@ -69,6 +71,12 @@ public final class SignInViewController: UIViewController, View {
     public static func create(with reactor: SignInReactor) -> SignInViewController {
         let viewController = SignInViewController()
         viewController.reactor = reactor
+        
+        if let appConfigurations = Bundle.main.infoDictionary?["AppConfigurations"] as? [String: String],
+           let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
+            KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
+        }
+        
         return viewController
     }
     
@@ -104,32 +112,50 @@ extension SignInViewController {
     
     private func kakaoSignIn() {
         if (UserApi.isKakaoTalkLoginAvailable()) {
-            UserApi.shared.loginWithKakaoTalk() { oauthToken, error in
-                if let error = error {
+            UserApi.shared.rx.loginWithKakaoTalk()
+                .subscribe(onNext: { oauthToken in
+                    self.kakaoSignInSubject.onNext(oauthToken.accessToken)
+                }, onError: { _ in
                     self.showCanNotSignInAlert(.kakao)
-                    return
-                }
-                guard let accessToken = oauthToken?.accessToken else { return }
-                self.kakaoSignInSubject.onNext(accessToken)
-            }
+                })
+                .disposed(by: disposeBag)
+            
+        } else {
+            UserApi.shared.rx.loginWithKakaoAccount()
+                .subscribe(onNext: { oauthToken in
+                    self.kakaoSignInSubject.onNext(oauthToken.accessToken)
+                }, onError: { error in
+                    if let error = error as? SdkError,
+                       case let .ClientFailed(reason, _) = error,
+                        reason != .Cancelled {
+                        self.showCanNotSignInAlert(.kakao)
+                    }
+                })
+                .disposed(by: disposeBag)
         }
     }
     
     private func showCanNotSignInAlert(_ type: SignInType) {
+        var title: AlertText?
+        let message = AlertText(text: Constants.SignIn.tryAgainLater)
+        let confirmButtonInfo = AlertButtonInfo(title: Constants.SignIn.ok)
+        
         switch type {
-        case .apple: break
-//            let title = AlertText(text: Constants.SignIn.canNotAppleSignInTitle)
-//            let message = AlertText(text: Constants.SignIn.tryAgainLater)
-//            let confirmButtonInfo = AlertButtonInfo(title: Constants.SignIn.ok)
-//            AlertViewer()
-//                .showSingleButtonAlert(self,
-//                                       title: title,
-//                                       message: message,
-//                                       confirmButtonInfo: confirmButtonInfo)
-        case .kakao: break
+        case .apple:
+            title = AlertText(text: Constants.SignIn.canNotAppleSignInTitle)
             
-        case .google: break
+        case .kakao:
+            title = AlertText(text: Constants.SignIn.canNotKakaoSignInTitle)
+                        
+        case .google:
+            title = AlertText(text: Constants.SignIn.canNotGoogleSignInTitle)
         }
+        
+        AlertViewer()
+            .showSingleButtonAlert(self,
+                                   title: title,
+                                   message: message,
+                                   confirmButtonInfo: confirmButtonInfo)
     }
 }
 
@@ -165,7 +191,7 @@ extension SignInViewController {
     }
     
     private func bindState(_ reactor: SignInReactor) {
-        showCanNotSignInAlert(.apple)
+        
     }
 }
 
@@ -187,6 +213,11 @@ extension SignInViewController: ASAuthorizationControllerDelegate {
     
     /// 애플 로그인 실패 (취소 포함)
     public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
+        // 취소인경우 리턴
+        guard let error = error as? ASAuthorizationError,
+            error.code.rawValue != 1000 else {
+            return
+        }
         showCanNotSignInAlert(.apple)
     }
 }

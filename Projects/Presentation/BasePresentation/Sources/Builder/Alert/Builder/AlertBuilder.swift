@@ -17,7 +17,7 @@ public struct AlertText {
     let alignment: NSTextAlignment
     
     public init(text: String,
-                color: UIColor = .label,
+                color: UIColor = Constants.Color.systemLabel,
                 alignment: NSTextAlignment = .center) {
         self.text = text
         self.color = color
@@ -87,7 +87,7 @@ extension AlertBuilder {
     @discardableResult
     public func addTitleLabel(_ title: AlertText?) -> Self {
         guard let title = title else { return self }
-        alert.addTitleLabel(.button(title.text,
+        alert.addTitleLabel(.title(title.text,
                                     color: title.color,
                                     alignment: title.alignment))
         return self
@@ -107,7 +107,7 @@ extension AlertBuilder {
     @discardableResult
     public func addMessageLabel(_ message: AlertText?) -> Self {
         guard let message = message else { return self }
-        alert.addMessageLabel(.button(message.text,
+        alert.addMessageLabel(.message(message.text,
                                       color: message.color,
                                       alignment: message.alignment))
         return self

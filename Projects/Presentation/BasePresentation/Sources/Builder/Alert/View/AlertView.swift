@@ -8,27 +8,32 @@
 
 import UIKit
 import Lottie
-import FlexLayout
-import PinLayout
 
 public final class AlertView: UIView {
-    private let rootFlexContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.Color.systemWhite
-        view.layer.cornerRadius = 24.0
-        view.layer.addShadow()
-        return view
+    
+    private let rootStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 24.0
+        return stackView
     }()
     
-    private let labelContainerView: UIView = {
-        let view = UIView()
-        return view
+    private let labelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8.0
+        return stackView
     }()
     
-    private let buttonContainerView: UIView = {
-        let view = UIView()
-        return view
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 8.0
+        return stackView
     }()
     
     lazy var popupImageView: UIImageView = {
@@ -54,16 +59,17 @@ public final class AlertView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        setupDefaultLayout()
+        
+        backgroundColor = Constants.Color.systemWhite
+        layer.cornerRadius = 24.0
+        layer.addShadow()
+        
+        addSubviews()
+        setupLayoutConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        setupSubviewLayout()
     }
 }
 
@@ -71,79 +77,70 @@ extension AlertView {
     func setup(popupImageName: String) {
         guard let image = UIImage(named: popupImageName) else { return }
         popupImageView.image = image
-        setupPopupImageLayout()
+        setupImageViewLayout()
     }
     
     func setup(popupImage: UIImage) {
         popupImageView.image = popupImage
-        setupPopupImageLayout()
+        setupImageViewLayout()
     }
     
     func addTitleLabel(_ text: String) {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 0
         titleLabel.text = text
-        titleLabel.font = Constants.Font.suiteBold(14.0)
-        labelContainerView.flex.addItem(titleLabel)
+        titleLabel.font = Constants.Font.suiteBold(24.0)
+        labelStackView.addArrangedSubview(titleLabel)
     }
     
     func addTitleLabel(_ attributedString: NSAttributedString) {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 0
         titleLabel.attributedText = attributedString
-        labelContainerView.flex.addItem(titleLabel)
+        labelStackView.addArrangedSubview(titleLabel)
     }
     
     func addMessageLabel(_ text: String) {
         let messageLabel = UILabel()
         messageLabel.numberOfLines = 0
         messageLabel.text = text
-        messageLabel.font = Constants.Font.suiteRegular(12.0)
-        labelContainerView.flex.addItem(messageLabel)
+        messageLabel.font = Constants.Font.suiteRegular(18.0)
+        labelStackView.addArrangedSubview(messageLabel)
     }
     
     func addMessageLabel(_ attributedString: NSAttributedString) {
         let messageLabel = UILabel()
         messageLabel.numberOfLines = 0
         messageLabel.attributedText = attributedString
-        labelContainerView.flex.addItem(messageLabel)
+        labelStackView.addArrangedSubview(messageLabel)
     }
     
     func setupCancelButton() {
-        buttonContainerView.flex.addItem(cancelButton)
-    }
-    
-    func updateLayout() {
-        setupSubviewLayout()
+        buttonStackView.addArrangedSubview(cancelButton)
     }
 }
 
 // MARK: - Layout
 extension AlertView {
-    private func setupDefaultLayout() {
-        addSubview(rootFlexContainerView)
+    private func addSubviews() {
+        addSubview(rootStackView)
+        rootStackView.addArrangedSubview(labelStackView)
+        rootStackView.addArrangedSubview(buttonStackView)
         
-        rootFlexContainerView.flex
-            .padding(32.0, 24.0, 32.0, 24.0)
-            .define { rootView in
-            rootView.addItem(labelContainerView)
-            rootView.addItem(buttonContainerView)
-        }
+        buttonStackView.addArrangedSubview(confirmButton)
+        confirmButton.backgroundColor = .yellow.withAlphaComponent(0.3)
     }
     
-    private func setupSubviewLayout() {
-        rootFlexContainerView.pin.all()
-        rootFlexContainerView.flex.layout()
-        
-        labelContainerView.flex.layout()
-        buttonContainerView.flex.layout()
+    private func setupLayoutConstraints() {
+        rootStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24.0).isActive = true
+        rootStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 24.0).isActive = true
+        rootStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24.0).isActive = true
+        rootStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -24.0).isActive = true
     }
     
-    private func setupPopupImageLayout() {
+    private func setupImageViewLayout() {
         addSubview(popupImageView)
-        popupImageView.centerXAnchor.constraint(equalTo: rootFlexContainerView.centerXAnchor).isActive = true
-        popupImageView.bottomAnchor.constraint(equalTo: rootFlexContainerView.topAnchor).isActive = true
-        popupImageView.heightAnchor.constraint(equalToConstant: 200.0).isActive = true
-        popupImageView.widthAnchor.constraint(equalToConstant: 200.0).isActive = true
+        popupImageView.centerYAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        popupImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
     }
 }

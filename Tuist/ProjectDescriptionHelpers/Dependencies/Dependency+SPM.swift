@@ -34,10 +34,10 @@ public extension TargetDependency.SPM.Data {
     static let RealmSwift: TargetDependency = .external(name: "RealmSwift")
 }
 public extension TargetDependency.SPM.Kakao {
-    static let KakaoSDKCommon: TargetDependency = .external(name: "KakaoSDKCommon")
-    static let KakaoSDKAuth: TargetDependency = .external(name: "KakaoSDKAuth")
-    static let KakaoSDKUser: TargetDependency = .external(name: "KakaoSDKUser")
-    static let KakaoSDKTalk: TargetDependency = .external(name: "KakaoSDKTalk")
+    static let KakaoSDKCommon: TargetDependency = .external(name: "RxKakaoSDKCommon")
+    static let KakaoSDKAuth: TargetDependency = .external(name: "RxKakaoSDKAuth")
+    static let KakaoSDKUser: TargetDependency = .external(name: "RxKakaoSDKUser")
+    static let KakaoSDKTalk: TargetDependency = .external(name: "RxKakaoSDKTalk")
 }
 public extension TargetDependency.SPM.Layout {
     static let FlexLayout: TargetDependency = .external(name: "FlexLayout")

@@ -8,6 +8,7 @@
 
 import UIKit
 import KakaoSDKAuth
+import RxKakaoSDKAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     

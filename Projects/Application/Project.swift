@@ -37,6 +37,7 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-SemiBold.otf"
     ],
     "AppConfigurations": [
+        "KAKAO_NATIVE_APP_KEY": "${KAKAO_NATIVE_APP_KEY}",
         "API_BASE_URL": "${API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
@@ -62,9 +63,10 @@ let defaultInfoPlist: [String: Plist.Value] = [
 
 // MARK: - Settings
 let settings: Settings = .settings(
-//    base: [
-//        "OTHER_LDFLAGS": ["-lc++", "-Objc"]
-//    ],
+    base: [
+//        "DEVELOPMENT_TEAM": "V72FNLD2UF"
+        "DEVELOPMENT_TEAM": "VW2UR5Y845"
+    ],
     configurations: [
         .debug(name: .DEV),
         .debug(name: .TEST_DEV),
@@ -89,6 +91,7 @@ let targets: [Target] = [
         infoPlist: .extendingDefault(with: defaultInfoPlist),
         sources: ["Sources/**"],
         resources: ["Resources/**"],
+        entitlements: "../../SupportingFiles/PillInformation.entitlements",
         scripts: scripts,
         dependencies: [
             .Project.Feature.Features,
@@ -128,6 +131,7 @@ let targets: [Target] = [
         deploymentTargets: deploymentTargets,
         infoPlist: .default,
         sources: ["Tests/**"],
+        entitlements: "../../SupportingFiles/PillInformation.entitlements",
         dependencies: [
             .target(name: projectName)
         ],
