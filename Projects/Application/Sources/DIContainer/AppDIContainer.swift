@@ -25,7 +25,8 @@ final class AppDIContainer {
     }
     
     func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
-        let dependencies = OnboardingSceneDIContainer.Dependencies(networkManager: networkManager)
+        let dependencies = OnboardingSceneDIContainer.Dependencies(networkManager: networkManager,
+                                                                   kakaoNativeAppKey: appConfiguration.kakaoNativeAppKey)
         return OnboardingSceneDIContainer(dependencies: dependencies)
     }
 }

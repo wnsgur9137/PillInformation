@@ -50,4 +50,11 @@ final class AppConfiguration {
         }
         return medicineInfoApiKey
     }()
+    
+    lazy var kakaoNativeAppKey: String = {
+        guard let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] else {
+            fatalError("KAKAO_NATIVE_APP_KEY must not be empty in plist")
+        }
+        return kakaoNativeAppKey
+    }()
 }

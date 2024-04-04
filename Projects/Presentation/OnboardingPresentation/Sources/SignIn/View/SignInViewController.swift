@@ -68,14 +68,11 @@ public final class SignInViewController: UIViewController, View {
     private let googleSignInSubject = PublishSubject<Void>()
     
     // MARK: - Lifecycle
-    public static func create(with reactor: SignInReactor) -> SignInViewController {
+    public static func create(with reactor: SignInReactor,
+                              kakaoNativeAppKey: String) -> SignInViewController {
         let viewController = SignInViewController()
         viewController.reactor = reactor
-        
-        if let appConfigurations = Bundle.main.infoDictionary?["AppConfigurations"] as? [String: String],
-           let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
-            KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
-        }
+        KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
         
         return viewController
     }
