@@ -32,7 +32,7 @@ public enum OutlineButtonStyle {
         case .defaultLarge, .defaultMedium: 
             return Constants.Color.systemLabel.cgColor
         case .primaryLarge, .primaryMedium: 
-            return Constants.Color.systemBlue.cgColor // TODO: - 더 어두운 블루로 변경
+            return Constants.Color.buttonHighlightBlue.cgColor
         }
     }
     
@@ -62,7 +62,7 @@ public enum OutlineButtonStyle {
         case .defaultLarge, .defaultMedium: 
             return Constants.Color.systemDarkGray
         case .primaryLarge, .primaryMedium: 
-            return Constants.Color.systemBlue // TODO: - 더 어두운 블루로 변경
+            return Constants.Color.buttonHighlightBlue
         }
     }
     

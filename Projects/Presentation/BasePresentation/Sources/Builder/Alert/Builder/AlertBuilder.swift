@@ -17,8 +17,8 @@ public struct AlertText {
     let alignment: NSTextAlignment
     
     public init(text: String,
-         color: UIColor,
-         alignment: NSTextAlignment) {
+                color: UIColor = Constants.Color.systemLabel,
+                alignment: NSTextAlignment = .center) {
         self.text = text
         self.color = color
         self.alignment = alignment
@@ -30,7 +30,7 @@ public struct AlertAttributedText {
     let alignment: NSTextAlignment
     
     public init(attributedText: NSAttributedString,
-         alignment: NSTextAlignment) {
+                alignment: NSTextAlignment = .center) {
         self.attributedText = attributedText
         self.alignment = alignment
     }
@@ -42,8 +42,8 @@ public struct AlertButtonInfo {
     let action: () -> Void
     
     public init(title: String?,
-         isEnabled: Bool,
-         action: @escaping () -> Void) {
+                isEnabled: Bool = true,
+                action: @escaping () -> Void = {}) {
         self.title = title
         self.isEnabled = isEnabled
         self.action = action
@@ -87,7 +87,7 @@ extension AlertBuilder {
     @discardableResult
     public func addTitleLabel(_ title: AlertText?) -> Self {
         guard let title = title else { return self }
-        alert.addTitleLabel(.button(title.text,
+        alert.addTitleLabel(.title(title.text,
                                     color: title.color,
                                     alignment: title.alignment))
         return self
@@ -107,7 +107,7 @@ extension AlertBuilder {
     @discardableResult
     public func addMessageLabel(_ message: AlertText?) -> Self {
         guard let message = message else { return self }
-        alert.addMessageLabel(.button(message.text,
+        alert.addMessageLabel(.message(message.text,
                                       color: message.color,
                                       alignment: message.alignment))
         return self

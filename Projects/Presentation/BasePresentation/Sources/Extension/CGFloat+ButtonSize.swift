@@ -9,6 +9,6 @@
 import UIKit
 
 extension CGFloat {
-    static let largeButton: Self = 64
-    static let mediumButton: Self = 34
+    public static let largeButton: Self = 64
+    public static let mediumButton: Self = 34
 }

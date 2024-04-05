@@ -13,6 +13,7 @@ let project: Project = .project(
     product: .staticFramework,
     dependencies: [
         .Project.LibraryManager.ReactiveLibraries,
+        .Project.LibraryManager.KakaoLibraries,
         .Project.LibraryManager.LayoutLibraries,
         .Project.LibraryManager.UILibraries,
         .Project.Common

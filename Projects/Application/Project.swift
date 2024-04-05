@@ -37,6 +37,7 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-SemiBold.otf"
     ],
     "AppConfigurations": [
+        "KAKAO_NATIVE_APP_KEY": "${DEV_KAKAO_NATIVE_APP_KEY}",
         "API_BASE_URL": "${API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
@@ -45,14 +46,26 @@ let defaultInfoPlist: [String: Plist.Value] = [
     ],
     "NSAppTransportSecurity": [
         "NSAllowsArbitraryLoads": true
+    ],
+    "LSApplicationQueriesSchemes": [
+        "kakaokompassauth",
+        "kakaolink"
+    ],
+    "CFBundleURLTypes": [
+        [
+            "CFBundleTypeRole": "Editor",
+            "CFBundleURLSchemes": [
+                "kakao\(String.devKakaoNativeAppKey)"
+            ]
+        ]
     ]
 ]
 
 // MARK: - Settings
 let settings: Settings = .settings(
-//    base: [
-//        "OTHER_LDFLAGS": ["-lc++", "-Objc"]
-//    ],
+    base: [
+        "DEVELOPMENT_TEAM": "VW2UR5Y845"
+    ],
     configurations: [
         .debug(name: .DEV),
         .debug(name: .TEST_DEV),
@@ -77,6 +90,7 @@ let targets: [Target] = [
         infoPlist: .extendingDefault(with: defaultInfoPlist),
         sources: ["Sources/**"],
         resources: ["Resources/**"],
+        entitlements: "../../SupportingFiles/PillInformation.entitlements",
         scripts: scripts,
         dependencies: [
             .Project.Feature.Features,
@@ -88,7 +102,9 @@ let targets: [Target] = [
                 .debug(
                     name: .DEV,
                     settings: [
-                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer"
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)-Dev",
+                        "PRODUCT_NAME": "PillInformation-Dev"
                     ],
                     xcconfig: .XCConfig.app(.DEV)
                 ),
@@ -96,7 +112,9 @@ let targets: [Target] = [
                     name: .PROD,
                     settings: [
                         "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "RELEASE",
-                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon"
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)",
+                        "PRODUCT_NAME": "PillInformation"
                     ],
                     xcconfig: .XCConfig.app(.PROD)
                 )
@@ -112,6 +130,7 @@ let targets: [Target] = [
         deploymentTargets: deploymentTargets,
         infoPlist: .default,
         sources: ["Tests/**"],
+        entitlements: "../../SupportingFiles/PillInformation.entitlements",
         dependencies: [
             .target(name: projectName)
         ],

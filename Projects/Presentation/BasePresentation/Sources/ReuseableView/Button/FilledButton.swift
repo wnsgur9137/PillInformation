@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PinLayout
 
 public enum FilledButtonStyle {
     case large
@@ -16,24 +17,32 @@ public enum FilledButtonStyle {
         return Constants.Color.systemBlue
     }
     
-    var enableTitleColor: UIColor {
-        return Constants.Color.systemWhite
-    }
-    
-    var selectedBackgroundColor: UIColor {
-        return Constants.Color.systemBlue // TODO: - 조금 더 어두운 블루로 변경
-    }
-    
-    var selectedTitleColor: UIColor {
-        return Constants.Color.systemWhite // TODO: - 하얀색에 가까운 하늘색으로 변경
-    }
-    
     var disableBackgroundColor: UIColor {
+        return Constants.Color.background
+    }
+    
+    var enableTitleColor: UIColor {
         return Constants.Color.systemWhite
     }
     
     var disableTitleColor: UIColor {
         return Constants.Color.systemLightGray
+    }
+    
+    var selectedBackgroundColor: UIColor {
+        return Constants.Color.buttonHighlightBlue
+    }
+    
+    var selectedTitleColor: UIColor {
+        return Constants.Color.systemWhite
+    }
+    
+    var enableBorderColor: CGColor {
+        return Constants.Color.systemBlue.cgColor
+    }
+    
+    var disableBorderColor: CGColor {
+        return Constants.Color.systemLightGray.cgColor
     }
 }
 
@@ -56,6 +65,10 @@ public final class FilledButton: UIButton {
         return style.selectedBackgroundColor
     }
     
+    private var borderColor: CGColor {
+        return isEnabled ? style.enableBorderColor : style.disableBorderColor
+    }
+    
     public override var isEnabled: Bool {
         didSet {
             self.buttonShadow = self.isEnabled
@@ -74,6 +87,7 @@ public final class FilledButton: UIButton {
             
             UIView.animate(withDuration: 0.3) {
                 self.backgroundColor = self.buttonBackgroundColor
+                self.layer.borderColor = self.borderColor
             }
         }
     }
@@ -90,7 +104,7 @@ public final class FilledButton: UIButton {
             let font = Constants.Font.suiteSemiBold(17.0)
             let attributedTitle = NSAttributedString(string: currentTitle, attributes: [
                 .paragraphStyle: paragraphStyle,
-                .foregroundColor: self.titleColor,
+                .foregroundColor: color,
                 .font: font,
                 .kern: -0.4
             ])
@@ -114,13 +128,13 @@ public final class FilledButton: UIButton {
         }
     }
     
-    lazy var cornerRadius: CGFloat = self.style == .large ? .largeButton : .mediumButton {
+    public lazy var cornerRadius: CGFloat = self.style == .large ? .largeButton : .mediumButton {
         didSet {
             layer.cornerRadius = cornerRadius
         }
     }
     
-    var title: String {
+    public var title: String {
         get {
             "\(self.titleLabel?.attributedText ?? .init(string: ""))"
         }
@@ -140,9 +154,10 @@ public final class FilledButton: UIButton {
     
     // MARK: - init
     
-    public init(style: FilledButtonStyle) {
+    public init(style: FilledButtonStyle, isEnabled: Bool = true) {
         self.style = style
         super.init(frame: .zero)
+        self.isEnabled = isEnabled
         setupButton()
     }
     
@@ -156,6 +171,11 @@ public final class FilledButton: UIButton {
         self.style = .large
         super.init(coder: aDecoder)
         setupButton()
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        setupLayout()
     }
     
     public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
@@ -180,7 +200,10 @@ public final class FilledButton: UIButton {
     
     private func setupButton() {
         backgroundColor = buttonBackgroundColor
-        self.layer.cornerRadius = self.frame.height / 2
+        titleLabel?.numberOfLines = 0
+        layer.cornerRadius = .largeButton / 2
+        layer.borderWidth = 1.0
+        layer.borderColor = borderColor
         self.buttonShadow = isEnabled
     }
     
@@ -188,5 +211,9 @@ public final class FilledButton: UIButton {
         UIView.animate(withDuration: 0.3) {
             self.buttonShadow = self.isEnabled
         }
+    }
+    
+    private func setupLayout() {
+        pin.height(self.style == .large ? .largeButton : .mediumButton)
     }
 }

@@ -20,7 +20,12 @@ extension Constants {
         public static let systemGray: UIColor = .gray
         public static let systemLightGray: UIColor = .lightGray
         public static let systemDarkGray: UIColor = .darkGray
+        
         public static let darkBackground: UIColor = UIColor(hex: "2E2E2E") ?? .darkGray
         public static let dimBlack: UIColor = (UIColor(hex: "#22282A") ?? .black).withAlphaComponent(0.75)
+        public static let kakaoYellow: UIColor = UIColor(hex: "#FDDC3F") ?? .systemYellow
+        public static let googleBlue: UIColor = UIColor(hex: "#4285F4") ?? .systemBlue
+        public static let background: UIColor = UIColor(named: "background") ?? UIColor()
+        public static let buttonHighlightBlue: UIColor = UIColor(hex: "#0055AA") ?? .systemBlue
     }
 }

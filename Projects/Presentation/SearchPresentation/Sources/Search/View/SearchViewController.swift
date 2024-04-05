@@ -63,7 +63,7 @@ public final class SearchViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchAdapter(collectionView: recentCollectionView,
                                          dataSource: reactor,
@@ -81,6 +81,11 @@ public final class SearchViewController: UIViewController, View {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
+    }
+    
+    public func bind(reactor: SearchReactor) {
+        bindAction(reactor)
+        bindState(reactor)
     }
 }
 
@@ -113,11 +118,6 @@ extension SearchViewController {
 
 // MARK: - Binding
 extension SearchViewController {
-    public func bind(reactor: SearchReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: SearchReactor) {
         searchRelay
             .map { text in

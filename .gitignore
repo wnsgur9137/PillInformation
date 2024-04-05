@@ -71,3 +71,4 @@ Tuist/Dependencies
 
 **.xcconfig
 **.build
+**/KakaoKey.swift

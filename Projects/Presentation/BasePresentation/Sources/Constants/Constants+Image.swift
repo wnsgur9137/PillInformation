@@ -11,7 +11,7 @@ import UIKit
 extension Constants {
     // MARK: - Image
     public struct Image {
-        
+        public static let appLogo: UIImage = UIImage(named: "appLogo") ?? UIImage()
     }
 }
 

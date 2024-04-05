@@ -72,7 +72,7 @@ public final class HomeViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = HomeAdapter(tableView: noticeTableView,
                                   dataSource: reactor,
@@ -86,9 +86,14 @@ public final class HomeViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: HomeReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension HomeViewController {
     private func setupSearchButtons() {
         searchPillByShapeButtonView.button.rx.tap
@@ -114,11 +119,6 @@ extension HomeViewController {
 
 // MARK: - Binding
 extension HomeViewController {
-    public func bind(reactor: HomeReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: HomeReactor) {
         self.rx.viewDidLoad
             .map { Reactor.Action.loadNotices }

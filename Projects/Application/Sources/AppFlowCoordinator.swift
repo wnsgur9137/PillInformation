@@ -11,6 +11,7 @@ import UIKit
 import Features
 
 final class AppFlowCoordinator {
+    
     var tabBarController: UITabBarController
     private let appDIContainer: AppDIContainer
     
@@ -21,8 +22,17 @@ final class AppFlowCoordinator {
     }
     
     func start() {
+        tabBarController.tabBar.isHidden = false
         let mainSceneDIContainer = appDIContainer.makeMainSceneDIContainer()
         let flow = mainSceneDIContainer.makeTabBarCoordinator(tabBarController: tabBarController)
+        flow.start()
+    }
+    
+    func startOnboarding(navigationController: UINavigationController) {
+        tabBarController.tabBar.isHidden = true
+        tabBarController.viewControllers = [navigationController]
+        let onboardingSceneDIContainer = appDIContainer.makeOnboardingSceneDIContainer()
+        let flow = onboardingSceneDIContainer.makeOnboardingViewController(navigationController: navigationController)
         flow.start()
     }
 }

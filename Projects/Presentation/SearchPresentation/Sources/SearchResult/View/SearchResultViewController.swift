@@ -41,7 +41,7 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
                                                dataSource: reactor,
@@ -55,9 +55,14 @@ public final class SearchResultViewController: UIViewController, View {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
     }
+    
+    public func bind(reactor: SearchResultReactor) {
+        bindAction(reactor)
+        bindState(reactor)
+    }
 }
 
-// MARK: - Functions
+// MARK: - Methods
 extension SearchResultViewController {
     private func setupKeyboard() {
         keyboardBackgroundView.rx.tapGesture()
@@ -85,11 +90,6 @@ extension SearchResultViewController {
 
 // MARK: - Binding
 extension SearchResultViewController {
-    public func bind(reactor: SearchResultReactor) {
-        bindAction(reactor)
-        bindState(reactor)
-    }
-    
     private func bindAction(_ reactor: SearchResultReactor) {
         
     }

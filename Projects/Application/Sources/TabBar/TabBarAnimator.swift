@@ -35,12 +35,12 @@ final class TabBarAnimator: NSObject {
               let toView = transitionContext.view(forKey: .to) else { return }
         let container = transitionContext.containerView
         let distanceX = self.fadeDirection == .leftToRight ? container.frame.width / 10 : -(container.frame.width / 10)
-        let whiteBackView = UIView(frame: container.bounds)
-        whiteBackView.backgroundColor = Constants.Color.systemWhite
+        let dimView = UIView(frame: container.bounds)
+        dimView.backgroundColor = Constants.Color.systemBackground
         
         fromDelegate?.willStartWith(animator: self)
         
-        container.addSubview(whiteBackView)
+        container.addSubview(dimView)
         container.addSubview(fromView)
         container.addSubview(toView)
         
@@ -48,7 +48,7 @@ final class TabBarAnimator: NSObject {
         toView.center.x += distanceX
         toView.alpha = 0
         
-        whiteBackView.alpha = 0
+        dimView.alpha = 0
         
         UIView.animateKeyframes(withDuration: duration,
                                 delay: 0,
@@ -59,7 +59,7 @@ final class TabBarAnimator: NSObject {
                 fromView.center.x -= distanceX * (2/3)
                 toView.center.x -= distanceX * (2/3)
                 fromView.alpha = 0
-                whiteBackView.alpha = 1.0
+                dimView.alpha = 1.0
             })
             UIView.addKeyframe(withRelativeStartTime: 2/3,
                                relativeDuration: 1/3,
@@ -67,11 +67,11 @@ final class TabBarAnimator: NSObject {
                 fromView.center.x -= distanceX * (1/3)
                 toView.center.x -= distanceX * (1/3)
                 toView.alpha = 1.0
-                whiteBackView.alpha = 0
+                dimView.alpha = 0
             })
         }) { isSuccess in
             transitionContext.completeTransition(isSuccess)
-            whiteBackView.removeFromSuperview()
+            dimView.removeFromSuperview()
             self.toDelegate?.didEndWith(animator: self)
         }
     }

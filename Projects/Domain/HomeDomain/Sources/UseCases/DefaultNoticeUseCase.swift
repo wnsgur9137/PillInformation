@@ -20,8 +20,8 @@ public final class DefaultNoticeUseCase: NoticeUseCase {
     }
 }
 
-public extension DefaultNoticeUseCase {
-    func executeNotice() -> Single<[NoticeModel]> {
+extension DefaultNoticeUseCase {
+    public func executeNotice() -> Single<[NoticeModel]> {
         return noticeRepository.executeNotices().map {
             $0.map { $0.toModel() }
         }
