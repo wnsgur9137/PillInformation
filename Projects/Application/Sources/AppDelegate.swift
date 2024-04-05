@@ -8,13 +8,15 @@
 
 import UIKit
 
+import KakaoLibraries
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
-//        if let appConfigurations = Bundle.main.infoDictionary?["AppConfigurations"] as? [String: String],
-//           let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
-//            KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
-//        }
+        if let appConfigurations = Bundle.main.infoDictionary?["AppConfigurations"] as? [String: String],
+           let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
+            KakaoService.initSDK(appKey: kakaoNativeAppKey)
+        }
         return true
     }
     

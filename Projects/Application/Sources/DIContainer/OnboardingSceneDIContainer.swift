@@ -15,7 +15,6 @@ import Onboarding
 final class OnboardingSceneDIContainer {
     struct Dependencies {
         let networkManager: NetworkManager
-        let kakaoNativeAppKey: String
     }
     
     let dependencies: Dependencies
@@ -25,8 +24,7 @@ final class OnboardingSceneDIContainer {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
         self.onboardingDIContainer = OnboardingDIContainer(dependenceis: .init(
-            networkManager: dependencies.networkManager,
-            kakaoNativeAppKey: dependencies.kakaoNativeAppKey
+            networkManager: dependencies.networkManager
         ))
     }
     

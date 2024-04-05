@@ -13,9 +13,6 @@ import RxCocoa
 import FlexLayout
 import PinLayout
 import AuthenticationServices
-import KakaoSDKCommon
-import KakaoSDKUser
-import RxKakaoSDKUser
 
 import BasePresentation
 
@@ -64,15 +61,12 @@ public final class SignInViewController: UIViewController, View {
     public var disposeBag = DisposeBag()
     
     private let appleSignInSubject = PublishSubject<String>()
-    private let kakaoSignInSubject = PublishSubject<String>()
     private let googleSignInSubject = PublishSubject<Void>()
     
     // MARK: - Lifecycle
-    public static func create(with reactor: SignInReactor,
-                              kakaoNativeAppKey: String) -> SignInViewController {
+    public static func create(with reactor: SignInReactor) -> SignInViewController {
         let viewController = SignInViewController()
         viewController.reactor = reactor
-        KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
         
         return viewController
     }
@@ -105,31 +99,6 @@ extension SignInViewController {
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
-    }
-    
-    private func kakaoSignIn() {
-        if (UserApi.isKakaoTalkLoginAvailable()) {
-            UserApi.shared.rx.loginWithKakaoTalk()
-                .subscribe(onNext: { oauthToken in
-                    self.kakaoSignInSubject.onNext(oauthToken.accessToken)
-                }, onError: { _ in
-                    self.showCanNotSignInAlert(.kakao)
-                })
-                .disposed(by: disposeBag)
-            
-        } else {
-            UserApi.shared.rx.loginWithKakaoAccount()
-                .subscribe(onNext: { oauthToken in
-                    self.kakaoSignInSubject.onNext(oauthToken.accessToken)
-                }, onError: { error in
-                    if let error = error as? SdkError,
-                       case let .ClientFailed(reason, _) = error,
-                        reason != .Cancelled {
-                        self.showCanNotSignInAlert(.kakao)
-                    }
-                })
-                .disposed(by: disposeBag)
-        }
     }
     
     private func showCanNotSignInAlert(_ type: SignInType) {
@@ -166,18 +135,12 @@ extension SignInViewController {
             .disposed(by: disposeBag)
         
         kakaoSignInButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.kakaoSignIn()
-            })
+            .map { Reactor.Action.didTapKakaoLoginButton("") }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         appleSignInSubject
             .map { token in Reactor.Action.didTapAppleLoginButton(token) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        kakaoSignInSubject
-            .map { token in Reactor.Action.didTapKakaoLoginButton(token) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -188,7 +151,13 @@ extension SignInViewController {
     }
     
     private func bindState(_ reactor: SignInReactor) {
-        
+        reactor.state
+            .map { $0.signInError }
+            .bind(onNext: { [weak self] signInType in
+                guard let signInType = signInType else { return }
+                self?.showCanNotSignInAlert(signInType)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

@@ -11,7 +11,9 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-enum SignInType {
+import KakaoLibraries
+
+public enum SignInType {
     case apple
     case kakao
     case google
@@ -28,7 +30,7 @@ public struct SignInFlowAction {
 public final class SignInReactor: Reactor {
     public enum Action {
         case didTapAppleLoginButton(String)
-        case didTapKakaoLoginButton(String)
+        case didTapKakaoLoginButton
         case didTapGoogleLoginButton
     }
     
@@ -36,10 +38,11 @@ public final class SignInReactor: Reactor {
         case appleLogin(String)
         case kakaoLogin(String)
         case googleLogin
+        case signInError(SignInType)
     }
     
     public struct State {
-        
+        var signInError: SignInType?
     }
     
     public var initialState = State()
@@ -49,6 +52,38 @@ public final class SignInReactor: Reactor {
     public init(flowAction: SignInFlowAction) {
         self.flowAction = flowAction
     }
+    
+    private func isKakaoLoginAvailable() -> Bool {
+        return KakaoService.isKakaoTalkLoginAvailable()
+    }
+    
+    private func loginWithKakaoTalk() -> Observable<Mutation> {
+        return Observable<Mutation>.create { observable in
+            KakaoService.loginWithKakaoTalk()
+                .subscribe(onSuccess: { accessToken in
+                    observable.onNext(.kakaoLogin(accessToken))
+                }, onFailure: { error in
+                    observable.onNext(.signInError(.kakao))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func loginWithKakaoAccount() -> Observable<Mutation> {
+        return Observable<Mutation>.create { observable in
+            KakaoService.loginWithKakaoAccount()
+                .subscribe(onSuccess: { accessToken in
+                    observable.onNext(.kakaoLogin(accessToken))
+                }, onFailure: { error in
+                    observable.onNext(.signInError(.kakao))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
 }
 
 // MARK: - React
@@ -57,8 +92,10 @@ extension SignInReactor {
         switch action {
         case let .didTapAppleLoginButton(token):
             return .just(.appleLogin(token))
-        case let .didTapKakaoLoginButton(token):
-            return .just(.kakaoLogin(token))
+            
+        case .didTapKakaoLoginButton:
+            return isKakaoLoginAvailable() ? loginWithKakaoTalk() : loginWithKakaoAccount()
+            
         case .didTapGoogleLoginButton:
             return .just(.googleLogin)
         }
@@ -70,8 +107,12 @@ extension SignInReactor {
         case let .appleLogin(token):
             showOnboardingPolicyViewController()
             
-        case let .kakaoLogin(token): break
+        case let .kakaoLogin(token):
+            showOnboardingPolicyViewController()
+            
         case .googleLogin: break
+        case let .signInError(signInType):
+            state.signInError = signInType
         }
         return state
     }

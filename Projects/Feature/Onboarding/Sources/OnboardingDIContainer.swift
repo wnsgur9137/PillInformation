@@ -16,12 +16,9 @@ import OnboardingPresentation
 public final class OnboardingDIContainer {
     public struct Dependencies {
         let networkManager: NetworkManager
-        let kakaoNativeAppKey: String
         
-        public init(networkManager: NetworkManager,
-                    kakaoNativeAppKey: String) {
+        public init(networkManager: NetworkManager) {
             self.networkManager = networkManager
-            self.kakaoNativeAppKey = kakaoNativeAppKey
         }
     }
     
@@ -42,8 +39,7 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     
     public func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController {
         return SignInViewController.create(with:
-                                            makeSignInReactor(flowAction: flowAction),
-                                           kakaoNativeAppKey: dependencies.kakaoNativeAppKey)
+                                            makeSignInReactor(flowAction: flowAction))
     }
     
     // MARK: - OnboardingPolicy
