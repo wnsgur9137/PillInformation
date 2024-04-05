@@ -31,13 +31,13 @@ public final class SignInReactor: Reactor {
     public enum Action {
         case didTapAppleLoginButton(String)
         case didTapKakaoLoginButton
-        case didTapGoogleLoginButton
+        case didTapGoogleLoginButton(String)
     }
     
     public enum Mutation {
         case appleLogin(String)
         case kakaoLogin(String)
-        case googleLogin
+        case googleLogin(String)
         case signInError(SignInType)
     }
     
@@ -96,8 +96,8 @@ extension SignInReactor {
         case .didTapKakaoLoginButton:
             return isKakaoLoginAvailable() ? loginWithKakaoTalk() : loginWithKakaoAccount()
             
-        case .didTapGoogleLoginButton:
-            return .just(.googleLogin)
+        case let .didTapGoogleLoginButton(token):
+            return .just(.googleLogin(token))
         }
     }
     
@@ -110,7 +110,10 @@ extension SignInReactor {
         case let .kakaoLogin(token):
             showOnboardingPolicyViewController()
             
-        case .googleLogin: break
+        case let .googleLogin(token):
+            print("🚨google token: \(token)")
+//            showOnboardingPolicyViewController()
+            
         case let .signInError(signInType):
             state.signInError = signInType
         }

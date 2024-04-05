@@ -16,9 +16,12 @@ import OnboardingPresentation
 public final class OnboardingDIContainer {
     public struct Dependencies {
         let networkManager: NetworkManager
+        let googleClientID: String
         
-        public init(networkManager: NetworkManager) {
+        public init(networkManager: NetworkManager,
+                    googleClientID: String) {
             self.networkManager = networkManager
+            self.googleClientID = googleClientID
         }
     }
     
@@ -39,7 +42,7 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     
     public func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController {
         return SignInViewController.create(with:
-                                            makeSignInReactor(flowAction: flowAction))
+                                            makeSignInReactor(flowAction: flowAction), googleClientID: dependencies.googleClientID)
     }
     
     // MARK: - OnboardingPolicy

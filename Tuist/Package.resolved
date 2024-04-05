@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "appauth-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/openid/AppAuth-iOS.git",
+      "state" : {
+        "revision" : "7e2c09cbeb3bb799f26c268dbedb26325ea722a9",
+        "version" : "1.7.3"
+      }
+    },
+    {
       "identity" : "dropdown",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AssistoLab/DropDown",
@@ -25,6 +34,33 @@
       "state" : {
         "branch" : "master",
         "revision" : "ad20f2874f0fe87300e89caed2f03d5c9525c3c0"
+      }
+    },
+    {
+      "identity" : "googlesignin-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/GoogleSignIn-iOS",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a7965d134c5d3567026c523e0a8a583f73b62b0d"
+      }
+    },
+    {
+      "identity" : "gtm-session-fetcher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/gtm-session-fetcher.git",
+      "state" : {
+        "revision" : "9534039303015a84837090d20fa21cae6e5eadb6",
+        "version" : "3.3.2"
+      }
+    },
+    {
+      "identity" : "gtmappauth",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/GTMAppAuth.git",
+      "state" : {
+        "revision" : "5d7d66f647400952b1758b230e019b07c0b4b22a",
+        "version" : "4.1.1"
       }
     },
     {

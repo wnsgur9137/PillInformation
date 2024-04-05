@@ -13,6 +13,7 @@ extension TargetDependency {
     public struct SPM {
         public struct Network { }
         public struct Data { }
+        public struct Google { }
         public struct Kakao { }
         public struct Layout { }
         public struct Reactive { }
@@ -32,6 +33,9 @@ public extension TargetDependency.SPM.Network {
 }
 public extension TargetDependency.SPM.Data {
     static let RealmSwift: TargetDependency = .external(name: "RealmSwift")
+}
+public extension TargetDependency.SPM.Google {
+    static let GoogleSignIn: TargetDependency = .external(name: "GoogleSignIn")
 }
 public extension TargetDependency.SPM.Kakao {
     static let KakaoSDKCommon: TargetDependency = .external(name: "RxKakaoSDKCommon")

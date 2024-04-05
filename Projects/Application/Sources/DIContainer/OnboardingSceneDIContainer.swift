@@ -15,6 +15,7 @@ import Onboarding
 final class OnboardingSceneDIContainer {
     struct Dependencies {
         let networkManager: NetworkManager
+        let googleClientID: String
     }
     
     let dependencies: Dependencies
@@ -24,7 +25,8 @@ final class OnboardingSceneDIContainer {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
         self.onboardingDIContainer = OnboardingDIContainer(dependenceis: .init(
-            networkManager: dependencies.networkManager
+            networkManager: dependencies.networkManager,
+            googleClientID: dependencies.googleClientID
         ))
     }
     

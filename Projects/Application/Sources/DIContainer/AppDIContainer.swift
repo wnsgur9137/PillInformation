@@ -25,7 +25,10 @@ final class AppDIContainer {
     }
     
     func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
-        let dependencies = OnboardingSceneDIContainer.Dependencies(networkManager: networkManager)
+        let dependencies = OnboardingSceneDIContainer.Dependencies(
+            networkManager: networkManager,
+            googleClientID: appConfiguration.googleClientID
+        )
         return OnboardingSceneDIContainer(dependencies: dependencies)
     }
 }

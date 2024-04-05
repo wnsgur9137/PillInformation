@@ -13,6 +13,7 @@ import RxCocoa
 import FlexLayout
 import PinLayout
 import AuthenticationServices
+import GoogleSignIn
 
 import BasePresentation
 
@@ -59,16 +60,27 @@ public final class SignInViewController: UIViewController, View {
     
     // MARK: - Properties
     public var disposeBag = DisposeBag()
+    private let googleConfig: GIDConfiguration
     
     private let appleSignInSubject = PublishSubject<String>()
-    private let googleSignInSubject = PublishSubject<Void>()
+    private let googleSignInSubject = PublishSubject<String>()
     
     // MARK: - Lifecycle
-    public static func create(with reactor: SignInReactor) -> SignInViewController {
-        let viewController = SignInViewController()
+    public static func create(with reactor: SignInReactor,
+                              googleClientID: String) -> SignInViewController {
+        let viewController = SignInViewController(googleClientID: googleClientID)
         viewController.reactor = reactor
         
         return viewController
+    }
+    
+    init(googleClientID: String) {
+        self.googleConfig = GIDConfiguration(clientID: googleClientID)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
@@ -99,6 +111,24 @@ extension SignInViewController {
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+    }
+    
+    private func googleSignIn() {
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] result, error in
+            if let error = error {
+                self?.showCanNotSignInAlert(.google)
+                return
+            }
+            guard let result = result else { return }
+            let user = result.user
+            let email = user.profile?.email
+            
+//            let idToken = user.idToken
+            let accessToken = user.accessToken.tokenString
+//            let refrashToken = user.refreshToken
+            
+            self?.googleSignInSubject.onNext(accessToken)
+        }
     }
     
     private func showCanNotSignInAlert(_ type: SignInType) {
@@ -135,8 +165,14 @@ extension SignInViewController {
             .disposed(by: disposeBag)
         
         kakaoSignInButton.rx.tap
-            .map { Reactor.Action.didTapKakaoLoginButton("") }
+            .map { Reactor.Action.didTapKakaoLoginButton }
             .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        googleSignInButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.googleSignIn()
+            })
             .disposed(by: disposeBag)
         
         appleSignInSubject
@@ -144,8 +180,8 @@ extension SignInViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        googleSignInButton.rx.tap
-            .map { Reactor.Action.didTapGoogleLoginButton }
+        googleSignInSubject
+            .map { token in Reactor.Action.didTapGoogleLoginButton(token) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 import KakaoLibraries
 
@@ -41,9 +42,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let url = URLContexts.first?.url,
-           KakaoService.isKakaoTalkLoginUrl(url) {
-            _ = KakaoService.handleOpenURL(url)
+        if let url = URLContexts.first?.url {
+            if KakaoService.isKakaoTalkLoginUrl(url) {
+                _ = KakaoService.handleOpenURL(url)
+            } else {
+                let _ = GIDSignIn.sharedInstance.handle(url)
+            }
         }
     }
     

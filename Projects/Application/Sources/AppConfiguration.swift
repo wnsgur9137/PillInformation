@@ -57,4 +57,18 @@ final class AppConfiguration {
         }
         return kakaoNativeAppKey
     }()
+    
+    lazy var googleClientID: String = {
+        guard let googleClientID = appConfigurations["GOOGLE_CLIENT_ID"] else {
+            fatalError("GOOGLE_CLIENT_ID must not be empty in plist")
+        }
+        return googleClientID
+    }()
+    
+    lazy var googleReversedClientID: String = {
+        guard let googleReversedClientID = appConfigurations["GOOGLE_REVERSED_CLIENT_ID"] else {
+            fatalError("GOOGLE_REVERSED_CLIENT_ID must not be empty in plist")
+        }
+        return googleReversedClientID
+    }()
 }

@@ -38,6 +38,8 @@ let defaultInfoPlist: [String: Plist.Value] = [
     ],
     "AppConfigurations": [
         "KAKAO_NATIVE_APP_KEY": "${DEV_KAKAO_NATIVE_APP_KEY}",
+        "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
+        "GOOGLE_REVERSED_ID": "${GOOGLE_REVERSED_ID}",
         "API_BASE_URL": "${API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
@@ -55,10 +57,12 @@ let defaultInfoPlist: [String: Plist.Value] = [
         [
             "CFBundleTypeRole": "Editor",
             "CFBundleURLSchemes": [
-                "kakao\(String.devKakaoNativeAppKey)"
+                "kakao\(String.devKakaoNativeAppKey)",
+                "\(String.googleReversedClientID)"
             ]
         ]
-    ]
+    ],
+    "GIDClientID": "\(String.googleClientID)"
 ]
 
 // MARK: - Settings
