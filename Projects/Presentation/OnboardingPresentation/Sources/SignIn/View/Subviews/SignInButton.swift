@@ -15,13 +15,11 @@ final class SignInButton: UIButton {
     enum SignInType {
         case apple
         case kakao
-        case google
         
         var backGroundColor: UIColor {
             switch self {
             case .apple: return Constants.Color.systemLabel
             case .kakao: return Constants.Color.kakaoYellow
-            case .google: return Constants.Color.systemBackground
             }
         }
         
@@ -29,7 +27,6 @@ final class SignInButton: UIButton {
             switch self {
             case .apple: return Constants.Color.systemBackground
             case .kakao: return Constants.Color.systemBlack
-            case .google: return Constants.Color.systemLabel
             }
         }
         
@@ -37,7 +34,6 @@ final class SignInButton: UIButton {
             switch self {
             case .apple: return Constants.SignIn.appleLogin
             case .kakao: return Constants.SignIn.kakaoLogin
-            case .google: return Constants.SignIn.googleLogin
             }
         }
         
@@ -45,7 +41,6 @@ final class SignInButton: UIButton {
             switch self {
             case .apple: return Constants.SignIn.Image.appleLogo
             case .kakao: return Constants.SignIn.Image.kakaoLogo
-            case .google: return Constants.SignIn.Image.googleLogo
             }
         }
     }

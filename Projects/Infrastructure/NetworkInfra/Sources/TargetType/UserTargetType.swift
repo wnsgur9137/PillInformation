@@ -11,6 +11,8 @@ import Moya
 
 public enum UserTargetType {
     case getUserInfo(email: String)
+    case signin(token: String)
+    
     case getNicknameCheck(nickname: String)
     case postUserInfo(email: String, nickname: String, updateDate: String)
     case updateUserInfo(email: String, nickname: String, updateDate: String)
@@ -24,7 +26,8 @@ extension UserTargetType: MoyaErrorHandleable {
     
     public var path: String {
         switch self {
-        case .getUserInfo: return "/getUserInfo/"
+        case .getUserInfo: return "/user/userInfo"
+        case .signin: return "/user/signin"
         case .getNicknameCheck: return "/getNicknameCheck/"
         case .postUserInfo: return "/setUserInfo/"
         case .updateUserInfo: return "/updateUserInfo/"
@@ -36,8 +39,11 @@ extension UserTargetType: MoyaErrorHandleable {
         switch self {
         // GET
         case .getUserInfo: return .get
+            
         case .getNicknameCheck: return .get
         // POST
+        case .signin: return .post
+            
         case .postUserInfo: return .post
         case .updateUserInfo: return .post
         case .deleteUser: return .post
@@ -45,6 +51,9 @@ extension UserTargetType: MoyaErrorHandleable {
     }
     
     public var headers: [String : String]? {
+        if case let .signin(token) = self {
+            return ["token": "Bearer \(token)"]
+        }
         return nil
     }
     
@@ -52,6 +61,9 @@ extension UserTargetType: MoyaErrorHandleable {
         switch self {
         case let .getUserInfo(email):
             return ["email": email]
+            
+        case .signin:
+            return nil
             
         case let .getNicknameCheck(nickname):
             return ["nickname": nickname]
@@ -89,6 +101,9 @@ extension UserTargetType: MoyaErrorHandleable {
 extension UserTargetType {
     public var sampleData: Data {
         switch self {
+        case .signin:
+            return Data()
+            
         case .getUserInfo:
             return Data(
                 """

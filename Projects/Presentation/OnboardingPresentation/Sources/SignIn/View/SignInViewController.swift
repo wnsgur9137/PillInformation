@@ -49,7 +49,6 @@ public final class SignInViewController: UIViewController, View {
     
     private let appleSignInButton = SignInButton(type: .apple)
     private let kakaoSignInButton = SignInButton(type: .kakao)
-    private let googleSignInButton = SignInButton(type: .google)
     
     // 사용할지 안할지 고민중
     private let lookaroundButton: UIButton = {
@@ -112,9 +111,9 @@ extension SignInViewController {
             
         case .kakao:
             title = AlertText(text: Constants.SignIn.canNotKakaoSignInTitle)
-                        
-        case .google:
-            title = AlertText(text: Constants.SignIn.canNotGoogleSignInTitle)
+            
+        case .signin:
+            title = AlertText(text: Constants.SignIn.canNotSignInTitle)
         }
         
         AlertViewer()
@@ -135,17 +134,12 @@ extension SignInViewController {
             .disposed(by: disposeBag)
         
         kakaoSignInButton.rx.tap
-            .map { Reactor.Action.didTapKakaoLoginButton("") }
+            .map { Reactor.Action.didTapKakaoLoginButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         appleSignInSubject
             .map { token in Reactor.Action.didTapAppleLoginButton(token) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        googleSignInButton.rx.tap
-            .map { Reactor.Action.didTapGoogleLoginButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -223,8 +217,6 @@ extension SignInViewController {
                     .define { buttonStack in
                         buttonStack.addItem(appleSignInButton)
                         buttonStack.addItem(kakaoSignInButton)
-                            .marginTop(10.0)
-                        buttonStack.addItem(googleSignInButton)
                             .marginTop(10.0)
                     }
             }

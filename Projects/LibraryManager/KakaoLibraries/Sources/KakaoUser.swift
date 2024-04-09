@@ -67,6 +67,8 @@ final class KakaoSDKUserService: KakaoSDKUserServicable {
         return .create() { single in
             UserApi.shared.rx.loginWithKakaoAccount()
                 .subscribe(onNext: { oauthToken in
+                    print("🚨accessToken: \(oauthToken.accessToken)")
+                    print("🚨idToken: \(oauthToken.idToken)")
                     single(.success(oauthToken.accessToken))
                 }, onError: { error in
                     single(.failure(error))

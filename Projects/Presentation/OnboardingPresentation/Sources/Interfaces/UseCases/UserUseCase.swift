@@ -11,5 +11,6 @@ import RxSwift
 
 public protocol UserUseCase {
     func executeUser(userID: Int) -> Single<UserModel>
+    func signin(token: String) -> Single<UserModel>
     func save(_ user: UserModel) -> Single<Void>
 }

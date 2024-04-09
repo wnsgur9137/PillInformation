@@ -11,5 +11,6 @@ import RxSwift
 
 public protocol UserRepository {
     func fetchUser(userID: Int) -> Single<User>
+    func postUser(token: String) -> Single<User>
     func save(_ user: User) -> Single<Void>
 }

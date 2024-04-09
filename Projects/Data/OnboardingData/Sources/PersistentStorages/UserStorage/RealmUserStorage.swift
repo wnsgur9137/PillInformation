@@ -79,7 +79,9 @@ extension RealmUserStorage: UserStorage {
             isAgreeAgePolicy: response.isAgreeAgePolicy,
             isAgreePrivacyPolicy: response.isAgreePrivacyPolicy,
             isAgreeDaytimeNoti: response.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: response.isAgreeNighttimeNoti
+            isAgreeNighttimeNoti: response.isAgreeNighttimeNoti,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken
         )
         guard save(for: userObject) else {
             return .error(RealmError.save)
@@ -105,7 +107,9 @@ extension RealmUserStorage: UserStorage {
             isAgreeAgePolicy: updatedResponse.isAgreeAgePolicy,
             isAgreePrivacyPolicy: updatedResponse.isAgreePrivacyPolicy,
             isAgreeDaytimeNoti: updatedResponse.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: updatedResponse.isAgreeNighttimeNoti
+            isAgreeNighttimeNoti: updatedResponse.isAgreeNighttimeNoti,
+            accessToken: updatedResponse.accessToken,
+            refreshToken: updatedResponse.refreshToken
         )
         guard let updatedUserObjec = update(for: userObject, updatedObject: updateUserObject) else {
             return .error(RealmError.update)

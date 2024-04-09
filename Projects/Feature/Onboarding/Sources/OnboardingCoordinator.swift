@@ -45,7 +45,10 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     }
     
     public func showSignInViewController() {
-        let flowAction = SignInFlowAction(showOnboardingPolicyViewController: showOnboardingPolicyViewController)
+        let flowAction = SignInFlowAction(
+            showOnboardingPolicyViewController: showOnboardingPolicyViewController,
+            showMainScene: self.showMainScene
+        )
         let viewController = dependencies.makeSignInViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         signInViewController = viewController

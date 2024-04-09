@@ -32,9 +32,18 @@ public final class OnboardingDIContainer {
 // MARK: - OnboardingCoordinator Dependencies
 extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     
+    public func makeUserRepository() -> UserRepository {
+        return DefaultUserRepository(networkManager: dependencies.networkManager)
+    }
+    
+    public func makeUserUseCase() -> UserUseCase {
+        return DefaultUserUseCase(with: makeUserRepository())
+    }
+    
     // MARK: - SignIn
     public func makeSignInReactor(flowAction: SignInFlowAction) -> SignInReactor {
-        return SignInReactor(flowAction: flowAction)
+        return SignInReactor(with: makeUserUseCase(),
+                             flowAction: flowAction)
     }
     
     public func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController {
@@ -43,14 +52,6 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     }
     
     // MARK: - OnboardingPolicy
-    public func makeUserRepository() -> UserRepository {
-        return DefaultUserRepository()
-    }
-    
-    public func makeUserUseCase() -> UserUseCase {
-        return DefaultUserUseCase(with: makeUserRepository())
-    }
-    
     public func makeOnboardingPolicyReactor(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
         return OnboardingPolicyReactor(userUseCase: makeUserUseCase(),
                                        flowAction: flowAction)

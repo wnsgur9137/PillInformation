@@ -25,8 +25,12 @@ extension DefaultUserUseCase {
         return userRepository.fetchUser(userID: userID).map { $0.toModel() }
     }
     
+    public func signin(token: String) -> Single<UserModel> {
+        return userRepository.postUser(token: token).map { $0.toModel() }
+    }
+    
     public func save(_ userModel: UserModel) -> Single<Void> {
-        let user = User(id: userModel.id, isAgreeAppPolicy: userModel.isAgreeAppPolicy, isAgreeAgePolicy: userModel.isAgreeAgePolicy, isAgreePrivacyPolicy: userModel.isAgreePrivacyPolicy, isAgreeDaytimeNoti: userModel.isAgreeDaytimeNoti, isAgreeNighttimeNoti: userModel.isAgreeNighttimeNoti)
+        let user = User(id: userModel.id, isAgreeAppPolicy: userModel.isAgreeAppPolicy, isAgreeAgePolicy: userModel.isAgreeAgePolicy, isAgreePrivacyPolicy: userModel.isAgreePrivacyPolicy, isAgreeDaytimeNoti: userModel.isAgreeDaytimeNoti, isAgreeNighttimeNoti: userModel.isAgreeNighttimeNoti, accessToken: userModel.accessToken, refreshToken: userModel.refreshToken)
         return userRepository.save(user)
     }
 }
