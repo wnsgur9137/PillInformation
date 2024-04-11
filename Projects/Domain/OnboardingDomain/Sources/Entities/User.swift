@@ -30,6 +30,17 @@ public struct User {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }
+    
+    public init(userModel: UserModel) {
+        self.id = userModel.id
+        self.isAgreeAppPolicy = userModel.isAgreeAppPolicy
+        self.isAgreeAgePolicy = userModel.isAgreeAgePolicy
+        self.isAgreePrivacyPolicy = userModel.isAgreePrivacyPolicy
+        self.isAgreeDaytimeNoti = userModel.isAgreeDaytimeNoti
+        self.isAgreeNighttimeNoti = userModel.isAgreeNighttimeNoti
+        self.accessToken = userModel.accessToken
+        self.refreshToken = userModel.refreshToken
+    }
 }
 
 extension User {

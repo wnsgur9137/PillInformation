@@ -30,6 +30,28 @@ public struct UserDTO: Decodable {
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
     }
+    
+    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String) {
+        self.id = id
+        self.isAgreeAppPolicy = isAgreeAppPolicy
+        self.isAgreeAgePolicy = isAgreeAgePolicy
+        self.isAgreePrivacyPolicy = isAgreePrivacyPolicy
+        self.isAgreeDaytimeNoti = isAgreeDaytimeNoti
+        self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+    }
+    
+    public init(user: User) {
+        self.id = user.id
+        self.isAgreeAppPolicy = user.isAgreeAppPolicy
+        self.isAgreeAgePolicy = user.isAgreeAgePolicy
+        self.isAgreePrivacyPolicy = user.isAgreePrivacyPolicy
+        self.isAgreeDaytimeNoti = user.isAgreeDaytimeNoti
+        self.isAgreeNighttimeNoti = user.isAgreeNighttimeNoti
+        self.accessToken = user.accessToken
+        self.refreshToken = user.refreshToken
+    }
 }
 
 extension UserDTO {

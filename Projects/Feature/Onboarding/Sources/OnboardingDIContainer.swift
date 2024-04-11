@@ -52,12 +52,16 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     }
     
     // MARK: - OnboardingPolicy
-    public func makeOnboardingPolicyReactor(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
-        return OnboardingPolicyReactor(userUseCase: makeUserUseCase(),
+    public func makeOnboardingPolicyReactor(user: UserModel,
+                                            flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
+        return OnboardingPolicyReactor(user: user,
+                                       userUseCase: makeUserUseCase(),
                                        flowAction: flowAction)
     }
     
-    public func makeOnboardingPolicyViewController(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {
-        return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(flowAction: flowAction))
+    public func makeOnboardingPolicyViewController(user: UserModel,
+                                                   flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {
+        return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(user: user,
+                                                                                       flowAction: flowAction))
     }
 }

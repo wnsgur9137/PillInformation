@@ -62,4 +62,14 @@ extension KakaoService {
     public static func handleOpenURL(_ url: URL) -> Bool {
         return authService.handleOpenUrl(url)
     }
+    
+    /// User ID
+    public static func loadUserID() -> Single<Int> {
+        return userService.loadUserID()
+    }
+    
+    /// User Profile Nickname
+    public static func loadProfileNickname() -> Single<String> {
+        return userService.loadUserNickname()
+    }
 }

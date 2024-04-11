@@ -20,10 +20,10 @@ public enum SignInType {
 }
 
 public struct SignInFlowAction {
-    let showOnboardingPolicyViewController: () -> Void
+    let showOnboardingPolicyViewController: (UserModel) -> Void
     let showMainScene: () -> Void
     
-    public init(showOnboardingPolicyViewController: @escaping () -> Void,
+    public init(showOnboardingPolicyViewController: @escaping (UserModel) -> Void,
                 showMainScene: @escaping () -> Void) {
         self.showOnboardingPolicyViewController = showOnboardingPolicyViewController
         self.showMainScene = showMainScene
@@ -38,7 +38,7 @@ public final class SignInReactor: Reactor {
     
     public enum Mutation {
         case signin
-        case signup
+        case signup(UserModel)
         case signInError(SignInType)
     }
     
@@ -68,7 +68,7 @@ public final class SignInReactor: Reactor {
                     if userModel.isAgreeRequredPolicies {
                         observable.onNext(.signin)
                     } else {
-                        observable.onNext(.signup)
+                        observable.onNext(.signup(userModel))
                     }
                     
                 }, onFailure: { error in
@@ -78,10 +78,6 @@ public final class SignInReactor: Reactor {
             
             return Disposables.create()
         }
-    }
-    
-    private func signin(token: String) -> Single<UserModel> {
-        self.userUseCase.signin(token: token)
     }
 }
 
@@ -93,18 +89,23 @@ extension SignInReactor {
             return signin(token: token)
             
         case .didTapKakaoLoginButton:
-            return Observable<Mutation>.create { observable in
+            return .create { observable in
                 self.loginKakaoTalk()
-                    .subscribe(onSuccess: { token in
-                        self.signin(token: token)
+                    .flatMap { _ -> Single<Int> in
+                        return KakaoService.loadUserID()
+                    }
+                    .subscribe(onSuccess: { userID in
+                        self.signin(token: "\(userID)")
                             .subscribe(onNext: { mutation in
                                 observable.onNext(mutation)
                             })
                             .disposed(by: self.disposeBag)
-                    }, onFailure: { error in
-                        observable.onNext(.signInError(.kakao))
+                        
+                    }, onFailure: { _ in
+                        observable.onNext(.signInError(.signin))
                     })
                     .disposed(by: self.disposeBag)
+                
                 return Disposables.create()
             }
         }
@@ -116,8 +117,8 @@ extension SignInReactor {
         case .signin:
             showMainScene()
             
-        case .signup:
-            showOnboardingPolicyViewController()
+        case let .signup(userModel):
+            showOnboardingPolicyViewController(userModel: userModel)
             
         case let .signInError(signInType):
             state.signInError = signInType
@@ -132,7 +133,7 @@ extension SignInReactor {
         flowAction.showMainScene()
     }
     
-    private func showOnboardingPolicyViewController() {
-        flowAction.showOnboardingPolicyViewController()
+    private func showOnboardingPolicyViewController(userModel: UserModel) {
+        flowAction.showOnboardingPolicyViewController(userModel)
     }
 }

@@ -64,7 +64,7 @@ public final class OnboardingPolicyReactor: Reactor {
         case checkNighttimeNotiPolicy
         case showPolicyViewController(PolicyReactor.PolicyType)
         case confirm
-        case allAgree
+        case isError
     }
     
     public struct State {
@@ -74,6 +74,7 @@ public final class OnboardingPolicyReactor: Reactor {
         var isCheckedDaytimeNotiPolicy: Bool = false
         var isCheckedNighttimeNotiPolicy: Bool = false
         var isRequiredChecked: Bool = false
+        var isError: Void = Void()
     }
     
     public var initialState = State()
@@ -81,30 +82,111 @@ public final class OnboardingPolicyReactor: Reactor {
     public let flowAction: OnboardingPolicyFlowAction
     private let disposeBag = DisposeBag()
     
-    private var policys = PolicyChecked()
+    private var policies = PolicyChecked()
+    private var user: UserModel
     
-    public init(userUseCase: UserUseCase,
+    public init(user: UserModel,
+                userUseCase: UserUseCase,
                 flowAction: OnboardingPolicyFlowAction) {
+        self.user = user
         self.userUseCase = userUseCase
         self.flowAction = flowAction
     }
     
+    private func updateUserPolicies() -> Observable<Mutation> {
+        return .create() { observable in
+            self.postUserPolicies()
+                .flatMap { userModel in
+                    return self.postUserPolicies()
+                }
+                .subscribe(onSuccess: { userModel in
+                    self.updateUserStorage()
+                        .subscribe(onNext: { mutation in
+                            observable.onNext(mutation)
+                        })
+                        .disposed(by: self.disposeBag)
+                    
+                }, onFailure: { error in
+                    observable.onNext(.isError)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func postUserPolicies() -> Single<UserModel> {
+        user = UserModel(
+            id: user.id,
+            isAgreeAppPolicy: policies.appPolicy,
+            isAgreeAgePolicy: policies.agePolicy,
+            isAgreePrivacyPolicy: policies.privacyPolicy,
+            isAgreeDaytimeNoti: policies.daytimeNotiPolicy,
+            isAgreeNighttimeNoti: policies.nighttimeNotiPolicy,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken
+        )
+        return userUseCase.post(user)
+    }
+    
+    private func updateUserStorage() -> Observable<Mutation> {
+        return .create() { observable in
+            self.userUseCase.updateStorage(self.user)
+                .subscribe(onSuccess: { user in
+                    observable.onNext(.confirm)
+                }, onFailure: { error in
+                    observable.onNext(.isError)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
 }
 
 // MARK: - React
 extension OnboardingPolicyReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .didTapBackwardButton: return .just(.dismiss)
-        case .didTapAgePolicy: return .just(.checkAgePolicy)
-        case .didTapAppPolicy: return .just(.checkAppPolicy)
-        case .didTapPrivacyPolicy: return .just(.checkPrivacyPolicy)
-        case .didTapDaytimeNotiPolicy: return .just(.checkDaytimeNotiPolicy)
-        case .didTapNighttimeNotiPolicy: return .just(.checkNighttimeNotiPolicy)
-        case .didTapAppPolicyMoreButton: return .just(.showPolicyViewController(.app))
-        case .didTapPrivacyPolicyMoreButton: return .just(.showPolicyViewController(.privacy))
-        case .didTapConfirmButton: return .just(.confirm)
-        case .didTapAllAgreeButton: return .just(.allAgree)
+        case .didTapBackwardButton: 
+            return .just(.dismiss)
+            
+        case .didTapAgePolicy: 
+            policies.agePolicy = !policies.agePolicy
+            return .just(.checkAgePolicy)
+            
+        case .didTapAppPolicy: 
+            policies.appPolicy = !policies.appPolicy
+            return .just(.checkAppPolicy)
+            
+        case .didTapPrivacyPolicy: 
+            policies.privacyPolicy = !policies.privacyPolicy
+            return .just(.checkPrivacyPolicy)
+            
+        case .didTapDaytimeNotiPolicy: 
+            policies.daytimeNotiPolicy = !policies.daytimeNotiPolicy
+            return .just(.checkDaytimeNotiPolicy)
+            
+        case .didTapNighttimeNotiPolicy: 
+            policies.nighttimeNotiPolicy = !policies.nighttimeNotiPolicy
+            return .just(.checkNighttimeNotiPolicy)
+            
+        case .didTapAppPolicyMoreButton: 
+            return .just(.showPolicyViewController(.app))
+            
+        case .didTapPrivacyPolicyMoreButton: 
+            return .just(.showPolicyViewController(.privacy))
+            
+        case .didTapConfirmButton: 
+            return updateUserPolicies()
+            
+        case .didTapAllAgreeButton:
+            policies.agePolicy = true
+            policies.appPolicy = true
+            policies.privacyPolicy = true
+            policies.daytimeNotiPolicy = true
+            policies.nighttimeNotiPolicy = true
+            return updateUserStorage()
         }
     }
     
@@ -116,36 +198,31 @@ extension OnboardingPolicyReactor {
             return state
             
         case .checkAgePolicy:
-            policys.agePolicy = !policys.agePolicy
-            state.isCheckedAgePolicy = policys.agePolicy
+            state.isCheckedAgePolicy = policies.agePolicy
             
-        case .checkAppPolicy: 
-            policys.appPolicy = !policys.appPolicy
-            state.isCheckedAppPolicy = policys.appPolicy
+        case .checkAppPolicy:
+            state.isCheckedAppPolicy = policies.appPolicy
             
         case .checkPrivacyPolicy:
-            policys.privacyPolicy = !policys.privacyPolicy
-            state.isCheckedPrivacyPolicy = policys.privacyPolicy
+            state.isCheckedPrivacyPolicy = policies.privacyPolicy
             
-        case .checkDaytimeNotiPolicy: 
-            policys.daytimeNotiPolicy = !policys.daytimeNotiPolicy
-            state.isCheckedDaytimeNotiPolicy = policys.daytimeNotiPolicy
+        case .checkDaytimeNotiPolicy:
+            state.isCheckedDaytimeNotiPolicy = policies.daytimeNotiPolicy
             
-        case .checkNighttimeNotiPolicy: 
-            policys.nighttimeNotiPolicy = !policys.nighttimeNotiPolicy
-            state.isCheckedNighttimeNotiPolicy = policys.nighttimeNotiPolicy
+        case .checkNighttimeNotiPolicy:
+            state.isCheckedNighttimeNotiPolicy = policies.nighttimeNotiPolicy
             
         case let .showPolicyViewController(type):
             showPolicyViewController(type: type)
             
         case .confirm:
-            fallthrough
-            
-        case .allAgree:
             showMainScene()
+            
+        case .isError:
+            state.isError = Void()
         }
         
-        state.isRequiredChecked = policys.isRequiredChecked()
+        state.isRequiredChecked = policies.isRequiredChecked()
         
         return state
     }

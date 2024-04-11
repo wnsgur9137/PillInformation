@@ -23,6 +23,9 @@ public final class RealmUserStorage {
     
     public init() { 
         self.realm = try! Realm()
+        #if DEBUG
+        print("🚨Realm fileURL: \(Realm.Configuration.defaultConfiguration.fileURL)")
+        #endif
     }
     
     private func save(for userObject: UserObject) -> Bool {
@@ -72,7 +75,12 @@ public final class RealmUserStorage {
 }
 
 extension RealmUserStorage: UserStorage {
-    public func save(response: UserDTO) -> Single<Void> {
+    public func save(response: UserDTO) -> Single<UserDTO> {
+        
+        if let _ = fetch(for: response.id) {
+            return update(updatedResponse: response)
+        }
+        
         let userObject = UserObject(
             id: response.id,
             isAgreeAppPolicy: response.isAgreeAppPolicy,
@@ -86,7 +94,7 @@ extension RealmUserStorage: UserStorage {
         guard save(for: userObject) else {
             return .error(RealmError.save)
         }
-        return .just(Void())
+        return get(userID: response.id)
     }
     
     public func get(userID: Int) -> Single<UserDTO> {
@@ -96,9 +104,15 @@ extension RealmUserStorage: UserStorage {
         return .just(userObject.toDTO())
     }
     
-    public func update(userID: Int,
-                       updatedResponse: UserDTO) -> Single<UserDTO> {
+    public func getTokens(userID: Int) -> Single<(accessToken: String, refreshToken: String)> {
         guard let userObject = fetch(for: userID) else {
+            return .error(RealmError.fetch)
+        }
+        return .just((userObject.accessToken, userObject.refreshToken))
+    }
+    
+    public func update(updatedResponse: UserDTO) -> Single<UserDTO> {
+        guard let userObject = fetch(for: updatedResponse.id) else {
             return .error(RealmError.fetch)
         }
         let updateUserObject = UserObject(

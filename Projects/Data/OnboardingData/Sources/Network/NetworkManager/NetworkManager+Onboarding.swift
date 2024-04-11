@@ -14,7 +14,21 @@ import NetworkInfra
 import OnboardingDomain
 
 extension NetworkManager {
-    public func postUser(token: String) -> Single<UserDTO> {
+    public func getUser(token: String) -> Single<UserDTO> {
+        return requestObject(.getUser(token: token), type: UserDTO.self)
+    }
+    
+    public func signin(token: String) -> Single<UserDTO> {
         return requestObject(.signin(token: token), type: UserDTO.self)
+    }
+    
+    public func update(userDTO: UserDTO, token: String) -> Single<UserDTO> {
+        return requestObject(.updateUser(appPolicy: userDTO.isAgreeAppPolicy,
+                                         agePolicy: userDTO.isAgreeAgePolicy,
+                                         privacyPolicy: userDTO.isAgreePrivacyPolicy,
+                                         daytimeNoti: userDTO.isAgreeDaytimeNoti,
+                                         nighttimeNoti: userDTO.isAgreeNighttimeNoti,
+                                         token: token),
+                             type: UserDTO.self)
     }
 }

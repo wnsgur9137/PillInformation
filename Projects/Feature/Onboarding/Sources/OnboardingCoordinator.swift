@@ -13,12 +13,13 @@ import BasePresentation
 
 public protocol OnboardingCoordinatorDependencies {
     func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController
-    func makeOnboardingPolicyViewController(flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController
+    func makeOnboardingPolicyViewController(user: UserModel,
+                                            flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController
 }
 
 public protocol OnboardingCoordinator: Coordinator {
     func showSignInViewController()
-    func showOnboardingPolicyViewController()
+    func showOnboardingPolicyViewController(user: UserModel)
 }
 
 public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
@@ -54,13 +55,14 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
         signInViewController = viewController
     }
     
-    public func showOnboardingPolicyViewController() {
+    public func showOnboardingPolicyViewController(user: UserModel) {
         let flowAction = OnboardingPolicyFlowAction(
             popViewController: self.popViewController,
             showMainScene: self.showMainScene,
             showPolicyViewController: self.showPolicyViewController
         )
-        let viewController = dependencies.makeOnboardingPolicyViewController(flowAction: flowAction)
+        let viewController = dependencies.makeOnboardingPolicyViewController(user: user,
+                                                                             flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         onboardingPolicyViewController = viewController
     }
