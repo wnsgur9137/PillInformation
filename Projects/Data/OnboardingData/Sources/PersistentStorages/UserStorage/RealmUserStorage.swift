@@ -17,7 +17,16 @@ enum RealmError: Error {
     case delete
 }
 
-public final class RealmUserStorage {
+enum KeychainError: Error {
+    case isNullAppBundleID
+    case save
+    case fetch
+    case update
+    case delete
+    case unknown
+}
+
+public final class DefaultUserStorage {
     
     private let realm: Realm
     
@@ -76,7 +85,7 @@ public final class RealmUserStorage {
     }
 }
 
-extension RealmUserStorage: UserStorage {
+extension DefaultUserStorage: UserStorage {
     public func save(response: UserDTO) -> Single<UserDTO> {
         if let _ = fetch(for: response.id) {
             return update(updatedResponse: response)
@@ -119,6 +128,90 @@ extension RealmUserStorage: UserStorage {
         }
         guard delete(for: userObject) else {
             return .error(RealmError.delete)
+        }
+        return .just(Void())
+    }
+    
+    public func saveToKeychain(_ email: String) -> Single<Void> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let saveQuery: NSDictionary = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecValueData as String: email as AnyObject,
+        ]
+        
+        let status = SecItemAdd(saveQuery, nil)
+        guard status == errSecSuccess else {
+            return .error(KeychainError.save)
+        }
+        return .just(Void())
+    }
+    
+    public func getEmailFromKeychain() -> Single<String> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let selectQuery: NSDictionary = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrAccount: "appleEmail" as AnyObject,
+            kSecReturnAttributes: true,
+            kSecReturnData: true
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(selectQuery, &result)
+        
+        guard status == errSecSuccess,
+              let email = result as? String else {
+            return .error(KeychainError.fetch)
+        }
+        return .just(email)
+    }
+    
+    public func updateEmailToKeychain(_ email: String) -> Single<String> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let updateQuery: NSDictionary = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecValueData as String: email as AnyObject,
+        ]
+        
+        let attributes: NSDictionary = [
+            kSecValueData as String: email as AnyObject
+        ]
+        
+        let status = SecItemUpdate(updateQuery, attributes)
+        
+        guard status == errSecSuccess else {
+            return .error(KeychainError.update)
+        }
+        return getEmailFromKeychain()
+    }
+    
+    public func deleteEmailFromKeychain() -> Single<Void> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let query: [String: AnyObject] = [
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecClass as String: kSecClassGenericPassword
+        ]
+        
+        let status = SecItemDelete(query as CFDictionary)
+        
+        guard status == errSecSuccess else {
+            return .error(KeychainError.delete)
         }
         return .just(Void())
     }

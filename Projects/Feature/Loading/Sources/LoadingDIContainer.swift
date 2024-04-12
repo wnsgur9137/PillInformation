@@ -6,7 +6,7 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import UIKIt
+import UIKit
 
 import NetworkInfra
 import LoadingData

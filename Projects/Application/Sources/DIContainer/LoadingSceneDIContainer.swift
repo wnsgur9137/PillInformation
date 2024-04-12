@@ -23,12 +23,14 @@ final class LoadingSceneDIContainer {
     
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
-        self.loadingDIContainer = LoadingDIContainer(dependnecies: .init(networkManager: dependencies.networkManager))
+        self.loadingDIContainer = LoadingDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
     }
     
-    func makeLoadingViewController() -> LoadingViewController {
+    func makeLoadingViewController(navigationController: UINavigationController) -> LoadingCoordinator
+    {
         return DefaultLoadingCoordinator(
-            dependencies: onboardingDIContainer
+            navigationController: navigationController,
+            dependencies: loadingDIContainer
         )
     }
 }

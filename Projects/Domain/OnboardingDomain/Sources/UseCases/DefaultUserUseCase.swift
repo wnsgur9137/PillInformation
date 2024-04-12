@@ -26,7 +26,7 @@ extension DefaultUserUseCase {
     }
     
     public func signin(identifier: String) -> Single<UserModel> {
-        return userRepository.signinUser(identifier: token).map { $0.toModel() }
+        return userRepository.signinUser(identifier: identifier).map { $0.toModel() }
     }
     
     public func post(_ user: UserModel) -> Single<UserModel> {
@@ -46,5 +46,21 @@ extension DefaultUserUseCase {
     public func updateStorage(_ user: UserModel) -> Single<UserModel> {
         let user = User(userModel: user)
         return userRepository.updateStorage(user).map { $0.toModel() }
+    }
+    
+    public func saveEmailToKeychain(_ email: String) -> Single<Void> {
+        return userRepository.saveEmailToKeychain(email)
+    }
+    
+    public func getEmailToKeychain() -> Single<String> {
+        return userRepository.getEmailToKeychain()
+    }
+    
+    public func updateEmailToKeychain(_ email: String) -> Single<String> {
+        return userRepository.updateEmailToKeychain(email)
+    }
+    
+    public func deleteEmailFromKeychain() -> Single<Void> {
+        return userRepository.deleteEmailFromKeychain()
     }
 }

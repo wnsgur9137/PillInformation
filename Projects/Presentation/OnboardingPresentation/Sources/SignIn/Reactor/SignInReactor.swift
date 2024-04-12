@@ -14,6 +14,8 @@ import RxCocoa
 import KakaoLibraries
 
 public enum SignInType {
+    case saveAppleEmail
+    case loadAppleEmail
     case apple
     case kakao
     case signin
@@ -32,11 +34,13 @@ public struct SignInFlowAction {
 
 public final class SignInReactor: Reactor {
     public enum Action {
+        case loadedAppleEmail(String)
         case didTapAppleLoginButton(String)
         case didTapKakaoLoginButton
     }
     
     public enum Mutation {
+        case saveAppleEmail(String)
         case signin
         case signup(UserModel)
         case signInError(SignInType)
@@ -57,21 +61,76 @@ public final class SignInReactor: Reactor {
         self.flowAction = flowAction
     }
     
+    private func saveAppleEmail(_ email: String) -> Observable<Mutation> {
+        return .create() { observable in
+            self.userUseCase.saveEmailToKeychain(email)
+                .subscribe(onSuccess: { _ in
+                    print("Success: saveAppleEmail")
+                }, onFailure: { error in
+                    observable.onNext(.signInError(.saveAppleEmail))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func loadAppleEmail() -> Single<String> {
+        return userUseCase.getEmailToKeychain()
+    }
+    
     private func loginKakaoTalk() -> Single<String> {
         return KakaoService.isKakaoTalkLoginAvailable() ? KakaoService.loginWithKakaoTalk() : KakaoService.loginWithKakaoAccount()
     }
     
-    private func signin(identifier: String) -> Observable<Mutation> {
-        return Observable<Mutation>.create { observable in
+    private func signin(identifier: String) -> Single<Mutation> {
+        return .create { observable in
             self.userUseCase.signin(identifier: identifier)
                 .subscribe(onSuccess: { userModel in
                     if userModel.isAgreeRequredPolicies {
-                        observable.onNext(.signin)
+                        observable(.success(.signin))
                     } else {
-                        observable.onNext(.signup(userModel))
+                        observable(.success(.signup(userModel)))
                     }
                     
                 }, onFailure: { error in
+                    observable(.success(.signInError(.signin)))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func appleSignin(_ token: String) -> Observable<Mutation> {
+        return .create { observable in
+            self.loadAppleEmail()
+                .flatMap { email -> Single<Mutation> in
+                    return self.signin(identifier: email)
+                }
+                .subscribe(onSuccess: { mutation in
+                    observable.onNext(mutation)
+                }, onFailure: { error in
+                    observable.onNext(.signInError(.loadAppleEmail))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func kakaoSignin() -> Observable<Mutation> {
+        return .create { observable in
+            self.loginKakaoTalk()
+                .flatMap { _ -> Single<Int> in
+                    return KakaoService.loadUserID()
+                }
+                .flatMap { userID -> Single<Mutation> in
+                    return self.signin(identifier: "\(userID)")
+                }
+                .subscribe(onSuccess: { mutation in
+                    observable.onNext(mutation)
+                }, onFailure: { _ in
                     observable.onNext(.signInError(.signin))
                 })
                 .disposed(by: self.disposeBag)
@@ -85,35 +144,23 @@ public final class SignInReactor: Reactor {
 extension SignInReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case let .didTapAppleLoginButton(identifier):
-            return signin(identifier: identifier)
+        case let .loadedAppleEmail(email):
+            return saveAppleEmail(email)
+            
+        case let .didTapAppleLoginButton(token):
+            return appleSignin(token)
             
         case .didTapKakaoLoginButton:
-            return .create { observable in
-                self.loginKakaoTalk()
-                    .flatMap { _ -> Single<Int> in
-                        return KakaoService.loadUserID()
-                    }
-                    .subscribe(onSuccess: { userID in
-                        self.signin(identifier: "\(userID)")
-                            .subscribe(onNext: { mutation in
-                                observable.onNext(mutation)
-                            })
-                            .disposed(by: self.disposeBag)
-                        
-                    }, onFailure: { _ in
-                        observable.onNext(.signInError(.signin))
-                    })
-                    .disposed(by: self.disposeBag)
-                
-                return Disposables.create()
-            }
+            return kakaoSignin()
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
+        case .saveAppleEmail:
+            break
+            
         case .signin:
             showMainScene()
             

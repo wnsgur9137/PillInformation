@@ -19,7 +19,7 @@ public struct DefaultUserRepository: UserRepository {
     private let disposeBag = DisposeBag()
     
     public init(networkManager: NetworkManager,
-                userStorage: UserStorage = RealmUserStorage()) {
+                userStorage: UserStorage = DefaultUserStorage()) {
         self.networkManager = networkManager
         self.userStorage = userStorage
     }
@@ -94,5 +94,21 @@ extension DefaultUserRepository {
     public func updateStorage(_ user: User) -> Single<User> {
         let userDTO = UserDTO(user: user)
         return userStorage.update(updatedResponse: userDTO).map { $0.toDomain() }
+    }
+    
+    public func saveEmailToKeychain(_ email: String) -> Single<Void> {
+        return userStorage.saveToKeychain(email)
+    }
+    
+    public func getEmailToKeychain() -> Single<String> {
+        return userStorage.getEmailFromKeychain()
+    }
+    
+    public func updateEmailToKeychain(_ email: String) -> Single<String> {
+        return userStorage.updateEmailToKeychain(email)
+    }
+    
+    public func deleteEmailFromKeychain() -> Single<Void> {
+        return userStorage.deleteEmailFromKeychain()
     }
 }

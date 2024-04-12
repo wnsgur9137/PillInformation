@@ -17,4 +17,9 @@ public protocol UserUseCase {
     func fetchUserStorage(userID: Int) -> Single<UserModel>
     func saveStorage(_ user: UserModel) -> Single<UserModel>
     func updateStorage(_ user: UserModel) -> Single<UserModel>
+    
+    func saveEmailToKeychain(_ email: String) -> Single<Void>
+    func getEmailToKeychain() -> Single<String>
+    func updateEmailToKeychain(_ email: String) -> Single<String>
+    func deleteEmailFromKeychain() -> Single<Void>
 }

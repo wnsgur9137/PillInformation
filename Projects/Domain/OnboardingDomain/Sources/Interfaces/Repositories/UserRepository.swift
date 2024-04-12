@@ -17,4 +17,9 @@ public protocol UserRepository {
     func fetchUserStorage(userID: Int) -> Single<User>
     func saveStorage(_ user: User) -> Single<User>
     func updateStorage(_ user: User) -> Single<User>
+    
+    func saveEmailToKeychain(_ email: String) -> Single<Void>
+    func getEmailToKeychain() -> Single<String>
+    func updateEmailToKeychain(_ email: String) -> Single<String>
+    func deleteEmailFromKeychain() -> Single<Void>
 }
