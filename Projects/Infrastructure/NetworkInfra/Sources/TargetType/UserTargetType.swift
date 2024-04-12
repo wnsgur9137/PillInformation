@@ -11,7 +11,7 @@ import Moya
 
 public enum UserTargetType {
     case getUser(token: String)
-    case signin(token: String)
+    case signin(identifier: String)
     case updateUser(appPolicy: Bool,
                     agePolicy: Bool,
                     privacyPolicy: Bool,
@@ -47,13 +47,13 @@ extension UserTargetType: MoyaErrorHandleable {
     public var headers: [String : String]? {
         switch self {
         case let .getUser(token):
-            return ["token": "Bearer \(token)"]
+            return ["token": "\(token)"]
             
-        case let .signin(token):
-            return ["token": "Bearer \(token)"]
+        case let .signin(identifier):
+            return ["token": "\(identifier)"]
             
         case let .updateUser(_, _, _, _, _, token):
-            return ["token": "Bearer \(token)"]
+            return ["token": "\(token)"]
             
         default:
             return nil

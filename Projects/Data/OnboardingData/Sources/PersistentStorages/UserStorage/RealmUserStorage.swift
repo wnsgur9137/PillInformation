@@ -55,8 +55,10 @@ public final class RealmUserStorage {
                 userObject.isAgreePrivacyPolicy = updatedObject.isAgreePrivacyPolicy
                 userObject.isAgreeDaytimeNoti = updatedObject.isAgreeDaytimeNoti
                 userObject.isAgreeNighttimeNoti = updatedObject.isAgreeNighttimeNoti
+                userObject.accessToken = updatedObject.accessToken
+                userObject.refreshToken = updatedObject.refreshToken
             }
-            return userObject
+            return fetch(for: updatedObject.id)
         } catch {
             return nil
         }
@@ -76,21 +78,10 @@ public final class RealmUserStorage {
 
 extension RealmUserStorage: UserStorage {
     public func save(response: UserDTO) -> Single<UserDTO> {
-        
         if let _ = fetch(for: response.id) {
             return update(updatedResponse: response)
         }
-        
-        let userObject = UserObject(
-            id: response.id,
-            isAgreeAppPolicy: response.isAgreeAppPolicy,
-            isAgreeAgePolicy: response.isAgreeAgePolicy,
-            isAgreePrivacyPolicy: response.isAgreePrivacyPolicy,
-            isAgreeDaytimeNoti: response.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: response.isAgreeNighttimeNoti,
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken
-        )
+        let userObject = UserObject(userDTO: response)
         guard save(for: userObject) else {
             return .error(RealmError.save)
         }
@@ -115,16 +106,7 @@ extension RealmUserStorage: UserStorage {
         guard let userObject = fetch(for: updatedResponse.id) else {
             return .error(RealmError.fetch)
         }
-        let updateUserObject = UserObject(
-            id: updatedResponse.id,
-            isAgreeAppPolicy: updatedResponse.isAgreeAppPolicy,
-            isAgreeAgePolicy: updatedResponse.isAgreeAgePolicy,
-            isAgreePrivacyPolicy: updatedResponse.isAgreePrivacyPolicy,
-            isAgreeDaytimeNoti: updatedResponse.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: updatedResponse.isAgreeNighttimeNoti,
-            accessToken: updatedResponse.accessToken,
-            refreshToken: updatedResponse.refreshToken
-        )
+        let updateUserObject = UserObject(userDTO: updatedResponse)
         guard let updatedUserObjec = update(for: userObject, updatedObject: updateUserObject) else {
             return .error(RealmError.update)
         }

@@ -46,6 +46,7 @@ public extension TargetDependency.Project.InjectionManager {
 // MARK: - Feature
 public extension TargetDependency.Project.Feature {
     static let Features: TargetDependency = .project(layer: .Feature, name: "Features")
+    static let Loading: TargetDependency = .project(layer: .Feature, name: "Loading")
     static let Onboarding: TargetDependency = .project(layer: .Feature, name: "Onboarding")
     static let Home: TargetDependency = .project(layer: .Feature, name: "Home")
     static let Search: TargetDependency = .project(layer: .Feature, name: "Search")
@@ -56,6 +57,7 @@ public extension TargetDependency.Project.Feature {
 // MARK: - Presentation
 public extension TargetDependency.Project.Feature.Presentation {
     static let Base: TargetDependency = .project(layer: .Presentation, name: "BasePresentation")
+    static let Loading: TargetDependency = .project(layer: .Presentation, name: "LoadingPresentation")
     static let Onboarding: TargetDependency = .project(layer: .Presentation, name: "OnboardingPresentation")
     static let Home: TargetDependency = .project(layer: .Presentation, name: "HomePresentation")
     static let Search: TargetDependency = .project(layer: .Presentation, name: "SearchPresentation")
@@ -66,6 +68,7 @@ public extension TargetDependency.Project.Feature.Presentation {
 // MARK: - Domain
 public extension TargetDependency.Project.Feature.Domain {
     static let Base: TargetDependency = .project(layer: .Domain, name: "BaseDomain")
+    static let Loading: TargetDependency = .project(layer: .Domain, name: "LoadingDomain")
     static let Onboarding: TargetDependency = .project(layer: .Domain, name: "OnboardingDomain")
     static let Home: TargetDependency = .project(layer: .Domain, name: "HomeDomain")
     static let Search: TargetDependency = .project(layer: .Domain, name: "SearchDomain")
@@ -76,6 +79,7 @@ public extension TargetDependency.Project.Feature.Domain {
 // MARK: - Data
 public extension TargetDependency.Project.Feature.Data {
     static let Base: TargetDependency = .project(layer: .Data, name: "BaseData")
+    static let Loading: TargetDependency = .project(layer: .Data, name: "LoadingData")
     static let Onboarding: TargetDependency = .project(layer: .Data, name: "OnboardingData")
     static let Home: TargetDependency = .project(layer: .Data, name: "HomeData")
     static let Search: TargetDependency = .project(layer: .Data, name: "SearchData")

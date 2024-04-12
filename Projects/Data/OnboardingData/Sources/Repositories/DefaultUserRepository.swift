@@ -43,8 +43,9 @@ extension DefaultUserRepository {
         }
     }
     
-    public func signinUser(token: String) -> Single<User> {
-        let userDTO = networkManager.signin(token: token)
+    public func signinUser(identifier: String) -> Single<User> {
+        let userDTO = networkManager.signin(identifier: identifier)
+        
         
         return .create() { single in
             userDTO

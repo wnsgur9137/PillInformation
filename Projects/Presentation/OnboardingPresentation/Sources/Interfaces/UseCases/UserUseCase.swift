@@ -11,7 +11,7 @@ import RxSwift
 
 public protocol UserUseCase {
     func executeUser(userID: Int) -> Single<UserModel>
-    func signin(token: String) -> Single<UserModel>
+    func signin(identifier: String) -> Single<UserModel>
     func post(_ user: UserModel) -> Single<UserModel>
     
     func fetchUserStorage(userID: Int) -> Single<UserModel>

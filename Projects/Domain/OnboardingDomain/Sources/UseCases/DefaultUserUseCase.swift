@@ -25,8 +25,8 @@ extension DefaultUserUseCase {
         return userRepository.getUser(userID: userID).map { $0.toModel() }
     }
     
-    public func signin(token: String) -> Single<UserModel> {
-        return userRepository.signinUser(token: token).map { $0.toModel() }
+    public func signin(identifier: String) -> Single<UserModel> {
+        return userRepository.signinUser(identifier: token).map { $0.toModel() }
     }
     
     public func post(_ user: UserModel) -> Single<UserModel> {

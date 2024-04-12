@@ -61,9 +61,9 @@ public final class SignInReactor: Reactor {
         return KakaoService.isKakaoTalkLoginAvailable() ? KakaoService.loginWithKakaoTalk() : KakaoService.loginWithKakaoAccount()
     }
     
-    private func signin(token: String) -> Observable<Mutation> {
+    private func signin(identifier: String) -> Observable<Mutation> {
         return Observable<Mutation>.create { observable in
-            self.userUseCase.signin(token: token)
+            self.userUseCase.signin(identifier: identifier)
                 .subscribe(onSuccess: { userModel in
                     if userModel.isAgreeRequredPolicies {
                         observable.onNext(.signin)
@@ -85,8 +85,8 @@ public final class SignInReactor: Reactor {
 extension SignInReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case let .didTapAppleLoginButton(token):
-            return signin(token: token)
+        case let .didTapAppleLoginButton(identifier):
+            return signin(identifier: identifier)
             
         case .didTapKakaoLoginButton:
             return .create { observable in
@@ -95,7 +95,7 @@ extension SignInReactor {
                         return KakaoService.loadUserID()
                     }
                     .subscribe(onSuccess: { userID in
-                        self.signin(token: "\(userID)")
+                        self.signin(identifier: "\(userID)")
                             .subscribe(onNext: { mutation in
                                 observable.onNext(mutation)
                             })

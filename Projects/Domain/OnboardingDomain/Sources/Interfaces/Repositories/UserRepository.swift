@@ -11,7 +11,7 @@ import RxSwift
 
 public protocol UserRepository {
     func getUser(userID: Int) -> Single<User>
-    func signinUser(token: String) -> Single<User>
+    func signinUser(identifier: String) -> Single<User>
     func postUser(_ user: User) -> Single<User>
     
     func fetchUserStorage(userID: Int) -> Single<User>

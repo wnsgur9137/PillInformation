@@ -96,9 +96,6 @@ public final class OnboardingPolicyReactor: Reactor {
     private func updateUserPolicies() -> Observable<Mutation> {
         return .create() { observable in
             self.postUserPolicies()
-                .flatMap { userModel in
-                    return self.postUserPolicies()
-                }
                 .subscribe(onSuccess: { userModel in
                     self.updateUserStorage()
                         .subscribe(onNext: { mutation in
@@ -177,7 +174,7 @@ extension OnboardingPolicyReactor {
         case .didTapPrivacyPolicyMoreButton: 
             return .just(.showPolicyViewController(.privacy))
             
-        case .didTapConfirmButton: 
+        case .didTapConfirmButton:
             return updateUserPolicies()
             
         case .didTapAllAgreeButton:
@@ -186,7 +183,7 @@ extension OnboardingPolicyReactor {
             policies.privacyPolicy = true
             policies.daytimeNotiPolicy = true
             policies.nighttimeNotiPolicy = true
-            return updateUserStorage()
+            return updateUserPolicies()
         }
     }
     

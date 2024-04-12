@@ -30,6 +30,19 @@ class UserObject: Object {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }
+    
+    
+    convenience init(userDTO: UserDTO) {
+        self.init()
+        self.id = userDTO.id
+        self.isAgreeAppPolicy = userDTO.isAgreeAppPolicy
+        self.isAgreeAgePolicy = userDTO.isAgreeAgePolicy
+        self.isAgreePrivacyPolicy = userDTO.isAgreePrivacyPolicy
+        self.isAgreeDaytimeNoti = userDTO.isAgreeDaytimeNoti
+        self.isAgreeNighttimeNoti = userDTO.isAgreeNighttimeNoti
+        self.accessToken = userDTO.accessToken
+        self.refreshToken = userDTO.refreshToken
+    }
 }
 
 extension UserObject {
