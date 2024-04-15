@@ -11,5 +11,15 @@ import RxSwift
 
 public protocol UserUseCase {
     func executeUser(userID: Int) -> Single<UserModel>
-    func save(_ user: UserModel) -> Single<Void>
+    func signin(identifier: String) -> Single<UserModel>
+    func post(_ user: UserModel) -> Single<UserModel>
+    
+    func fetchUserStorage(userID: Int) -> Single<UserModel>
+    func saveStorage(_ user: UserModel) -> Single<UserModel>
+    func updateStorage(_ user: UserModel) -> Single<UserModel>
+    
+    func saveEmailToKeychain(_ email: String) -> Single<Void>
+    func getEmailToKeychain() -> Single<String>
+    func updateEmailToKeychain(_ email: String) -> Single<String>
+    func deleteEmailFromKeychain() -> Single<Void>
 }

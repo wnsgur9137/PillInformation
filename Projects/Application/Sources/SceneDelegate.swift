@@ -33,7 +33,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             appDIContainer: appDIContainer
         )
         
-        appFlowCoordinator?.startOnboarding(navigationController: UINavigationController())
+        appFlowCoordinator?.startLoadingView(navigationController: UINavigationController())
+        
+//        appFlowCoordinator?.startOnboarding(navigationController: UINavigationController())
         
 //        appFlowCoordinator?.start()
         window?.makeKeyAndVisible()

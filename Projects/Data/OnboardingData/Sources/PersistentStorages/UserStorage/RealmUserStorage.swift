@@ -17,12 +17,24 @@ enum RealmError: Error {
     case delete
 }
 
-public final class RealmUserStorage {
+enum KeychainError: Error {
+    case isNullAppBundleID
+    case save
+    case fetch
+    case update
+    case delete
+    case unknown
+}
+
+public final class DefaultUserStorage {
     
     private let realm: Realm
     
     public init() { 
         self.realm = try! Realm()
+        #if DEBUG
+        print("🚨Realm fileURL: \(Realm.Configuration.defaultConfiguration.fileURL)")
+        #endif
     }
     
     private func save(for userObject: UserObject) -> Bool {
@@ -52,8 +64,10 @@ public final class RealmUserStorage {
                 userObject.isAgreePrivacyPolicy = updatedObject.isAgreePrivacyPolicy
                 userObject.isAgreeDaytimeNoti = updatedObject.isAgreeDaytimeNoti
                 userObject.isAgreeNighttimeNoti = updatedObject.isAgreeNighttimeNoti
+                userObject.accessToken = updatedObject.accessToken
+                userObject.refreshToken = updatedObject.refreshToken
             }
-            return userObject
+            return fetch(for: updatedObject.id)
         } catch {
             return nil
         }
@@ -71,20 +85,16 @@ public final class RealmUserStorage {
     }
 }
 
-extension RealmUserStorage: UserStorage {
-    public func save(response: UserDTO) -> Single<Void> {
-        let userObject = UserObject(
-            id: response.id,
-            isAgreeAppPolicy: response.isAgreeAppPolicy,
-            isAgreeAgePolicy: response.isAgreeAgePolicy,
-            isAgreePrivacyPolicy: response.isAgreePrivacyPolicy,
-            isAgreeDaytimeNoti: response.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: response.isAgreeNighttimeNoti
-        )
+extension DefaultUserStorage: UserStorage {
+    public func save(response: UserDTO) -> Single<UserDTO> {
+        if let _ = fetch(for: response.id) {
+            return update(updatedResponse: response)
+        }
+        let userObject = UserObject(userDTO: response)
         guard save(for: userObject) else {
             return .error(RealmError.save)
         }
-        return .just(Void())
+        return get(userID: response.id)
     }
     
     public func get(userID: Int) -> Single<UserDTO> {
@@ -94,19 +104,18 @@ extension RealmUserStorage: UserStorage {
         return .just(userObject.toDTO())
     }
     
-    public func update(userID: Int,
-                       updatedResponse: UserDTO) -> Single<UserDTO> {
+    public func getTokens(userID: Int) -> Single<(accessToken: String, refreshToken: String)> {
         guard let userObject = fetch(for: userID) else {
             return .error(RealmError.fetch)
         }
-        let updateUserObject = UserObject(
-            id: updatedResponse.id,
-            isAgreeAppPolicy: updatedResponse.isAgreeAppPolicy,
-            isAgreeAgePolicy: updatedResponse.isAgreeAgePolicy,
-            isAgreePrivacyPolicy: updatedResponse.isAgreePrivacyPolicy,
-            isAgreeDaytimeNoti: updatedResponse.isAgreeDaytimeNoti,
-            isAgreeNighttimeNoti: updatedResponse.isAgreeNighttimeNoti
-        )
+        return .just((userObject.accessToken, userObject.refreshToken))
+    }
+    
+    public func update(updatedResponse: UserDTO) -> Single<UserDTO> {
+        guard let userObject = fetch(for: updatedResponse.id) else {
+            return .error(RealmError.fetch)
+        }
+        let updateUserObject = UserObject(userDTO: updatedResponse)
         guard let updatedUserObjec = update(for: userObject, updatedObject: updateUserObject) else {
             return .error(RealmError.update)
         }
@@ -119,6 +128,90 @@ extension RealmUserStorage: UserStorage {
         }
         guard delete(for: userObject) else {
             return .error(RealmError.delete)
+        }
+        return .just(Void())
+    }
+    
+    public func saveToKeychain(_ email: String) -> Single<Void> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let saveQuery: NSDictionary = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecValueData as String: email as AnyObject,
+        ]
+        
+        let status = SecItemAdd(saveQuery, nil)
+        guard status == errSecSuccess else {
+            return .error(KeychainError.save)
+        }
+        return .just(Void())
+    }
+    
+    public func getEmailFromKeychain() -> Single<String> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let selectQuery: NSDictionary = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrAccount: "appleEmail" as AnyObject,
+            kSecReturnAttributes: true,
+            kSecReturnData: true
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(selectQuery, &result)
+        
+        guard status == errSecSuccess,
+              let email = result as? String else {
+            return .error(KeychainError.fetch)
+        }
+        return .just(email)
+    }
+    
+    public func updateEmailToKeychain(_ email: String) -> Single<String> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let updateQuery: NSDictionary = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecValueData as String: email as AnyObject,
+        ]
+        
+        let attributes: NSDictionary = [
+            kSecValueData as String: email as AnyObject
+        ]
+        
+        let status = SecItemUpdate(updateQuery, attributes)
+        
+        guard status == errSecSuccess else {
+            return .error(KeychainError.update)
+        }
+        return getEmailFromKeychain()
+    }
+    
+    public func deleteEmailFromKeychain() -> Single<Void> {
+        guard let bundleID = Bundle.main.bundleIdentifier else {
+            return .error(KeychainError.isNullAppBundleID)
+        }
+        
+        let query: [String: AnyObject] = [
+            kSecAttrService as String: bundleID as AnyObject,
+            kSecAttrAccount as String: "appleEmail" as AnyObject,
+            kSecClass as String: kSecClassGenericPassword
+        ]
+        
+        let status = SecItemDelete(query as CFDictionary)
+        
+        guard status == errSecSuccess else {
+            return .error(KeychainError.delete)
         }
         return .just(Void())
     }

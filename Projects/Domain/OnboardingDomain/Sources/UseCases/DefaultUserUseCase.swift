@@ -22,11 +22,45 @@ public final class DefaultUserUseCase: UserUseCase {
 
 extension DefaultUserUseCase {
     public func executeUser(userID: Int) -> Single<UserModel> {
-        return userRepository.fetchUser(userID: userID).map { $0.toModel() }
+        return userRepository.getUser(userID: userID).map { $0.toModel() }
     }
     
-    public func save(_ userModel: UserModel) -> Single<Void> {
-        let user = User(id: userModel.id, isAgreeAppPolicy: userModel.isAgreeAppPolicy, isAgreeAgePolicy: userModel.isAgreeAgePolicy, isAgreePrivacyPolicy: userModel.isAgreePrivacyPolicy, isAgreeDaytimeNoti: userModel.isAgreeDaytimeNoti, isAgreeNighttimeNoti: userModel.isAgreeNighttimeNoti)
-        return userRepository.save(user)
+    public func signin(identifier: String) -> Single<UserModel> {
+        return userRepository.signinUser(identifier: identifier).map { $0.toModel() }
+    }
+    
+    public func post(_ user: UserModel) -> Single<UserModel> {
+        let user = User(userModel: user)
+        return userRepository.postUser(user).map { $0.toModel() }
+    }
+    
+    public func fetchUserStorage(userID: Int) -> Single<UserModel> {
+        return userRepository.fetchUserStorage(userID: userID).map { $0.toModel() }
+    }
+    
+    public func saveStorage(_ userModel: UserModel) -> Single<UserModel> {
+        let user = User(userModel: userModel)
+        return userRepository.saveStorage(user).map { $0.toModel() }
+    }
+    
+    public func updateStorage(_ user: UserModel) -> Single<UserModel> {
+        let user = User(userModel: user)
+        return userRepository.updateStorage(user).map { $0.toModel() }
+    }
+    
+    public func saveEmailToKeychain(_ email: String) -> Single<Void> {
+        return userRepository.saveEmailToKeychain(email)
+    }
+    
+    public func getEmailToKeychain() -> Single<String> {
+        return userRepository.getEmailToKeychain()
+    }
+    
+    public func updateEmailToKeychain(_ email: String) -> Single<String> {
+        return userRepository.updateEmailToKeychain(email)
+    }
+    
+    public func deleteEmailFromKeychain() -> Single<Void> {
+        return userRepository.deleteEmailFromKeychain()
     }
 }

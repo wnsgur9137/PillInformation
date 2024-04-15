@@ -15,13 +15,21 @@ public struct UserModel {
     public let isAgreePrivacyPolicy: Bool
     public let isAgreeDaytimeNoti: Bool
     public let isAgreeNighttimeNoti: Bool
+    public let accessToken: String
+    public let refreshToken: String
     
-    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool) {
+    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String) {
         self.id = id
         self.isAgreeAppPolicy = isAgreeAppPolicy
         self.isAgreeAgePolicy = isAgreeAgePolicy
         self.isAgreePrivacyPolicy = isAgreePrivacyPolicy
         self.isAgreeDaytimeNoti = isAgreeDaytimeNoti
         self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+    }
+    
+    public var isAgreeRequredPolicies: Bool {
+        return isAgreeAgePolicy && isAgreeAgePolicy && isAgreePrivacyPolicy
     }
 }

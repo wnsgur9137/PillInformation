@@ -49,7 +49,6 @@ public final class SignInViewController: UIViewController, View {
     
     private let appleSignInButton = SignInButton(type: .apple)
     private let kakaoSignInButton = SignInButton(type: .kakao)
-    private let googleSignInButton = SignInButton(type: .google)
     
     // 사용할지 안할지 고민중
     private let lookaroundButton: UIButton = {
@@ -60,8 +59,8 @@ public final class SignInViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag = DisposeBag()
     
+    private let saveAppleEmailSubject = PublishSubject<String>()
     private let appleSignInSubject = PublishSubject<String>()
-    private let googleSignInSubject = PublishSubject<Void>()
     
     // MARK: - Lifecycle
     public static func create(with reactor: SignInReactor) -> SignInViewController {
@@ -107,14 +106,20 @@ extension SignInViewController {
         let confirmButtonInfo = AlertButtonInfo(title: Constants.SignIn.ok)
         
         switch type {
+        case .saveAppleEmail:
+            print("Error: saveAppleEmail")
+            
+        case .loadAppleEmail:
+            print("Error: loadAppleEmail")
+            
         case .apple:
             title = AlertText(text: Constants.SignIn.canNotAppleSignInTitle)
             
         case .kakao:
             title = AlertText(text: Constants.SignIn.canNotKakaoSignInTitle)
-                        
-        case .google:
-            title = AlertText(text: Constants.SignIn.canNotGoogleSignInTitle)
+            
+        case .signin:
+            title = AlertText(text: Constants.SignIn.canNotSignInTitle)
         }
         
         AlertViewer()
@@ -135,17 +140,17 @@ extension SignInViewController {
             .disposed(by: disposeBag)
         
         kakaoSignInButton.rx.tap
-            .map { Reactor.Action.didTapKakaoLoginButton("") }
+            .map { Reactor.Action.didTapKakaoLoginButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        saveAppleEmailSubject
+            .map { email in Reactor.Action.loadedAppleEmail(email) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         appleSignInSubject
             .map { token in Reactor.Action.didTapAppleLoginButton(token) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        googleSignInButton.rx.tap
-            .map { Reactor.Action.didTapGoogleLoginButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -168,6 +173,9 @@ extension SignInViewController: ASAuthorizationControllerDelegate {
     public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
+            if let email = appleIDCredential.email {
+                saveAppleEmailSubject.onNext(email)
+            }
             guard let identityToken = appleIDCredential.identityToken,
                   let identityTokenString = String(data: identityToken, encoding: .utf8) else { return }
             appleSignInSubject.onNext(identityTokenString)
@@ -223,8 +231,6 @@ extension SignInViewController {
                     .define { buttonStack in
                         buttonStack.addItem(appleSignInButton)
                         buttonStack.addItem(kakaoSignInButton)
-                            .marginTop(10.0)
-                        buttonStack.addItem(googleSignInButton)
                             .marginTop(10.0)
                     }
             }

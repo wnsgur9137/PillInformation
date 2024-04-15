@@ -10,11 +10,14 @@ import Foundation
 import Moya
 
 public enum UserTargetType {
-    case getUserInfo(email: String)
-    case getNicknameCheck(nickname: String)
-    case postUserInfo(email: String, nickname: String, updateDate: String)
-    case updateUserInfo(email: String, nickname: String, updateDate: String)
-    case deleteUser(email: String)
+    case getUser(token: String)
+    case signin(identifier: String)
+    case updateUser(appPolicy: Bool,
+                    agePolicy: Bool,
+                    privacyPolicy: Bool,
+                    daytimeNoti: Bool,
+                    nighttimeNoti: Bool,
+                    token: String)
 }
 
 extension UserTargetType: MoyaErrorHandleable {
@@ -24,50 +27,55 @@ extension UserTargetType: MoyaErrorHandleable {
     
     public var path: String {
         switch self {
-        case .getUserInfo: return "/getUserInfo/"
-        case .getNicknameCheck: return "/getNicknameCheck/"
-        case .postUserInfo: return "/setUserInfo/"
-        case .updateUserInfo: return "/updateUserInfo/"
-        case .deleteUser: return "/deleteUserInfo/"
+        case .getUser: return "/user/userInfo"
+        case .signin: return "/user/signin"
+        case .updateUser: return "/user/update"
         }
     }
     
     public var method: Moya.Method {
         switch self {
         // GET
-        case .getUserInfo: return .get
-        case .getNicknameCheck: return .get
+        case .getUser: return .get
+            
         // POST
-        case .postUserInfo: return .post
-        case .updateUserInfo: return .post
-        case .deleteUser: return .post
+        case .signin: return .post
+        case .updateUser: return .post
         }
     }
     
     public var headers: [String : String]? {
-        return nil
+        switch self {
+        case let .getUser(token):
+            return ["token": "\(token)"]
+            
+        case let .signin(identifier):
+            return ["token": "\(identifier)"]
+            
+        case let .updateUser(_, _, _, _, _, token):
+            return ["token": "\(token)"]
+            
+        default:
+            return nil
+        }
     }
     
     public var parameters: [String: Any]? {
         switch self {
-        case let .getUserInfo(email):
-            return ["email": email]
+        case .getUser:
+            return nil
             
-        case let .getNicknameCheck(nickname):
-            return ["nickname": nickname]
+        case .signin:
+            return nil
             
-        case let .postUserInfo(email, nickname, updateDate):
-            return ["email": email,
-                    "nickname": nickname,
-                    "updateDate": updateDate]
-            
-        case let .updateUserInfo(email, nickname, updateDate):
-            return ["email": email,
-                    "nickname": nickname,
-                    "updateDate": updateDate]
-            
-        case let .deleteUser(email):
-            return ["email": email]
+        case let .updateUser(appPolicy, agePolicy, privacyPolicy, daytimeNoti, nighttimeNoti, _):
+            return [
+                "is_agree_app_policy": appPolicy,
+                "is_agree_age_policy": agePolicy,
+                "is_agree_privacy_policy": privacyPolicy,
+                "is_agree_daytime_noti": daytimeNoti,
+                "is_agree_nighttime_noti": nighttimeNoti
+            ]
         }
     }
     
@@ -89,7 +97,10 @@ extension UserTargetType: MoyaErrorHandleable {
 extension UserTargetType {
     public var sampleData: Data {
         switch self {
-        case .getUserInfo:
+        case .signin:
+            return Data()
+            
+        case .getUser:
             return Data(
                 """
                 {
@@ -100,46 +111,8 @@ extension UserTargetType {
                 """.utf8
             )
             
-        case .getNicknameCheck:
-            return Data(
-                """
-                {
-                    "email": "test@test.com",
-                    "nickname": "testNickname",
-                    "updateDate": "updateDate"
-                }
-                """.utf8
-            )
-            
-        case .postUserInfo:
-            // "success" or "fail"
-            return Data(
-                """
-                {
-                    "success"
-                }
-                """.utf8
-            )
-            
-        case .updateUserInfo:
-            // "success" or "fail"
-            return Data(
-                """
-                {
-                    "success"
-                }
-                """.utf8
-            )
-            
-        case .deleteUser:
-            // "success" or "fail"
-            return Data(
-                """
-                {
-                    "success"
-                }
-                """.utf8
-            )
+        case .updateUser:
+            return Data()
         }
     }
 }

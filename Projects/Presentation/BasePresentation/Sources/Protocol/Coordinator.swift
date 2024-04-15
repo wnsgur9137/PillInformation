@@ -15,6 +15,7 @@ public enum CoordinatorType {
     case alarm
     case myPage
     case onboarding
+    case loading
 }
 
 public protocol Coordinator: AnyObject {

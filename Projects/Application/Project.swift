@@ -119,7 +119,10 @@ let targets: [Target] = [
                     xcconfig: .XCConfig.app(.PROD)
                 )
             ]
-        )
+        ),
+        launchArguments: [
+            .launchArgument(name: "IDEPreferLogStreaming", isEnabled: true)
+        ]
     ),
     .target(
         name: "\(projectName)Tests",
@@ -152,7 +155,10 @@ let targets: [Target] = [
                     xcconfig: .XCConfig.app(.TEST_PROD)
                 ),
             ]
-        )
+        ),
+        launchArguments: [
+            .launchArgument(name: "IDEPreferLogStreaming", isEnabled: true)
+        ]
     )
 ]
 
