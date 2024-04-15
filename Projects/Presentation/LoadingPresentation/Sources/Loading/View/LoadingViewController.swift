@@ -20,6 +20,23 @@ public final class LoadingViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
+    private let rootFlexContainerView = UIView()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.appName
+        label.textColor = Constants.Color.systemBlue
+        label.font = Constants.Font.suiteExtraBold(36.0)
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    private let animationView: LottieAnimationView = {
+        let lottieView = LottieAnimationView(name: "loadingAnimation")
+        lottieView.frame = CGRect(x: 0, y: 0, width: 100.0, height: 100.0)
+        return lottieView
+    }()
+    
     // MARK: - Properties
     public var disposeBag = DisposeBag()
     
@@ -34,6 +51,7 @@ public final class LoadingViewController: UIViewController, View {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
         setupLayout()
+        setupAnimationView()
     }
     
     public override func viewDidLayoutSubviews() {
@@ -45,12 +63,20 @@ public final class LoadingViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func setupAnimationView() {
+        animationView.loopMode = .loop
+        animationView.play()
+    }
 }
 
 // MARK: - React
 extension LoadingViewController {
     private func bindAction(_ reactor: LoadingReactor) {
-        
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: LoadingReactor) {
@@ -61,10 +87,20 @@ extension LoadingViewController {
 // MARK: - Layout
 extension LoadingViewController {
     private func setupLayout() {
+        view.addSubview(rootFlexContainerView)
         
+        rootFlexContainerView.flex
+            .alignItems(.center)
+            .justifyContent(.center)
+            .define { rootView in
+                rootView.addItem(titleLabel)
+                rootView.addItem(animationView)
+                    .marginTop(40.0)
+        }
     }
     
     private func setupSubviewLayout() {
-        
+        rootFlexContainerView.pin.all()
+        rootFlexContainerView.flex.layout()
     }
 }

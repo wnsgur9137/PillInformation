@@ -31,5 +31,11 @@ public final class LoadingDIContainer {
 
 // MARK: - LoadingCoordinator Dependencies
 extension LoadingDIContainer: LoadingCoordinatorDependencies {
+    public func makeLoadingReactor(flowAction: LoadingFlowAction) -> LoadingReactor {
+        return LoadingReactor(flowAction: flowAction)
+    }
     
+    public func makeLoadingViewController(flowAction: LoadingFlowAction) -> LoadingViewController {
+        return LoadingViewController.create(with: makeLoadingReactor(flowAction: flowAction))
+    }
 }

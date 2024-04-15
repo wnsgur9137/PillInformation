@@ -23,11 +23,12 @@ public struct LoadingFlowAction {
 
 public final class LoadingReactor: Reactor {
     public enum Action {
-        
+        case viewDidLoad
     }
     
     public enum Mutation {
-        
+        case isSignin
+        case isNotSignin
     }
     
     public struct State {
@@ -45,20 +46,30 @@ public final class LoadingReactor: Reactor {
 //        self.userUseCase = useCase
         self.flowAction = flowAction
     }
+    
+    private func checkSignin() {
+        
+    }
 }
 
 // MARK: - React
 extension LoadingReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-            
+        case .viewDidLoad:
+            checkSignin()
+            return .just(.isNotSignin)
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        let state = state
         switch mutation {
+        case .isSignin:
+            showMainScene()
             
+        case .isNotSignin:
+            showOnboardingScene()
         }
         return state
     }

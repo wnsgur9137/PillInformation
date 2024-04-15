@@ -35,4 +35,12 @@ final class AppFlowCoordinator {
         let flow = onboardingSceneDIContainer.makeOnboardingViewController(navigationController: navigationController)
         flow.start()
     }
+    
+    func startLoadingView(navigationController: UINavigationController) {
+        tabBarController.tabBar.isHidden = true
+        tabBarController.viewControllers = [navigationController]
+        let loadingSceneDIContainer = appDIContainer.makeLoadingSceneDIContainer()
+        let flow = loadingSceneDIContainer.makeLoadingViewController(navigationController: navigationController)
+        flow.start()
+    }
 }

@@ -12,7 +12,7 @@ import LoadingPresentation
 import BasePresentation
 
 public protocol LoadingCoordinatorDependencies {
-    
+    func makeLoadingViewController(flowAction: LoadingFlowAction) -> LoadingViewController
 }
 
 public protocol LoadingCoordinator: Coordinator {
@@ -41,7 +41,13 @@ public final class DefaultLoadingCoordinator: LoadingCoordinator {
     }
     
     public func showLoadingViewController() {
-        
+        let flowAction = LoadingFlowAction(
+            showMainScene: showMainScene,
+            showOnboardingScene: showOnboardingScene
+        )
+        let viewController = dependencies.makeLoadingViewController(flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: false)
+        self.loadingViewController = viewController
     }
     
     public func popViewController(animated: Bool = true) {
