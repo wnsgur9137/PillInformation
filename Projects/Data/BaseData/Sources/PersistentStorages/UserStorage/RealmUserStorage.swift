@@ -30,7 +30,7 @@ public final class DefaultUserStorage {
     
     private let realm: Realm
     
-    public init() { 
+    public init() {
         self.realm = try! Realm()
         #if DEBUG
         print("🚨Realm fileURL: \(Realm.Configuration.defaultConfiguration.fileURL)")

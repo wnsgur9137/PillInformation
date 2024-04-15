@@ -9,8 +9,22 @@
 import Foundation
 import RxSwift
 
-import OnboardingDomain
 import NetworkInfra
+
+public protocol UserRepository {
+    func getUser(userID: Int) -> Single<UserDTO>
+    func signinUser(identifier: String) -> Single<UserDTO>
+    func postUser(_ user: UserDTO) -> Single<UserDTO>
+    
+    func fetchUserStorage(userID: Int) -> Single<UserDTO>
+    func saveStorage(_ user: UserDTO) -> Single<UserDTO>
+    func updateStorage(_ user: UserDTO) -> Single<UserDTO>
+    
+    func saveEmailToKeychain(_ email: String) -> Single<Void>
+    func getEmailToKeychain() -> Single<String>
+    func updateEmailToKeychain(_ email: String) -> Single<String>
+    func deleteEmailFromKeychain() -> Single<Void>
+}
 
 public struct DefaultUserRepository: UserRepository {
     
@@ -26,14 +40,14 @@ public struct DefaultUserRepository: UserRepository {
 }
 
 extension DefaultUserRepository {
-    public func getUser(userID: Int) -> Single<User> {
+    public func getUser(userID: Int) -> Single<UserDTO> {
         return .create() { single in
             self.userStorage.getTokens(userID: userID)
                 .flatMap { accessToken, refreshToken in
                     self.networkManager.getUser(token: accessToken)
                 }
                 .subscribe(onSuccess: { userDTO in
-                    single(.success(userDTO.toDomain()))
+                    single(.success(userDTO))
                 }, onFailure: { error in
                     single(.failure(error))
                 })
@@ -43,9 +57,8 @@ extension DefaultUserRepository {
         }
     }
     
-    public func signinUser(identifier: String) -> Single<User> {
+    public func signinUser(identifier: String) -> Single<UserDTO> {
         let userDTO = networkManager.signin(identifier: identifier)
-        
         
         return .create() { single in
             userDTO
@@ -53,7 +66,7 @@ extension DefaultUserRepository {
                     self.userStorage.save(response: userDTO)
                 }
                 .subscribe(onSuccess: { userDTO in
-                    single(.success(userDTO.toDomain()))
+                    single(.success(userDTO))
                 }, onFailure: { error in
                     single(.failure(error))
                 })
@@ -63,16 +76,14 @@ extension DefaultUserRepository {
         }
     }
     
-    public func postUser(_ user: User) -> Single<User> {
-        let userDTO = UserDTO(user: user)
-        
+    public func postUser(_ user: UserDTO) -> Single<UserDTO> {
         return .create() { single in
             userStorage.getTokens(userID: user.id)
                 .flatMap { accessToken, refreshToken -> Single<UserDTO> in
-                    return networkManager.update(userDTO: userDTO, token: accessToken)
+                    return networkManager.update(userDTO: user, token: accessToken)
                 }
                 .subscribe(onSuccess: { userDTO in
-                    single(.success(userDTO.toDomain()))
+                    single(.success(userDTO))
                 }, onFailure: { error in
                     single(.failure(error))
                 })
@@ -82,18 +93,16 @@ extension DefaultUserRepository {
         }
     }
     
-    public func fetchUserStorage(userID: Int) -> Single<User> {
-        return userStorage.get(userID: userID).map { $0.toDomain() }
+    public func fetchUserStorage(userID: Int) -> Single<UserDTO> {
+        return userStorage.get(userID: userID)
     }
     
-    public func saveStorage(_ user: User) -> Single<User> {
-        let userDTO = UserDTO(user: user)
-        return userStorage.save(response: userDTO).map { $0.toDomain() }
+    public func saveStorage(_ user: UserDTO) -> Single<UserDTO> {
+        return userStorage.save(response: user)
     }
     
-    public func updateStorage(_ user: User) -> Single<User> {
-        let userDTO = UserDTO(user: user)
-        return userStorage.update(updatedResponse: userDTO).map { $0.toDomain() }
+    public func updateStorage(_ user: UserDTO) -> Single<UserDTO> {
+        return userStorage.update(updatedResponse: user)
     }
     
     public func saveEmailToKeychain(_ email: String) -> Single<Void> {

@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-public protocol UserRepository {
+public protocol UserOnboardingRepository {
     func getUser(userID: Int) -> Single<User>
     func signinUser(identifier: String) -> Single<User>
     func postUser(_ user: User) -> Single<User>
