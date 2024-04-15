@@ -8,17 +8,15 @@
 
 import Foundation
 
-import OnboardingDomain
-
 public struct UserDTO: Decodable {
-    let id: Int
-    let isAgreeAppPolicy: Bool
-    let isAgreeAgePolicy: Bool
-    let isAgreePrivacyPolicy: Bool
-    let isAgreeDaytimeNoti: Bool
-    let isAgreeNighttimeNoti: Bool
-    let accessToken: String
-    let refreshToken: String
+    public let id: Int
+    public let isAgreeAppPolicy: Bool
+    public let isAgreeAgePolicy: Bool
+    public let isAgreePrivacyPolicy: Bool
+    public let isAgreeDaytimeNoti: Bool
+    public let isAgreeNighttimeNoti: Bool
+    public let accessToken: String
+    public let refreshToken: String
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -40,22 +38,5 @@ public struct UserDTO: Decodable {
         self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
         self.accessToken = accessToken
         self.refreshToken = refreshToken
-    }
-    
-    public init(user: User) {
-        self.id = user.id
-        self.isAgreeAppPolicy = user.isAgreeAppPolicy
-        self.isAgreeAgePolicy = user.isAgreeAgePolicy
-        self.isAgreePrivacyPolicy = user.isAgreePrivacyPolicy
-        self.isAgreeDaytimeNoti = user.isAgreeDaytimeNoti
-        self.isAgreeNighttimeNoti = user.isAgreeNighttimeNoti
-        self.accessToken = user.accessToken
-        self.refreshToken = user.refreshToken
-    }
-}
-
-extension UserDTO {
-    func toDomain() -> User {
-        return .init(id: self.id, isAgreeAppPolicy: self.isAgreeAppPolicy, isAgreeAgePolicy: self.isAgreeAgePolicy, isAgreePrivacyPolicy: self.isAgreePrivacyPolicy, isAgreeDaytimeNoti: self.isAgreeDaytimeNoti, isAgreeNighttimeNoti: self.isAgreeNighttimeNoti, accessToken: self.accessToken, refreshToken: self.refreshToken)
     }
 }

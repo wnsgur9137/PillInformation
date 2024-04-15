@@ -9,6 +9,7 @@
 import UIKit
 
 import NetworkInfra
+import BaseData
 import OnboardingData
 import OnboardingDomain
 import OnboardingPresentation
@@ -36,8 +37,12 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
         return DefaultUserRepository(networkManager: dependencies.networkManager)
     }
     
+    public func makeUserOnboardingRepository() -> UserOnboardingRepository {
+        return DefaultUserOnboardingRepository(userRepository: makeUserRepository())
+    }
+    
     public func makeUserUseCase() -> UserUseCase {
-        return DefaultUserUseCase(with: makeUserRepository())
+        return DefaultUserUseCase(with: makeUserOnboardingRepository())
     }
     
     // MARK: - SignIn

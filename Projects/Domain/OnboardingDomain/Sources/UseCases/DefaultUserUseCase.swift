@@ -13,9 +13,9 @@ import OnboardingPresentation
 
 public final class DefaultUserUseCase: UserUseCase {
     
-    private let userRepository: UserRepository
+    private let userRepository: UserOnboardingRepository
     
-    public init(with userRepository: UserRepository) {
+    public init(with userRepository: UserOnboardingRepository) {
         self.userRepository = userRepository
     }
 }

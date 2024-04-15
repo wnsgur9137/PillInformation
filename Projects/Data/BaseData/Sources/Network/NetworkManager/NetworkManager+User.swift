@@ -11,7 +11,6 @@ import RxSwift
 import Moya
 
 import NetworkInfra
-import OnboardingDomain
 
 extension NetworkManager {
     public func getUser(token: String) -> Single<UserDTO> {
