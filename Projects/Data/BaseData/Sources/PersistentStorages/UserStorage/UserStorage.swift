@@ -12,6 +12,7 @@ import RxSwift
 public protocol UserStorage {
     func save(response: UserDTO) -> Single<UserDTO>
     func get(userID: Int) -> Single<UserDTO>
+    func getFirstUser() -> Single<UserDTO>
     func getTokens(userID: Int) -> Single<(accessToken: String, refreshToken: String)>
     func update(updatedResponse: UserDTO) -> Single<UserDTO>
     func delete(userID: Int) -> Single<Void>

@@ -1,8 +1,8 @@
 //
-//  UserDTO+Onboarding.swift
-//  OnboardingData
+//  UserDTO+Splash.swift
+//  SplashData
 //
-//  Created by JunHyeok Lee on 4/2/24.
+//  Created by JunHyeok Lee on 4/15/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 

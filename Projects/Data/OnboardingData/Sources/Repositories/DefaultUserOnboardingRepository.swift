@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 import BaseData
+import BaseDomain
 import OnboardingDomain
 
 public struct DefaultUserOnboardingRepository: UserOnboardingRepository {
@@ -28,6 +29,10 @@ extension DefaultUserOnboardingRepository {
     
     public func signinUser(identifier: String) -> Single<User> {
         return userRepository.signinUser(identifier: identifier).map { $0.toDomain() }
+    }
+    
+    public func signinUser(accessToken: String) -> Single<User> {
+        return userRepository.signinUser(accessToken: accessToken).map { $0.toDomain() }
     }
     
     public func postUser(_ user: User) -> Single<User> {

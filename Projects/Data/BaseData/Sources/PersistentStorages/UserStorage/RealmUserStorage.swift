@@ -54,6 +54,11 @@ public final class DefaultUserStorage {
         return filteredUserObject.first
     }
     
+    private func fetchFirst() -> UserObject? {
+        let userObject = realm.objects(UserObject.self)
+        return userObject.first
+    }
+    
     private func update(for userObject: UserObject,
                         updatedObject: UserObject) -> UserObject? {
         guard userObject.id == updatedObject.id else { return nil }
@@ -99,6 +104,13 @@ extension DefaultUserStorage: UserStorage {
     
     public func get(userID: Int) -> Single<UserDTO> {
         guard let userObject = fetch(for: userID) else {
+            return .error(RealmError.fetch)
+        }
+        return .just(userObject.toDTO())
+    }
+    
+    public func getFirstUser() -> Single<UserDTO> {
+        guard let userObject = fetchFirst() else {
             return .error(RealmError.fetch)
         }
         return .just(userObject.toDTO())

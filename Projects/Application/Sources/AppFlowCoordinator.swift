@@ -36,11 +36,11 @@ final class AppFlowCoordinator {
         flow.start()
     }
     
-    func startLoadingView(navigationController: UINavigationController) {
+    func startSplashView(navigationController: UINavigationController) {
         tabBarController.tabBar.isHidden = true
         tabBarController.viewControllers = [navigationController]
-        let loadingSceneDIContainer = appDIContainer.makeLoadingSceneDIContainer()
-        let flow = loadingSceneDIContainer.makeLoadingViewController(navigationController: navigationController)
+        let splashSceneDIContainer = appDIContainer.makeSplashSceneDIContainer()
+        let flow = splashSceneDIContainer.makeSplashViewController(navigationController: navigationController)
         flow.start()
     }
 }

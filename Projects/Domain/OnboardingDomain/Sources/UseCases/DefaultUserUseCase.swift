@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 
+import BaseDomain
 import OnboardingPresentation
 
 public final class DefaultUserUseCase: UserUseCase {
@@ -30,7 +31,7 @@ extension DefaultUserUseCase {
     }
     
     public func post(_ user: UserModel) -> Single<UserModel> {
-        let user = User(userModel: user)
+        let user = User.makeUser(userModel: user)
         return userRepository.postUser(user).map { $0.toModel() }
     }
     
@@ -39,12 +40,12 @@ extension DefaultUserUseCase {
     }
     
     public func saveStorage(_ userModel: UserModel) -> Single<UserModel> {
-        let user = User(userModel: userModel)
+        let user = User.makeUser(userModel: userModel)
         return userRepository.saveStorage(user).map { $0.toModel() }
     }
     
     public func updateStorage(_ user: UserModel) -> Single<UserModel> {
-        let user = User(userModel: user)
+        let user = User.makeUser(userModel: user)
         return userRepository.updateStorage(user).map { $0.toModel() }
     }
     

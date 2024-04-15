@@ -11,7 +11,8 @@ import Moya
 
 public enum UserTargetType {
     case getUser(token: String)
-    case signin(identifier: String)
+    case signup(identifier: String)
+    case signin(accessToken: String)
     case updateUser(appPolicy: Bool,
                     agePolicy: Bool,
                     privacyPolicy: Bool,
@@ -28,6 +29,7 @@ extension UserTargetType: MoyaErrorHandleable {
     public var path: String {
         switch self {
         case .getUser: return "/user/userInfo"
+        case .signup: return "/user/signup"
         case .signin: return "/user/signin"
         case .updateUser: return "/user/update"
         }
@@ -37,9 +39,10 @@ extension UserTargetType: MoyaErrorHandleable {
         switch self {
         // GET
         case .getUser: return .get
+        case .signin: return .get
             
         // POST
-        case .signin: return .post
+        case .signup: return .post
         case .updateUser: return .post
         }
     }
@@ -49,20 +52,23 @@ extension UserTargetType: MoyaErrorHandleable {
         case let .getUser(token):
             return ["token": "\(token)"]
             
-        case let .signin(identifier):
-            return ["token": "\(identifier)"]
+        case let .signup(identifier):
+            return ["identifier": "\(identifier)"]
+            
+        case let .signin(accessToken):
+            return ["access_token": "\(accessToken)"]
             
         case let .updateUser(_, _, _, _, _, token):
             return ["token": "\(token)"]
-            
-        default:
-            return nil
         }
     }
     
     public var parameters: [String: Any]? {
         switch self {
         case .getUser:
+            return nil
+            
+        case .signup:
             return nil
             
         case .signin:
@@ -97,6 +103,9 @@ extension UserTargetType: MoyaErrorHandleable {
 extension UserTargetType {
     public var sampleData: Data {
         switch self {
+        case .signup:
+            return Data()
+            
         case .signin:
             return Data()
             

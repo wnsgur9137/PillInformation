@@ -17,6 +17,6 @@ let project: Project = .project(
         .Project.Feature.Search,
         .Project.Feature.MyPage,
         .Project.Feature.Onboarding,
-        .Project.Feature.Loading,
+        .Project.Feature.Splash,
     ]
 )
