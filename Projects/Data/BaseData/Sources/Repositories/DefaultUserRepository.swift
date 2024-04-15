@@ -22,6 +22,7 @@ public protocol UserRepository {
     func saveStorage(_ user: UserDTO) -> Single<UserDTO>
     func updateStorage(_ user: UserDTO) -> Single<UserDTO>
     func deleteStorage(userID: Int) -> Single<Void>
+    func deleteStorage() -> Single<Void>
     
     func saveEmailToKeychain(_ email: String) -> Single<Void>
     func getEmailToKeychain() -> Single<String>
@@ -133,6 +134,10 @@ extension DefaultUserRepository {
     
     public func deleteStorage(userID: Int) -> Single<Void> {
         return userStorage.delete(userID: userID)
+    }
+    
+    public func deleteStorage() -> Single<Void> {
+        return userStorage.delete()
     }
     
     public func saveEmailToKeychain(_ email: String) -> Single<Void> {

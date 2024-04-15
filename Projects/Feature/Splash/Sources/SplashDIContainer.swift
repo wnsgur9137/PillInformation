@@ -9,6 +9,7 @@
 import UIKit
 
 import NetworkInfra
+import BaseData
 import SplashData
 import SplashDomain
 import SplashPresentation
@@ -31,8 +32,20 @@ public final class SplashDIContainer {
 
 // MARK: - SplashCoordinator Dependencies
 extension SplashDIContainer: SplashCoordinatorDependencies {
+    public func makeUserRepository() -> UserRepository {
+        return DefaultUserRepository(networkManager: dependencies.networkManager)
+    }
+    
+    public func makeUserSplashRepository() -> UserSplashRepository {
+        return DefaultUserSplashRepository(userRepository: makeUserRepository())
+    }
+    
+    public func makeUserUseCase() -> UserUseCase {
+        return DefaultUserUseCase(with: makeUserSplashRepository())
+    }
+    
     public func makeSplashReactor(flowAction: SplashFlowAction) -> SplashReactor {
-        return SplashReactor(flowAction: flowAction)
+        return SplashReactor(with: makeUserUseCase(), flowAction: flowAction)
     }
     
     public func makeSplashViewController(flowAction: SplashFlowAction) -> SplashViewController {

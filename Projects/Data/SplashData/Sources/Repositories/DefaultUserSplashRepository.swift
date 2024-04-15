@@ -36,7 +36,7 @@ extension DefaultUserSplashRepository {
         return userRepository.updateStorage(userDTO).map { $0.toDomain() }
     }
     
-    public func deleteUserStorage(userID: Int) -> Single<Void> {
-        return userRepository.deleteStorage(userID: userID)
+    public func deleteUserStorage() -> Single<Void> {
+        return userRepository.deleteStorage()
     }
 }

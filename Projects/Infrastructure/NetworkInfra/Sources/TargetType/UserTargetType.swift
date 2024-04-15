@@ -56,7 +56,7 @@ extension UserTargetType: MoyaErrorHandleable {
             return ["identifier": "\(identifier)"]
             
         case let .signin(accessToken):
-            return ["access_token": "\(accessToken)"]
+            return ["accessToken": "\(accessToken)"]
             
         case let .updateUser(_, _, _, _, _, token):
             return ["token": "\(token)"]

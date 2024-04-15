@@ -13,5 +13,5 @@ public protocol UserUseCase {
     func signin(accessToken: String) -> Single<UserModel>
     func fetchUserStorage() -> Single<UserModel>
     func updateUserStorage(_ user: UserModel) -> Single<UserModel>
-    func deleteUserStorage(userID: Int) -> Single<Void>
+    func deleteUserStorage() -> Single<Void>
 }

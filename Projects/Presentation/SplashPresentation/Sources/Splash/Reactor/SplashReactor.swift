@@ -37,18 +37,35 @@ public final class SplashReactor: Reactor {
     
     public var initialState = State()
     private let disposeBag = DisposeBag()
-//    private let userUseCase: UserUseCase
+    private let userUseCase: UserUseCase
     private let flowAction: SplashFlowAction
     
-//    public init(with useCase: UserUseCase,
-//                flowAction: SplashFlowAction) {
-    public init(flowAction: SplashFlowAction) {
-//        self.userUseCase = useCase
+    public init(with useCase: UserUseCase,
+                flowAction: SplashFlowAction) {
+        self.userUseCase = useCase
         self.flowAction = flowAction
     }
     
-    private func checkSignin() {
-        
+    private func checkSignin() -> Observable<Mutation> {
+        return .create() { observable in
+            
+            self.userUseCase.fetchUserStorage()
+                .flatMap { userModel -> Single<UserModel> in
+                    return self.userUseCase.signin(accessToken: userModel.accessToken)
+                }
+                .subscribe(onSuccess: { userModel in
+                    observable.onNext(.isSignin)
+                }, onFailure: { error in
+                    self.userUseCase.deleteUserStorage()
+                        .subscribe { _ in
+                            observable.onNext(.isNotSignin)
+                        }
+                        .disposed(by: self.disposeBag)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
 }
 
@@ -57,8 +74,7 @@ extension SplashReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .viewDidLoad:
-            checkSignin()
-            return .just(.isNotSignin)
+            return checkSignin()
         }
     }
     
@@ -69,8 +85,7 @@ extension SplashReactor {
             showMainScene()
             
         case .isNotSignin:
-            break
-//            showOnboardingScene()
+            showOnboardingScene()
         }
         return state
     }

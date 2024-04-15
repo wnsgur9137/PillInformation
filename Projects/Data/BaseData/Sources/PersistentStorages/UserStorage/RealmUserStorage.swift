@@ -88,6 +88,18 @@ public final class DefaultUserStorage {
             return false
         }
     }
+    
+    private func deleteAll() -> Bool {
+        let userObject = realm.objects(UserObject.self)
+        do {
+            try realm.write{
+                realm.delete(userObject)
+            }
+            return true
+        } catch {
+            return false
+        }
+    }
 }
 
 extension DefaultUserStorage: UserStorage {
@@ -139,6 +151,13 @@ extension DefaultUserStorage: UserStorage {
             return .error(RealmError.fetch)
         }
         guard delete(for: userObject) else {
+            return .error(RealmError.delete)
+        }
+        return .just(Void())
+    }
+    
+    public func delete() -> Single<Void> {
+        guard deleteAll() else {
             return .error(RealmError.delete)
         }
         return .just(Void())

@@ -35,7 +35,7 @@ extension DefaultUserUseCase {
         return userRepository.updateStorage(user).map { $0.toModel() }
     }
     
-    public func deleteUserStorage(userID: Int) -> Single<Void> {
-        return userRepository.deleteUserStorage(userID: userID)
+    public func deleteUserStorage() -> Single<Void> {
+        return userRepository.deleteUserStorage()
     }
 }

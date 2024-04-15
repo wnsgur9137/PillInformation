@@ -16,6 +16,7 @@ public protocol UserStorage {
     func getTokens(userID: Int) -> Single<(accessToken: String, refreshToken: String)>
     func update(updatedResponse: UserDTO) -> Single<UserDTO>
     func delete(userID: Int) -> Single<Void>
+    func delete() -> Single<Void>
     
     func saveToKeychain(_ email: String) -> Single<Void>
     func getEmailFromKeychain() -> Single<String>

@@ -15,5 +15,5 @@ public protocol UserSplashRepository {
     func signin(accessToken: String) -> Single<User>
     func fetchUserStorage() -> Single<User>
     func updateStorage(_ user: User) -> Single<User>
-    func deleteUserStorage(userID: Int) -> Single<Void>
+    func deleteUserStorage() -> Single<Void>
 }
