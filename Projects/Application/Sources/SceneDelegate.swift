@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             appDIContainer: appDIContainer
         )
         
-        appFlowCoordinator?.startLoadingView(navigationController: UINavigationController())
+        appFlowCoordinator?.startSplashView(navigationController: UINavigationController())
         
 //        appFlowCoordinator?.startOnboarding(navigationController: UINavigationController())
         

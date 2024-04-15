@@ -54,6 +54,11 @@ public final class DefaultUserStorage {
         return filteredUserObject.first
     }
     
+    private func fetchFirst() -> UserObject? {
+        let userObject = realm.objects(UserObject.self)
+        return userObject.first
+    }
+    
     private func update(for userObject: UserObject,
                         updatedObject: UserObject) -> UserObject? {
         guard userObject.id == updatedObject.id else { return nil }
@@ -83,6 +88,18 @@ public final class DefaultUserStorage {
             return false
         }
     }
+    
+    private func deleteAll() -> Bool {
+        let userObject = realm.objects(UserObject.self)
+        do {
+            try realm.write{
+                realm.delete(userObject)
+            }
+            return true
+        } catch {
+            return false
+        }
+    }
 }
 
 extension DefaultUserStorage: UserStorage {
@@ -99,6 +116,13 @@ extension DefaultUserStorage: UserStorage {
     
     public func get(userID: Int) -> Single<UserDTO> {
         guard let userObject = fetch(for: userID) else {
+            return .error(RealmError.fetch)
+        }
+        return .just(userObject.toDTO())
+    }
+    
+    public func getFirstUser() -> Single<UserDTO> {
+        guard let userObject = fetchFirst() else {
             return .error(RealmError.fetch)
         }
         return .just(userObject.toDTO())
@@ -127,6 +151,13 @@ extension DefaultUserStorage: UserStorage {
             return .error(RealmError.fetch)
         }
         guard delete(for: userObject) else {
+            return .error(RealmError.delete)
+        }
+        return .just(Void())
+    }
+    
+    public func delete() -> Single<Void> {
+        guard deleteAll() else {
             return .error(RealmError.delete)
         }
         return .just(Void())

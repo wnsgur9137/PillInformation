@@ -14,11 +14,15 @@ import NetworkInfra
 public protocol UserRepository {
     func getUser(userID: Int) -> Single<UserDTO>
     func signinUser(identifier: String) -> Single<UserDTO>
+    func signinUser(accessToken: String) -> Single<UserDTO>
     func postUser(_ user: UserDTO) -> Single<UserDTO>
     
     func fetchUserStorage(userID: Int) -> Single<UserDTO>
+    func fetchFirstUser() -> Single<UserDTO>
     func saveStorage(_ user: UserDTO) -> Single<UserDTO>
     func updateStorage(_ user: UserDTO) -> Single<UserDTO>
+    func deleteStorage(userID: Int) -> Single<Void>
+    func deleteStorage() -> Single<Void>
     
     func saveEmailToKeychain(_ email: String) -> Single<Void>
     func getEmailToKeychain() -> Single<String>
@@ -76,6 +80,25 @@ extension DefaultUserRepository {
         }
     }
     
+    public func signinUser(accessToken: String) -> Single<UserDTO> {
+        let userDTO = networkManager.signin(accessToken: accessToken)
+        
+        return .create() { single in
+            userDTO
+                .flatMap { userDTO in
+                    self.userStorage.save(response: userDTO)
+                }
+                .subscribe(onSuccess: { userDTO in
+                    single(.success(userDTO))
+                }, onFailure: { error in
+                    single(.failure(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
     public func postUser(_ user: UserDTO) -> Single<UserDTO> {
         return .create() { single in
             userStorage.getTokens(userID: user.id)
@@ -97,12 +120,24 @@ extension DefaultUserRepository {
         return userStorage.get(userID: userID)
     }
     
+    public func fetchFirstUser() -> Single<UserDTO> {
+        return userStorage.getFirstUser()
+    }
+    
     public func saveStorage(_ user: UserDTO) -> Single<UserDTO> {
         return userStorage.save(response: user)
     }
     
     public func updateStorage(_ user: UserDTO) -> Single<UserDTO> {
         return userStorage.update(updatedResponse: user)
+    }
+    
+    public func deleteStorage(userID: Int) -> Single<Void> {
+        return userStorage.delete(userID: userID)
+    }
+    
+    public func deleteStorage() -> Single<Void> {
+        return userStorage.delete()
     }
     
     public func saveEmailToKeychain(_ email: String) -> Single<Void> {
