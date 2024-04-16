@@ -51,7 +51,7 @@ public final class MainTabBarController: UITabBarController {
     // MARK: - Properties
     
     // TabBar Animator
-    private var previousSelectedIndex: Int?
+    private var previousSelectedIndex: Int = 0
     private let tabBarAnimator = TabBarAnimator()
     private weak var animatorFromDelegate: TabBarAnimatorDelegate?
     private weak var animatorToDelegate: TabBarAnimatorDelegate?
@@ -160,7 +160,6 @@ extension MainTabBarController: UITabBarControllerDelegate {
     }
     
     public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-        guard let previousSelectedIndex = self.previousSelectedIndex else { return nil }
         let toNavigationViewController = toVC as? UINavigationController
         var toIndex: Int?
         
@@ -177,13 +176,14 @@ extension MainTabBarController: UITabBarControllerDelegate {
         animatorFromDelegate = fromVC as? TabBarAnimatorDelegate
         animatorToDelegate = fromVC as? TabBarAnimatorDelegate
         
-        
         if previousSelectedIndex < toIndex ?? previousSelectedIndex { // left to right
             tabBarAnimator.fadeDirection = .leftToRight
+            previousSelectedIndex = toIndex ?? previousSelectedIndex
             return tabBarAnimator
             
         } else if previousSelectedIndex > toIndex ??  previousSelectedIndex { // right to left
             tabBarAnimator.fadeDirection = .rightToLeft
+            previousSelectedIndex = toIndex ?? previousSelectedIndex
             return tabBarAnimator
         }
         return nil
