@@ -60,7 +60,7 @@ public final class AlertView: UIView {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundColor = Constants.Color.systemWhite
+        backgroundColor = Constants.Color.systemBackground
         layer.cornerRadius = 24.0
         layer.addShadow()
         

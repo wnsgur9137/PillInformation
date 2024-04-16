@@ -39,6 +39,7 @@ let defaultInfoPlist: [String: Plist.Value] = [
     "AppConfigurations": [
         "KAKAO_NATIVE_APP_KEY": "${DEV_KAKAO_NATIVE_APP_KEY}",
         "API_BASE_URL": "${API_BASE_URL}",
+        "DEV_API_BASE_URL": "${DEV_API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
         "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
@@ -142,16 +143,20 @@ let targets: [Target] = [
             configurations: [
                 .debug(
                     name: .TEST_DEV,
-//                    settings: [
-//                        "OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"
-//                    ],
+                    settings: [
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)Tests-Dev",
+                        "PRODUCT_NAME": "PillInformationTests-Dev"
+                    ],
                     xcconfig: .XCConfig.app(.TEST_DEV)
                 ),
                 .debug(
                     name: .TEST_PROD,
-//                    settings: [
-//                        "OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable -all_load"
-//                    ],
+                    settings: [
+                        "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIconDevServer",
+                        "PRODUCT_BUNDLE_IDENTIFIER": "\(organizationName)Tests",
+                        "PRODUCT_NAME": "PillInformationTests"
+                    ],
                     xcconfig: .XCConfig.app(.TEST_PROD)
                 ),
             ]
