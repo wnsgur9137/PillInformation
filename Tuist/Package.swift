@@ -24,7 +24,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/layoutBox/FlexLayout", branch: "master"),
         .package(url: "https://github.com/layoutBox/PinLayout", branch: "master"),
-        .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
         .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "6.6.0"),
         .package(url: "https://github.com/RxSwiftCommunity/RxGesture.git", from: "4.0.0"),
         .package(url: "https://github.com/ReactorKit/ReactorKit.git", branch: "master"),
