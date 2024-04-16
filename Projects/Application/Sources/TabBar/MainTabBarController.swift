@@ -72,6 +72,8 @@ public final class MainTabBarController: UITabBarController {
                 button.isSelected = false
             }
             tabBarButtons[selectedIndex].isSelected = true
+            
+            centerButton.isSelected = selectedIndex == 2
         }
     }
     

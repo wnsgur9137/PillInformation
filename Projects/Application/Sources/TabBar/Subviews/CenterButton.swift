@@ -16,7 +16,7 @@ final class CenterButton: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = false
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = Constants.Color.systemWhite
+        imageView.tintColor = Constants.Color.systemLightGray
         return imageView
     }()
     
@@ -30,7 +30,7 @@ final class CenterButton: UIView {
     
     var isSelected: Bool = false {
         didSet {
-            imageView.tintColor = isSelected ? Constants.Color.systemBlue : Constants.Color.systemLightGray
+            imageView.tintColor = isSelected ? Constants.Color.systemWhite : Constants.Color.systemLightGray
         }
     }
     
@@ -40,6 +40,11 @@ final class CenterButton: UIView {
         layer.cornerRadius = width / 2
         clipsToBounds = true
         layer.addShadow()
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.isSelected = !self.isSelected
+        }), for: .touchUpInside)
         
         addSubviews()
         setupLayoutConstraints()
