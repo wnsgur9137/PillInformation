@@ -42,16 +42,16 @@ enum TabBarPage {
         }
     }
     
-    func image() -> UIImage {
+    func image() -> UIImage? {
         switch self {
-        case .home: return UIImage()
-        case .search: return UIImage()
-        case .alarm: return UIImage()
-        case .myPage: return UIImage()
+        case .home: return UIImage(systemName: "house")
+        case .search: return UIImage(systemName: "magnifyingglass")
+        case .alarm: return UIImage(systemName: "deskclock")
+        case .myPage: return UIImage(systemName: "person")
         }
     }
     
-    func selectedImage() -> UIImage {
+    func selectedImage() -> UIImage? {
         switch self {
         case .home: return UIImage()
         case .search: return UIImage()
