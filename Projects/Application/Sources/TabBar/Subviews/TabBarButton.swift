@@ -26,7 +26,7 @@ final class TabBarButton: UIView {
         return button
     }()
     
-    let height: CGFloat = (CGSize.deviceSize.width / 7.8) / 2
+    let height: CGFloat = (CGSize.shortWidth / 7.8) / 2
     
     var defaultColor: UIColor = Constants.Color.systemLightGray
     var selectedColor: UIColor = Constants.Color.systemBlue

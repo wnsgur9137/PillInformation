@@ -26,7 +26,7 @@ final class CenterButton: UIView {
         return button
     }()
     
-    private let width: CGFloat = CGSize.deviceSize.width / 7.8
+    private let width: CGFloat = CGSize.shortWidth / 7.8
     
     var isSelected: Bool = false {
         didSet {

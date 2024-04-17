@@ -16,6 +16,6 @@ import HomeDomain
 
 extension NetworkManager {
     public func requestNotices() -> Single<[NoticeResponseDTO]> {
-        return requestObject(.getAllNotices, type: NoticeListResponseDTO.self).map { $0.noticeList }
+        return requestObject(.getAllNotices, type: [NoticeResponseDTO].self)
     }
 }
