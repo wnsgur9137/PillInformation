@@ -10,6 +10,7 @@ import UIKit
 
 import BasePresentation
 import HomePresentation
+import BookmarkPresentation
 import SearchPresentation
 import AlarmPresentation
 import MyPagePresentation
@@ -166,9 +167,10 @@ extension MainTabBarController: UITabBarControllerDelegate {
         for viewController in toNavigationViewController?.viewControllers ?? [] {
             switch viewController {
             case is HomeViewController: toIndex = 0
-            case is SearchViewController: toIndex = 1
-            case is AlarmViewController: toIndex = 2
-            case is MyPageViewController: toIndex = 3
+            case is BookmarkViewController: toIndex = 1
+            case is SearchViewController: toIndex = 2
+            case is AlarmViewController: toIndex = 3
+            case is MyPageViewController: toIndex = 4
             default: break
             }
         }

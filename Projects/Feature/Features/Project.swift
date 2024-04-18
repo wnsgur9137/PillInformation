@@ -12,11 +12,12 @@ let project: Project = .project(
     name: "Features",
     product: .framework,
     dependencies: [
+        .Project.Feature.Splash,
+        .Project.Feature.Onboarding,
         .Project.Feature.Home,
+        .Project.Feature.Bookmark,
         .Project.Feature.Alarm,
         .Project.Feature.Search,
         .Project.Feature.MyPage,
-        .Project.Feature.Onboarding,
-        .Project.Feature.Splash,
     ]
 )
