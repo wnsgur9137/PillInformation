@@ -18,29 +18,15 @@ import BasePresentation
 
 public final class HomeViewController: UIViewController, View {
     
+    private let rootFlexContainerView = UIView()
+    private let searchTextFieldView = SearchTextFieldView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private let navigationView = NavigationView(useTextField: true)
     
     private let titleImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.Color.systemLightGray
         return imageView
-    }()
-    
-    
-    private let searchPillByShapeButtonView: SearchPillButtonView = {
-        let image = Constants.HomeViewController.Image.pills
-        let title = Constants.HomeViewController.searchPillByShape
-        let view = SearchPillButtonView(image: image, title: title)
-        return view
-    }()
-    
-    private let searchPillByPhotoButtonView: SearchPillButtonView = {
-        let image = Constants.HomeViewController.Image.camera
-        let title = Constants.HomeViewController.searchPillByPhoto
-        let view = SearchPillButtonView(image: image, title: title)
-        return view
     }()
     
     private let noticeLabel: UILabel = {
@@ -54,6 +40,7 @@ public final class HomeViewController: UIViewController, View {
     private let noticeTableView: UITableView = {
         let tableView = UITableView()
         tableView.isScrollEnabled = false
+        tableView.layer.addShadow()
         return tableView
     }()
     
@@ -61,6 +48,7 @@ public final class HomeViewController: UIViewController, View {
     
     private var adapter: HomeAdapter?
     public var disposeBag = DisposeBag()
+    private lazy var noticeTableRowHeight: CGFloat = 50.0
     
     // MARK: - LifeCycle
     
@@ -82,6 +70,11 @@ public final class HomeViewController: UIViewController, View {
         setupLayout()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchTextFieldView.searchTextField.resignFirstResponder()
+    }
+    
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
@@ -96,19 +89,7 @@ public final class HomeViewController: UIViewController, View {
 // MARK: - Methods
 extension HomeViewController {
     private func setupSearchButtons() {
-        searchPillByShapeButtonView.button.rx.tap
-            .subscribe(onNext: { [weak self] _ in
-                self?.reactor?.changeTab(index: 1)
-            })
-            .disposed(by: disposeBag)
-        
-        searchPillByPhotoButtonView.button.rx.tap
-            .subscribe(onNext: { [weak self] _ in
-                self?.reactor?.changeTab(index: 1)
-            })
-            .disposed(by: disposeBag)
-        
-        navigationView.textField.rx.tapGesture()
+        searchTextFieldView.searchTextField.rx.tapGesture()
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
                 self?.reactor?.changeTab(index: 1)
@@ -128,10 +109,19 @@ extension HomeViewController {
     
     private func bindState(_ reactor: HomeReactor) {
         reactor.state
-            .map { $0.isLoadedNotices }
-            .bind(onNext: { isLoadedNotices in
+            .map { $0.noticeCount }
+            .bind(onNext: { noticeCount in
+                let height = self.noticeTableRowHeight * CGFloat(noticeCount)
+                self.noticeTableView.flex.height(height)
                 self.noticeTableView.reloadData()
                 self.updateSubviewLayout()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.isFailedLoadNotices }
+            .bind(onNext: { isFailedLoadNotices in
+                guard isFailedLoadNotices != nil else { return }
             })
             .disposed(by: disposeBag)
     }
@@ -142,60 +132,60 @@ extension HomeViewController: HomeAdapterDelegate {
     public func didSelectRow(at indexPath: IndexPath) {
         reactor?.didSelectNoticeRow(at: indexPath.row)
     }
+    
+    public func heightForRow(at indexPath: IndexPath) -> CGFloat {
+        return noticeTableRowHeight
+    }
 }
 
 // MARK: - Layout
 extension HomeViewController {
     private func setupLayout() {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
-        view.addSubview(scrollView)
-        view.addSubview(navigationView)
+        view.addSubview(rootFlexContainerView)
+        rootFlexContainerView.addSubview(searchTextFieldView)
+        rootFlexContainerView.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-        scrollView.flex.define { scrollView in
-            scrollView.addItem(contentView)
-                .marginTop(navigationView.height)
-                .define { contentView in
-                    contentView.addItem(titleImageView)
-                        .height(120)
-                    
-                    contentView.addItem()
-                        .direction(.row)
-                        .justifyContent(.center)
-                        .marginTop(24.0)
-                        .define { buttonStack in
-                            buttonStack.addItem(searchPillByShapeButtonView)
-                                .margin(8.0)
-                            buttonStack.addItem(searchPillByPhotoButtonView)
-                                .margin(8.0)
-                        }
-                    
-                    contentView.addItem(noticeLabel)
-                        .margin(contentMargin)
-                        .marginTop(24.0)
-                        .marginLeft(36.0)
-                    contentView.addItem(noticeTableView)
-                        .margin(contentMargin)
-                        .marginBottom(24.0)
-                        .grow(1)
-                    contentView.addItem(footerView)
-            }
+        contentView.flex.define { contentView in
+            contentView.addItem(titleImageView)
+                .height(120)
+            
+            contentView.addItem(noticeLabel)
+                .margin(contentMargin)
+                .marginTop(24.0)
+                .marginLeft(36.0)
+            contentView.addItem(noticeTableView)
+                .cornerRadius(8.0)
+                .margin(contentMargin)
+            
+            contentView.addItem(footerView)
+                .marginTop(24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        scrollView.pin.left().right().bottom().top(view.safeAreaInsets.top)
-        scrollView.flex.layout()
+        rootFlexContainerView.pin
+            .left().right().bottom().top(view.safeAreaInsets.top)
+        searchTextFieldView.pin
+            .left(24.0)
+            .right(24.0)
+            .height(48.0)
+        searchTextFieldView.flex.layout()
+        
+        scrollView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom(view.safeAreaInsets.bottom)
+        
+        contentView.pin.top().horizontally()
+        
         contentView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
-        scrollView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
 }

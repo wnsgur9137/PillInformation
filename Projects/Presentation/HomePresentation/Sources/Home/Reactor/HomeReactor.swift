@@ -28,12 +28,18 @@ public final class HomeReactor: Reactor {
     }
     
     public enum Mutation {
-        case loadNotices
+        case isLoadedNotices
+        case loadError
     }
     
     public struct State {
         var isLoading: Bool = true
-        var isLoadedNotices: Bool = false
+        var noticeCount: Int = 0
+        var isFailedLoadNotices: Void?
+    }
+    
+    enum HomeReactorError {
+        case loadNotices
     }
     
     public var initialState = State()
@@ -49,9 +55,20 @@ public final class HomeReactor: Reactor {
         self.flowAction = flowAction
     }
     
-    private func loadNotice() -> Observable<[NoticeModel]> {
-        return noticeUseCase.executeNotice()
-            .asObservable()
+    private func loadNotice() -> Observable<Mutation> {
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.noticeUseCase.executeNotice()
+                .subscribe(onSuccess: { notices in
+                    self.notices = notices
+                    observable.onNext(.isLoadedNotices)
+                }, onFailure: { error in
+                    observable.onNext(.loadError)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
 }
 
@@ -61,18 +78,16 @@ extension HomeReactor {
         switch action {
         case .loadNotices:
             return loadNotice()
-                .flatMap { [weak self] notice -> Observable<Mutation> in
-                    self?.notices = notice
-                    return .just(.loadNotices)
-                }
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .loadNotices:
-            state.isLoadedNotices = true
+        case .isLoadedNotices:
+            state.noticeCount = notices.count
+        case .loadError:
+            state.isFailedLoadNotices = Void()
         }
         return state
     }

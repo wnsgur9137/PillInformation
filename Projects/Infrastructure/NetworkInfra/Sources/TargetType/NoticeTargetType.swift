@@ -24,11 +24,11 @@ extension NoticeTargetType: MoyaErrorHandleable {
     
     public var path: String {
         switch self {
-        case .getAllNotices: return "/getAllNotices/"
-        case .getNotice: return "/getNotice/"
-        case .setNotice: return "/setNotice/"
-        case .updateNotice: return "/updateNotice/"
-        case .deleteNotice: return "/deleteNotice/"
+        case .getAllNotices: return "/notice/allNotices"
+        case let .getNotice(noticeID): return "notice/\(noticeID)"
+        case .setNotice: return "/notice/setNotice/"
+        case .updateNotice: return "/notice/updateNotice/"
+        case .deleteNotice: return "/notice/deleteNotice/"
         }
     }
     
@@ -53,8 +53,8 @@ extension NoticeTargetType: MoyaErrorHandleable {
         case .getAllNotices:
             return nil
             
-        case let .getNotice(noticeID):
-            return ["id": noticeID]
+        case .getNotice:
+            return nil
             
         case let .setNotice(title, writer, content):
             return ["title": title,

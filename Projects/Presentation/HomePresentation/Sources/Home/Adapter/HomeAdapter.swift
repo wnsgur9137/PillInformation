@@ -15,6 +15,7 @@ public protocol HomeAdapterDataSource: AnyObject {
 
 public protocol HomeAdapterDelegate: AnyObject {
     func didSelectRow(at indexPath: IndexPath)
+    func heightForRow(at indexPath: IndexPath) -> CGFloat
 }
 
 public final class HomeAdapter: NSObject {
@@ -60,5 +61,9 @@ extension HomeAdapter: UITableViewDataSource {
 extension HomeAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.didSelectRow(at: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return delegate?.heightForRow(at: indexPath) ?? 0
     }
 }

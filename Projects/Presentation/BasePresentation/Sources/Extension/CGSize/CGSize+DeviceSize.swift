@@ -13,4 +13,11 @@ extension CGSize {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return CGSize() }
         return scene.screen.bounds.size
     }()
+    
+    public static var shortWidth: CGFloat = {
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return 0 }
+        let width = scene.screen.bounds.size.width
+        let height = scene.screen.bounds.size.height
+        return min(width, height)
+    }()
 }

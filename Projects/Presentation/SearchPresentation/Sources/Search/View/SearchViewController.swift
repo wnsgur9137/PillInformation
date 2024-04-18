@@ -20,9 +20,10 @@ public final class SearchViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
+    private let rootContainerView = UIView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private lazy var navigationView = NavigationView(useTextField: true)
+    private let searchTextFieldView = SearchTextFieldView()
     
     private let keyboardBackgroundView: UIView = {
         let view = UIView()
@@ -75,7 +76,7 @@ public final class SearchViewController: UIViewController, View {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationView.textField.becomeFirstResponder()
+        searchTextFieldView.searchTextField.becomeFirstResponder()
     }
     
     public override func viewDidLayoutSubviews() {
@@ -92,7 +93,7 @@ public final class SearchViewController: UIViewController, View {
 // MARK: - Methods
 extension SearchViewController {
     private func setupKeyboard() {
-        navigationView.textField.delegate = self
+        searchTextFieldView.searchTextField.delegate = self
         keyboardBackgroundView.rx.tapGesture()
             .asDriver()
             .drive(onNext: { [weak self] _ in
@@ -123,18 +124,6 @@ extension SearchViewController {
             .map { text in
                 Reactor.Action.search(text)
             }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        navigationView.searchButton.rx.tap
-            .map { _ in
-                self.navigationView.textField.text
-            }
-            .bind(to: searchRelay)
-            .disposed(by: disposeBag)
-        
-        navigationView.searchButton.rx.tapGesture()
-            .map { _ in Reactor.Action.search(self.navigationView.textField.text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -170,7 +159,7 @@ extension SearchViewController {
 // MARK: - UITextFieldDelegate
 extension SearchViewController: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == navigationView.textField {
+        if textField == searchTextFieldView.searchTextField {
             searchRelay.accept(textField.text)
         }
         return true
@@ -185,38 +174,45 @@ extension SearchViewController: SearchAdapterDelegate {
 // MARK: - Layout
 extension SearchViewController {
     private func setupLayout() {
-        view.addSubview(scrollView)
-        view.addSubview(keyboardBackgroundView)
-        view.addSubview(navigationView)
+        view.addSubview(rootContainerView)
+        rootContainerView.addSubview(searchTextFieldView)
+        rootContainerView.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-        scrollView.flex.define { scrollView in
-            scrollView.addItem(contentView)
-                .marginTop(navigationView.height)
-                .define { contentView in
-                    contentView.addItem(recentCollectionView)
-                        .margin(UIEdgeInsets(top: 12.0, left: 0, bottom: 12.0, right: 0))
-                        .height(60.0)
-                    contentView.addItem(label)
-                    contentView.addItem(footerView)
-                }
+        contentView.flex.define { contentView in
+            contentView.addItem(recentCollectionView)
+                .margin(UIEdgeInsets(top: 12.0, left: 0, bottom: 12.0, right: 0))
+                .height(60.0)
+            contentView.addItem(label)
+                .marginTop(24.0)
+                .marginLeft(36.0)
+            contentView.addItem(footerView)
+                .marginTop(24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        keyboardBackgroundView.pin.all()
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        scrollView.pin.left().right().bottom().top(view.safeAreaInsets.top)
-        scrollView.flex.layout()
+        rootContainerView.pin
+            .left().right().bottom().top(view.safeAreaInsets.top)
+        searchTextFieldView.pin
+            .left(24.0)
+            .right(24.0)
+            .height(48.0)
+        searchTextFieldView.flex.layout()
+        
+        scrollView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom(view.safeAreaInsets.bottom)
+        
+        contentView.pin.top().horizontally()
+        
         contentView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
-        scrollView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
 }
