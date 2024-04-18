@@ -9,13 +9,14 @@
 import UIKit
 
 public enum CoordinatorType {
+    case splash
+    case onboarding
     case tab
     case home
+    case bookmark
     case search
     case alarm
     case myPage
-    case onboarding
-    case splash
 }
 
 public protocol Coordinator: AnyObject {

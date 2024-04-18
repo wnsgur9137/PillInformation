@@ -11,6 +11,7 @@ import UIKit
 import Features
 import NetworkInfra
 import Home
+import Bookmark
 import Search
 import Alarm
 import MyPage
@@ -24,6 +25,7 @@ final class MainSceneDIContainer {
     let dependencies: Dependencies
 
     private let homeDIContainer: HomeDIContainer
+    private let bookmarkDIContainer: BookmarkDIContainer
     private let searchDIContainer: SearchDIContainer
     private let alarmDIContainer: AlarmDIContainer
     private let myPageDIContainer: MyPageDIContainer
@@ -31,6 +33,9 @@ final class MainSceneDIContainer {
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
         self.homeDIContainer = HomeDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
+        self.bookmarkDIContainer = BookmarkDIContainer(dependencies: .init(
             networkManager: dependencies.networkManager
         ))
         self.searchDIContainer = SearchDIContainer(dependencies: .init(
@@ -48,6 +53,7 @@ final class MainSceneDIContainer {
         return DefaultTabBarCoordinator(
             tabBarController: tabBarController,
             homeDIContainer: homeDIContainer,
+            bookmarkDIContainer: bookmarkDIContainer,
             searchDIContainer: searchDIContainer,
             alarmDIContainer: alarmDIContainer,
             myPageDIContainer: myPageDIContainer
