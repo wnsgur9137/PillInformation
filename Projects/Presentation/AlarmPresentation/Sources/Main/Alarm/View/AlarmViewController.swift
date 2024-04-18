@@ -18,13 +18,28 @@ import BasePresentation
 
 public final class AlarmViewController: UIViewController, View {
     
+    // MARK: - UI Instances
+    
     private let rootContainerView = UIView()
+    
+    private let alarmLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.AlarmViewController.alarm
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteBold(24.0)
+        return label
+    }()
+    
     private let alarmTableView = UITableView()
-    private let navigationView = NavigationView(useTextField: false)
+    
     private let footerView = FooterView()
+    
+    // MARK: - Properties
     
     private var adapter: AlarmAdapter?
     public var disposeBag = DisposeBag()
+    
+    // MARK: - Lifecycle
     
     public static func create(with reactor: AlarmReactor) -> AlarmViewController {
         let viewController = AlarmViewController()
@@ -80,19 +95,21 @@ extension AlarmViewController: AlarmAdapterDelegate {
 extension AlarmViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
-        view.addSubview(navigationView)
         
         rootContainerView.flex.define { rootView in
+            rootView.addItem(alarmLabel)
+                .marginTop(24.0)
+                .marginLeft(36.0)
+            
             rootView.addItem(alarmTableView)
-                .marginTop(navigationView.height)
+                .marginTop(12.0)
+            
             rootView.addItem(footerView)
+                .marginTop(24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        
         rootContainerView.pin.left().right().bottom().top(view.safeAreaInsets.top)
         rootContainerView.flex.layout()
     }

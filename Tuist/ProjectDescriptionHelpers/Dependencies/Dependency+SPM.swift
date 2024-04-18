@@ -54,6 +54,7 @@ public extension TargetDependency.SPM.UI {
     static let KingFisher: TargetDependency = .external(name: "Kingfisher")
     static let DropDown: TargetDependency = .external(name: "DropDown")
     static let Lottie: TargetDependency = .external(name: "Lottie")
+    static let Tabman: TargetDependency = .external(name: "Tabman")
 }
 public extension TargetDependency.SPM.Test {
     static let RxBlocking: TargetDependency = .external(name: "RxBlocking")

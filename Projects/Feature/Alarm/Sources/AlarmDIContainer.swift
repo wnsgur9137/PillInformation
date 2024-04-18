@@ -6,7 +6,7 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 import NetworkInfra
 import AlarmData
@@ -31,6 +31,18 @@ public final class AlarmDIContainer {
 
 // MARK: - AlarmCoordinatorDependencies
 extension AlarmDIContainer: AlarmCoordinatorDependencies {
+    public func makeAlarmTabBarController(viewControllers: [UIViewController]) -> AlarmTabBarController {
+        return AlarmTabBarController.create(viewControllers: viewControllers)
+    }
+    
+    public func makeTimerReactor(flowAction: TimerFlowAction) -> TimerReactor {
+        return TimerReactor(flowAction: flowAction)
+    }
+    
+    public func makeTimerViewController(flowAction: TimerFlowAction) -> TimerViewController {
+        return TimerViewController.create(with: makeTimerReactor(flowAction: flowAction))
+    }
+    
     public func makeAlarmReactor(flowAction: AlarmFlowAction) -> AlarmReactor {
         return AlarmReactor(flowAction: flowAction)
     }
