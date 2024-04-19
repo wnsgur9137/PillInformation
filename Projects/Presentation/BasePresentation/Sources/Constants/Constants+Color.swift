@@ -11,6 +11,7 @@ import UIKit
 extension Constants {
     // MARK: - Color
     public struct Color {
+        public static let clear: UIColor = .clear
         public static let systemBlack: UIColor = .black
         public static let systemWhite: UIColor = .white
         public static let systemLabel: UIColor = .label

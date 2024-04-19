@@ -169,7 +169,7 @@ extension MainTabBarController: UITabBarControllerDelegate {
             case is HomeViewController: toIndex = 0
             case is BookmarkViewController: toIndex = 1
             case is SearchViewController: toIndex = 2
-            case is AlarmViewController: toIndex = 3
+            case is AlarmTabBarController: toIndex = 3
             case is MyPageViewController: toIndex = 4
             default: break
             }

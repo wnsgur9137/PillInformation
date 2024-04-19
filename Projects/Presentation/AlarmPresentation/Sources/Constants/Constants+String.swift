@@ -20,3 +20,8 @@ extension Constants.AlarmViewController {
     static let emptyAlarm = "타이머가 설정되지 않았어요"
     static let addTimer = "타이머 설정하기"
 }
+
+extension Constants.TimerViewController {
+    static let timer = "타이머"
+    static let recentTimer = "이전 타이머 기록"
+}
