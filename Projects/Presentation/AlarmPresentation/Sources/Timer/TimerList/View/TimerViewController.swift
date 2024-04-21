@@ -92,7 +92,7 @@ extension TimerViewController: TimerAdapterDelegate {
     }
     
     public func didSelectRow(at indexPath: IndexPath) {
-        print("🚨didSelect: \(indexPath)")
+        reactor?.didSelectRow(at: indexPath)
     }
     
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {

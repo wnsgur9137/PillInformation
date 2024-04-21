@@ -28,6 +28,7 @@ final class AppConfiguration {
         guard let apiBaseURL = appConfigurations[key] else {
             fatalError("\(key) must not be empty in plist")
         }
+        print("🚨apiBaseURL: \(apiBaseURL)")
         return apiBaseURL
     }()
     

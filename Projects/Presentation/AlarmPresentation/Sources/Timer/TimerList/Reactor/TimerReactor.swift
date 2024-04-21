@@ -12,8 +12,10 @@ import RxSwift
 import RxCocoa
 
 public struct TimerFlowAction {
-    public init() {
-        
+    let showTimerDetailViewController: () -> Void
+    
+    public init(showTimerDetailViewController: @escaping () -> Void) {
+        self.showTimerDetailViewController = showTimerDetailViewController
     }
 }
 
@@ -62,6 +64,10 @@ extension TimerReactor {
 }
 
 extension TimerReactor {
+    func didSelectRow(at indexPath: IndexPath) {
+        showTimerDetailViewController()
+    }
+    
     func delete(indexPath: IndexPath) {
         if indexPath.section == 0 {
             operationTimerData.remove(at: indexPath.row)
@@ -88,5 +94,7 @@ extension TimerReactor: TimerAdapterDataSource {
 
 // MARK: - FlowAction
 extension TimerReactor {
-    
+    func showTimerDetailViewController() {
+        flowAction.showTimerDetailViewController()
+    }
 }

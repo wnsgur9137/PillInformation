@@ -50,5 +50,13 @@ extension AlarmDIContainer: AlarmCoordinatorDependencies {
     public func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController {
         return AlarmViewController.create(with: makeAlarmReactor(flowAction: flowAction))
     }
+    
+    public func makeTimerDetailReactor(flowAction: TimerDetailFlowAction) -> TimerDetailReactor {
+        return TimerDetailReactor(flowAction: flowAction)
+    }
+    
+    public func makeTimerDetailViewController(flowAction: TimerDetailFlowAction) -> TimerDetailViewController {
+        return TimerDetailViewController.create(with: makeTimerDetailReactor(flowAction: flowAction))
+    }
 }
 
