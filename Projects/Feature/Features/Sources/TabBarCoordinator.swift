@@ -114,9 +114,6 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     private func prepareTabBarController(with controllers: [UINavigationController]) {
         tabBarController?.setViewControllers(controllers, animated: true)
         tabBarController?.selectedIndex = TabBarPage.home.orderNumber()
-        tabBarController?.tabBar.isTranslucent = false
-        tabBarController?.tabBar.barTintColor = Constants.Color.systemBackground
-        tabBarController?.view.backgroundColor = Constants.Color.systemBackground
     }
 }
 

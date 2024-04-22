@@ -125,6 +125,9 @@ public final class MainTabBarController: UITabBarController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        tabBar.isTranslucent = false
+        tabBar.barTintColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         addSubviews()
         setupLayoutConstraints()
     }

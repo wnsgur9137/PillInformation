@@ -51,7 +51,7 @@ public final class AlarmTabBarController: TabmanViewController {
             button.selectedTintColor = Constants.Color.systemDarkGray
         }
         tabBar.indicator.tintColor = Constants.Color.systemBlue
-        tabBar.backgroundColor = Constants.Color.systemWhite
+        tabBar.backgroundColor = Constants.Color.background
         
         addBar(tabBar, dataSource: self, at: .top)
     }
