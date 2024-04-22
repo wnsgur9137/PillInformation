@@ -17,18 +17,9 @@ final class AppConfiguration {
     }()
     
     lazy var apiBaseURL: String = {
-        var key: String = ""
-        
-        #if DEBUG
-        key = "DEV_API_BASE_URL"
-        #elseif RELEASE
-        key = "API_BASE_URL"
-        #endif
-        
-        guard let apiBaseURL = appConfigurations[key] else {
-            fatalError("\(key) must not be empty in plist")
+        guard let apiBaseURL = appConfigurations["API_BASE_URL"] else {
+            fatalError("API_BASE_URL must not be empty in plist")
         }
-        print("🚨apiBaseURL: \(apiBaseURL)")
         return apiBaseURL
     }()
     

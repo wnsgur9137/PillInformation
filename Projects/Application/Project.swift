@@ -39,7 +39,6 @@ let defaultInfoPlist: [String: Plist.Value] = [
     "AppConfigurations": [
         "KAKAO_NATIVE_APP_KEY": "${DEV_KAKAO_NATIVE_APP_KEY}",
         "API_BASE_URL": "${API_BASE_URL}",
-        "DEV_API_BASE_URL": "${DEV_API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
         "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
