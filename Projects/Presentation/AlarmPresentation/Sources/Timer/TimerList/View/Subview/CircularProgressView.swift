@@ -35,7 +35,7 @@ final class CircularProgressView: UIView {
         }
     }
     
-    private var circularPath: UIBezierPath {
+    private lazy var circularPath: UIBezierPath = {
         return UIBezierPath(
             arcCenter: CGPoint(x: self.frame.size.width / 2.0,
                                y: self.frame.size.height / 2.0),
@@ -43,7 +43,7 @@ final class CircularProgressView: UIView {
             startAngle: CGFloat(-Double.pi / 2),
             endAngle: CGFloat(3 * Double.pi / 2),
             clockwise: true)
-    }
+    }()
     
     // MARK: - Lifecycle
     

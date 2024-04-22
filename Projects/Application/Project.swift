@@ -37,7 +37,7 @@ let defaultInfoPlist: [String: Plist.Value] = [
         "SUITE-SemiBold.otf"
     ],
     "AppConfigurations": [
-        "KAKAO_NATIVE_APP_KEY": "${DEV_KAKAO_NATIVE_APP_KEY}",
+        "KAKAO_NATIVE_APP_KEY": "${KAKAO_NATIVE_APP_KEY}",
         "API_BASE_URL": "${API_BASE_URL}",
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
@@ -55,6 +55,7 @@ let defaultInfoPlist: [String: Plist.Value] = [
         [
             "CFBundleTypeRole": "Editor",
             "CFBundleURLSchemes": [
+                "kakao\(String.kakaoNativeAppKey)",
                 "kakao\(String.devKakaoNativeAppKey)"
             ]
         ]

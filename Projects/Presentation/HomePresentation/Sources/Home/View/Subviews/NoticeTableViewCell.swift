@@ -11,8 +11,13 @@ import FlexLayout
 import PinLayout
 
 final class NoticeTableViewCell: UITableViewCell {
+    
+    // MARK: - UI Instances
+    
     private let rootFlexContainerView = UIView()
     private let titleLabel = UILabel()
+    
+    // MARK: - Lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

@@ -17,6 +17,12 @@ import BasePresentation
 
 public final class TimerDetailViewController: UIViewController, View {
     
+    // MARK: - UI Instances
+    
+    private let rootContainerView = UIView()
+    private let circularProgressView = CircularProgressView()
+    
+    // MARK: - Properties
     public var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
@@ -68,10 +74,17 @@ extension TimerDetailViewController {
 // MARK: - Layout
 extension TimerDetailViewController {
     private func setupLayout() {
+        view.addSubview(rootContainerView)
         
+        rootContainerView.flex.define { rootView in
+            rootView.addItem(circularProgressView)
+                .alignSelf(.center)
+                .marginTop(250.0)
+        }
     }
     
     private func setupSubviewLayout() {
-        
+        rootContainerView.pin.all()
+        rootContainerView.flex.layout()
     }
 }
