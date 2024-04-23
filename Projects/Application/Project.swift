@@ -14,54 +14,6 @@ let organizationName = "com.junhyeok.PillInformation"
 
 let deploymentTargets: DeploymentTargets = .iOS("14.0")
 
-//let defaultInfoPlist: [String: Plist.Value] = [
-//    "UILaunchStoryboardName": "LaunchScreen",
-//    "UIApplicationSceneManifest": [
-//        "UIApplicationSupportsMultipleScenes": false,
-//        "UISceneConfigurations": [
-//            "UIWindowSceneSessionRoleApplication": [
-//                [
-//                    "UISceneConfigurationName": "Default Configuration",
-//                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
-//                ]
-//            ]
-//        ]
-//    ],
-//    "UIAppFonts": [
-//        "SUITE-Bold.otf",
-//        "SUITE-ExtraBold.otf",
-//        "SUITE-Heavy.otf",
-//        "SUITE-Light.otf",
-//        "SUITE-Medium.otf",
-//        "SUITE-Regular.otf",
-//        "SUITE-SemiBold.otf"
-//    ],
-//    "AppConfigurations": [
-//        "KAKAO_NATIVE_APP_KEY": "${KAKAO_NATIVE_APP_KEY}",
-//        "API_BASE_URL": "${API_BASE_URL}",
-//        "MEDICINE_API_URL": "${MEDICINE_API_URL}",
-//        "MEDICINE_API_KEY": "${MEDICINE_KEY}",
-//        "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
-//        "MEDICINE_INFO_API_KEY": "${MEDICINE_INFO_API_KEY}"
-//    ],
-//    "NSAppTransportSecurity": [
-//        "NSAllowsArbitraryLoads": true
-//    ],
-//    "LSApplicationQueriesSchemes": [
-//        "kakaokompassauth",
-//        "kakaolink"
-//    ],
-//    "CFBundleURLTypes": [
-//        [
-//            "CFBundleTypeRole": "Editor",
-//            "CFBundleURLSchemes": [
-//                "kakao\(String.kakaoNativeAppKey)",
-//                "kakao\(String.devKakaoNativeAppKey)"
-//            ]
-//        ]
-//    ]
-//]
-
 // MARK: - Settings
 let settings: Settings = .settings(
     base: [
