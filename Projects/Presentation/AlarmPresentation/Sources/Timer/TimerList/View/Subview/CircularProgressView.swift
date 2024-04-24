@@ -16,30 +16,22 @@ final class CircularProgressView: UIView {
     
     private let rootContainerView = UIView()
     
-    private let timerLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .gray
-        label.text = "60s"
-        return label
+    let datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .countDownTimer
+        datePicker.preferredDatePickerStyle = .wheels
+        return datePicker
     }()
     
     private let backgroundLayer = CAShapeLayer()
     private let progressLayer = CAShapeLayer()
     private let animationName = "progressAnimation"
-    private var timer: Timer?
-    
-    private var remainingSeconds: TimeInterval? {
-        didSet {
-            guard let remainingSeconds = self.remainingSeconds else { return }
-            self.timerLabel.text = String(format: "$02ds", Int(remainingSeconds))
-        }
-    }
     
     private lazy var circularPath: UIBezierPath = {
         return UIBezierPath(
             arcCenter: CGPoint(x: self.frame.size.width / 2.0,
                                y: self.frame.size.height / 2.0),
-            radius: 80.0,
+            radius: self.frame.size.width / 2.0,
             startAngle: CGFloat(-Double.pi / 2),
             endAngle: CGFloat(3 * Double.pi / 2),
             clockwise: true)
@@ -56,11 +48,6 @@ final class CircularProgressView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        self.timer?.invalidate()
-        self.timer = nil
-    }
-    
     /// UIBezierPath는 런타임마다 바뀌는 Frame 값을 참조하여 원의 윤곽 레이아웃을 알아야 한다.
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
@@ -71,59 +58,44 @@ final class CircularProgressView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupSubviewLayout()
+        setupBackgroundLayer()
+        setupProgressLayer()
     }
     
     private func setupBackgroundLayer() {
         backgroundLayer.path = circularPath.cgPath
         backgroundLayer.fillColor = Constants.Color.clear.cgColor
         backgroundLayer.lineCap = .round
-        backgroundLayer.lineWidth = 3.0
+        backgroundLayer.lineWidth = 15.0
         backgroundLayer.strokeEnd = 1.0
         backgroundLayer.strokeColor = Constants.Color.systemLightGray.cgColor
         layer.addSublayer(backgroundLayer)
     }
     
     private func setupProgressLayer() {
-        progressLayer.path = self.circularPath.cgPath
+        progressLayer.path = circularPath.cgPath
         progressLayer.fillColor = Constants.Color.clear.cgColor
         progressLayer.lineCap = .round
-        progressLayer.lineWidth = 3.0
-        progressLayer.strokeEnd = 0
+        progressLayer.lineWidth = 15.0
+        progressLayer.strokeEnd = 1.0
         progressLayer.strokeColor = Constants.Color.systemBlue.cgColor
         layer.addSublayer(progressLayer)
     }
     
     func start(duration: TimeInterval) {
-        remainingSeconds = duration
-        
-        timer?.invalidate()
-        let startDate = Date()
-        timer = Timer.scheduledTimer(
-            withTimeInterval: 1,
-            repeats: true,
-            block: { [weak self] _ in
-                let remainingSeconds = duration - round(abs(startDate.timeIntervalSinceNow))
-                guard remainingSeconds >= 0 else {
-                    self?.stop()
-                    return
-                }
-                self?.remainingSeconds = remainingSeconds
-            })
-        
-        // animation
+        datePicker.isEnabled = false
         progressLayer.removeAnimation(forKey: animationName)
         let circularProgressAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        circularProgressAnimation.duration = duration
-        circularProgressAnimation.toValue = 1.0
+        circularProgressAnimation.duration = duration + 2
+        circularProgressAnimation.toValue = -1.0
         circularProgressAnimation.fillMode = .forwards
         circularProgressAnimation.isRemovedOnCompletion = false
         progressLayer.add(circularProgressAnimation, forKey: animationName)
     }
     
     func stop() {
-        timer?.invalidate()
+        datePicker.isEnabled = true
         progressLayer.removeAnimation(forKey: animationName)
-        remainingSeconds = 60.0
     }
 }
 
@@ -132,8 +104,11 @@ extension CircularProgressView {
     private func setupLayout() {
         addSubview(rootContainerView)
         
-        rootContainerView.flex.define { rootView in
-            rootView.addItem(timerLabel)
+        rootContainerView.flex
+            .alignItems(.center)
+            .justifyContent(.center)
+            .define { rootView in
+                rootView.addItem(datePicker)
         }
     }
     

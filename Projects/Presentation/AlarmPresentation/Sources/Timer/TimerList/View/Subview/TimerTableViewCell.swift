@@ -40,11 +40,6 @@ final class TimerTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let operationButton: UIButton = {
-        let button = UIButton()
-        return button
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -82,7 +77,6 @@ extension TimerTableViewCell {
                         timeStack.addItem(remainingTimeLabel)
                         timeStack.addItem(titleLabel)
                 }
-                rootView.addItem(operationButton)
         }
     }
     
