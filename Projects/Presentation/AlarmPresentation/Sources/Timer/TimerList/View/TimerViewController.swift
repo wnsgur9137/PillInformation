@@ -73,6 +73,11 @@ extension TimerViewController {
             .map { Reactor.Action.viewDidLoad }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        rx.viewWillAppear
+            .map { Reactor.Action.viewWillAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: TimerReactor) {
@@ -88,7 +93,7 @@ extension TimerViewController {
 // MARK: - TimerAdapterDelegate
 extension TimerViewController: TimerAdapterDelegate {
     public func didSelectAddButton() {
-        print("addButton")
+        reactor?.showTimerDetailViewController()
     }
     
     public func didSelectRow(at indexPath: IndexPath) {

@@ -14,4 +14,5 @@ extension Constants {
     struct AlarmTabBarController { }
     struct AlarmViewController { }
     struct TimerViewController { }
+    struct TimerDetailViewController { }
 }

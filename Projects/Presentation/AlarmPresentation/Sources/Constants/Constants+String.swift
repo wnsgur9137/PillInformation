@@ -25,3 +25,8 @@ extension Constants.TimerViewController {
     static let timer = "타이머"
     static let recentTimer = "이전 타이머 기록"
 }
+
+extension Constants.TimerDetailViewController {
+    static let timer = "타이머"
+    static let title = "타이머 이름"
+}

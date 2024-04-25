@@ -86,8 +86,8 @@ final class CircularProgressView: UIView {
         datePicker.isEnabled = false
         progressLayer.removeAnimation(forKey: animationName)
         let circularProgressAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        circularProgressAnimation.duration = duration + 2
-        circularProgressAnimation.toValue = -1.0
+        circularProgressAnimation.duration = duration
+        circularProgressAnimation.toValue = 0
         circularProgressAnimation.fillMode = .forwards
         circularProgressAnimation.isRemovedOnCompletion = false
         progressLayer.add(circularProgressAnimation, forKey: animationName)

@@ -15,7 +15,6 @@ import NetworkInfra
 
 public final class DefaultNoticeRepository: NoticeRepository {
     private let networkManager: NetworkManager
-    private let disposeBag = DisposeBag()
     
     public init(networkManager: NetworkManager) {
         self.networkManager = networkManager

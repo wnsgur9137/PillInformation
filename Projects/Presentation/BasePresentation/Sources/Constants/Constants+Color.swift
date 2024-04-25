@@ -28,5 +28,6 @@ extension Constants {
         public static let googleBlue: UIColor = UIColor(hex: "#4285F4") ?? .systemBlue
         public static let background: UIColor = UIColor(named: "background") ?? UIColor()
         public static let buttonHighlightBlue: UIColor = UIColor(hex: "#0055AA") ?? .systemBlue
+        public static let textFieldBackground: UIColor = UIColor(hex: "#DDDDDD") ?? .lightGray
     }
 }

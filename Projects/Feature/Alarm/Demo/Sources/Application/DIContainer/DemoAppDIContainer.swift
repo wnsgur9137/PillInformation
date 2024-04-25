@@ -8,6 +8,7 @@
 
 import Foundation
 
+import Alarm
 import NetworkInfra
 
 final class AlarmDemoAppDIContainer {

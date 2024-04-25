@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Alarm
 import BasePresentation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

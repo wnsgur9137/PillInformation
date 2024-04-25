@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 import KakaoLibraries
 
@@ -17,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
             KakaoService.initSDK(appKey: kakaoNativeAppKey)
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.resignOnTouchOutside = true
         return true
     }
     

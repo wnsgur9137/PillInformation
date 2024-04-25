@@ -20,13 +20,33 @@ public final class TimerDetailViewController: UIViewController, View {
     // MARK: - UI Instances
     
     private let rootContainerView = UIView()
+    
     private let circularProgressView = CircularProgressView()
     
-    private let playButton: UIButton = {
+    private let operationButton1: UIButton = {
         let button = UIButton()
         button.setTitle("start", for: .normal)
         button.setTitleColor(.black, for: .normal)
         return button
+    }()
+    
+    private let operationButton: FilledButton = {
+        let button = FilledButton(style: .large)
+        button.title = "start"
+        return button
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.TimerDetailViewController.title
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteSemiBold(28.0)
+        return label
+    }()
+    
+    private let titleTextField: UITextField = {
+        let textField = UITextField()
+        return textField
     }()
     
     // MARK: - Properties
@@ -44,6 +64,7 @@ public final class TimerDetailViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Timer"
         view.backgroundColor = Constants.Color.background
         setupLayout()
     }
@@ -77,6 +98,7 @@ public final class TimerDetailViewController: UIViewController, View {
 // MARK: - Methods
 extension TimerDetailViewController {
     private func start(duration: TimeInterval) {
+        operationButton.title = "Stop"
         remainingSeconds = duration
         timer?.invalidate()
         let startDate = Date()
@@ -85,9 +107,14 @@ extension TimerDetailViewController {
             repeats: true,
             block: { [weak self] _ in
                 let remainingSeconds = duration - round(abs(startDate.timeIntervalSinceNow))
+                UIView.animate(withDuration: 0.5) {
+                    self?.circularProgressView.datePicker.countDownDuration = remainingSeconds + 60
+                }
                 guard remainingSeconds > 0 else {
-                    self?.complte()
-                    self?.stop()
+                    DispatchQueue.main.async {
+                        self?.complte()
+                        self?.stop()
+                    }
                     return
                 }
                 self?.remainingSeconds = remainingSeconds
@@ -98,6 +125,7 @@ extension TimerDetailViewController {
     }
     
     private func stop() {
+        operationButton.title = "Start"
         timer?.invalidate()
         circularProgressView.stop()
     }
@@ -114,22 +142,59 @@ extension TimerDetailViewController {
                 confirmButtonInfo: confirmButtonInfo
             )
     }
+    
+    private func showErrorAlert(_ error: Error) {
+        print("SAVE ERROR")
+    }
 }
 
 // MARK: - Bind
 extension TimerDetailViewController {
     private func bindAction(_ reactor: TimerDetailReactor) {
-        playButton.rx.tap
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                let remainingTime = circularProgressView.datePicker.countDownDuration
-                self.start(duration: remainingTime)
-            })
+        operationButton.rx.tap
+            .map {
+                Reactor.Action.didTapOperationButton((
+                    title: self.titleTextField.text,
+                    duration: self.circularProgressView.datePicker.countDownDuration
+                ))
+            }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: TimerDetailReactor) {
+        reactor.state
+            .map { $0.timerData }
+            .distinctUntilChanged()
+            .filter { $0.revision > 0 }
+            .subscribe(onNext: { [weak self] timerData in
+                print("timerData: \(timerData)")
+                guard let timerData = timerData.data as? TimerModel else { return }
+                print("isStarteddddd: \(timerData.isStarted)")
+                if timerData.isStarted {
+                    self?.start(duration: timerData.duration)
+                } else {
+                    self?.stop()
+                }
+            })
+            .disposed(by: disposeBag)
         
+        reactor.pulse(\.$isStarted)
+            .bind { [weak self] isStarted in
+                guard isStarted else { return }
+                self?.stop()
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.isError }
+            .distinctUntilChanged()
+            .filter { $0.revision > 0 }
+            .subscribe(onNext: { [weak self] error in
+                guard let error = error.data as? Error else { return }
+                self?.showErrorAlert(error)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -142,17 +207,32 @@ extension TimerDetailViewController {
         rootContainerView.flex.define { rootView in
             rootView.addItem(circularProgressView)
                 .alignSelf(.center)
-                .marginTop(150.0)
+                .marginTop(50.0)
                 .width(deviceSize.width / 1.5)
                 .height(deviceSize.width / 1.5)
             
-            rootView.addItem(playButton)
-                .marginTop(50.0)
+            rootView.addItem()
+                .margin(60.0)
+                .define { titleStack in
+                    titleStack.addItem(titleLabel)
+                    titleStack.addItem(titleTextField)
+                        .marginTop(8.0)
+                        .cornerRadius(12.0)
+                        .height(40.0)
+                        .backgroundColor(Constants.Color.textFieldBackground)
+                }
+            
+            rootView.addItem(operationButton)
+                .alignSelf(.center)
+                .margin(24.0, 12.0, 24.0, 12.0)
+                .width(25%)
         }
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.all()
+        rootContainerView.pin
+            .top(view.safeAreaInsets.top)
+            .left().right().bottom()
         rootContainerView.flex.layout()
     }
 }

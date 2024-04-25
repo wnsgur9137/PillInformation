@@ -16,6 +16,7 @@ let project: Project = .project(
         .SPM.UI.KingFisher,
         .SPM.UI.SkeletonView,
         .SPM.UI.Lottie,
-        .SPM.UI.Tabman
+        .SPM.UI.Tabman,
+        .SPM.UI.IQKeyboardManager
     ]
 )

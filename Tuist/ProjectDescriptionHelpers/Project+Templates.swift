@@ -52,6 +52,12 @@ public let defaultInfoPlist: [String: Plist.Value] = [
                 "kakao\(String.devKakaoNativeAppKey)"
             ]
         ]
+    ],
+    "UISupportedInterfaceOrientations": [
+        "UIInterfaceOrientationPortrait"
+    ],
+    "UISupportedInterfaceOrientations~ipad": [
+        "UIInterfaceOrientationPortrait"
     ]
 ]
 
