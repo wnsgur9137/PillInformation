@@ -60,6 +60,18 @@ final class TimerTableViewCell: UITableViewCell {
         self.contentView.flex.layout(mode: .adjustHeight)
         return self.contentView.frame.size
     }
+    
+    func configure(_ timerModel: TimerModel) {
+        self.titleLabel.text = timerModel.title
+        self.remainingTimeLabel.text = timerModel.duration.toStringFormat()
+        self.setTimeLabel.text = timerModel.duration.toStringFormat()
+        
+        guard let startedDate = timerModel.startedDate else { return }
+        let currentDate = Date().timeIntervalSince(startedDate)
+        let remainingTime = timerModel.duration - currentDate
+        
+        self.remainingTimeLabel.text = "\(remainingTime.toStringFormat())"
+    }
 }
 
 // MARK: - Layout
@@ -76,6 +88,7 @@ extension TimerTableViewCell {
                     .define { timeStack in
                         timeStack.addItem(remainingTimeLabel)
                         timeStack.addItem(titleLabel)
+                        timeStack.addItem(setTimeLabel)
                 }
         }
     }

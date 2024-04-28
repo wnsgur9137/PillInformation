@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 public protocol TimerAdapterDataSource: AnyObject {
     func numberOfRowsIn(section: Int) -> Int
-    func cellForRow(at indexPath: IndexPath)
+    func cellForRow(at indexPath: IndexPath) -> TimerModel?
 }
 
 public protocol TimerAdapterDelegate: AnyObject {
@@ -55,16 +56,19 @@ extension TimerAdapter: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TimerTableViewCell.identifier, for: indexPath) as? TimerTableViewCell else { return .init() }
-        
+        guard let data = dataSource?.cellForRow(at: indexPath) else { return cell }
+        cell.configure(data)
         return cell
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimerTableViewHeaderView.identifier) as? TimerTableViewHeaderView else { return nil }
         if section == 0 {
-            headerView.addButton.addAction(UIAction { [weak self] _ in
-                self?.delegate?.didSelectAddButton()
-            }, for: .touchUpInside)
+            headerView.addButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    self?.delegate?.didSelectAddButton()
+                })
+                .disposed(by: headerView.disposeBag)
         }
         headerView.configure(isOperationHeader: section == 0)
         return headerView

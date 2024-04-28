@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 import FlexLayout
 import PinLayout
 
@@ -31,6 +32,8 @@ final class TimerTableViewHeaderView: UITableViewHeaderFooterView {
         return button
     }()
     
+    private(set) var disposeBag = DisposeBag()
+    
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         backgroundColor = Constants.Color.background
@@ -43,13 +46,18 @@ final class TimerTableViewHeaderView: UITableViewHeaderFooterView {
     
     func configure(isOperationHeader: Bool = false) {
         setupLayout(isOperationHeader)
-        
+        addButton.isHidden = !isOperationHeader
         titleLabel.text = isOperationHeader ? Constants.TimerViewController.timer : Constants.TimerViewController.recentTimer
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         setupSubviewLayout()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
 }
 
@@ -65,11 +73,9 @@ extension TimerTableViewHeaderView {
                 rootView.addItem(titleLabel)
                     .marginLeft(24.0)
                     .grow(1)
-                if isOperationHeader {
-                    rootView.addItem(addButton)
-                        .width(48.0)
-                        .height(48.0)
-                }
+                rootView.addItem(addButton)
+                    .width(48.0)
+                    .height(48.0)
         }
         
         rootContainerView.addSubview(titleLabel)

@@ -32,8 +32,8 @@ public final class TimerDetailReactor: Reactor {
     }
     
     public struct State {
-        @Pulse var timerData: RevisionedData<TimerModel?> = .init(nil)
-        @Pulse var isError: RevisionedData<Error?> = .init(nil)
+        @Pulse var timerData: TimerModel?
+        @Pulse var isError: Error?
         @Pulse var isStarted: Bool = false
     }
     
@@ -60,10 +60,8 @@ public final class TimerDetailReactor: Reactor {
         return .create() { observable in
             self.useCase.save(timerModel)
                 .subscribe(onSuccess: { timerModel in
-                    print("timerModel: \(timerModel)")
                     observable.onNext(.isStartedTimer(timerModel))
                 }, onFailure: { error in
-                    print("error: \(error)")
                     observable.onNext(.storageError(error))
                 })
                 .disposed(by: self.disposeBag)
@@ -78,7 +76,6 @@ extension TimerDetailReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .didTapOperationButton((title, duration)):
-            print("🚨isStarted: \(isStarted)")
             if isStarted {
                 return .just(.stop)
             } else {
@@ -91,14 +88,13 @@ extension TimerDetailReactor {
         var state = state
         switch mutation {
         case let .isStartedTimer(timerModel):
-            state.timerData = state.timerData.update(timerModel)
+            state.timerData = timerModel
             self.isStarted = true
         case .stop:
-//            state.isStarted = state.isStarted.update(true)
             state.isStarted = true
             self.isStarted = false
         case let .storageError(error):
-            state.isError = state.isError.update(error)
+            state.isError = error
         }
         return state
     }

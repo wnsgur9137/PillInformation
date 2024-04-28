@@ -128,8 +128,12 @@ extension TimerReactor: TimerAdapterDataSource {
         }
     }
     
-    public func cellForRow(at indexPath: IndexPath) {
-        
+    public func cellForRow(at indexPath: IndexPath) -> TimerModel? {
+        switch indexPath.section {
+        case 0: return operationTimerData[indexPath.row]
+        case 1: return nonOperationTimerData[indexPath.row]
+        default: return nil
+        }
     }
 }
 

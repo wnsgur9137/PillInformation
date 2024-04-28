@@ -163,20 +163,11 @@ extension TimerDetailViewController {
     }
     
     private func bindState(_ reactor: TimerDetailReactor) {
-        reactor.state
-            .map { $0.timerData }
-            .distinctUntilChanged()
-            .filter { $0.revision > 0 }
-            .subscribe(onNext: { [weak self] timerData in
-                print("timerData: \(timerData)")
-                guard let timerData = timerData.data as? TimerModel else { return }
-                print("isStarteddddd: \(timerData.isStarted)")
-                if timerData.isStarted {
-                    self?.start(duration: timerData.duration)
-                } else {
-                    self?.stop()
-                }
-            })
+        reactor.pulse(\.$timerData)
+            .bind { [weak self] timerData in
+                guard let timerData = timerData else { return }
+                timerData.isStarted ? self?.start(duration: timerData.duration) : self?.stop()
+            }
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$isStarted)
@@ -186,14 +177,11 @@ extension TimerDetailViewController {
             }
             .disposed(by: disposeBag)
         
-        reactor.state
-            .map { $0.isError }
-            .distinctUntilChanged()
-            .filter { $0.revision > 0 }
-            .subscribe(onNext: { [weak self] error in
-                guard let error = error.data as? Error else { return }
+        reactor.pulse(\.$isError)
+            .bind { [weak self] error in
+                guard let error = error else { return }
                 self?.showErrorAlert(error)
-            })
+            }
             .disposed(by: disposeBag)
     }
 }
