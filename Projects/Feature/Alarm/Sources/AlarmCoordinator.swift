@@ -15,7 +15,7 @@ public protocol AlarmCoordinatorDependencies {
     func makeAlarmTabBarController(viewControllers: [UIViewController]) -> AlarmTabBarController
     func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController
     func makeTimerViewController(flowAction: TimerFlowAction) -> TimerViewController
-    func makeTimerDetailViewController(flowAction: TimerDetailFlowAction) -> TimerDetailViewController
+    func makeTimerDetailViewController(flowAction: TimerDetailFlowAction, timerModel: TimerModel?) -> TimerDetailViewController
 }
 
 public protocol AlarmCoordinator: Coordinator {
@@ -69,9 +69,9 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
         return timerViewController
     }
     
-    private func showTimerDetailViewController() {
+    private func showTimerDetailViewController(timerModel: TimerModel? = nil) {
         let flowAction = TimerDetailFlowAction()
-        let viewController = dependencies.makeTimerDetailViewController(flowAction: flowAction)
+        let viewController = dependencies.makeTimerDetailViewController(flowAction: flowAction, timerModel: timerModel)
         navigationController?.pushViewController(viewController, animated: true)
         timerDetailViewController = viewController
     }

@@ -8,10 +8,12 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 public protocol TimerAdapterDataSource: AnyObject {
     func numberOfRowsIn(section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> TimerModel?
+    func update(_ timerModel: TimerModel)
 }
 
 public protocol TimerAdapterDelegate: AnyObject {
@@ -58,6 +60,11 @@ extension TimerAdapter: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TimerTableViewCell.identifier, for: indexPath) as? TimerTableViewCell else { return .init() }
         guard let data = dataSource?.cellForRow(at: indexPath) else { return cell }
         cell.configure(data)
+        cell.completedRelay
+            .bind(onNext: { [weak self] timerModel in
+                self?.dataSource?.update(timerModel)
+            })
+            .disposed(by: cell.disposeBag)
         return cell
     }
     

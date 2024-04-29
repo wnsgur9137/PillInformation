@@ -97,11 +97,12 @@ public final class TimerDetailViewController: UIViewController, View {
 
 // MARK: - Methods
 extension TimerDetailViewController {
-    private func start(duration: TimeInterval) {
+    private func start(timerModel: TimerModel) {
+        let duration = timerModel.duration
         operationButton.title = "Stop"
         remainingSeconds = duration
         timer?.invalidate()
-        let startDate = Date()
+        let startDate = timerModel.startedDate ?? Date()
         timer = Timer.scheduledTimer(
             withTimeInterval: 1,
             repeats: true,
@@ -120,8 +121,7 @@ extension TimerDetailViewController {
                 self?.remainingSeconds = remainingSeconds
             }
         )
-        
-        circularProgressView.start(duration: duration)
+        circularProgressView.start(duration: duration, fromValue: duration-round(abs(startDate.timeIntervalSinceNow)))
     }
     
     private func stop() {
@@ -151,6 +151,16 @@ extension TimerDetailViewController {
 // MARK: - Bind
 extension TimerDetailViewController {
     private func bindAction(_ reactor: TimerDetailReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        rx.viewWillDisappear
+            .map { Reactor.Action.viewWillDisappear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         operationButton.rx.tap
             .map {
                 Reactor.Action.didTapOperationButton((
@@ -164,9 +174,9 @@ extension TimerDetailViewController {
     
     private func bindState(_ reactor: TimerDetailReactor) {
         reactor.pulse(\.$timerData)
-            .bind { [weak self] timerData in
-                guard let timerData = timerData else { return }
-                timerData.isStarted ? self?.start(duration: timerData.duration) : self?.stop()
+            .bind { [weak self] timerModel in
+                guard let timerModel = timerModel else { return }
+                timerModel.isStarted ? self?.start(timerModel: timerModel) : self?.stop()
             }
             .disposed(by: disposeBag)
         

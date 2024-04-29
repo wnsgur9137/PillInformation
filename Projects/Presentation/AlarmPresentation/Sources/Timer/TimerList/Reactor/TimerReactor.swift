@@ -14,9 +14,9 @@ import RxCocoa
 import ReactiveLibraries
 
 public struct TimerFlowAction {
-    let showTimerDetailViewController: () -> Void
+    let showTimerDetailViewController: (TimerModel?) -> Void
     
-    public init(showTimerDetailViewController: @escaping () -> Void) {
+    public init(showTimerDetailViewController: @escaping (TimerModel?) -> Void) {
         self.showTimerDetailViewController = showTimerDetailViewController
     }
 }
@@ -67,6 +67,12 @@ public final class TimerReactor: Reactor {
             return Disposables.create()
         }
     }
+    
+    private func update(timerModel: TimerModel) {
+        self.useCase.update(timerModel)
+            .subscribe(onSuccess: { _ in })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - React
@@ -106,7 +112,13 @@ extension TimerReactor {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        showTimerDetailViewController()
+        var timerModel: TimerModel?
+        if indexPath.section == 0 {
+            timerModel = operationTimerData[indexPath.row]
+        } else if indexPath.section == 1 {
+            timerModel = nonOperationTimerData[indexPath.row]
+        }
+        showTimerDetailViewController(timerModel: timerModel)
     }
     
     func delete(indexPath: IndexPath) {
@@ -135,11 +147,15 @@ extension TimerReactor: TimerAdapterDataSource {
         default: return nil
         }
     }
+    
+    public func update(_ timerModel: TimerModel) {
+        self.update(timerModel: timerModel)
+    }
 }
 
 // MARK: - FlowAction
 extension TimerReactor {
-    func showTimerDetailViewController() {
-        flowAction.showTimerDetailViewController()
+    func showTimerDetailViewController(timerModel: TimerModel? = nil) {
+        flowAction.showTimerDetailViewController(timerModel)
     }
 }

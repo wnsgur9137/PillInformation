@@ -82,11 +82,13 @@ final class CircularProgressView: UIView {
         layer.addSublayer(progressLayer)
     }
     
-    func start(duration: TimeInterval) {
+    func start(duration: TimeInterval,
+               fromValue: TimeInterval? = nil) {
         datePicker.isEnabled = false
         progressLayer.removeAnimation(forKey: animationName)
         let circularProgressAnimation = CABasicAnimation(keyPath: "strokeEnd")
         circularProgressAnimation.duration = duration
+        circularProgressAnimation.fromValue = (fromValue ?? duration) / 60
         circularProgressAnimation.toValue = 0
         circularProgressAnimation.fillMode = .forwards
         circularProgressAnimation.isRemovedOnCompletion = false

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 import FlexLayout
 import PinLayout
 
@@ -40,6 +42,11 @@ final class TimerTableViewCell: UITableViewCell {
         return label
     }()
     
+    private var timer: Timer?
+    private var remainingSeconds: TimeInterval?
+    private(set) var disposeBag = DisposeBag()
+    let completedRelay: PublishRelay<TimerModel> = .init()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -61,6 +68,49 @@ final class TimerTableViewCell: UITableViewCell {
         return self.contentView.frame.size
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+    
+    deinit {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    
+    private func startTimer(timerModel: TimerModel) {
+        let duration = timerModel.duration
+        remainingSeconds = duration
+        timer?.invalidate()
+        let startDate = timerModel.startedDate ?? Date()
+        timer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true,
+            block: { [weak self] _ in
+                let remainingSeconds = duration - round(abs(startDate.timeIntervalSinceNow))
+                UIView.animate(withDuration: 0.1) {
+                    self?.remainingTimeLabel.text = remainingSeconds.toStringFormat()
+                }
+                guard remainingSeconds > 0 else {
+                    DispatchQueue.main.async {
+                        self?.stop()
+                        let timerModel = TimerModel(id: timerModel.id,
+                                                    title: timerModel.title,
+                                                    duration: timerModel.duration,
+                                                    startedDate: startDate,
+                                                    isStarted: false)
+                        self?.completedRelay.accept(timerModel)
+                    }
+                    return
+                }
+                self?.remainingSeconds = remainingSeconds
+            })
+    }
+    
+    private func stop() {
+        timer?.invalidate()
+    }
+    
     func configure(_ timerModel: TimerModel) {
         self.titleLabel.text = timerModel.title
         self.remainingTimeLabel.text = timerModel.duration.toStringFormat()
@@ -71,6 +121,9 @@ final class TimerTableViewCell: UITableViewCell {
         let remainingTime = timerModel.duration - currentDate
         
         self.remainingTimeLabel.text = "\(remainingTime.toStringFormat())"
+        
+        guard timerModel.isStarted else { return }
+        startTimer(timerModel: timerModel)
     }
 }
 
@@ -84,6 +137,7 @@ extension TimerTableViewCell {
             .alignItems(.center)
             .define { rootView in
                 rootView.addItem()
+                    .width(100%)
                     .marginLeft(24.0)
                     .define { timeStack in
                         timeStack.addItem(remainingTimeLabel)
