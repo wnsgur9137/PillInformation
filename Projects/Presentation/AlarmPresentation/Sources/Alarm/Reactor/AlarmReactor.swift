@@ -34,6 +34,7 @@ public final class AlarmReactor: Reactor {
     public var initialState = State()
     public let flowAction: AlarmFlowAction
     private let disposeBag = DisposeBag()
+    private var alarmData: [AlarmModel] = []
     
     public init(flowAction: AlarmFlowAction) {
         self.flowAction = flowAction
@@ -57,7 +58,30 @@ extension AlarmReactor {
     }
 }
 
+extension AlarmReactor {
+    func didSelectAddButton() {
+        showAlarmDetailViewController()
+    }
+    
+    func didSelectToggleButton(at indexPath: IndexPath) {
+        
+    }
+    
+    func didSelectRow(at indexPath: IndexPath) {
+//        showAlarmDetailViewController(alarmData[indexPath.row])
+    }
+    
+    func delete(indexPath: IndexPath) {
+        alarmData.remove(at: indexPath.row)
+    }
+}
+
 // MARK: - Flow Action
+extension AlarmReactor {
+    private func showAlarmDetailViewController(_ alarmData: AlarmModel? = nil) {
+        
+    }
+}
 
 // MARK: - AlarmAdapter DataSource
 extension AlarmReactor: AlarmAdapterDataSource {

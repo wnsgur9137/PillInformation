@@ -20,24 +20,15 @@ public final class AlarmViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
-    private let rootContainerView = UIView()
-    
-    private let alarmLabel: UILabel = {
-        let label = UILabel()
-        label.text = Constants.AlarmViewController.alarm
-        label.textColor = Constants.Color.systemLabel
-        label.font = Constants.Font.suiteBold(24.0)
-        return label
-    }()
-    
     private let alarmTableView = UITableView()
-    
-    private let footerView = FooterView()
     
     // MARK: - Properties
     
     private var adapter: AlarmAdapter?
     public var disposeBag = DisposeBag()
+    
+    private var alarmTableViewRowHeight: CGFloat = 100.0
+    private var alarmTableViewHeaderHeight: CGFloat = 50.0
     
     // MARK: - Lifecycle
     
@@ -87,30 +78,37 @@ extension AlarmViewController {
 // MARK: - AlarmAdapter Delegate
 extension AlarmViewController: AlarmAdapterDelegate {
     func didSelectRow(at indexPath: IndexPath) {
-        print("indexPath: \(indexPath)")
+        reactor?.didSelectRow(at: indexPath)
+    }
+    
+    func didSelectToggleButton(at indexPath: IndexPath) {
+        reactor?.didSelectToggleButton(at: indexPath)
+    }
+    
+    func didSelectAddButton() {
+        reactor?.didSelectAddButton()
+    }
+    
+    func heightForRow(at indexPath: IndexPath) -> CGFloat {
+        return alarmTableViewRowHeight
+    }
+    
+    func heightForHeader(in section: Int) -> CGFloat {
+        return alarmTableViewHeaderHeight
+    }
+    
+    func deleteRow(at indexPath: IndexPath) {
+        reactor?.delete(indexPath: indexPath)
     }
 }
 
 // MARK: - Layout
 extension AlarmViewController {
     private func setupLayout() {
-        view.addSubview(rootContainerView)
-        
-        rootContainerView.flex.define { rootView in
-            rootView.addItem(alarmLabel)
-                .marginTop(24.0)
-                .marginLeft(36.0)
-            
-            rootView.addItem(alarmTableView)
-                .marginTop(12.0)
-            
-            rootView.addItem(footerView)
-                .marginTop(24.0)
-        }
+        view.addSubview(alarmTableView)
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.left().right().bottom().top(view.safeAreaInsets.top)
-        rootContainerView.flex.layout()
+        alarmTableView.pin.all(view.safeAreaInsets)
     }
 }

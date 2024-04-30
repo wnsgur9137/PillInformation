@@ -22,10 +22,7 @@ public final class TimerViewController: UIViewController, View {
     
     private lazy var emptyTimerView = EmptyTimerView()
     
-    private let timerTableView: UITableView = {
-        let tableView = UITableView()
-        return tableView
-    }()
+    private let timerTableView = UITableView()
     
     private let footerView = FooterView()
     

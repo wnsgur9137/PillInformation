@@ -75,6 +75,13 @@ public final class TimerReactor: Reactor {
             .subscribe(onSuccess: { _ in })
             .disposed(by: disposeBag)
     }
+    
+    private func delete(timerModel: TimerModel?) {
+        guard let timerModel = timerModel else { return }
+        self.useCase.delete(timerModel.id)
+            .subscribe(onSuccess: { _ in })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - React
@@ -117,8 +124,10 @@ extension TimerReactor {
         var timerModel: TimerModel?
         if indexPath.section == 0 {
             timerModel = operationTimerData[indexPath.row]
+            delete(timerModel: timerModel)
         } else if indexPath.section == 1 {
             timerModel = nonOperationTimerData[indexPath.row]
+            delete(timerModel: timerModel)
         }
         showTimerDetailViewController(timerModel: timerModel)
     }

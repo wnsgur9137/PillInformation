@@ -32,7 +32,7 @@ public final class TimerAdapter: NSObject {
     init(tableView: UITableView,
          dataSource: TimerAdapterDataSource,
          delegate: TimerAdapterDelegate) {
-        tableView.register(TimerTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: TimerTableViewHeaderView.identifier)
+        tableView.register(TimerTableHeaderView.self, forHeaderFooterViewReuseIdentifier: TimerTableHeaderView.identifier)
         tableView.register(TimerTableViewCell.self, forCellReuseIdentifier: TimerTableViewCell.identifier)
         
         self.tableView = tableView
@@ -69,7 +69,7 @@ extension TimerAdapter: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimerTableViewHeaderView.identifier) as? TimerTableViewHeaderView else { return nil }
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimerTableHeaderView.identifier) as? TimerTableHeaderView else { return nil }
         if section == 0 {
             headerView.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
