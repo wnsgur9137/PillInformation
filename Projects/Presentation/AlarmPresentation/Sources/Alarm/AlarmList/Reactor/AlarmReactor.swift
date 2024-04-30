@@ -12,9 +12,10 @@ import RxSwift
 import RxCocoa
 
 public struct AlarmFlowAction {
+    let showAlarmDetailViewController: (AlarmModel?) -> Void
     
-    public init() {
-        
+    public init(showAlarmDetailViewController: @escaping (AlarmModel?) -> Void) {
+        self.showAlarmDetailViewController = showAlarmDetailViewController
     }
 }
 
@@ -79,7 +80,7 @@ extension AlarmReactor {
 // MARK: - Flow Action
 extension AlarmReactor {
     private func showAlarmDetailViewController(_ alarmData: AlarmModel? = nil) {
-        
+        flowAction.showAlarmDetailViewController(alarmData)
     }
 }
 

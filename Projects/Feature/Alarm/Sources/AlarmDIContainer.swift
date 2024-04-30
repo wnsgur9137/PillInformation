@@ -35,27 +35,33 @@ extension AlarmDIContainer: AlarmCoordinatorDependencies {
     public func makeAlarmTabBarController(viewControllers: [UIViewController]) -> AlarmTabBarController {
         return AlarmTabBarController.create(viewControllers: viewControllers)
     }
-    public func makeAlarmReactor(flowAction: AlarmFlowAction) -> AlarmReactor {
+    private func makeAlarmReactor(flowAction: AlarmFlowAction) -> AlarmReactor {
         return AlarmReactor(flowAction: flowAction)
     }
     public func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController {
         return AlarmViewController.create(with: makeAlarmReactor(flowAction: flowAction))
     }
+    private func makeAlarmDetailReactor(flowAction: AlarmDetailFlowAction) -> AlarmDetailReactor {
+        return AlarmDetailReactor(flowAction: flowAction)
+    }
+    public func makeAlarmDetailViewController(flowAction: AlarmDetailFlowAction) -> AlarmDetailViewController {
+        return AlarmDetailViewController.create(with: makeAlarmDetailReactor(flowAction: flowAction))
+    }
     
     // Timer
-    public func makeTimerRepository() -> TimerRepository {
+    private func makeTimerRepository() -> TimerRepository {
         return DefaultTimerRepository()
     }
-    public func makeTimerUseCase() -> TimerUseCase {
+    private func makeTimerUseCase() -> TimerUseCase {
         return DefaultTimerUseCase(with: makeTimerRepository())
     }
-    public func makeTimerReactor(flowAction: TimerFlowAction) -> TimerReactor {
+    private func makeTimerReactor(flowAction: TimerFlowAction) -> TimerReactor {
         return TimerReactor(with: makeTimerUseCase(), flowAction: flowAction)
     }
     public func makeTimerViewController(flowAction: TimerFlowAction) -> TimerViewController {
         return TimerViewController.create(with: makeTimerReactor(flowAction: flowAction))
     }
-    public func makeTimerDetailReactor(flowAction: TimerDetailFlowAction, timerModel: TimerModel?) -> TimerDetailReactor {
+    private func makeTimerDetailReactor(flowAction: TimerDetailFlowAction, timerModel: TimerModel?) -> TimerDetailReactor {
         return TimerDetailReactor(with: makeTimerUseCase(), flowAction: flowAction, timerModel: timerModel)
     }
     public func makeTimerDetailViewController(flowAction: TimerDetailFlowAction, timerModel: TimerModel?) -> TimerDetailViewController {
