@@ -13,6 +13,7 @@ public protocol TimerRepository {
     func save(_ timerDomain: TimerData) -> Single<TimerData>
     func fetch(timerID: Int) -> Single<TimerData>
     func fetchAll() -> Single<[TimerData]>
+    func fetchCount() -> Single<Int>
     func update(_ timerDomain: TimerData) -> Single<TimerData>
     func delete(timerID: Int) -> Single<Void>
     func deleteAll() -> Single<Void>

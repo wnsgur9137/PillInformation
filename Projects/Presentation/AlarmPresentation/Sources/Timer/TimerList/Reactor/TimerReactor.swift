@@ -56,6 +56,8 @@ public final class TimerReactor: Reactor {
         return .create() { observable in
             self.useCase.executeAll()
                 .subscribe(onSuccess: { [weak self] timerModels in
+                    self?.operationTimerData = []
+                    self?.nonOperationTimerData = []
                     self?.operationTimerData = timerModels.filter { $0.isStarted }
                     self?.nonOperationTimerData = timerModels.filter { !$0.isStarted }
                     observable.onNext(.loadTimerData)

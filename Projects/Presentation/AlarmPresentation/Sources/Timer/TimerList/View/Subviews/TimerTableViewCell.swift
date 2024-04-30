@@ -88,6 +88,11 @@ final class TimerTableViewCell: UITableViewCell {
             repeats: true,
             block: { [weak self] _ in
                 let remainingSeconds = duration - round(abs(startDate.timeIntervalSinceNow))
+                guard remainingSeconds > 0 else {
+                    self?.remainingTimeLabel.text = Double(0).toStringFormat()
+                    self?.stop()
+                    return
+                }
                 UIView.animate(withDuration: 0.1) {
                     self?.remainingTimeLabel.text = remainingSeconds.toStringFormat()
                 }
@@ -109,6 +114,7 @@ final class TimerTableViewCell: UITableViewCell {
     
     private func stop() {
         timer?.invalidate()
+        timer = nil
     }
     
     func configure(_ timerModel: TimerModel) {
@@ -120,9 +126,17 @@ final class TimerTableViewCell: UITableViewCell {
         let currentDate = Date().timeIntervalSince(startedDate)
         let remainingTime = timerModel.duration - currentDate
         
+        guard remainingTime > 0 else {
+            remainingTimeLabel.text = Double(0).toStringFormat()
+            stop()
+            return
+        }
         self.remainingTimeLabel.text = "\(remainingTime.toStringFormat())"
         
-        guard timerModel.isStarted else { return }
+        guard timerModel.isStarted else {
+            stop()
+            return
+        }
         startTimer(timerModel: timerModel)
     }
 }

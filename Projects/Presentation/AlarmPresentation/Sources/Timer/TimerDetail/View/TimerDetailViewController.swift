@@ -23,13 +23,6 @@ public final class TimerDetailViewController: UIViewController, View {
     
     private let circularProgressView = CircularProgressView()
     
-    private let operationButton1: UIButton = {
-        let button = UIButton()
-        button.setTitle("start", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        return button
-    }()
-    
     private let operationButton: FilledButton = {
         let button = FilledButton(style: .large)
         button.title = "start"

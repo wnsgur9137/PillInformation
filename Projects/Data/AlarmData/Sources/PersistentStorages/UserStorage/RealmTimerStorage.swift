@@ -49,6 +49,10 @@ public final class DefaultTimerStorage {
         return realm.objects(TimerObject.self).map{$0}
     }
     
+    private func count() -> Int {
+        return realm.objects(TimerObject.self).count
+    }
+    
     private func update(for timerObject: TimerObject,
                         updatedObject: TimerObject) -> TimerObject? {
         guard timerObject.id == updatedObject.id else { return nil }
@@ -110,6 +114,10 @@ extension DefaultTimerStorage: TimerStorage {
     
     public func getAll() -> Single<[TimerDTO]> {
         return .just(fetchAll().map { $0.toDTO() })
+    }
+    
+    public func getCount() -> Single<Int> {
+        return .just(count())
     }
     
     public func update(updatedResponse: TimerDTO) -> Single<TimerDTO> {

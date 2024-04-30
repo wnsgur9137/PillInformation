@@ -32,6 +32,10 @@ extension DefaultTimerRepository {
         return timerStorage.getAll().map { $0.map { $0.toDomain() }}
     }
     
+    public func fetchCount() -> Single<Int> {
+        return timerStorage.getCount()
+    }
+    
     public func save(_ timerDomain: TimerData) -> Single<TimerData> {
         let timerDTO = TimerDTO(timerData: timerDomain)
         return timerStorage.save(response: timerDTO).map { $0.toDomain() }

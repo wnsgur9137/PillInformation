@@ -33,6 +33,10 @@ extension DefaultTimerUseCase {
         return timerRepository.fetchAll().map { $0.map { $0.toModel() } }
     }
     
+    public func executeCount() -> Single<Int> {
+        return timerRepository.fetchCount()
+    }
+    
     public func update(_ timerModel: TimerModel) -> Single<TimerModel> {
         let timerDomain = TimerData(timerModel: timerModel)
         return timerRepository.update(timerDomain).map { $0.toModel() }

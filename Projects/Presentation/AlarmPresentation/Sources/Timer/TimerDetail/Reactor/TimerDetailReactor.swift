@@ -57,15 +57,25 @@ public final class TimerDetailReactor: Reactor {
     
     private func save(title: String?, 
                       duration: TimeInterval) -> Observable<Mutation> {
-        let timerModel = TimerModel(id: 0,
-                                    title: title,
-                                    duration: duration,
-                                    startedDate: Date(),
-                                    isStarted: true)
         return .create() { observable in
-            self.useCase.save(timerModel)
-                .subscribe(onSuccess: { timerModel in
-                    observable.onNext(.isStartedTimer(timerModel))
+            self.useCase.executeCount()
+                .subscribe(onSuccess: { count in
+                    var timerID = count
+                    if let id = self.timerModel?.id {
+                        timerID = id
+                    }
+                    let timerModel = TimerModel(id: timerID,
+                                                title: title,
+                                                duration: duration,
+                                                startedDate: Date(),
+                                                isStarted: true)
+                    self.useCase.save(timerModel)
+                        .subscribe(onSuccess: { timerModel in
+                            observable.onNext(.isStartedTimer(timerModel))
+                        }, onFailure: { error in
+                            observable.onNext(.storageError(error))
+                        })
+                        .disposed(by: self.disposeBag)
                 }, onFailure: { error in
                     observable.onNext(.storageError(error))
                 })
@@ -98,7 +108,8 @@ public final class TimerDetailReactor: Reactor {
                                     isStarted: false)
         return .create() { observable in
             self.useCase.update(timerModel)
-                .subscribe(onSuccess: { _ in
+                .subscribe(onSuccess: { [weak self] timerModel in
+                    self?.timerModel = timerModel
                     observable.onNext(.stop)
                 }, onFailure: { error in
                     observable.onNext(.storageError(error))
