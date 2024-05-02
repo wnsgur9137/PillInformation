@@ -17,7 +17,7 @@ public struct TimerDTO: Decodable {
     let startedDate: Date?
     let isStarted: Bool
     
-    public init(id: Int, title: String?, duration: TimeInterval, startedDate: Date?, isStarted: Bool) {
+    init(id: Int, title: String?, duration: TimeInterval, startedDate: Date?, isStarted: Bool) {
         self.id = id
         self.title = title
         self.duration = duration
@@ -25,7 +25,7 @@ public struct TimerDTO: Decodable {
         self.isStarted = isStarted
     }
     
-    public init(timerData: TimerData) {
+    init(timerData: TimerDomain) {
         self.id = timerData.id
         self.title = timerData.title
         self.duration = timerData.duration
@@ -35,7 +35,7 @@ public struct TimerDTO: Decodable {
 }
 
 extension TimerDTO {
-    public func toDomain() -> TimerData {
+    func toDomain() -> TimerDomain {
         return .init(id: id, title: title, duration: duration, startedDate: startedDate, isStarted: isStarted)
     }
 }

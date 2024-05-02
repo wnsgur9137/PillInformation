@@ -69,6 +69,7 @@ extension AlarmReactor {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
+        showAlarmDetailViewController()
 //        showAlarmDetailViewController(alarmData[indexPath.row])
     }
     

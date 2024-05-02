@@ -19,6 +19,15 @@ extension Constants.AlarmViewController {
     static let alarm = "알람"
     static let emptyAlarm = "타이머가 설정되지 않았어요"
     static let addTimer = "타이머 설정하기"
+    static let sunday = "일"
+    static let monday = "월"
+    static let tuesday = "화"
+    static let wednesday = "수"
+    static let thursday = "목"
+    static let friday = "금"
+    static let saturday = "토"
+    static let title = "알람 이름"
+    static let save = "저장"
 }
 
 extension Constants.TimerViewController {

@@ -13,23 +13,25 @@ public struct AlarmModel {
     public let title: String?
     public let alarmTime: Date
     public let week: WeekModel
+    public let isActive: Bool
     
-    public init(id: Int, title: String?, alarmTime: Date, week: WeekModel) {
+    public init(id: Int, title: String?, alarmTime: Date, week: WeekModel, isActive: Bool) {
         self.id = id
         self.title = title
         self.alarmTime = alarmTime
         self.week = week
+        self.isActive = isActive
     }
 }
 
 public struct WeekModel {
-    public let sunday: Bool
-    public let monday: Bool
-    public let tuesday: Bool
-    public let wednesday: Bool
-    public let thursday: Bool
-    public let friday: Bool
-    public let saturday: Bool
+    public var sunday: Bool
+    public var monday: Bool
+    public var tuesday: Bool
+    public var wednesday: Bool
+    public var thursday: Bool
+    public var friday: Bool
+    public var saturday: Bool
     
     public init(sunday: Bool = false,
                 monday: Bool = false,

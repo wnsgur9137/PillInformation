@@ -21,7 +21,7 @@ public final class DefaultTimerUseCase: TimerUseCase {
 
 extension DefaultTimerUseCase {
     public func save(_ timerModel: TimerModel) -> Single<TimerModel> {
-        let timerDomain = TimerData(timerModel: timerModel)
+        let timerDomain = TimerDomain(timerModel: timerModel)
         return timerRepository.save(timerDomain).map { $0.toModel() }
     }
     
@@ -38,7 +38,7 @@ extension DefaultTimerUseCase {
     }
     
     public func update(_ timerModel: TimerModel) -> Single<TimerModel> {
-        let timerDomain = TimerData(timerModel: timerModel)
+        let timerDomain = TimerDomain(timerModel: timerModel)
         return timerRepository.update(timerDomain).map { $0.toModel() }
     }
     

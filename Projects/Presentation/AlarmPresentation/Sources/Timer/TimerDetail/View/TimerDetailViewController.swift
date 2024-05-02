@@ -37,10 +37,7 @@ public final class TimerDetailViewController: UIViewController, View {
         return label
     }()
     
-    private let titleTextField: UITextField = {
-        let textField = UITextField()
-        return textField
-    }()
+    private let titleTextField = UITextField()
     
     // MARK: - Properties
     public var disposeBag = DisposeBag()

@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 public protocol TimerRepository {
-    func save(_ timerDomain: TimerData) -> Single<TimerData>
-    func fetch(timerID: Int) -> Single<TimerData>
-    func fetchAll() -> Single<[TimerData]>
+    func save(_ timerDomain: TimerDomain) -> Single<TimerDomain>
+    func fetch(timerID: Int) -> Single<TimerDomain>
+    func fetchAll() -> Single<[TimerDomain]>
     func fetchCount() -> Single<Int>
-    func update(_ timerDomain: TimerData) -> Single<TimerData>
+    func update(_ timerDomain: TimerDomain) -> Single<TimerDomain>
     func delete(timerID: Int) -> Single<Void>
     func deleteAll() -> Single<Void>
 }

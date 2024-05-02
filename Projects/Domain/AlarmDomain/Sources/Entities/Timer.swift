@@ -1,5 +1,5 @@
 //
-//  TimerData.swift
+//  Timer.swift
 //  AlarmDomain
 //
 //  Created by JunHyeok Lee on 4/25/24.
@@ -10,7 +10,7 @@ import Foundation
 
 import AlarmPresentation
 
-public struct Timer {
+public struct TimerDomain {
     public let id: Int
     public let title: String?
     public let duration: TimeInterval
@@ -34,7 +34,7 @@ public struct Timer {
     }
 }
 
-extension Timer {
+extension TimerDomain {
     func toModel() -> TimerModel {
         return .init(id: id, title: title, duration: duration, startedDate: startedDate, isStarted: isStarted)
     }

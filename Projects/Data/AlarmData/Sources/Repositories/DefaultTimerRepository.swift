@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import RxCocoa
 
 import AlarmDomain
 import NetworkInfra
@@ -16,7 +15,6 @@ import NetworkInfra
 public final class DefaultTimerRepository: TimerRepository {
     
     private let timerStorage: TimerStorage
-    private let disposeBag = DisposeBag()
     
     public init(timerStorage: TimerStorage = DefaultTimerStorage()) {
         self.timerStorage = timerStorage
@@ -24,11 +22,11 @@ public final class DefaultTimerRepository: TimerRepository {
 }
 
 extension DefaultTimerRepository {
-    public func fetch(timerID: Int) -> Single<TimerData> {
+    public func fetch(timerID: Int) -> Single<TimerDomain> {
         return timerStorage.get(timerID: timerID).map { $0.toDomain() }
     }
     
-    public func fetchAll() -> Single<[TimerData]> {
+    public func fetchAll() -> Single<[TimerDomain]> {
         return timerStorage.getAll().map { $0.map { $0.toDomain() }}
     }
     
@@ -36,12 +34,12 @@ extension DefaultTimerRepository {
         return timerStorage.getCount()
     }
     
-    public func save(_ timerDomain: TimerData) -> Single<TimerData> {
+    public func save(_ timerDomain: TimerDomain) -> Single<TimerDomain> {
         let timerDTO = TimerDTO(timerData: timerDomain)
         return timerStorage.save(response: timerDTO).map { $0.toDomain() }
     }
     
-    public func update(_ timerDomain: TimerData) -> Single<TimerData> {
+    public func update(_ timerDomain: TimerDomain) -> Single<TimerDomain> {
         let timerDTO = TimerDTO(timerData: timerDomain)
         return timerStorage.update(updatedResponse: timerDTO).map { $0.toDomain() }
     }

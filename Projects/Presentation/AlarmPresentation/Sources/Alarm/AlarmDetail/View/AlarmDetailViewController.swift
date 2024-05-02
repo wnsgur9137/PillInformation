@@ -21,6 +21,31 @@ public final class AlarmDetailViewController: UIViewController, View {
     
     private let rootContainerView = UIView()
     
+    private let datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .time
+        datePicker.preferredDatePickerStyle = .wheels
+        return datePicker
+    }()
+    
+    private let weekSelectionView = WeekSelectionView()
+    
+    private let saveButton: FilledButton = {
+        let button = FilledButton()
+        button.title = Constants.AlarmViewController.save
+        return button
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.AlarmViewController.title
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteSemiBold(28.0)
+        return label
+    }()
+    
+    private let titleTextField = UITextField()
+    
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
@@ -63,27 +88,130 @@ public final class AlarmDetailViewController: UIViewController, View {
 
 // MARK: - Methods
 extension AlarmDetailViewController {
-    private func bindAction(_ reactor: AlarmDetailReactor) {
+    private func configureAlarm(_ alarm: AlarmModel) {
         
     }
     
-    private func bindState(_ reactor: AlarmDetailReactor) {
-        
+    private func configureWeek(_ week: WeekModel) {
+        weekSelectionView.sundayButton.isSelected = week.sunday
+        weekSelectionView.mondayButton.isSelected = week.monday
+        weekSelectionView.tuesdayButton.isSelected = week.tuesday
+        weekSelectionView.wednesdayButton.isSelected = week.wednesday
+        weekSelectionView.thursdayButton.isSelected = week.thursday
+        weekSelectionView.fridayButton.isSelected = week.friday
+        weekSelectionView.saturdayButton.isSelected = week.saturday
     }
 }
 
 // MARK: - Binding
 extension AlarmDetailViewController {
+    private func bindAction(_ reactor: AlarmDetailReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.sundayButton.rx.tap
+            .map { Reactor.Action.didTapSundayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.mondayButton.rx.tap
+            .map { Reactor.Action.didTapMondayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.tuesdayButton.rx.tap
+            .map { Reactor.Action.didTapTuesdayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.wednesdayButton.rx.tap
+            .map { Reactor.Action.didTapWednesdayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.thursdayButton.rx.tap
+            .map { Reactor.Action.didTapThurdayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.fridayButton.rx.tap
+            .map { Reactor.Action.didTapFridayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        weekSelectionView.saturdayButton.rx.tap
+            .map { Reactor.Action.didTapSaturdayButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
     
+    private func bindState(_ reactor: AlarmDetailReactor) {
+        reactor.state
+            .map { $0.alarmData }
+            .subscribe(onNext: { [weak self] alarm in
+                guard let alarm = alarm else { return }
+                self?.configureAlarm(alarm)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.week }
+            .subscribe(onNext: { [weak self] week in
+                guard let week = week else { return }
+                self?.configureWeek(week)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - Layout
 extension AlarmDetailViewController {
     private func setupLayout() {
+        view.addSubview(rootContainerView)
         
+        rootContainerView.flex
+            .justifyContent(.center)
+            .alignItems(.center)
+            .define { rootView in
+                
+                rootView.addItem()
+                    .width(100%)
+                    .justifyContent(.center)
+                    .alignItems(.center)
+                    .define { pickerStack in
+                        pickerStack.addItem(datePicker)
+                            .width(80%)
+                            .height(200)
+                        
+                        pickerStack.addItem(weekSelectionView)
+                            .marginTop(8.0)
+                            .width(85%)
+                            .height(60.0)
+                    }
+                
+                rootView.addItem()
+                    .margin(UIEdgeInsets(top: 80.0, left: 0, bottom: 80.0, right: 0))
+                    .width(80%)
+                    .define { titleStack in
+                        titleStack.addItem(titleLabel)
+                        
+                        titleStack.addItem(titleTextField)
+                            .marginTop(8.0)
+                            .cornerRadius(12.0)
+                            .height(40.0)
+                            .backgroundColor(Constants.Color.textFieldBackground)
+                    }
+                
+                rootView.addItem(saveButton)
+                    .marginTop(80.0)
+                    .width(20%)
+            }
     }
     
     private func setupSubviewLayout() {
-        
+        rootContainerView.pin.all(view.safeAreaInsets)
+        rootContainerView.flex.layout()
     }
 }
