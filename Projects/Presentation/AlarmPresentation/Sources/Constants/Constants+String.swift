@@ -28,6 +28,9 @@ extension Constants.AlarmViewController {
     static let saturday = "토"
     static let title = "알람 이름"
     static let save = "저장"
+    static let saveErrorTitle = "알람 등록에 실패했습니다."
+    static let tryAgain = "다시 시도해주세요."
+    static let confirm = "확인"
 }
 
 extension Constants.TimerViewController {

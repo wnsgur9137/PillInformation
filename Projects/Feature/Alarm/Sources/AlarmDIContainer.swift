@@ -32,17 +32,23 @@ public final class AlarmDIContainer {
 // MARK: - AlarmCoordinatorDependencies
 extension AlarmDIContainer: AlarmCoordinatorDependencies {
     // Alarm
+    private func makeAlarmRepository() -> AlarmRepository {
+        return DefaultAlarmRepository()
+    }
+    private func makeAlarmUseCase() -> AlarmUseCase {
+        return DefaultAlarmUseCase(alarmRepository: makeAlarmRepository())
+    }
     public func makeAlarmTabBarController(viewControllers: [UIViewController]) -> AlarmTabBarController {
         return AlarmTabBarController.create(viewControllers: viewControllers)
     }
     private func makeAlarmReactor(flowAction: AlarmFlowAction) -> AlarmReactor {
-        return AlarmReactor(flowAction: flowAction)
+        return AlarmReactor(with: makeAlarmUseCase(), flowAction: flowAction)
     }
     public func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController {
         return AlarmViewController.create(with: makeAlarmReactor(flowAction: flowAction))
     }
     private func makeAlarmDetailReactor(flowAction: AlarmDetailFlowAction) -> AlarmDetailReactor {
-        return AlarmDetailReactor(flowAction: flowAction)
+        return AlarmDetailReactor(with: makeAlarmUseCase(), flowAction: flowAction)
     }
     public func makeAlarmDetailViewController(flowAction: AlarmDetailFlowAction) -> AlarmDetailViewController {
         return AlarmDetailViewController.create(with: makeAlarmDetailReactor(flowAction: flowAction))

@@ -101,6 +101,23 @@ extension AlarmDetailViewController {
         weekSelectionView.fridayButton.isSelected = week.friday
         weekSelectionView.saturdayButton.isSelected = week.saturday
     }
+    
+    private func showErrorAlert(_ error: Error?) {
+        let title = AlertText(text: Constants.AlarmViewController.saveErrorTitle)
+        let message = AlertText(text: Constants.AlarmViewController.tryAgain)
+        let confirmButtonInfo = AlertButtonInfo(title: Constants.AlarmViewController.confirm)
+        AlertViewer()
+            .showSingleButtonAlert(
+                self,
+                title: title,
+                message: message,
+                confirmButtonInfo: confirmButtonInfo)
+    }
+    
+    private func getTitle() -> String? {
+        guard let text = titleTextField.text else { return nil }
+        return text.count > 0 ? text : nil
+    }
 }
 
 // MARK: - Binding
@@ -145,6 +162,23 @@ extension AlarmDetailViewController {
             .map { Reactor.Action.didTapSaturdayButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        saveButton.rx.tap
+            .map { Reactor.Action.didTapSaveButton((
+                time: self.datePicker.date,
+                title: self.getTitle(),
+                isSelectedDays: (
+                    sunday: self.weekSelectionView.sundayButton.isSelected,
+                    monday: self.weekSelectionView.mondayButton.isSelected,
+                    tuesday: self.weekSelectionView.tuesdayButton.isSelected,
+                    wednesday: self.weekSelectionView.wednesdayButton.isSelected,
+                    thursday: self.weekSelectionView.thursdayButton.isSelected,
+                    friday: self.weekSelectionView.fridayButton.isSelected,
+                    saturday: self.weekSelectionView.saturdayButton.isSelected
+                )
+            ))}
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: AlarmDetailReactor) {
@@ -161,6 +195,13 @@ extension AlarmDetailViewController {
             .subscribe(onNext: { [weak self] week in
                 guard let week = week else { return }
                 self?.configureWeek(week)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$error)
+            .skip(1)
+            .subscribe(onNext: { [weak self] error in
+                self?.showErrorAlert(error)
             })
             .disposed(by: disposeBag)
     }

@@ -23,14 +23,12 @@ public struct TimerFlowAction {
 
 public final class TimerReactor: Reactor {
     public enum Action {
-        case viewDidLoad
         case viewWillAppear
     }
     
     public enum Mutation {
         case loadTimerData
         case loadError
-        case asdf
     }
     
     public struct State {
@@ -53,11 +51,12 @@ public final class TimerReactor: Reactor {
     }
     
     private func loadTimerData() -> Observable<Mutation> {
-        return .create() { observable in
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
             self.useCase.executeAll()
                 .subscribe(onSuccess: { [weak self] timerModels in
-                    self?.operationTimerData = []
-                    self?.nonOperationTimerData = []
+                    self?.operationTimerData.removeAll()
+                    self?.nonOperationTimerData.removeAll()
                     self?.operationTimerData = timerModels.filter { $0.isStarted }
                     self?.nonOperationTimerData = timerModels.filter { !$0.isStarted }
                     observable.onNext(.loadTimerData)
@@ -88,14 +87,6 @@ public final class TimerReactor: Reactor {
 extension TimerReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .viewDidLoad: // MARK: - Test Code
-            self.useCase.deleteAll().subscribe(onSuccess: {
-                print("Success Delete All")
-            },onFailure: { error in
-                print("Failed Delete All")
-            })
-            .disposed(by: disposeBag)
-            return .just(.asdf)
         case .viewWillAppear:
             return loadTimerData()
         }
@@ -108,8 +99,6 @@ extension TimerReactor {
             state.timerCellCount = operationTimerData.count + nonOperationTimerData.count
         case .loadError:
             state.isError = state.isError.update(Void())
-        case .asdf:
-            break
         }
         return state
     }
@@ -124,20 +113,22 @@ extension TimerReactor {
         var timerModel: TimerModel?
         if indexPath.section == 0 {
             timerModel = operationTimerData[indexPath.row]
-            delete(timerModel: timerModel)
         } else if indexPath.section == 1 {
             timerModel = nonOperationTimerData[indexPath.row]
-            delete(timerModel: timerModel)
         }
         showTimerDetailViewController(timerModel: timerModel)
     }
     
     func delete(indexPath: IndexPath) {
+        var timerModel: TimerModel?
         if indexPath.section == 0 {
+            timerModel = operationTimerData[indexPath.row]
             operationTimerData.remove(at: indexPath.row)
         } else if indexPath.section == 1 {
+            timerModel = nonOperationTimerData[indexPath.row]
             nonOperationTimerData.remove(at: indexPath.row)
         }
+        delete(timerModel: timerModel)
     }
 }
 

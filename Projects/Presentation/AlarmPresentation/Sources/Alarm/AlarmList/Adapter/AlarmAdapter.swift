@@ -12,7 +12,7 @@ import RxCocoa
 
 protocol AlarmAdapterDataSource: AnyObject {
     func numberOfRowsIn(section: Int) -> Int
-    func cellForRow(at indexPath: IndexPath)
+    func cellForRow(at indexPath: IndexPath) -> AlarmModel
 }
 
 protocol AlarmAdapterDelegate: AnyObject {
@@ -57,6 +57,8 @@ extension AlarmAdapter: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AlarmTableViewCell.identifier, for: indexPath) as? AlarmTableViewCell else { return .init() }
+        guard let data = dataSource?.cellForRow(at: indexPath) else { return cell }
+        cell.configure(data)
         cell.toggleButton.rx.tapGesture()
             .skip(1)
             .subscribe(onNext: { [weak self] _ in

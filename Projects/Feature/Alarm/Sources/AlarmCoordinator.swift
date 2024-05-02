@@ -66,7 +66,9 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
     }
     
     private func makeAlarmDetailViewController(alarmModel: AlarmModel? = nil) {
-        let flowAction = AlarmDetailFlowAction()
+        let flowAction = AlarmDetailFlowAction(
+            popViewController: popViewController
+        )
         let alarmDetailViewController = dependencies.makeAlarmDetailViewController(flowAction: flowAction)
         navigationController?.pushViewController(alarmDetailViewController, animated: true)
         self.alarmDetailViewController = alarmDetailViewController
@@ -85,5 +87,9 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
         let viewController = dependencies.makeTimerDetailViewController(flowAction: flowAction, timerModel: timerModel)
         navigationController?.pushViewController(viewController, animated: true)
         timerDetailViewController = viewController
+    }
+    
+    private func popViewController(animation: Bool = true) {
+        navigationController?.popViewController(animated: animation)
     }
 }

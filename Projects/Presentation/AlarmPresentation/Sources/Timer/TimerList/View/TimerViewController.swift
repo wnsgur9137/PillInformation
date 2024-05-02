@@ -66,11 +66,6 @@ public final class TimerViewController: UIViewController, View {
 // MARK: - React
 extension TimerViewController {
     private func bindAction(_ reactor: TimerReactor) {
-        rx.viewDidLoad
-            .map { Reactor.Action.viewDidLoad }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
         rx.viewWillAppear
             .map { Reactor.Action.viewWillAppear }
             .bind(to: reactor.action)
@@ -78,8 +73,7 @@ extension TimerViewController {
     }
     
     private func bindState(_ reactor: TimerReactor) {
-        reactor.state
-            .map { $0.timerCellCount }
+        reactor.pulse(\.$timerCellCount)
             .bind(onNext: { [weak self] count in
                 self?.timerTableView.reloadData()
             })

@@ -41,6 +41,8 @@ final class AlarmTableViewCell: UITableViewCell {
         return toggleButton
     }()
     
+    private let weekSelectionView = WeekSelectionView()
+    
     private(set) var disposeBag = DisposeBag()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -69,8 +71,18 @@ final class AlarmTableViewCell: UITableViewCell {
         return self.contentView.frame.size
     }
 
-    func confgure(_ alarmModel: AlarmModel) {
-        self.titleLabel.text = alarmModel.title
+    func configure(_ alarmModel: AlarmModel) {
+        titleLabel.text = alarmModel.title
+        timeLabel.text = alarmModel.alarmTime.toKSTString(format: "HH:mm:ss")
+        toggleButton.isOn = alarmModel.isActive
+        
+        weekSelectionView.sundayButton.isSelected = alarmModel.week.sunday
+        weekSelectionView.mondayButton.isSelected = alarmModel.week.monday
+        weekSelectionView.tuesdayButton.isSelected = alarmModel.week.tuesday
+        weekSelectionView.wednesdayButton.isSelected = alarmModel.week.wednesday
+        weekSelectionView.thursdayButton.isSelected = alarmModel.week.thursday
+        weekSelectionView.fridayButton.isSelected = alarmModel.week.friday
+        weekSelectionView.saturdayButton.isSelected = alarmModel.week.saturday
     }
 }
 
@@ -92,6 +104,8 @@ extension AlarmTableViewCell {
                     }
                 rootView.addItem(toggleButton)
                     .marginRight(24.0)
+                rootView.addItem(weekSelectionView)
+                    .grow(1)
             }
     }
     

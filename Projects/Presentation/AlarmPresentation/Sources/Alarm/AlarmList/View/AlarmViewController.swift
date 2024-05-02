@@ -59,19 +59,21 @@ public final class AlarmViewController: UIViewController, View {
     }
 }
 
-// MARK: - Methods
-extension AlarmViewController {
-    
-}
-
 // MARK: - Binding
 extension AlarmViewController {
     private func bindAction(_ reactor: AlarmReactor) {
-        
+        rx.viewWillAppear
+            .map { Reactor.Action.viewWillAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: AlarmReactor) {
-        
+        reactor.pulse(\.$alarmCellCount)
+            .subscribe(onNext: { [weak self] _ in
+                self?.alarmTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

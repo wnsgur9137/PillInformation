@@ -13,7 +13,7 @@ public struct AlarmModel {
     public let title: String?
     public let alarmTime: Date
     public let week: WeekModel
-    public let isActive: Bool
+    public var isActive: Bool
     
     public init(id: Int, title: String?, alarmTime: Date, week: WeekModel, isActive: Bool) {
         self.id = id
