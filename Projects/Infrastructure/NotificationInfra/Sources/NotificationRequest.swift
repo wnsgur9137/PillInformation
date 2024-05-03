@@ -93,4 +93,26 @@ final class NotificationRequest {
         content.badge = badge
         return content
     }
+    /// Delete pending notifications
+    /// - Parameter ids: Identifiers
+    func deletePendingNotifications(ids: [String]) {
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ids)
+    }
+    
+    /// Delete all pendingNotifications
+    func deleteAllPendingNotifications() {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+    
+    /// Delete delivered notifications
+    /// - Parameter ids: Identifiers
+    func deleteDeliveredNotifications(ids: [String]) {
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ids)
+    }
+    
+    /// Delete all delivered notifications
+    func deleteAllDeliveredNotifications() {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    }
 }

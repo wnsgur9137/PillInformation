@@ -13,7 +13,7 @@ public struct TimerModel {
     public let title: String?
     public let duration: TimeInterval
     public let startedDate: Date?
-    public let isStarted: Bool
+    public var isStarted: Bool
     
     public init(id: Int, title: String?, duration: TimeInterval, startedDate: Date?, isStarted: Bool) {
         self.id = id

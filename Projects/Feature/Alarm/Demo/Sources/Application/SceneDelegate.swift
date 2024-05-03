@@ -10,6 +10,7 @@ import UIKit
 
 import Alarm
 import BasePresentation
+import NotificationInfra
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -37,5 +38,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         alarmCoordinator?.start()
         window?.makeKeyAndVisible()
         return
+    }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        NotificationService.deleteAllDeliveredNotifications()
     }
 }

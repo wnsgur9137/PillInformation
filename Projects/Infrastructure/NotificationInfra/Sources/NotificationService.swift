@@ -102,4 +102,38 @@ extension NotificationService {
         let content = request.makeContent(title: title, body: body, badge: badge)
         request.addNotification(id: id, content: content, date: date, repeats: repeats, completion: completion)
     }
+    
+    /// Delete pending notification
+    /// - Parameter id: Identifier
+    public static func deletePendingNotification(id: String) {
+        request.deletePendingNotifications(ids: [id])
+    }
+    
+    /// Delete pending notifications
+    /// - Parameter ids: Identifiers
+    public static func deletePendingNotifications(ids: [String]) {
+        request.deletePendingNotifications(ids: ids)
+    }
+    
+    /// Delete all pending notifications
+    public static func deleteAllPendingNotifications() {
+        request.deleteAllPendingNotifications()
+    }
+    
+    /// Delete delivered notification
+    /// - Parameter id: Idetifier
+    public static func deleteDeliveredNotification(id: String) {
+        request.deleteDeliveredNotifications(ids: [id])
+    }
+    
+    /// Delete delivered notifications
+    /// - Parameter ids: Identifiers
+    public static func deleteDeliveredNotifications(ids: [String]) {
+        request.deleteDeliveredNotifications(ids: ids)
+    }
+    
+    /// Delete all delivered notifications
+    public static func deleteAllDeliveredNotifications() {
+        request.deleteAllDeliveredNotifications()
+    }
 }

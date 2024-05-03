@@ -9,6 +9,7 @@
 import UIKit
 
 import KakaoLibraries
+import NotificationInfra
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -40,6 +41,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        appFlowCoordinator?.start()
         window?.makeKeyAndVisible()
         return
+    }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        NotificationService.deleteAllDeliveredNotifications()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

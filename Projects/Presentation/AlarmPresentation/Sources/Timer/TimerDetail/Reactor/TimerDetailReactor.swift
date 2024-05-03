@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 
 import ReactiveLibraries
+import NotificationInfra
 
 public struct TimerDetailFlowAction {
     
@@ -55,11 +56,49 @@ public final class TimerDetailReactor: Reactor {
         self.timerModel = timerModel
     }
     
+    private func addNotification(_ timerModel: TimerModel) {
+        guard let startedDate = timerModel.startedDate else { return }
+        let targetDate = startedDate.addingTimeInterval(timerModel.duration)
+        let endDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: targetDate)
+        let id = NotificationIdentifier.timer(id: timerModel.id)
+        NotificationService.addTriggerNotification(id: id,
+                                                   title: "타이머가 종료되었어요!",
+                                                   body: timerModel.title ?? "",
+                                                   date: endDate,
+                                                   repeats: true) { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error: \(error)")
+            }
+            self.deleteNotification(timerModel.id)
+            guard var timerModel = self.timerModel else { return }
+            timerModel.isStarted = false
+            DispatchQueue.main.async {
+                self.useCase.update(timerModel)
+                    .subscribe(onSuccess: { [weak self] timerModel in
+                        self?.timerModel = timerModel
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func deleteNotification(_ id: Int) {
+        let id = NotificationIdentifier.timer(id: id)
+        NotificationService.deletePendingNotification(id: id)
+        NotificationService.deleteDeliveredNotification(id: id)
+    }
+    
     private func save(title: String?, 
                       duration: TimeInterval) -> Observable<Mutation> {
-        return .create() { observable in
+        if let timerModel = timerModel {
+            return update(timerModel: timerModel)
+        }
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
             self.useCase.executeCount()
-                .subscribe(onSuccess: { count in
+                .subscribe(onSuccess: { [weak self] count in
+                    guard let self = self else { return }
                     var timerID = count
                     if let id = self.timerModel?.id {
                         timerID = id
@@ -70,7 +109,8 @@ public final class TimerDetailReactor: Reactor {
                                                 startedDate: Date(),
                                                 isStarted: true)
                     self.useCase.save(timerModel)
-                        .subscribe(onSuccess: { timerModel in
+                        .subscribe(onSuccess: { [weak self] timerModel in
+                            self?.addNotification(timerModel)
                             observable.onNext(.isStartedTimer(timerModel))
                         }, onFailure: { error in
                             observable.onNext(.storageError(error))
@@ -86,9 +126,11 @@ public final class TimerDetailReactor: Reactor {
     }
     
     private func update(timerModel: TimerModel) -> Observable<Mutation> {
-        return .create() { observable in
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
             self.useCase.update(timerModel)
-                .subscribe(onSuccess: { _ in
+                .subscribe(onSuccess: { [weak self] timerModel in
+                    self?.addNotification(timerModel)
                     observable.onNext(.skip)
                 })
                 .disposed(by: self.disposeBag)
@@ -110,6 +152,7 @@ public final class TimerDetailReactor: Reactor {
             self.useCase.update(timerModel)
                 .subscribe(onSuccess: { [weak self] timerModel in
                     self?.timerModel = timerModel
+                    self?.deleteNotification(timerModel.id)
                     observable.onNext(.stop)
                 }, onFailure: { error in
                     observable.onNext(.storageError(error))
