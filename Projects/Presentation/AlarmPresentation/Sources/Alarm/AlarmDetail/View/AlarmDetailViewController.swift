@@ -89,7 +89,9 @@ public final class AlarmDetailViewController: UIViewController, View {
 // MARK: - Methods
 extension AlarmDetailViewController {
     private func configureAlarm(_ alarm: AlarmModel) {
-        
+        datePicker.date = alarm.alarmTime
+        titleTextField.text = alarm.title
+        configureWeek(alarm.week)
     }
     
     private func configureWeek(_ week: WeekModel) {

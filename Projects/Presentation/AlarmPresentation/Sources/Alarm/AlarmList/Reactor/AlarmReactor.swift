@@ -44,6 +44,9 @@ public final class AlarmReactor: Reactor {
                 flowAction: AlarmFlowAction) {
         self.useCase = useCase
         self.flowAction = flowAction
+        self.useCase.deleteAll()
+            .subscribe(onSuccess: { _ in })
+            .disposed(by: self.disposeBag)
     }
     
     private func loadAlarm() -> Observable<Mutation> {

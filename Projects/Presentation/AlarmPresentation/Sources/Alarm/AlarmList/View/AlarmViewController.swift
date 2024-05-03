@@ -27,7 +27,7 @@ public final class AlarmViewController: UIViewController, View {
     private var adapter: AlarmAdapter?
     public var disposeBag = DisposeBag()
     
-    private var alarmTableViewRowHeight: CGFloat = 100.0
+    private var alarmTableViewRowHeight: CGFloat = 140.0
     private var alarmTableViewHeaderHeight: CGFloat = 50.0
     
     // MARK: - Lifecycle

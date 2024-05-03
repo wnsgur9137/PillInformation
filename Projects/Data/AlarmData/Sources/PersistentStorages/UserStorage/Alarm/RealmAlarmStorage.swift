@@ -45,7 +45,9 @@ public final class DefaultAlarmStorage {
     
     private func update(for alarmObject: AlarmObject,
                         updatedObject: AlarmObject) -> AlarmObject? {
-        guard alarmObject.id == updatedObject.id else { return nil }
+        guard alarmObject.id == updatedObject.id,
+              let weekObject = alarmObject.week,
+              let updatedWeekObject = alarmObject.week else { return nil }
         do {
             try realm.write {
                 alarmObject.title = updatedObject.title
@@ -53,16 +55,35 @@ public final class DefaultAlarmStorage {
                 alarmObject.week = updatedObject.week
                 alarmObject.isActive = updatedObject.isActive
             }
+            try updateWeek(for: weekObject, updatedObject: updatedWeekObject)
             return fetch(for: alarmObject.id)
         } catch {
             return nil
         }
     }
     
+    private func updateWeek(for weekObject: WeekObject,
+                            updatedObject: WeekObject) throws {
+        guard weekObject.id == updatedObject.id else {
+            throw RealmError.update
+        }
+        try realm.write {
+            weekObject.sunday = updatedObject.sunday
+            weekObject.monday = updatedObject.monday
+            weekObject.tuesday = updatedObject.tuesday
+            weekObject.wednesday = updatedObject.wednesday
+            weekObject.thursday = updatedObject.thursday
+            weekObject.friday = updatedObject.friday
+            weekObject.saturday = updatedObject.saturday
+        }
+    }
+    
     private func delete(for alarmObject: AlarmObject) -> Bool {
+        let weekObject = realm.objects(WeekObject.self).filter("id == \(alarmObject.id)")
         do {
             try realm.write {
                 realm.delete(alarmObject)
+                realm.delete(weekObject)
             }
             return true
         } catch {
@@ -71,10 +92,12 @@ public final class DefaultAlarmStorage {
     }
     
     private func deleteAll() -> Bool {
-        let alarmObject = realm.objects(AlarmObject.self)
+        let alarmObjects = realm.objects(AlarmObject.self)
+        let weekObjects = realm.objects(WeekObject.self)
         do {
             try realm.write {
-                realm.delete(alarmObject)
+                realm.delete(alarmObjects)
+                realm.delete(weekObjects)
             }
             return true
         } catch {

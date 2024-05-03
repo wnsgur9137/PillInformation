@@ -42,7 +42,8 @@ extension AlarmObject {
 }
 
 public class WeekObject: Object {
-    @Persisted(primaryKey: true) var id: Int
+    @Persisted var id: Int
+//    @Persisted(primaryKey: true) var id: Int
     @Persisted var sunday: Bool
     @Persisted var monday: Bool
     @Persisted var tuesday: Bool

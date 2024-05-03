@@ -73,7 +73,7 @@ final class AlarmTableViewCell: UITableViewCell {
 
     func configure(_ alarmModel: AlarmModel) {
         titleLabel.text = alarmModel.title
-        timeLabel.text = alarmModel.alarmTime.toKSTString(format: "HH:mm:ss")
+        timeLabel.text = alarmModel.alarmTime.toKSTString(format: "HH:mm", hasAMPM: true)
         toggleButton.isOn = alarmModel.isActive
         
         weekSelectionView.sundayButton.isSelected = alarmModel.week.sunday
@@ -90,22 +90,25 @@ final class AlarmTableViewCell: UITableViewCell {
 extension AlarmTableViewCell {
     private func setupLayout() {
         contentView.addSubview(rootContainerView)
-        
         rootContainerView.flex
             .direction(.row)
             .alignItems(.center)
+            .justifyContent(.center)
             .define { rootView in
                 rootView.addItem()
                     .marginLeft(24.0)
                     .grow(1.0)
-                    .define { timeStack in
-                        timeStack.addItem(timeLabel)
-                        timeStack.addItem(titleLabel)
+                    .define { stack in
+                        stack.addItem().define { labelStack in
+                            labelStack.addItem(timeLabel)
+                            labelStack.addItem(titleLabel)
+                        }
+                        stack.addItem(weekSelectionView)
+                            .marginTop(8.0)
                     }
                 rootView.addItem(toggleButton)
+                    .marginLeft(24.0)
                     .marginRight(24.0)
-                rootView.addItem(weekSelectionView)
-                    .grow(1)
             }
     }
     
