@@ -41,7 +41,7 @@ final class AlarmTableViewCell: UITableViewCell {
         return toggleButton
     }()
     
-    private let weekSelectionView = WeekSelectionView()
+    let weekSelectionView = WeekSelectionView()
     
     private(set) var disposeBag = DisposeBag()
     

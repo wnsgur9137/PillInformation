@@ -38,7 +38,7 @@ public final class AlarmReactor: Reactor {
     private let useCase: AlarmUseCase
     private let flowAction: AlarmFlowAction
     private let disposeBag = DisposeBag()
-    private var alarmData: [AlarmModel] = []
+    private var alarm: [AlarmModel] = []
     
     public init(with useCase: AlarmUseCase,
                 flowAction: AlarmFlowAction) {
@@ -54,7 +54,7 @@ public final class AlarmReactor: Reactor {
             guard let self = self else { return Disposables.create() }
             self.useCase.executeAll()
                 .subscribe(onSuccess: { [weak self] alarms in
-                    self?.alarmData = alarms
+                    self?.alarm = alarms
                     observable.onNext(.loadAlarm)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
@@ -65,9 +65,11 @@ public final class AlarmReactor: Reactor {
         }
     }
     
-    private func update(alarm: AlarmModel) {
+    private func update(alarm: AlarmModel, index: Int) {
         self.useCase.update(alarm)
-            .subscribe(onSuccess: { _ in })
+            .subscribe(onSuccess: { [weak self] alarm in
+                self?.alarm[index] = alarm
+            })
             .disposed(by: disposeBag)
     }
     
@@ -92,7 +94,7 @@ extension AlarmReactor {
         var state = state
         switch mutation {
         case .loadAlarm:
-            state.alarmCellCount = alarmData.count
+            state.alarmCellCount = alarm.count
             
         case let .error(error):
             state.isError = error
@@ -107,19 +109,33 @@ extension AlarmReactor {
     }
     
     func didSelectToggleButton(at indexPath: IndexPath) {
-        var alarm = alarmData[indexPath.row]
+        var alarm = alarm[indexPath.row]
         alarm.isActive = !alarm.isActive
-        update(alarm: alarm)
+        update(alarm: alarm, index: indexPath.row)
+    }
+    
+    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton) {
+        var alarm = alarm[indexPath.row]
+        switch button {
+        case .sunday: alarm.week.sunday = !alarm.week.sunday
+        case .monday: alarm.week.monday = !alarm.week.monday
+        case .tuesday: alarm.week.tuesday = !alarm.week.tuesday
+        case .wednesday: alarm.week.wednesday = !alarm.week.wednesday
+        case .thursday: alarm.week.thursday = !alarm.week.thursday
+        case .friday: alarm.week.friday = !alarm.week.friday
+        case .saturday: alarm.week.saturday = !alarm.week.saturday
+        }
+        update(alarm: alarm, index: indexPath.row)
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        showAlarmDetailViewController(alarmData[indexPath.row])
+        showAlarmDetailViewController(alarm[indexPath.row])
     }
     
     func delete(indexPath: IndexPath) {
-        let alarm = alarmData[indexPath.row]
+        let alarm = alarm[indexPath.row]
         delete(alarm: alarm)
-        alarmData.remove(at: indexPath.row)
+        self.alarm.remove(at: indexPath.row)
     }
 }
 
@@ -133,10 +149,10 @@ extension AlarmReactor {
 // MARK: - AlarmAdapter DataSource
 extension AlarmReactor: AlarmAdapterDataSource {
     func numberOfRowsIn(section: Int) -> Int {
-        return alarmData.count
+        return alarm.count
     }
     
     func cellForRow(at indexPath: IndexPath) -> AlarmModel {
-        return alarmData[indexPath.row]
+        return alarm[indexPath.row]
     }
 }

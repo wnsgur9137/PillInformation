@@ -18,6 +18,7 @@ protocol AlarmAdapterDataSource: AnyObject {
 protocol AlarmAdapterDelegate: AnyObject {
     func didSelectAddButton()
     func didSelectToggleButton(at indexPath: IndexPath)
+    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton)
     func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
     func heightForHeader(in section: Int) -> CGFloat
@@ -25,6 +26,16 @@ protocol AlarmAdapterDelegate: AnyObject {
 }
 
 final class AlarmAdapter: NSObject {
+    enum WeekButton: Int {
+        case sunday
+        case monday
+        case tuesday
+        case wednesday
+        case thursday
+        case friday
+        case saturday
+    }
+    
     private let tableView: UITableView
     private weak var dataSource: AlarmAdapterDataSource?
     private weak var delegate: AlarmAdapterDelegate?
@@ -65,6 +76,26 @@ extension AlarmAdapter: UITableViewDataSource {
                 self?.delegate?.didSelectToggleButton(at: indexPath)
             })
             .disposed(by: cell.disposeBag)
+        
+        let weekButtons: [UIButton] = [
+            cell.weekSelectionView.sundayButton,
+            cell.weekSelectionView.mondayButton,
+            cell.weekSelectionView.tuesdayButton,
+            cell.weekSelectionView.wednesdayButton,
+            cell.weekSelectionView.thursdayButton,
+            cell.weekSelectionView.fridayButton,
+            cell.weekSelectionView.saturdayButton
+        ]
+        
+        weekButtons.enumerated().forEach { index, button in
+            button.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    guard let buttonType = WeekButton(rawValue: index) else { return }
+                    self?.delegate?.didSelectWeekButton(at: indexPath, button: buttonType)
+                    button.isSelected = !button.isSelected
+                })
+                .disposed(by: cell.disposeBag)
+        }
         return cell
     }
     

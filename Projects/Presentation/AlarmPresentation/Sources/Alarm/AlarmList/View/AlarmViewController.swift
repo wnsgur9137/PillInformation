@@ -87,6 +87,10 @@ extension AlarmViewController: AlarmAdapterDelegate {
         reactor?.didSelectToggleButton(at: indexPath)
     }
     
+    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton) {
+        reactor?.didSelectWeekButton(at: indexPath, button: button)
+    }
+    
     func didSelectAddButton() {
         reactor?.didSelectAddButton()
     }
