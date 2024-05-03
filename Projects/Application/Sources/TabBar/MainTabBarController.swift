@@ -125,6 +125,9 @@ public final class MainTabBarController: UITabBarController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        tabBar.isTranslucent = false
+        tabBar.barTintColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         addSubviews()
         setupLayoutConstraints()
     }
@@ -169,7 +172,7 @@ extension MainTabBarController: UITabBarControllerDelegate {
             case is HomeViewController: toIndex = 0
             case is BookmarkViewController: toIndex = 1
             case is SearchViewController: toIndex = 2
-            case is AlarmViewController: toIndex = 3
+            case is AlarmTabBarController: toIndex = 3
             case is MyPageViewController: toIndex = 4
             default: break
             }

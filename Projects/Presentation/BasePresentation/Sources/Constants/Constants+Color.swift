@@ -11,6 +11,7 @@ import UIKit
 extension Constants {
     // MARK: - Color
     public struct Color {
+        public static let clear: UIColor = .clear
         public static let systemBlack: UIColor = .black
         public static let systemWhite: UIColor = .white
         public static let systemLabel: UIColor = .label
@@ -27,5 +28,6 @@ extension Constants {
         public static let googleBlue: UIColor = UIColor(hex: "#4285F4") ?? .systemBlue
         public static let background: UIColor = UIColor(named: "background") ?? UIColor()
         public static let buttonHighlightBlue: UIColor = UIColor(hex: "#0055AA") ?? .systemBlue
+        public static let textFieldBackground: UIColor = UIColor(hex: "#DDDDDD") ?? .lightGray
     }
 }

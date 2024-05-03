@@ -13,6 +13,7 @@ let project: Project = .project(
     product: .staticFramework,
     dependencies: [
         .Project.Infrastructure.Network,
+        .Project.Infrastructure.Notification,
         .Project.Feature.Features
     ]
 )

@@ -7,16 +7,32 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 import KakaoLibraries
+import NotificationInfra
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+        
+        /// Notification
+        NotificationService.initService()
+        NotificationService.requestAuthorization() { auth, error in
+            if let error = error {
+                print("Error: \(error)")
+            }
+        }
+        
+        /// Init KakaoSDK
         if let appConfigurations = Bundle.main.infoDictionary?["AppConfigurations"] as? [String: String],
            let kakaoNativeAppKey = appConfigurations["KAKAO_NATIVE_APP_KEY"] {
             KakaoService.initSDK(appKey: kakaoNativeAppKey)
         }
+        
+        /// IQKeyboardManager
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.resignOnTouchOutside = true
         return true
     }
     

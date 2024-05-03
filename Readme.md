@@ -17,5 +17,7 @@
 |SkeletonView|1.30.4|UILibraries|
 |Kingfisher|7.11.0|UILibraries|
 |DropDown|2.3.13|UILibraries|
+|Tabman|3.2.0|UILibraries|
+|Pageboy|4.2.0|UILibraries|
 |lottie|4.4.1|UILibraries|
 |kakaoSDK|master|KakaoLibraries|

@@ -7,7 +7,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let packageSettings = PackageSettings(
-    productTypes: [:],
+    productTypes: ["IQKeyboardManagerSwift": .framework],
     baseSettings: Settings.settings(
         configurations: [
             .debug(name: .DEV),
@@ -36,6 +36,8 @@ let package = Package(
         .package(url: "https://github.com/airbnb/lottie-ios", from: "4.4.1"),
         .package(url: "https://github.com/realm/realm-swift", branch: "master"),
 //        .package(url: "https://github.com/kakao/kakao-ios-sdk.git", branch: "master"),
-        .package(url: "https://github.com/kakao/kakao-ios-sdk-rx.git", branch: "master")
+        .package(url: "https://github.com/kakao/kakao-ios-sdk-rx.git", branch: "master"),
+        .package(url: "https://github.com/uias/Tabman.git", from: "3.2.0"),
+        .package(url: "https://github.com/hackiftekhar/IQKeyboardManager.git", from: "7.0.0")
     ]
 )

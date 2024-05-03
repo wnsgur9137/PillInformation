@@ -15,6 +15,7 @@ extension Constants {
         public static let magnifyingglass: UIImage = UIImage(systemName: "magnifyingglass") ?? UIImage()
         public static let camera: UIImage = UIImage(systemName: "camera") ?? UIImage()
         public static let pills: UIImage = UIImage(systemName: "pills") ?? UIImage()
+        public static let plus: UIImage = UIImage(systemName: "plus") ?? UIImage()
     }
 }
 

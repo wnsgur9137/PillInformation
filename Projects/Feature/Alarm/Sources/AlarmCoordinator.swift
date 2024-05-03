@@ -12,11 +12,15 @@ import AlarmPresentation
 import BasePresentation
 
 public protocol AlarmCoordinatorDependencies {
+    func makeAlarmTabBarController(viewControllers: [UIViewController]) -> AlarmTabBarController
     func makeAlarmViewController(flowAction: AlarmFlowAction) -> AlarmViewController
+    func makeAlarmDetailViewController(flowAction: AlarmDetailFlowAction, alarmModel: AlarmModel?) -> AlarmDetailViewController
+    func makeTimerViewController(flowAction: TimerFlowAction) -> TimerViewController
+    func makeTimerDetailViewController(flowAction: TimerDetailFlowAction, timerModel: TimerModel?) -> TimerDetailViewController
 }
 
 public protocol AlarmCoordinator: Coordinator {
-    func showAlarmViewController()
+    func showAlarmTabBarController()
 }
 
 public final class DefaultAlarmCoordinator: AlarmCoordinator {
@@ -26,7 +30,9 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
     public var type: CoordinatorType { .alarm }
     
     private let dependencies: AlarmCoordinatorDependencies
-    private weak var alarmViewController: AlarmViewController?
+    private weak var alarmTabBarController: AlarmTabBarController?
+    private weak var alarmDetailViewController: AlarmDetailViewController?
+    private weak var timerDetailViewController: TimerDetailViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: AlarmCoordinatorDependencies) {
@@ -35,13 +41,55 @@ public final class DefaultAlarmCoordinator: AlarmCoordinator {
     }
     
     public func start() {
-        showAlarmViewController()
+        showAlarmTabBarController()
     }
     
-    public func showAlarmViewController() {
-        let flowAction = AlarmFlowAction()
-        let viewController =  dependencies.makeAlarmViewController(flowAction: flowAction)
+    public func showAlarmTabBarController() {
+        let alarmViewController = makeAlarmViewController()
+        let timerViewController = makeTimerViewController()
+        let viewController = dependencies.makeAlarmTabBarController(
+            viewControllers: [
+                alarmViewController,
+                timerViewController
+            ]
+        )
         navigationController?.pushViewController(viewController, animated: false)
-        alarmViewController = viewController
+        alarmTabBarController = viewController
+    }
+    
+    private func makeAlarmViewController() -> AlarmViewController {
+        let flowAction = AlarmFlowAction(
+            showAlarmDetailViewController: makeAlarmDetailViewController
+        )
+        let alarmViewController =  dependencies.makeAlarmViewController(flowAction: flowAction)
+        return alarmViewController
+    }
+    
+    private func makeAlarmDetailViewController(alarmModel: AlarmModel? = nil) {
+        let flowAction = AlarmDetailFlowAction(
+            popViewController: popViewController
+        )
+        let alarmDetailViewController = dependencies.makeAlarmDetailViewController(flowAction: flowAction, alarmModel: alarmModel)
+        navigationController?.pushViewController(alarmDetailViewController, animated: true)
+        self.alarmDetailViewController = alarmDetailViewController
+    }
+    
+    private func makeTimerViewController() -> TimerViewController {
+        let flowAction = TimerFlowAction(
+            showTimerDetailViewController: showTimerDetailViewController
+        )
+        let timerViewController = dependencies.makeTimerViewController(flowAction: flowAction)
+        return timerViewController
+    }
+    
+    private func showTimerDetailViewController(timerModel: TimerModel? = nil) {
+        let flowAction = TimerDetailFlowAction()
+        let viewController = dependencies.makeTimerDetailViewController(flowAction: flowAction, timerModel: timerModel)
+        navigationController?.pushViewController(viewController, animated: true)
+        timerDetailViewController = viewController
+    }
+    
+    private func popViewController(animation: Bool = true) {
+        navigationController?.popViewController(animated: animation)
     }
 }
