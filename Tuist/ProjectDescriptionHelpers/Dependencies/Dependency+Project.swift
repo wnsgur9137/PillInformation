@@ -94,6 +94,7 @@ public extension TargetDependency.Project.Feature.Data {
 // MARK: - Infrastructure
 public extension TargetDependency.Project.Infrastructure {
     static let Network: TargetDependency = .project(layer: .Infrastructure, name: "NetworkInfra")
+    static let Notification: TargetDependency = .project(layer: .Infrastructure, name: "NotificationInfra")
 }
 
 // MARK: - LibraryManager

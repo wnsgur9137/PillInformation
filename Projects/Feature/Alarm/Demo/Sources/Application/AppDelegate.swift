@@ -9,11 +9,22 @@
 import UIKit
 import IQKeyboardManagerSwift
 
+import NotificationInfra
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+        
+        NotificationService.initService()
+        NotificationService.requestAuthorization() { auth, error in
+            if let error = error {
+                print("Error: \(error)")
+            }
+        }
+        
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
+        
         return true
     }
     

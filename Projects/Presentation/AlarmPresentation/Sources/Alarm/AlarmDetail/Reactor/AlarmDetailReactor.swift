@@ -11,6 +11,8 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import NotificationInfra
+
 public struct AlarmDetailFlowAction {
     let popViewController: (Bool) -> Void
     
