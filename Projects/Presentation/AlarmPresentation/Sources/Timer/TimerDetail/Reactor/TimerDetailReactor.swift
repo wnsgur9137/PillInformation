@@ -11,6 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
 import ReactiveLibraries
 import NotificationInfra
 
@@ -62,7 +63,7 @@ public final class TimerDetailReactor: Reactor {
         let endDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: targetDate)
         let id = NotificationIdentifier.timer(id: timerModel.id)
         NotificationService.addTriggerNotification(id: id,
-                                                   title: "타이머가 종료되었어요!",
+                                                   title: Constants.TimerViewController.notificationTitle,
                                                    body: timerModel.title ?? "",
                                                    date: endDate,
                                                    repeats: true) { [weak self] error in

@@ -31,11 +31,13 @@ extension Constants.AlarmViewController {
     static let saveErrorTitle = "알람 등록에 실패했습니다."
     static let tryAgain = "다시 시도해주세요."
     static let confirm = "확인"
+    static let notificationTitle = "알람시간이에요!"
 }
 
 extension Constants.TimerViewController {
     static let timer = "타이머"
     static let recentTimer = "이전 타이머 기록"
+    static let notificationTitle = "타이머가 종료되었어요!"
 }
 
 extension Constants.TimerDetailViewController {

@@ -11,6 +11,9 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
+import NotificationInfra
+
 public struct AlarmFlowAction {
     let showAlarmDetailViewController: (AlarmModel?) -> Void
     
@@ -38,7 +41,7 @@ public final class AlarmReactor: Reactor {
     private let useCase: AlarmUseCase
     private let flowAction: AlarmFlowAction
     private let disposeBag = DisposeBag()
-    private var alarm: [AlarmModel] = []
+    private var alarms: [AlarmModel] = []
     
     public init(with useCase: AlarmUseCase,
                 flowAction: AlarmFlowAction) {
@@ -49,12 +52,41 @@ public final class AlarmReactor: Reactor {
             .disposed(by: self.disposeBag)
     }
     
+    private func addNotification(alarm: AlarmModel, index: Int) {
+        let id = NotificationIdentifier.alarm(id: alarm.id)
+        let targetDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarm.alarmTime)
+        NotificationService.addTriggerNotification(id: id,
+                                                   title: Constants.AlarmViewController.notificationTitle,
+                                                   body: alarm.title ?? "",
+                                                   date: targetDate,
+                                                   repeats: true) { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error: \(error)")
+            }
+            self.deleteNotification(id: alarm.id)
+            DispatchQueue.main.async {
+                self.useCase.update(alarm)
+                    .subscribe(onSuccess: { [weak self] alarm in
+                        self?.alarms[index] = alarm
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func deleteNotification(id: Int) {
+        let id = NotificationIdentifier.alarm(id: id)
+        NotificationService.deletePendingNotification(id: id)
+        NotificationService.deleteDeliveredNotification(id: id)
+    }
+    
     private func loadAlarm() -> Observable<Mutation> {
         return .create() { [weak self] observable in
             guard let self = self else { return Disposables.create() }
             self.useCase.executeAll()
                 .subscribe(onSuccess: { [weak self] alarms in
-                    self?.alarm = alarms
+                    self?.alarms = alarms
                     observable.onNext(.loadAlarm)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
@@ -68,7 +100,7 @@ public final class AlarmReactor: Reactor {
     private func update(alarm: AlarmModel, index: Int) {
         self.useCase.update(alarm)
             .subscribe(onSuccess: { [weak self] alarm in
-                self?.alarm[index] = alarm
+                self?.alarms[index] = alarm
             })
             .disposed(by: disposeBag)
     }
@@ -94,7 +126,7 @@ extension AlarmReactor {
         var state = state
         switch mutation {
         case .loadAlarm:
-            state.alarmCellCount = alarm.count
+            state.alarmCellCount = alarms.count
             
         case let .error(error):
             state.isError = error
@@ -109,13 +141,14 @@ extension AlarmReactor {
     }
     
     func didSelectToggleButton(at indexPath: IndexPath) {
-        var alarm = alarm[indexPath.row]
+        var alarm = alarms[indexPath.row]
         alarm.isActive = !alarm.isActive
+        alarm.isActive ? addNotification(alarm: alarm, index: indexPath.row) : deleteNotification(id: alarm.id)
         update(alarm: alarm, index: indexPath.row)
     }
     
     func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton) {
-        var alarm = alarm[indexPath.row]
+        var alarm = alarms[indexPath.row]
         switch button {
         case .sunday: alarm.week.sunday = !alarm.week.sunday
         case .monday: alarm.week.monday = !alarm.week.monday
@@ -129,13 +162,13 @@ extension AlarmReactor {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        showAlarmDetailViewController(alarm[indexPath.row])
+        showAlarmDetailViewController(alarms[indexPath.row])
     }
     
     func delete(indexPath: IndexPath) {
-        let alarm = alarm[indexPath.row]
+        let alarm = alarms[indexPath.row]
         delete(alarm: alarm)
-        self.alarm.remove(at: indexPath.row)
+        self.alarms.remove(at: indexPath.row)
     }
 }
 
@@ -149,10 +182,10 @@ extension AlarmReactor {
 // MARK: - AlarmAdapter DataSource
 extension AlarmReactor: AlarmAdapterDataSource {
     func numberOfRowsIn(section: Int) -> Int {
-        return alarm.count
+        return alarms.count
     }
     
     func cellForRow(at indexPath: IndexPath) -> AlarmModel {
-        return alarm[indexPath.row]
+        return alarms[indexPath.row]
     }
 }

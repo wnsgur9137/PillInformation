@@ -11,6 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
 import NotificationInfra
 
 public struct AlarmDetailFlowAction {
@@ -78,6 +79,35 @@ public final class AlarmDetailReactor: Reactor {
         if let alarmData = self.alarm {
             self.week = alarmData.week
         }
+    }
+    
+    private func addNotification(alarm: AlarmModel) {
+        let id = NotificationIdentifier.alarm(id: alarm.id)
+        let targetDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarm.alarmTime)
+        NotificationService.addTriggerNotification(id: id,
+                                                   title: Constants.AlarmViewController.notificationTitle,
+                                                   body: alarm.title ?? "",
+                                                   date: targetDate,
+                                                   repeats: true) { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error: \(error)")
+            }
+            self.deleteNotification(id: alarm.id)
+            DispatchQueue.main.async {
+                self.useCase.update(alarm)
+                    .subscribe(onSuccess: { [weak self] alarm in
+                        self?.alarm = alarm
+                    })
+                    .disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func deleteNotification(id: Int) {
+        let id = NotificationIdentifier.alarm(id: id)
+        NotificationService.deletePendingNotification(id: id)
+        NotificationService.deleteDeliveredNotification(id: id)
     }
     
     private func makeAlarmModel(_ alarmData: AlarmData) -> Single<AlarmModel> {
