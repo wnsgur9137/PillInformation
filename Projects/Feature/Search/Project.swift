@@ -15,5 +15,6 @@ let project: Project = .project(
         .Project.Feature.Data.Search,
         .Project.Feature.Domain.Search,
         .Project.Feature.Presentation.Search
-    ]
+    ],
+    hasDemoApp: true
 )
