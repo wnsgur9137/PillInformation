@@ -52,11 +52,20 @@ public final class SearchReactor: Reactor {
         self.flowAction = flowAction
     }
     
-    private func loadPillList(keyword: String) -> Observable<PillInfoListModel> {
-        return searchUseCase.executePill(keyword: keyword)
-            .asObservable()
+    private func loadPills(keyword: String) -> Observable<Mutation> {
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.searchUseCase.executePill(keyword: keyword)
+                .subscribe(onSuccess: { pills in
+                    observable.onNext(.loadPill(pills))
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
-    
     
     /// 에러 핸들링
     /// - Parameter error: Error 타입
@@ -88,10 +97,7 @@ extension SearchReactor {
                   !keyword.isEmpty else {
                 return .just(.error(SearchViewError.emptyKeyword))
             }
-            return loadPillList(keyword: keyword)
-                .flatMap { pillList -> Observable<Mutation> in
-                    return .just(.loadPill(pillList))
-                }
+            return loadPills(keyword: keyword)
         }
     }
     

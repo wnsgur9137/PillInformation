@@ -53,32 +53,44 @@ public final class AlarmReactor: Reactor {
     }
     
     private func addNotification(alarm: AlarmModel, index: Int) {
-        let id = NotificationIdentifier.alarm(id: alarm.id)
-        let targetDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarm.alarmTime)
-        NotificationService.addTriggerNotification(id: id,
-                                                   title: Constants.AlarmViewController.notificationTitle,
-                                                   body: alarm.title ?? "",
-                                                   date: targetDate,
-                                                   repeats: true) { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error: \(error)")
-            }
-            self.deleteNotification(id: alarm.id)
-            DispatchQueue.main.async {
-                self.useCase.update(alarm)
-                    .subscribe(onSuccess: { [weak self] alarm in
-                        self?.alarms[index] = alarm
-                    })
-                    .disposed(by: self.disposeBag)
+        let days = [alarm.week.sunday, alarm.week.monday, alarm.week.tuesday, alarm.week.wednesday, alarm.week.thursday, alarm.week.friday, alarm.week.saturday]
+        
+        for (index, day) in days.enumerated() {
+            guard day == true else { return }
+            let weekday = index + 1
+            let id = NotificationIdentifier.alarm(id: alarm.id, day: weekday)
+            var targetDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarm.alarmTime)
+            targetDate.weekday = weekday
+            NotificationService.addTriggerNotification(id: id,
+                                                       title: Constants.AlarmViewController.notificationTitle,
+                                                       body: alarm.title ?? "",
+                                                       date: targetDate,
+                                                       repeats: true) { [weak self] error in
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error: \(error)")
+                }
+                self.deleteNotification(id: alarm.id)
+                DispatchQueue.main.async {
+                    self.useCase.update(alarm)
+                        .subscribe(onSuccess: { [weak self] alarm in
+                            self?.alarms[index] = alarm
+                        })
+                        .disposed(by: self.disposeBag)
+                }
             }
         }
     }
     
     private func deleteNotification(id: Int) {
-        let id = NotificationIdentifier.alarm(id: id)
-        NotificationService.deletePendingNotification(id: id)
-        NotificationService.deleteDeliveredNotification(id: id)
+        var ids: [String] = []
+        for index in 1...7 {
+            ids.append(NotificationIdentifier.alarm(id: id, day: index))
+        }
+        ids.forEach { id in
+            NotificationService.deletePendingNotification(id: id)
+            NotificationService.deleteDeliveredNotification(id: id)
+        }
     }
     
     private func loadAlarm() -> Observable<Mutation> {
