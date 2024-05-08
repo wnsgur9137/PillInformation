@@ -18,8 +18,12 @@ import BasePresentation
 
 public final class SearchResultViewController: UIViewController, View {
     
-    private let navigationView = NavigationView(useTextField: true)
-    private let keyboardBackgroundView = UIView()
+    private let searchTextFieldView = SearchTextFieldView()
+    private let searchResultEmptyView: SearchResultEmptyView = {
+        let view = SearchResultEmptyView()
+        view.isHidden = true
+        return view
+    }()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,8 +33,13 @@ public final class SearchResultViewController: UIViewController, View {
     
     private let footerView = FooterView()
     
+    // MARK: - Properties
+    
     public var disposeBag = DisposeBag()
     private var adapter: SearchResultAdapter?
+    
+    private let searchRelay: PublishRelay<String?> = .init()
+    
     
     // MARK: - LifeCycle
     public static func create(with reactor: SearchResultReactor) -> SearchResultViewController {
@@ -44,11 +53,17 @@ public final class SearchResultViewController: UIViewController, View {
         view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
-                                               dataSource: reactor,
-                                               deleagte: self)
+                                               textField: searchTextFieldView.searchTextField,
+                                               collectionViewDataSource: reactor,
+                                               collectionViewDelegate: self,
+                                               textFieldDelegate: self)
         }
-        setupKeyboard()
-        setupLayout()
+        addSubviews()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -62,66 +77,90 @@ public final class SearchResultViewController: UIViewController, View {
     }
 }
 
-// MARK: - Methods
-extension SearchResultViewController {
-    private func setupKeyboard() {
-        keyboardBackgroundView.rx.tapGesture()
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.view.endEditing(true)
-            })
-            .disposed(by: disposeBag)
-        
-        rx.showKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = false
-            })
-            .disposed(by: disposeBag)
-        
-        rx.hideKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = true
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: - Binding
 extension SearchResultViewController {
     private func bindAction(_ reactor: SearchResultReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        searchRelay
+            .map { text in
+                Reactor.Action.search(text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchResultReactor) {
+        reactor.pulse(\.$reloadData)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] _ in
+                self?.searchResultEmptyView.isHidden = true
+                self?.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$isEmpty)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler())
+            .subscribe(onNext: { [weak self] _ in
+                self?.searchResultEmptyView.isHidden = false
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$error)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler())
+            .subscribe(onNext: { _ in
+                
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - SearchResultAdapter CollectionViewDelegate
+extension SearchResultViewController: SearchResultCollectionViewDelegate {
+    public func didSelectItem(at indexPath: IndexPath) {
         
     }
 }
 
-// MARK: - SearchResultAdapter Delegate
-extension SearchResultViewController: SearchResultAdapterDelegate {
-    
+// MARK: - SearchResultAdapter TextFieldDelegate
+extension SearchResultViewController: SearchResultTextFieldDelegate {
+    public func shouldReturn(text: String?) {
+        searchRelay.accept(text)
+    }
 }
 
 // MARK: - Layout
 extension SearchResultViewController {
-    private func setupLayout() {
+    private func addSubviews() {
         view.addSubview(collectionView)
-        view.addSubview(keyboardBackgroundView)
-        view.addSubview(navigationView)
-        
-        collectionView.flex.define { collectionView in
-            
-        }
+        view.addSubview(searchTextFieldView)
+        view.addSubview(searchResultEmptyView)
     }
     
     private func setupSubviewLayout() {
-        keyboardBackgroundView.pin.all()
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        collectionView.pin.all()
+        searchTextFieldView.pin
+            .left(24.0)
+            .right(24.0)
+            .height(48.0)
+            .top(view.safeAreaInsets.top)
+        searchTextFieldView.flex.layout()
+        
+        collectionView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom()
         collectionView.flex.layout()
+        
+        searchResultEmptyView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom(view.safeAreaInsets.bottom)
+        searchResultEmptyView.flex.layout()
     }
     
     private func updateSubviewLayout() {

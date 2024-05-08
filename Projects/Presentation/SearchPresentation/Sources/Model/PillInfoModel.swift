@@ -8,16 +8,6 @@
 
 import Foundation
 
-public struct PillInfoListModel {
-    let resultCount: Int
-    let medicineItem: [PillInfoModel]
-    
-    public init(resultCount: Int, medicineItem: [PillInfoModel]) {
-        self.resultCount = resultCount
-        self.medicineItem = medicineItem
-    }
-}
-
 public struct PillInfoModel {
     let medicineSeq: String
     let medicineName: String

@@ -106,7 +106,20 @@ extension Project {
             infoPlist: .extendingDefault(with: defaultInfoPlist),
             sources: ["Demo/**"],
             resources: ["Demo/Resources/**"],
-            dependencies: [.target(name: name)]
+            dependencies: [.target(name: name)],
+            settings: .settings(
+                base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+                configurations: [
+                    .debug(
+                        name: .DEV,
+                        xcconfig: .XCConfig.app(.DEV)
+                    ),
+                    .release(
+                        name: .PROD,
+                        xcconfig: .XCConfig.app(.PROD)
+                    )
+                ]
+            )
         )
         
         let testTargetDependencies: [TargetDependency] = hasDemoApp ? [.target(name: "\(name)DemoApp")] : [.target(name: "\(name)")]

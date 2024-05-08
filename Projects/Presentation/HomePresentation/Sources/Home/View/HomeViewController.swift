@@ -92,7 +92,7 @@ extension HomeViewController {
         searchTextFieldView.searchTextField.rx.tapGesture()
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.reactor?.changeTab(index: 1)
+                self?.reactor?.changeTab(index: 2)
             })
             .disposed(by: disposeBag)
     }

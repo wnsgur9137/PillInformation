@@ -8,42 +8,53 @@
 
 import UIKit
 
-public protocol SearchAdapterDataSource: AnyObject {
+public protocol SearchCollectionViewDataSource: AnyObject {
     func numberOfItemsIn(section: Int) -> Int
     func cellForItem(at indexPath: IndexPath) -> String
 }
 
-public protocol SearchAdapterDelegate: AnyObject {
+public protocol SearchCollectionViewDelegate: AnyObject {
     
+}
+
+public protocol SearchTextFieldDelegate: AnyObject {
+    func shouldReturn(text: String?)
 }
 
 public final class SearchAdapter: NSObject {
     private let collectionView: UICollectionView
-    private weak var dataSource: SearchAdapterDataSource?
-    private weak var delegate: SearchAdapterDelegate?
+    private let textField: UITextField
+    private weak var collectionViewDataSource: SearchCollectionViewDataSource?
+    private weak var collectionViewDelegate: SearchCollectionViewDelegate?
+    private weak var textFieldDelegate: SearchTextFieldDelegate?
     
     init(collectionView: UICollectionView,
-         dataSource: SearchAdapterDataSource,
-         delegate: SearchAdapterDelegate) {
+         textField: UITextField,
+         collectionViewDataSource: SearchCollectionViewDataSource,
+         collectionViewDelegate: SearchCollectionViewDelegate,
+         textFieldDelegate: SearchTextFieldDelegate) {
         collectionView.register(SearchRecentCollectionViewCell.self, forCellWithReuseIdentifier: SearchRecentCollectionViewCell.identifier)
         self.collectionView = collectionView
-        self.dataSource = dataSource
-        self.delegate = delegate
+        self.textField = textField
+        self.collectionViewDataSource = collectionViewDataSource
+        self.collectionViewDelegate = collectionViewDelegate
+        self.textFieldDelegate = textFieldDelegate
         super.init()
         collectionView.dataSource = self
         collectionView.delegate = self
+        textField.delegate = self
     }
 }
 
 // MARK: - UICollectionView DataSource
 extension SearchAdapter: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource?.numberOfItemsIn(section: section) ?? 0
+        return collectionViewDataSource?.numberOfItemsIn(section: section) ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchRecentCollectionViewCell.identifier, for: indexPath) as? SearchRecentCollectionViewCell else { return .init() }
-        guard let text = dataSource?.cellForItem(at: indexPath) else { return cell }
+        guard let text = collectionViewDataSource?.cellForItem(at: indexPath) else { return cell }
         cell.configure(text: text)
         return cell
     }
@@ -52,4 +63,12 @@ extension SearchAdapter: UICollectionViewDataSource {
 // MARK: - UICollectionView Delegate
 extension SearchAdapter: UICollectionViewDelegate {
     
+}
+
+// MARK: - UITextField Delegate
+extension SearchAdapter: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textFieldDelegate?.shouldReturn(text: textField.text)
+        return true
+    }
 }

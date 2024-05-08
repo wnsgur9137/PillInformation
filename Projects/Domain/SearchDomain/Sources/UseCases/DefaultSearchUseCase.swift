@@ -21,7 +21,7 @@ public final class DefaultSearchUseCase: SearchUseCase {
 }
 
 extension DefaultSearchUseCase {
-    public func executePill(keyword: String) -> Single<PillInfoListModel> {
-        return searchRepository.executePill(keyword: keyword).map { $0.toModel() }
+    public func executePill(keyword: String) -> Single<[PillInfoModel]> {
+        return searchRepository.executePill(keyword: keyword).map { $0.map { $0.toModel() } }
     }
 }

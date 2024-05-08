@@ -11,7 +11,7 @@ import Moya
 
 public enum PillTargetType {
     case getPillList(name: String)
-    case getPillShapeList(shape: String, color: String, line: String)
+    case getPillShapeList(shape: String, color: String, line: String, code: String)
     case getPillInfo(name: String)
 }
 
@@ -22,9 +22,9 @@ extension PillTargetType: MoyaErrorHandleable {
     
     public var path: String {
         switch self {
-        case .getPillList: return "/getMedicineListName"
-        case .getPillShapeList: return "/getMedicineListShape/"
-        case .getPillInfo: return "/getMedicineInfo/"
+        case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
+        case .getPillShapeList: return "/pill/getPillsWithShape"
+        case let .getPillInfo(name): return "/pill/infoWithName/\(name)"
         }
     }
     
@@ -43,16 +43,17 @@ extension PillTargetType: MoyaErrorHandleable {
     
     public var parameters: [String: Any]? {
         switch self {
-        case let .getPillList(name):
-            return ["medicineName": name]
+        case .getPillList:
+            return nil
             
-        case let .getPillShapeList(shape, color, line):
-            return ["medicineShape": shape,
-                    "medicineColor": color,
-                    "medicineLine": line]
+        case let .getPillShapeList(shape, color, line, code):
+            return ["shape": shape,
+                    "color": color,
+                    "line": line,
+                    "code": code]
             
-        case let .getPillInfo(name):
-            return ["medicineName": name]
+        case .getPillInfo:
+            return nil
         }
     }
     

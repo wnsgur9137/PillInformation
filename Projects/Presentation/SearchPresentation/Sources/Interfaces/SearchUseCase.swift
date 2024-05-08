@@ -10,5 +10,5 @@ import Foundation
 import RxSwift
 
 public protocol SearchUseCase {
-    func executePill(keyword: String) -> Single<PillInfoListModel>
+    func executePill(keyword: String) -> Single<[PillInfoModel]>
 }

@@ -10,16 +10,6 @@ import Foundation
 
 import SearchPresentation
 
-public struct PillInfoList {
-    let resultCount: Int
-    let medicineItem: [PillInfo]
-    
-    public init(resultCount: Int, medicineItem: [PillInfo]) {
-        self.resultCount = resultCount
-        self.medicineItem = medicineItem
-    }
-}
-
 public struct PillInfo {
     let medicineSeq: String
     let medicineName: String
@@ -85,12 +75,6 @@ public struct PillInfo {
         self.markCodeBack = markCodeBack
         self.medicineEngName = medicineEngName
         self.ediCode = ediCode
-    }
-}
-
-extension PillInfoList {
-    public func toModel() -> PillInfoListModel {
-        return .init(resultCount: self.resultCount, medicineItem: self.medicineItem.map { $0.toModel() })
     }
 }
 

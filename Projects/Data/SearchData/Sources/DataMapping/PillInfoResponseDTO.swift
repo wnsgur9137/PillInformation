@@ -10,11 +10,6 @@ import Foundation
 
 import SearchDomain
 
-public struct PillInfoListResponseDTO: Decodable {
-    let resultCount: Int
-    let medicineItem: [PillInfoResponseDTO]
-}
-
 public struct PillInfoResponseDTO: Decodable {
     let medicineSeq: String
     let medicineName: String
@@ -47,12 +42,6 @@ public struct PillInfoResponseDTO: Decodable {
     let markCodeBack: String?
     let medicineEngName: String?
     let ediCode: String?
-}
-
-extension PillInfoListResponseDTO {
-    public func toDomain() -> PillInfoList {
-        return .init(resultCount: self.resultCount, medicineItem: self.medicineItem.map { $0.toDomain() })
-    }
 }
 
 extension PillInfoResponseDTO {

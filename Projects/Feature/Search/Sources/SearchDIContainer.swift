@@ -31,16 +31,24 @@ public final class SearchDIContainer {
 
 // MARK: - SearchCoordinatorDependencies
 extension SearchDIContainer: SearchCoordinatorDependencies {
-    public func makeSearchRepository() -> SearchRepository {
+    private func makeSearchRepository() -> SearchRepository {
         return DefaultSearchRepository(networkManager: dependencies.networkManager)
     }
-    public func makeSearchUseCase() -> SearchUseCase {
+    private func makeSearchUseCase() -> SearchUseCase {
         return DefaultSearchUseCase(with: makeSearchRepository())
     }
-    public func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {
-        return SearchReactor(with: makeSearchUseCase(), flowAction: flowAction)
+    
+    private func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {
+        return SearchReactor(flowAction: flowAction)
     }
     public func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController {
         return SearchViewController().create(with: makeSearchReactor(flowAction: flowAction))
+    }
+    
+    private func makeSearchResultReactor(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultReactor {
+        return SearchResultReactor(with: makeSearchUseCase(), keyword: keyword, flowAction: flowAction)
+    }
+    public func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController {
+        return SearchResultViewController.create(with: makeSearchResultReactor(keyword: keyword, flowAction: flowAction))
     }
 }

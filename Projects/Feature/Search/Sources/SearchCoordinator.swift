@@ -13,6 +13,7 @@ import BasePresentation
 
 public protocol SearchCoordinatorDependencies {
     func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController
+    func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController
 }
 
 public protocol SearchCoordinator: Coordinator {
@@ -27,6 +28,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     private let dependencies: SearchCoordinatorDependencies
     private weak var searchViewController: SearchViewController?
+    private weak var searchResultViewController: SearchResultViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: SearchCoordinatorDependencies) {
@@ -39,9 +41,18 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     }
     
     public func showSearchViewController() {
-        let flowAction = SearchFlowAction()
+        let flowAction = SearchFlowAction(
+            showSearchResultViewController: showSearchResultViewController
+        )
         let viewController = dependencies.makeSearchViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         searchViewController = viewController
+    }
+    
+    private func showSearchResultViewController(keyword: String) {
+        let flowAction = SearchResultFlowAction()
+        let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        searchResultViewController = viewController
     }
 }
