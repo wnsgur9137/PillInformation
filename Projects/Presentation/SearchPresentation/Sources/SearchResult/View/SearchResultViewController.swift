@@ -18,7 +18,7 @@ import BasePresentation
 
 public final class SearchResultViewController: UIViewController, View {
     
-    private let searchTextFieldView = SearchTextFieldView()
+    private let searchTextFieldView = SearchTextFieldView(hasDismiss: true)
     private let searchResultEmptyView: SearchResultEmptyView = {
         let view = SearchResultEmptyView()
         view.isHidden = true
@@ -63,7 +63,6 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -82,6 +81,11 @@ extension SearchResultViewController {
     private func bindAction(_ reactor: SearchResultReactor) {
         rx.viewDidLoad
             .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.dismissButton.rx.tap
+            .map { Reactor.Action.dismiss }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         

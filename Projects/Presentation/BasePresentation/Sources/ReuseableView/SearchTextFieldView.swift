@@ -14,6 +14,14 @@ public final class SearchTextFieldView: UIView {
     
     private let rootContainerView = UIView()
     
+    public lazy var dismissButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.NavigationView.Image.backward, for: .normal)
+        button.tintColor = Constants.Color.systemBlue
+        button.setTitleColor(Constants.Color.systemBlue, for: .normal)
+        return button
+    }()
+    
     private let searchIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Image.magnifyingglass
@@ -46,9 +54,9 @@ public final class SearchTextFieldView: UIView {
         return button
     }()
     
-    public init() {
+    public init(hasDismiss: Bool = false) {
         super.init(frame: .zero)
-        setupLayout()
+        setupLayout(hasDismiss)
     }
     
     required init?(coder: NSCoder) {
@@ -63,12 +71,18 @@ public final class SearchTextFieldView: UIView {
 
 // MARK: - Layout
 extension SearchTextFieldView {
-    private func setupLayout() {
+    private func setupLayout(_ hasDismiss: Bool) {
         addSubview(rootContainerView)
         
         rootContainerView.flex
             .direction(.row)
             .define { rootView in
+                if hasDismiss {
+                    rootView.addItem(dismissButton)
+                        .width(36.0)
+                        .height(100%)
+                }
+                
                 rootView.addItem()
                     .backgroundColor(Constants.Color.systemBackground)
                     .cornerRadius(12.0)

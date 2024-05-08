@@ -19,19 +19,22 @@ enum SearchResultError: String, Error {
 }
 
 public struct SearchResultFlowAction {
+    let popViewController: (Bool) -> Void
     
-    public init() {
-        
+    public init(popViewController: @escaping (Bool) -> Void) {
+        self.popViewController = popViewController
     }
 }
 
 public final class SearchResultReactor: Reactor {
     public enum Action {
         case viewDidLoad
+        case dismiss
         case search(String?)
     }
     
     public enum Mutation {
+        case dismiss
         case reloadData
         case error(Error)
     }
@@ -95,6 +98,9 @@ extension SearchResultReactor {
             }
             return loadPills(keyword: keyword)
             
+        case .dismiss:
+            return .just(.dismiss)
+            
         case let .search(keyword):
             if let error = validate(keyword: keyword) {
                 return .just(.error(error))
@@ -106,6 +112,9 @@ extension SearchResultReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
+        case .dismiss:
+            popViewController()
+            
         case .reloadData:
             state.reloadData = Void()
             
@@ -122,7 +131,9 @@ extension SearchResultReactor {
 
 // MARK: - Flow Action
 extension SearchResultReactor {
-    
+    private func popViewController(animated: Bool = true) {
+        flowAction.popViewController(animated)
+    }
 }
 
 // MARK: - SearchResultAdapter DataSource

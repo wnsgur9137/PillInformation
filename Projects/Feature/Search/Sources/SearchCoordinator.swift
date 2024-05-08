@@ -50,9 +50,15 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     }
     
     private func showSearchResultViewController(keyword: String) {
-        let flowAction = SearchResultFlowAction()
+        let flowAction = SearchResultFlowAction(
+            popViewController: popViewController
+        )
         let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         searchResultViewController = viewController
+    }
+    
+    private func popViewController(animated: Bool = true) {
+        navigationController?.popViewController(animated: animated)
     }
 }
