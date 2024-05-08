@@ -9,6 +9,7 @@
 import Foundation
 
 public struct NotificationIdentifier {
-    public static func alarm(id: Int) -> String { return "Alarm-\(id)" }
+//    public static func alarm(id: Int) -> String { return "Alarm-\(id)" }
+    public static func alarm(id: Int, day: Int) -> String { return "Alarm-\(id)-\(day)" }
     public static func timer(id: Int) -> String { return "Timer-\(id)" }
 }
