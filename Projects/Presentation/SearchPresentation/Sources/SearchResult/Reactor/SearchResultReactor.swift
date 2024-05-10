@@ -20,9 +20,12 @@ enum SearchResultError: String, Error {
 
 public struct SearchResultFlowAction {
     let popViewController: (Bool) -> Void
+    let showSearchDetailViewController: (PillInfoModel) -> Void
     
-    public init(popViewController: @escaping (Bool) -> Void) {
+    public init(popViewController: @escaping (Bool) -> Void,
+                showSearchDetailViewController: @escaping (PillInfoModel) -> Void) {
         self.popViewController = popViewController
+        self.showSearchDetailViewController = showSearchDetailViewController
     }
 }
 
@@ -31,15 +34,18 @@ public final class SearchResultReactor: Reactor {
         case viewDidLoad
         case dismiss
         case search(String?)
+        case didSelectItem(IndexPath)
     }
     
     public enum Mutation {
         case dismiss
         case reloadData
         case error(Error)
+        case showSearchDetail(PillInfoModel)
     }
     
     public struct State {
+        var keyword: String?
         @Pulse var reloadData: Void?
         @Pulse var error: Error?
         @Pulse var isEmpty: Void?
@@ -48,7 +54,7 @@ public final class SearchResultReactor: Reactor {
     public var initialState = State()
     public let flowAction: SearchResultFlowAction
     private let searchUseCase: SearchUseCase
-    private let keyword: String
+    private var keyword: String
     private var results: [PillInfoModel] = []
     private let disposeBag = DisposeBag()
     
@@ -84,6 +90,7 @@ public final class SearchResultReactor: Reactor {
         guard keyword.count >= 2 else {
             return SearchResultError.tooShortKeyword
         }
+        self.keyword = keyword
         return nil
     }
 }
@@ -106,6 +113,9 @@ extension SearchResultReactor {
                 return .just(.error(error))
             }
             return loadPills(keyword: keyword ?? "")
+            
+        case let .didSelectItem(indexPath):
+            return .just(.showSearchDetail(results[indexPath.item]))
         }
     }
     
@@ -116,14 +126,20 @@ extension SearchResultReactor {
             popViewController()
             
         case .reloadData:
+            state.keyword = keyword
             state.reloadData = Void()
             
         case let .error(error):
+            state.keyword = keyword
             if case SearchResultError.emptyResult = error {
+                state.reloadData = Void()
                 state.isEmpty = Void()
             } else {
                 state.error = error
             }
+            
+        case let .showSearchDetail(pillInfo):
+            showSearchDetailViewController(pillInfo)
         }
         return state
     }
@@ -133,6 +149,10 @@ extension SearchResultReactor {
 extension SearchResultReactor {
     private func popViewController(animated: Bool = true) {
         flowAction.popViewController(animated)
+    }
+    
+    private func showSearchDetailViewController(_ pillInfo: PillInfoModel) {
+        flowAction.showSearchDetailViewController(pillInfo)
     }
 }
 

@@ -39,6 +39,7 @@ public final class SearchResultViewController: UIViewController, View {
     private var adapter: SearchResultAdapter?
     
     private let searchRelay: PublishRelay<String?> = .init()
+    private let didSelectItemRelay: PublishRelay<IndexPath> = .init()
     
     
     // MARK: - LifeCycle
@@ -95,9 +96,21 @@ extension SearchResultViewController {
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        didSelectItemRelay
+            .map { indexPath in
+                Reactor.Action.didSelectItem(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchResultReactor) {
+        reactor.state
+            .map { $0.keyword }
+            .bind(to: searchTextFieldView.searchTextField.rx.text)
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$reloadData)
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] _ in
@@ -127,7 +140,7 @@ extension SearchResultViewController {
 // MARK: - SearchResultAdapter CollectionViewDelegate
 extension SearchResultViewController: SearchResultCollectionViewDelegate {
     public func didSelectItem(at indexPath: IndexPath) {
-        
+        didSelectItemRelay.accept(indexPath)
     }
 }
 

@@ -58,6 +58,7 @@ extension SearchResultEmptyView {
                     .width(50%)
                     .aspectRatio(1)
                 rootView.addItem(label)
+                    .marginTop(16.0)
         }
     }
     

@@ -16,7 +16,7 @@ public final class SearchTextFieldView: UIView {
     
     public lazy var dismissButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.NavigationView.Image.backward, for: .normal)
+        button.setImage(Constants.Image.backward, for: .normal)
         button.tintColor = Constants.Color.systemBlue
         button.setTitleColor(Constants.Color.systemBlue, for: .normal)
         return button

@@ -14,8 +14,13 @@ extension Constants {
     struct Search {
         struct Image { }
     }
-    
     struct SearchResult {
+        struct Image { }
+    }
+    struct SearchDetail {
+        struct Image { }
+    }
+    struct ImageDetail {
         struct Image { }
     }
 }

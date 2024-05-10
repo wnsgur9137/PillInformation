@@ -14,6 +14,8 @@ import BasePresentation
 public protocol SearchCoordinatorDependencies {
     func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController
     func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController
+    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
+    func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
 }
 
 public protocol SearchCoordinator: Coordinator {
@@ -29,6 +31,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     private let dependencies: SearchCoordinatorDependencies
     private weak var searchViewController: SearchViewController?
     private weak var searchResultViewController: SearchResultViewController?
+    private weak var searchDetailViewController: SearchDetailViewController?
+    private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: SearchCoordinatorDependencies) {
@@ -51,14 +55,44 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     private func showSearchResultViewController(keyword: String) {
         let flowAction = SearchResultFlowAction(
-            popViewController: popViewController
+            popViewController: popViewController,
+            showSearchDetailViewController: showSearchDetailViewController
         )
         let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         searchResultViewController = viewController
     }
     
+    private func showSearchDetailViewController(pillInfo: PillInfoModel) {
+        let flowAction = SearchDetailFlowAction(
+            popViewController: popViewController,
+            showImageDetailViewController: showImageDetailViewController
+        )
+        let viewController = dependencies.makeSearchDetailViewController(pillInfo: pillInfo, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        searchDetailViewController = viewController
+    }
+    
+    private func showImageDetailViewController(pillInfo: (pillName: String, className: String?, imageURL: URL)) {
+        let flowAction = ImageDetailFlowAction(
+            dismiss: dismiss
+        )
+        let viewController = dependencies.makeImageDetailViewController(
+            pillName: pillInfo.pillName,
+            className: pillInfo.className,
+            imageURL: pillInfo.imageURL,
+            flowAction: flowAction
+        )
+        viewController.modalPresentationStyle = .overFullScreen
+        navigationController?.present(viewController, animated: true)
+        imageDetailViewController = viewController
+    }
+    
     private func popViewController(animated: Bool = true) {
         navigationController?.popViewController(animated: animated)
+    }
+    
+    private func dismiss(animated: Bool = true) {
+        navigationController?.dismiss(animated: animated)
     }
 }
