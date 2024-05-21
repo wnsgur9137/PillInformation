@@ -7,7 +7,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let packageSettings = PackageSettings(
-    productTypes: ["IQKeyboardManagerSwift": .framework],
+    productTypes: [
+        "IQKeyboardManagerSwift": .framework,
+        "SkeletonView": .framework
+    ],
     baseSettings: Settings.settings(
         configurations: [
             .debug(name: .DEV),

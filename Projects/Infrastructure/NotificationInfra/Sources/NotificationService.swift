@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RxSwift
 
 /// UNNotificationCenter를 사용하기 위한 Service
 public class NotificationService: NSObject {
