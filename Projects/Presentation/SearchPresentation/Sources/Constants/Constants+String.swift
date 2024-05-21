@@ -22,6 +22,8 @@ extension Constants.SearchResult {
 
 // MARK: - SearchDetail
 extension Constants.SearchDetail {
+    static let copyComplete: String = "복사 완료!"
+    
     static let medicineSeq: String = "품목 일련번호"
     static let medicineName: String = "품목명"
     static let entpSeq: String = "업체 일련번호"

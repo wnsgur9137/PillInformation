@@ -27,16 +27,19 @@ public final class SearchDetailReactor: Reactor {
         case viewDidLoad
         case popViewController
         case didTapImageView
+        case didSelectRow(IndexPath)
     }
     
     public enum Mutation {
         case loadPillInfo(PillInfoModel)
         case popViewController
         case showImageDetailView(URL?)
+        case copyPasteboard(String?)
     }
     
     public struct State {
         @Pulse var pillInfo: PillInfoModel?
+        @Pulse var pasteboardString: String?
     }
     
     public var initialState = State()
@@ -48,6 +51,14 @@ public final class SearchDetailReactor: Reactor {
                 flowAction: SearchDetailFlowAction) {
         self.pillInfo = pillInfo
         self.flowAction = flowAction
+    }
+    
+    private func getInfo(_ indexPath: IndexPath) -> (name: String?, value: String?) {
+        let children = Mirror(reflecting: pillInfo).children
+        let index = children.index(children.startIndex, offsetBy: indexPath.row)
+        let (name, anyValue) = children[index]
+        let value = anyValue as? String
+        return (name: name, value: value)
     }
 }
 
@@ -62,6 +73,9 @@ extension SearchDetailReactor {
         case .didTapImageView:
             let url = URL(string: pillInfo.medicineImage)
             return .just(.showImageDetailView(url))
+        case let .didSelectRow(indexPath):
+            let info = getInfo(indexPath)
+            return .just(.copyPasteboard(info.value))
         }
     }
     
@@ -78,6 +92,8 @@ extension SearchDetailReactor {
                 className: pillInfo.className,
                 imageURL: imageURL
             )
+        case let .copyPasteboard(value):
+            state.pasteboardString = value
         }
         return state
     }
@@ -106,11 +122,7 @@ extension SearchDetailReactor: SearchDetailDataSource {
     }
     
     public func cellForRow(at indexPath: IndexPath) -> (name: String?, value: String?) {
-        let children = Mirror(reflecting: pillInfo).children
-        let index = children.index(children.startIndex, offsetBy: indexPath.row)
-        let (name, anyValue) = children[index]
-        let value = anyValue as? String
-        return (name: name, value: value)
+        return getInfo(indexPath)
     }
 }
 

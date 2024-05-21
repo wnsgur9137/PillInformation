@@ -25,6 +25,7 @@ public final class SearchDetailViewController: UIViewController, View {
     private let navigationView = UIView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private var capsuleView: CapsuleView?
     
     private let dismissButton: UIButton = {
         let button = UIButton()
@@ -63,7 +64,8 @@ public final class SearchDetailViewController: UIViewController, View {
     private let imageHeaderViewHeight: CGFloat = 300.0
     private let footerViewHeight: CGFloat = 300.0
     
-    private let didTapImageHeaderView: PublishRelay<Void> = .init()
+    private let didTapImageHeaderViewSubject: PublishSubject<Void> = .init()
+    private let didSelectRowSubject: PublishSubject<IndexPath> = .init()
     
     // MARK: - LifeCycle
     public static func create(with reactor: SearchDetailReactor) -> SearchDetailViewController {
@@ -100,6 +102,37 @@ public final class SearchDetailViewController: UIViewController, View {
         navigationTitleLabel.text = medicineName
         titleLabel.text = medicineName
     }
+    
+    private func showPasteboardCapsule() {
+        if capsuleView == nil {
+            capsuleView = CapsuleView(Constants.SearchDetail.copyComplete)
+            capsuleView?.translatesAutoresizingMaskIntoConstraints = false
+            guard let capsuleView = capsuleView else { return }
+            view.addSubview(capsuleView)
+            capsuleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            capsuleView.topAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            capsuleView.widthAnchor.constraint(greaterThanOrEqualToConstant: capsuleView.minWidth).isActive = true
+            capsuleView.heightAnchor.constraint(equalToConstant: capsuleView.height).isActive = true
+        }
+        guard let capsuleView = capsuleView else { return }
+        let y = capsuleView.height + 20
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: .curveEaseInOut) {
+            capsuleView.transform = .init(translationX: 0, y: -y)
+        } completion: { _ in
+            // TODO: - 17.0 이상으로 올린 후 capsuleView.imageView.image에 bounce 주기
+            UIView.animate(withDuration: 1,
+                           delay: 0.5,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 1,
+                           options: .curveEaseInOut) {
+                capsuleView.transform = .init(translationX: 0, y: y)
+            }
+        }
+    }
 }
 
 // MARK: - Binding
@@ -115,8 +148,13 @@ extension SearchDetailViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        didTapImageHeaderView
+        didTapImageHeaderViewSubject
             .map { _ in Reactor.Action.didTapImageView }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectRowSubject
+            .map { indexPath in Reactor.Action.didSelectRow(indexPath) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -130,6 +168,15 @@ extension SearchDetailViewController {
                 self?.configure(pillInfo)
             })
             .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$pasteboardString)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { pasteboardString in
+                UIPasteboard.general.string = pasteboardString
+                self.showPasteboardCapsule()
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -137,11 +184,11 @@ extension SearchDetailViewController {
 extension SearchDetailViewController: SearchDetailDelegate {
     public func didSelectSection(at section: Int) {
         guard section == 0 else { return }
-        didTapImageHeaderView.accept(Void())
+        didTapImageHeaderViewSubject.onNext(Void())
     }
     
     public func didSelectRow(at indexPath: IndexPath) {
-        
+        didSelectRowSubject.onNext(indexPath)
     }
     
     public func heightForHeader(in section: Int) -> CGFloat {

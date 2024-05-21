@@ -131,13 +131,13 @@ extension SearchDetailTableViewCell {
     }
     
     private func setupLayoutConstraints() {
-        nameLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        nameLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8.0).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0).isActive = true
+        nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0).isActive = true
         nameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2).isActive = true
         valueLabel.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 16.0).isActive = true
-        valueLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        valueLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        valueLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0).isActive = true
+        valueLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8.0).isActive = true
+        valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0).isActive = true
     }
 }
