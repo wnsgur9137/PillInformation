@@ -158,7 +158,7 @@ extension SearchResultReactor {
 
 // MARK: - SearchResultAdapter DataSource
 extension SearchResultReactor: SearchResultCollectionViewDataSource {
-    public func numberOfItemsIn(section: Int) -> Int {
+    public func numberOfItems(in section: Int) -> Int {
         return results.count
     }
     

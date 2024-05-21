@@ -193,7 +193,7 @@ extension AlarmReactor {
 
 // MARK: - AlarmAdapter DataSource
 extension AlarmReactor: AlarmAdapterDataSource {
-    func numberOfRowsIn(section: Int) -> Int {
+    func numberOfRows(in section: Int) -> Int {
         return alarms.count
     }
     

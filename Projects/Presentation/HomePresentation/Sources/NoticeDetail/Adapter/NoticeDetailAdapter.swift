@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol NoticeDetailAdapterDataSource: AnyObject {
-    func numberOfRowsIn(section: Int) -> Int
+    func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> NoticeModel?
 }
 
@@ -40,7 +40,7 @@ public final class NoticeDetailAdapter: NSObject {
 // MARK: - UITableView DataSource
 extension NoticeDetailAdapter: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return min(3, dataSource?.numberOfRowsIn(section: section) ?? 0)
+        return min(3, dataSource?.numberOfRows(in: section) ?? 0)
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

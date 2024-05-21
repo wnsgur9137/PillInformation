@@ -83,6 +83,37 @@ extension SearchDetailReactor {
     }
 }
 
+// MARK: - SearchDetail DataSource
+extension SearchDetailReactor: SearchDetailDataSource {
+    public func numberOfSection() -> Int {
+        return 2
+    }
+    
+    public func numberOfRows(in section: Int) -> Int {
+        switch section {
+        case 0: return 0
+        case 1: return Mirror(reflecting: pillInfo).children.count
+        default: return 0
+        }
+    }
+    
+    public func viewForHeader(in section: Int) -> URL? {
+        switch section {
+        case 0: return URL(string: pillInfo.medicineImage)
+        case 1: return nil
+        default: return nil
+        }
+    }
+    
+    public func cellForRow(at indexPath: IndexPath) -> (name: String?, value: String?) {
+        let children = Mirror(reflecting: pillInfo).children
+        let index = children.index(children.startIndex, offsetBy: indexPath.row)
+        let (name, anyValue) = children[index]
+        let value = anyValue as? String
+        return (name: name, value: value)
+    }
+}
+
 // MARK: - Flow Action
 extension SearchDetailReactor {
     private func popViewController(animated: Bool = true) {

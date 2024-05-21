@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol AlarmAdapterDataSource: AnyObject {
-    func numberOfRowsIn(section: Int) -> Int
+    func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> AlarmModel
 }
 
@@ -63,7 +63,7 @@ extension AlarmAdapter: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource?.numberOfRowsIn(section: section) ?? 0
+        return dataSource?.numberOfRows(in: section) ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

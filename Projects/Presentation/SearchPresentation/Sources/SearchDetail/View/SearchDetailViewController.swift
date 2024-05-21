@@ -40,14 +40,8 @@ public final class SearchDetailViewController: UIViewController, View {
         label.textColor = Constants.Color.systemLabel
         label.font = Constants.Font.suiteBold(18.0)
         label.numberOfLines = 2
+        label.alpha = 0
         return label
-    }()
-    
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.isUserInteractionEnabled = true
-        return imageView
     }()
     
     private let titleLabel: UILabel = {
@@ -55,9 +49,21 @@ public final class SearchDetailViewController: UIViewController, View {
         return label
     }()
     
+    private let contentTableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.contentInset = .zero
+        return tableView
+    }()
+    
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
+    private var medicineName: String = ""
+    private var adapter: SearchDetailAdapter?
+    private let imageHeaderViewHeight: CGFloat = 300.0
+    private let footerViewHeight: CGFloat = 300.0
+    
+    private let didTapImageHeaderView: PublishRelay<Void> = .init()
     
     // MARK: - LifeCycle
     public static func create(with reactor: SearchDetailReactor) -> SearchDetailViewController {
@@ -69,6 +75,13 @@ public final class SearchDetailViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
+        if let reactor = reactor {
+            adapter = SearchDetailAdapter(
+                tableView: contentTableView,
+                dataSource: reactor,
+                delegate: self
+            )
+        }
         setupLayout()
     }
     
@@ -83,12 +96,9 @@ public final class SearchDetailViewController: UIViewController, View {
     }
     
     private func configure(_ pillInfo: PillInfoModel) {
-        navigationTitleLabel.text = pillInfo.medicineName
-        titleLabel.text = pillInfo.medicineName
-        
-        if let imageURL = URL(string: pillInfo.medicineImage) {
-            imageView.kf.setImage(with: imageURL)
-        }
+        medicineName = pillInfo.medicineName
+        navigationTitleLabel.text = medicineName
+        titleLabel.text = medicineName
     }
 }
 
@@ -105,8 +115,7 @@ extension SearchDetailViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        imageView.rx.tapGesture()
-            .skip(1)
+        didTapImageHeaderView
             .map { _ in Reactor.Action.didTapImageView }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -124,43 +133,62 @@ extension SearchDetailViewController {
     }
 }
 
+// MARK: - SearchDetail Delegate
+extension SearchDetailViewController: SearchDetailDelegate {
+    public func didSelectSection(at section: Int) {
+        guard section == 0 else { return }
+        didTapImageHeaderView.accept(Void())
+    }
+    
+    public func didSelectRow(at indexPath: IndexPath) {
+        
+    }
+    
+    public func heightForHeader(in section: Int) -> CGFloat {
+        switch section {
+        case 0: return imageHeaderViewHeight
+        case 1: return 0
+        default: return 0
+        }
+    }
+    
+    public func heightForFooter(in section: Int) -> CGFloat {
+        return section == 1 ? footerViewHeight : 0
+    }
+    
+    public func scrollViewDidScroll(_ contentOffset: CGPoint) {
+        let isHidden = contentOffset.y <= self.imageHeaderViewHeight - self.view.safeAreaInsets.top
+        UIView.animate(withDuration: 0.5) {
+            self.navigationView.backgroundColor = isHidden ? nil : Constants.Color.background
+            self.navigationTitleLabel.alpha = isHidden ? 0 : 1
+        }
+    }
+}
+
 // MARK: - Layout
 extension SearchDetailViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
         rootContainerView.addSubview(scrollView)
         rootContainerView.addSubview(navigationView)
+        rootContainerView.addSubview(navigationTitleLabel)
+        rootContainerView.addSubview(dismissButton)
         scrollView.addSubview(contentView)
+        contentView.addSubview(contentTableView)
         
-        contentView.flex.backgroundColor(.red.withAlphaComponent(0.2)).define { contentView in
-            contentView.addItem(imageView)
-                .width(100%)
-                .height(300)
-            
-            contentView.addItem().height(800).define { infoView in
-                infoView.addItem(titleLabel)
-                infoView.addItem().height(500) // for test
-            }
-        }
-        
-        navigationView.flex
-            .direction(.row)
-            .define { navigationView in
-                navigationView.addItem(dismissButton)
-                    .width(48.0)
-                    .height(48.0)
-                navigationView.addItem(navigationTitleLabel)
-                    .grow(1)
-                navigationView.addItem()
-                    .width(48.0)
-                    .height(48.0)
+        contentView.flex.define { contentView in
+            contentView.addItem(contentTableView)
         }
     }
     
     private func setupSubviewLayout() {
         rootContainerView.pin.all()
-        navigationView.pin.top(view.safeAreaInsets.top).left(12.0).right(12.0).height(48.0)
-        navigationView.flex.layout()
+        navigationTitleLabel.pin.top(view.safeAreaInsets.top).left().right().height(48.0)
+        dismissButton.pin
+            .centerLeft(to: navigationTitleLabel.anchor.centerLeft).marginLeft(12.0)
+            .width(48.0)
+            .height(48.0)
+        navigationView.pin.top().left().right().bottom(to: navigationTitleLabel.edge.bottom)
         scrollView.pin.top().horizontally().bottom()
         scrollView.flex.layout()
         contentView.pin.top(to: rootContainerView.edge.top).horizontally()
@@ -169,6 +197,7 @@ extension SearchDetailViewController {
     }
     
     private func updateSubviewLayout() {
+        contentTableView.flex.layout()
         contentView.flex.layout(mode: .adjustHeight)
         scrollView.contentSize = contentView.frame.size
     }

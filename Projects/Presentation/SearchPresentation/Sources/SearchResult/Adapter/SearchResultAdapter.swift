@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol SearchResultCollectionViewDataSource: AnyObject {
-    func numberOfItemsIn(section: Int) -> Int
+    func numberOfItems(in: Int) -> Int
     func cellForItem(at indexPath: IndexPath) -> PillInfoModel
 }
 
@@ -50,7 +50,7 @@ public final class SearchResultAdapter: NSObject {
 // MARK: - UICollectionView DataSource
 extension SearchResultAdapter: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionViewDataSource?.numberOfItemsIn(section: section) ?? 0
+        return collectionViewDataSource?.numberOfItems(in: section) ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

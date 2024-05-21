@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 public protocol TimerAdapterDataSource: AnyObject {
-    func numberOfRowsIn(section: Int) -> Int
+    func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> TimerModel?
     func update(_ timerModel: TimerModel)
 }
@@ -20,7 +20,7 @@ public protocol TimerAdapterDelegate: AnyObject {
     func didSelectAddButton()
     func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
-    func heightForHeaderIn(section: Int) -> CGFloat
+    func heightForHeader(in section: Int) -> CGFloat
     func deleteRow(at indexPath: IndexPath)
 }
 
@@ -53,7 +53,7 @@ extension TimerAdapter: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource?.numberOfRowsIn(section: section) ?? 0
+        return dataSource?.numberOfRows(in: section) ?? 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -111,6 +111,6 @@ extension TimerAdapter: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return delegate?.heightForHeaderIn(section: section) ?? 0
+        return delegate?.heightForHeader(in: section) ?? 0
     }
 }

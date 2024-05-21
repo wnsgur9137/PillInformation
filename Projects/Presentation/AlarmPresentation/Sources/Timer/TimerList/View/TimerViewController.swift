@@ -95,7 +95,7 @@ extension TimerViewController: TimerAdapterDelegate {
         return timerTableViewRowHeight
     }
     
-    public func heightForHeaderIn(section: Int) -> CGFloat {
+    public func heightForHeader(in section: Int) -> CGFloat {
         return timerTableViewHeaderHeight
     }
     

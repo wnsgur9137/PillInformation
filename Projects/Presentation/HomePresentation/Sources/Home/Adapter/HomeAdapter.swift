@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol HomeAdapterDataSource: AnyObject {
-    func numberOfRowsIn(section: Int) -> Int
+    func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> NoticeModel?
 }
 
@@ -42,7 +42,7 @@ public final class HomeAdapter: NSObject {
 // MARK: - UITableView DataSource
 extension HomeAdapter: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource?.numberOfRowsIn(section: section) ?? 0
+        return dataSource?.numberOfRows(in: section) ?? 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
