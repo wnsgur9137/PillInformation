@@ -12,7 +12,10 @@ import BasePresentation
 
 // MARK: - Search
 extension Constants.Search {
-    
+    static let alert: String = "알림"
+    static let unknownError: String = "알 수 없는 오류가 발생했습니다."
+    static let tooShortKeywordError: String = "알약명을 두 글자 이상 입력해주세요."
+    static let serverError: String = "서버 오류가 발생했습니다.\n다시 시도해 주세요."
 }
 
 // MARK: - SearchResult

@@ -77,8 +77,9 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     
     func configure(_ info: PillInfoModel) {
         if let url = URL(string: info.medicineImage) {
-            imageView.kf.setImage(with: url)
-            imageView.hideSkeleton()
+            imageView.kf.setImage(with: url) { _ in
+                self.imageView.hideSkeleton()
+            }
         }
         titleLabel.text = info.medicineName
         classLabel.text = info.className

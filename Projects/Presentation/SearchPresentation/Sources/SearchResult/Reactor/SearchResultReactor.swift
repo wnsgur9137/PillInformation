@@ -11,12 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-enum SearchResultError: String, Error {
-    case emptyKeyword
-    case tooShortKeyword
-    case emptyResult
-    case `default`
-}
+import BasePresentation
 
 public struct SearchResultFlowAction {
     let popViewController: (Bool) -> Void
@@ -30,6 +25,8 @@ public struct SearchResultFlowAction {
 }
 
 public final class SearchResultReactor: Reactor {
+    typealias AlertContents = (title: String, message: String?)
+    
     public enum Action {
         case viewDidLoad
         case dismiss
@@ -40,6 +37,7 @@ public final class SearchResultReactor: Reactor {
     public enum Mutation {
         case dismiss
         case reloadData
+        case isEmptyResult
         case error(Error)
         case showSearchDetail(PillInfoModel)
     }
@@ -47,8 +45,8 @@ public final class SearchResultReactor: Reactor {
     public struct State {
         var keyword: String?
         @Pulse var reloadData: Void?
-        @Pulse var error: Error?
         @Pulse var isEmpty: Void?
+        @Pulse var alertContents: AlertContents?
     }
     
     public var initialState = State()
@@ -72,7 +70,7 @@ public final class SearchResultReactor: Reactor {
             self.searchUseCase.executePill(keyword: keyword)
                 .subscribe(onSuccess: { pills in
                     self.results = pills
-                    let mutation: Mutation = pills.count > 0 ? .reloadData : .error(SearchResultError.emptyResult)
+                    let mutation: Mutation = pills.count > 0 ? .reloadData : .isEmptyResult
                     observable.onNext(mutation)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
@@ -85,13 +83,32 @@ public final class SearchResultReactor: Reactor {
     private func validate(keyword: String?) -> Error? {
         guard let keyword = keyword,
               !keyword.isEmpty else {
-            return SearchResultError.emptyKeyword
+            return SearchError.emptyKeyword
         }
         guard keyword.count >= 2 else {
-            return SearchResultError.tooShortKeyword
+            return SearchError.tooShortKeyword
         }
-        self.keyword = keyword
         return nil
+    }
+    
+    private func handle(_ error: Error) -> AlertContents {
+        guard let error = error as? SearchError else {
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.unknownError)
+        }
+        switch error {
+        case .emptyKeyword:
+            fallthrough
+            
+        case .tooShortKeyword:
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.tooShortKeywordError)
+            
+        default:
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.serverError)
+            
+        }
     }
 }
 
@@ -109,6 +126,7 @@ extension SearchResultReactor {
             return .just(.dismiss)
             
         case let .search(keyword):
+            self.keyword = keyword ?? ""
             if let error = validate(keyword: keyword) {
                 return .just(.error(error))
             }
@@ -129,14 +147,13 @@ extension SearchResultReactor {
             state.keyword = keyword
             state.reloadData = Void()
             
+        case .isEmptyResult:
+            state.reloadData = Void()
+            state.isEmpty = Void()
+            
         case let .error(error):
             state.keyword = keyword
-            if case SearchResultError.emptyResult = error {
-                state.reloadData = Void()
-                state.isEmpty = Void()
-            } else {
-                state.error = error
-            }
+            state.alertContents = handle(error)
             
         case let .showSearchDetail(pillInfo):
             showSearchDetailViewController(pillInfo)

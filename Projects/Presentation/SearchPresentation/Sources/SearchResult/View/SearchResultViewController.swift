@@ -76,6 +76,17 @@ public final class SearchResultViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func showAlert(title: String?, message: String?) {
+        let title = AlertText(text: title ?? "")
+        let message = AlertText(text: message ?? "")
+        let confirmButton = AlertButtonInfo(title: Constants.confirm)
+        AlertViewer()
+            .showSingleButtonAlert(self,
+                                   title: title,
+                                   message: message,
+                                   confirmButtonInfo: confirmButton)
+    }
 }
 
 // MARK: - Binding
@@ -122,17 +133,17 @@ extension SearchResultViewController {
         
         reactor.pulse(\.$isEmpty)
             .filter { $0 != nil }
-            .subscribe(on: MainScheduler())
+            .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 self?.searchResultEmptyView.isHidden = false
             })
             .disposed(by: disposeBag)
         
-        reactor.pulse(\.$error)
+        reactor.pulse(\.$alertContents)
             .filter { $0 != nil }
-            .subscribe(on: MainScheduler())
-            .subscribe(onNext: { _ in
-                
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] content in
+                self?.showAlert(title: content?.title, message: content?.message)
             })
             .disposed(by: disposeBag)
     }

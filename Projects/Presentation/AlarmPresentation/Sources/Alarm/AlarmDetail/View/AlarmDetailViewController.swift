@@ -107,7 +107,7 @@ extension AlarmDetailViewController {
     private func showErrorAlert(_ error: Error?) {
         let title = AlertText(text: Constants.AlarmViewController.saveErrorTitle)
         let message = AlertText(text: Constants.AlarmViewController.tryAgain)
-        let confirmButtonInfo = AlertButtonInfo(title: Constants.AlarmViewController.confirm)
+        let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
         AlertViewer()
             .showSingleButtonAlert(
                 self,

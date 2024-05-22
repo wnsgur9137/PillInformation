@@ -102,17 +102,14 @@ extension SearchViewController {
             .map { $0.alertContents }
             .bind(onNext: { contents in
                 guard let contents = contents else { return }
-                let alert = UIAlertController(
-                    title: contents.title,
-                    message: contents.message,
-                    preferredStyle: .alert
-                )
-                let confirm = UIAlertAction(
-                    title: "확인",
-                    style: .default
-                )
-                alert.addAction(confirm)
-                self.present(alert, animated: true)
+                let title = AlertText(text: contents.title)
+                let message = AlertText(text: contents.message ?? "")
+                let confirmButtonInfo = AlertButtonInfo(title: "확인")
+                AlertViewer()
+                    .showSingleButtonAlert(self, 
+                                           title: title,
+                                           message: message,
+                                           confirmButtonInfo: confirmButtonInfo)
             })
             .disposed(by: disposeBag)
     }
