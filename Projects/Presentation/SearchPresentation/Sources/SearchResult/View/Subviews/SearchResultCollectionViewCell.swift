@@ -10,6 +10,7 @@ import UIKit
 import FlexLayout
 import PinLayout
 import Kingfisher
+import SkeletonView
 
 import BasePresentation
 
@@ -19,7 +20,8 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -27,28 +29,28 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
         label.font = Constants.Font.suiteBold(20.0)
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
     
     private let classLabel: UILabel = {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
-        label.font = Constants.Font.suiteRegular(16.0)
-        label.numberOfLines = 0
+        label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()
     
     private let etcOtcLabel: UILabel = {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
-        label.font = Constants.Font.suiteRegular(18.0)
-        label.numberOfLines = 0
+        label.font = Constants.Font.suiteRegular(16.0)
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        layer.addShadow()
+        setupSkeletonable()
         setupLayout()
     }
     
@@ -57,20 +59,38 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         setupSubviewLayout()
     }
     
     override func prepareForReuse() {
+        super.prepareForReuse()
         setupSubviewLayout()
+    }
+    
+    private func setupSkeletonable() {
+        isSkeletonable = true
+        contentView.isSkeletonable = true
+        rootFlexContainerView.isSkeletonable = true
+        imageView.isSkeletonable = true
     }
     
     func configure(_ info: PillInfoModel) {
         if let url = URL(string: info.medicineImage) {
             imageView.kf.setImage(with: url)
+            imageView.hideSkeleton()
         }
         titleLabel.text = info.medicineName
         classLabel.text = info.className
         etcOtcLabel.text = info.etcOtcName
+        titleLabel.flex.markDirty()
+        classLabel.flex.markDirty()
+        etcOtcLabel.flex.markDirty()
+        rootFlexContainerView.flex.layout()
+    }
+    
+    func showSkeletonImageView() {
+        imageView.showAnimatedGradientSkeleton()
     }
 }
 
@@ -83,19 +103,24 @@ extension SearchResultCollectionViewCell {
             .alignItems(.center)
             .direction(.row)
             .cornerRadius(12.0)
-            .border(1.0, Constants.Color.systemLightGray)
-            .padding(12.0)
+            .padding(4.0)
+            .border(0.5, Constants.Color.systemLightGray)
+            .backgroundColor(Constants.Color.systemBackground)
             .define { rootView in
                 rootView.addItem(imageView)
-                    .width(30%)
                     .height(100%)
+                    .aspectRatio(1)
+                    .cornerRadius(12.0)
+                
                 rootView.addItem()
-                    .width(70%)
-                    .height(100%)
-                    .marginLeft(12.0)
+                    .grow(1)
+                    .shrink(1)
+                    .marginLeft(24.0)
+                    .marginRight(18.0)
                     .justifyContent(.center)
                     .define { labelStack in
                         labelStack.addItem(titleLabel)
+                            .width(100%)
                         labelStack.addItem().define {
                             $0.addItem(classLabel)
                             $0.addItem(etcOtcLabel)

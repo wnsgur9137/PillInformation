@@ -56,6 +56,7 @@ extension SearchResultAdapter: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCollectionViewCell.identifier, for: indexPath) as? SearchResultCollectionViewCell else { return .init() }
         guard let data = collectionViewDataSource?.cellForItem(at: indexPath) else { return cell }
+        cell.showAnimatedGradientSkeleton()
         cell.configure(data)
         return cell
     }
@@ -71,7 +72,7 @@ extension SearchResultAdapter: UICollectionViewDelegate {
 // MARK: - UICollectionView DelegateFlowLayout
 extension SearchResultAdapter: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 120)
+        return CGSize(width: collectionView.frame.width, height: 160)
     }
 }
 

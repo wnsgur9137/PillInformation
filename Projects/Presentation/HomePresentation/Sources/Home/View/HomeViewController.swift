@@ -60,7 +60,8 @@ public final class HomeViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
+        rootFlexContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = HomeAdapter(tableView: noticeTableView,
                                   dataSource: reactor,
@@ -143,7 +144,7 @@ extension HomeViewController {
     private func setupLayout() {
         let contentMargin = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 24.0)
         view.addSubview(rootFlexContainerView)
-        rootFlexContainerView.addSubview(searchTextFieldView)
+        view.addSubview(searchTextFieldView)
         rootFlexContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -165,21 +166,16 @@ extension HomeViewController {
     }
     
     private func setupSubviewLayout() {
-        rootFlexContainerView.pin
-            .left().right().bottom().top(view.safeAreaInsets.top)
-        searchTextFieldView.pin
-            .left(24.0)
-            .right(24.0)
-            .height(48.0)
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
         searchTextFieldView.flex.layout()
+        rootFlexContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
         
         scrollView.pin
-            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
         
         contentView.pin.top().horizontally()
-        
         contentView.flex.layout()
         scrollView.contentSize = contentView.frame.size
     }

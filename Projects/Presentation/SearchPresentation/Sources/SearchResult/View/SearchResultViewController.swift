@@ -28,6 +28,7 @@ public final class SearchResultViewController: UIViewController, View {
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = Constants.Color.background
         return collectionView
     }()
     
@@ -51,7 +52,7 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
                                                textField: searchTextFieldView.searchTextField,
@@ -160,11 +161,7 @@ extension SearchResultViewController {
     }
     
     private func setupSubviewLayout() {
-        searchTextFieldView.pin
-            .left(24.0)
-            .right(24.0)
-            .height(48.0)
-            .top(view.safeAreaInsets.top)
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
         searchTextFieldView.flex.layout()
         
         collectionView.pin

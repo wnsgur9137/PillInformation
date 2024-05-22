@@ -55,7 +55,7 @@ public final class SearchTextFieldView: UIView {
     }()
     
     public init(hasDismiss: Bool = false) {
-        super.init(frame: .zero)
+        super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 68.0))
         setupLayout(hasDismiss)
     }
     
@@ -76,6 +76,8 @@ extension SearchTextFieldView {
         
         rootContainerView.flex
             .direction(.row)
+            .backgroundColor(Constants.Color.systemBackground)
+            .padding(10.0, 24.0, 10.0, 24.0)
             .define { rootView in
                 if hasDismiss {
                     rootView.addItem(dismissButton)
@@ -85,6 +87,7 @@ extension SearchTextFieldView {
                 
                 rootView.addItem()
                     .backgroundColor(Constants.Color.systemBackground)
+                    .border(0.5, Constants.Color.systemLightGray)
                     .cornerRadius(12.0)
                     .height(48.0)
                     .grow(1.0)
@@ -114,5 +117,6 @@ extension SearchTextFieldView {
     
     private func setupSubviewLayout() {
         rootContainerView.pin.all()
+        rootContainerView.flex.layout()
     }
 }

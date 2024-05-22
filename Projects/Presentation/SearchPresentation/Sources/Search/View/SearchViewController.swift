@@ -58,7 +58,8 @@ public final class SearchViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
+        rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchAdapter(collectionView: recentCollectionView,
                                          textField: searchTextFieldView.searchTextField,
@@ -132,7 +133,7 @@ extension SearchViewController: SearchTextFieldDelegate {
 extension SearchViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
-        rootContainerView.addSubview(searchTextFieldView)
+        view.addSubview(searchTextFieldView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -149,16 +150,11 @@ extension SearchViewController {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin
-            .left().right().bottom().top(view.safeAreaInsets.top)
-        searchTextFieldView.pin
-            .left(24.0)
-            .right(24.0)
-            .height(48.0)
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
         searchTextFieldView.flex.layout()
-        
+        rootContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
         scrollView.pin
-            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
         
