@@ -53,7 +53,7 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
     }
     
     private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
-        return SearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction)
+        return SearchDetailReactor(with: makeSearchUseCase(), pillInfo: pillInfo, flowAction: flowAction)
     }
     public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController {
         return SearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))

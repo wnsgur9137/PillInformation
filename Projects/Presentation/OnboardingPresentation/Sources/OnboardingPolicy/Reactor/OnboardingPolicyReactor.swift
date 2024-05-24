@@ -121,7 +121,8 @@ public final class OnboardingPolicyReactor: Reactor {
             isAgreeDaytimeNoti: policies.daytimeNotiPolicy,
             isAgreeNighttimeNoti: policies.nighttimeNotiPolicy,
             accessToken: user.accessToken,
-            refreshToken: user.refreshToken
+            refreshToken: user.refreshToken, 
+            social: user.social
         )
         return userUseCase.post(user)
     }

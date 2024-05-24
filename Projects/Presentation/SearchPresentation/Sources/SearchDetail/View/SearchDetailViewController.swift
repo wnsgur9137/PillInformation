@@ -169,6 +169,15 @@ extension SearchDetailViewController {
             })
             .disposed(by: disposeBag)
         
+        reactor.pulse(\.$pillDescription)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { pillDescription in
+                guard let pillDescription = pillDescription else { return }
+                print("🚨pillDescription:\n\(pillDescription)")
+            })
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$pasteboardString)
             .filter { $0 != nil }
             .subscribe(on: MainScheduler.instance)

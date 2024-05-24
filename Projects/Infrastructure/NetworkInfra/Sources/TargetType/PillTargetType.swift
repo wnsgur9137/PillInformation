@@ -12,7 +12,7 @@ import Moya
 public enum PillTargetType {
     case getPillList(name: String)
     case getPillShapeList(shape: String, color: String, line: String, code: String)
-    case getPillInfo(name: String)
+    case getPillDescription(medicineSeq: String)
 }
 
 extension PillTargetType: MoyaErrorHandleable {
@@ -24,7 +24,7 @@ extension PillTargetType: MoyaErrorHandleable {
         switch self {
         case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
         case .getPillShapeList: return "/pill/getPillsWithShape"
-        case let .getPillInfo(name): return "/pill/infoWithName/\(name)"
+        case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
         }
     }
     
@@ -33,7 +33,7 @@ extension PillTargetType: MoyaErrorHandleable {
         // GET
         case .getPillList: return .get
         case .getPillShapeList: return .get
-        case .getPillInfo: return .get
+        case .getPillDescription: return .get
         }
     }
     
@@ -52,7 +52,7 @@ extension PillTargetType: MoyaErrorHandleable {
                     "line": line,
                     "code": code]
             
-        case .getPillInfo:
+        case .getPillDescription:
             return nil
         }
     }
@@ -229,7 +229,7 @@ extension PillTargetType {
                 """.utf8
             )
             
-        case .getPillInfo:
+        case .getPillDescription:
             return Data(
                 """
                 {

@@ -24,4 +24,8 @@ extension DefaultSearchUseCase {
     public func executePill(keyword: String) -> Single<[PillInfoModel]> {
         return searchRepository.executePill(keyword: keyword).map { $0.map { $0.toModel() } }
     }
+    
+    public func executePillDescription(_ medicineSeq: String) -> Single<PillDescriptionModel?> {
+        return searchRepository.executePillDescription(medicineSeq).map { $0?.toModel() }
+    }
 }

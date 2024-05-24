@@ -31,7 +31,7 @@ public final class SearchDetailReactor: Reactor {
     }
     
     public enum Mutation {
-        case loadPillInfo(PillInfoModel)
+        case loadPillInfo(PillInfoModel, PillDescriptionModel?)
         case popViewController
         case showImageDetailView(URL?)
         case copyPasteboard(String?)
@@ -39,16 +39,20 @@ public final class SearchDetailReactor: Reactor {
     
     public struct State {
         @Pulse var pillInfo: PillInfoModel?
+        @Pulse var pillDescription: PillDescriptionModel?
         @Pulse var pasteboardString: String?
     }
     
     public var initialState = State()
+    private let useCase: SearchUseCase
     private let flowAction: SearchDetailFlowAction
     private let disposeBag = DisposeBag()
     private let pillInfo: PillInfoModel
     
-    public init(pillInfo: PillInfoModel,
+    public init(with useCase: SearchUseCase,
+                pillInfo: PillInfoModel,
                 flowAction: SearchDetailFlowAction) {
+        self.useCase = useCase
         self.pillInfo = pillInfo
         self.flowAction = flowAction
     }
@@ -60,14 +64,34 @@ public final class SearchDetailReactor: Reactor {
         let value = anyValue as? String
         return (name: name, value: value)
     }
+    
+    private func loadPillDescription() -> Single<PillDescriptionModel?> {
+        return useCase.executePillDescription(pillInfo.medicineSeq)
+    }
+    
+    private func loadPillDescription() -> Observable<Mutation> {
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.useCase.executePillDescription(self.pillInfo.medicineSeq)
+                .subscribe(onSuccess: { pillDescription in
+                    observable.onNext(.loadPillInfo(self.pillInfo, pillDescription))
+                }, onFailure: { error in
+                    print("error: \(error)")
+                    observable.onNext(.loadPillInfo(self.pillInfo, nil))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
 }
 
 // MARK: - React
 extension SearchDetailReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .viewDidLoad: 
-            return .just(.loadPillInfo(pillInfo))
+        case .viewDidLoad:
+            return loadPillDescription()
         case .popViewController:
             return .just(.popViewController)
         case .didTapImageView:
@@ -82,8 +106,9 @@ extension SearchDetailReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .loadPillInfo(pillInfo):
+        case let .loadPillInfo(pillInfo, pillDescription):
             state.pillInfo = pillInfo
+            state.pillDescription = pillDescription
         case .popViewController:
             popViewController()
         case let .showImageDetailView(imageURL):

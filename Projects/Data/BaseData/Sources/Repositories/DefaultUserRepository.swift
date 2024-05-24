@@ -13,7 +13,7 @@ import NetworkInfra
 
 public protocol UserRepository {
     func getUser(userID: Int) -> Single<UserDTO>
-    func signinUser(identifier: String) -> Single<UserDTO>
+    func signinUser(identifier: String, social: String) -> Single<UserDTO>
     func signinUser(accessToken: String) -> Single<UserDTO>
     func postUser(_ user: UserDTO) -> Single<UserDTO>
     
@@ -61,8 +61,8 @@ extension DefaultUserRepository {
         }
     }
     
-    public func signinUser(identifier: String) -> Single<UserDTO> {
-        let userDTO = networkManager.signin(identifier: identifier)
+    public func signinUser(identifier: String, social: String) -> Single<UserDTO> {
+        let userDTO = networkManager.signin(identifier: identifier, social: social)
         
         return .create() { single in
             userDTO

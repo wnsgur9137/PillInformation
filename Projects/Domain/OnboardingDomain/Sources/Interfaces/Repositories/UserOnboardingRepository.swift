@@ -13,7 +13,7 @@ import BaseDomain
 
 public protocol UserOnboardingRepository {
     func getUser(userID: Int) -> Single<User>
-    func signinUser(identifier: String) -> Single<User>
+    func signinUser(identifier: String, social: String) -> Single<User>
     func signinUser(accessToken: String) -> Single<User>
     func postUser(_ user: User) -> Single<User>
     

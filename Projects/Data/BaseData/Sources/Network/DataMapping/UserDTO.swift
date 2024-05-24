@@ -17,6 +17,7 @@ public struct UserDTO: Decodable {
     public let isAgreeNighttimeNoti: Bool
     public let accessToken: String
     public let refreshToken: String
+    public let social: String
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -27,9 +28,10 @@ public struct UserDTO: Decodable {
         case isAgreeNighttimeNoti = "is_agree_nighttime_noti"
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
+        case social
     }
     
-    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String) {
+    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String, social: String) {
         self.id = id
         self.isAgreeAppPolicy = isAgreeAppPolicy
         self.isAgreeAgePolicy = isAgreeAgePolicy
@@ -38,5 +40,6 @@ public struct UserDTO: Decodable {
         self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        self.social = social
     }
 }

@@ -11,7 +11,7 @@ import Moya
 
 public enum UserTargetType {
     case getUser(token: String)
-    case signup(identifier: String)
+    case signup(identifier: String, social: String)
     case signin(accessToken: String)
     case updateUser(appPolicy: Bool,
                     agePolicy: Bool,
@@ -52,7 +52,7 @@ extension UserTargetType: MoyaErrorHandleable {
         case let .getUser(token):
             return ["token": "\(token)"]
             
-        case let .signup(identifier):
+        case let .signup(identifier, _):
             return ["identifier": "\(identifier)"]
             
         case let .signin(accessToken):
@@ -68,8 +68,8 @@ extension UserTargetType: MoyaErrorHandleable {
         case .getUser:
             return nil
             
-        case .signup:
-            return nil
+        case let .signup(_, social):
+            return ["social": "\(social)"]
             
         case .signin:
             return nil

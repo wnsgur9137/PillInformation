@@ -27,8 +27,8 @@ extension DefaultUserOnboardingRepository {
         return userRepository.getUser(userID: userID).map { $0.toDomain() }
     }
     
-    public func signinUser(identifier: String) -> Single<User> {
-        return userRepository.signinUser(identifier: identifier).map { $0.toDomain() }
+    public func signinUser(identifier: String, social: String) -> Single<User> {
+        return userRepository.signinUser(identifier: identifier, social: social).map { $0.toDomain() }
     }
     
     public func signinUser(accessToken: String) -> Single<User> {

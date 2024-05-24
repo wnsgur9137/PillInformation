@@ -17,4 +17,8 @@ extension NetworkManager {
     public func requestPill(keyword: String) -> Single<[PillInfoResponseDTO]> {
         return requestObject(.getPillList(name: keyword), type: [PillInfoResponseDTO].self)
     }
+    
+    public func requestPillDescription(_ medicineSeq: String) -> Single<PillDescriptionDTO?> {
+        return requestObject(.getPillDescription(medicineSeq: medicineSeq), type: PillDescriptionDTO?.self)
+    }
 }

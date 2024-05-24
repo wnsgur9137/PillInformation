@@ -25,4 +25,8 @@ extension DefaultSearchRepository {
     public func executePill(keyword: String) -> Single<[PillInfo]> {
         return networkManager.requestPill(keyword: keyword).map { $0.map { $0.toDomain() } }
     }
+    
+    public func executePillDescription(_ medicineSeq: String) -> Single<PillDescription?> {
+        return networkManager.requestPillDescription(medicineSeq).map { $0?.toDomain() }
+    }
 }

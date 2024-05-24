@@ -17,8 +17,9 @@ public struct UserModel {
     public let isAgreeNighttimeNoti: Bool
     public let accessToken: String
     public let refreshToken: String
+    public let social: String
     
-    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String) {
+    public init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String, social: String) {
         self.id = id
         self.isAgreeAppPolicy = isAgreeAppPolicy
         self.isAgreeAgePolicy = isAgreeAgePolicy
@@ -27,5 +28,6 @@ public struct UserModel {
         self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        self.social = social
     }
 }
