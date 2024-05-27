@@ -12,7 +12,7 @@ import Moya
 public enum PillTargetType {
     case getPillList(name: String)
     case getPillShapeList(shape: String, color: String, line: String, code: String)
-    case getPillDescription(medicineSeq: String)
+    case getPillDescription(medicineSeq: Int)
 }
 
 extension PillTargetType: MoyaErrorHandleable {

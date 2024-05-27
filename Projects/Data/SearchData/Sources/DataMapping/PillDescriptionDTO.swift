@@ -11,7 +11,7 @@ import Foundation
 import SearchDomain
 
 public struct PillDescriptionDTO: Decodable {
-    let medicineSeq: String
+    let medicineSeq: Int
     let medicineName: String
     let entpName: String
     let efcyQestim: String?

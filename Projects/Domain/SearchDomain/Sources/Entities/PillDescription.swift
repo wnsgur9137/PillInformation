@@ -11,7 +11,7 @@ import Foundation
 import SearchPresentation
 
 public struct PillDescription {
-    let medicineSeq: String
+    let medicineSeq: Int
     let medicineName: String
     let entpName: String
     let efcyQestim: String?
@@ -21,7 +21,7 @@ public struct PillDescription {
     let seQesitm: String?
     let depositMethodQesitm: String?
     
-    public init(medicineSeq: String, medicineName: String, entpName: String, efcyQestim: String?, useMethodQesitm: String?, atpnWarnQesitm: String?, intrcQesitm: String?, seQesitm: String?, depositMethodQesitm: String?) {
+    public init(medicineSeq: Int, medicineName: String, entpName: String, efcyQestim: String?, useMethodQesitm: String?, atpnWarnQesitm: String?, intrcQesitm: String?, seQesitm: String?, depositMethodQesitm: String?) {
         self.medicineSeq = medicineSeq
         self.medicineName = medicineName
         self.entpName = entpName

@@ -11,9 +11,9 @@ import Foundation
 import SearchDomain
 
 public struct PillInfoResponseDTO: Decodable {
-    let medicineSeq: String
+    let medicineSeq: Int
     let medicineName: String
-    let entpSeq: String
+    let entpSeq: Int
     let entpName: String
     let chart: String?
     let medicineImage: String
@@ -24,24 +24,24 @@ public struct PillInfoResponseDTO: Decodable {
     let colorClass2: String?
     let lineFront: String?
     let lineBack: String?
-    let lengLong: String?
-    let lengShort: String?
-    let thick: String?
-    let imgRegistTs: String
-    let classNo: String?
+    let lengLong: Float?
+    let lengShort: Float?
+    let thick: Float?
+    let imgRegistTs: Int
+    let classNo: Int?
     let className: String?
     let etcOtcName: String
-    let medicinePermitDate: String
+    let medicinePermitDate: Int
     let formCodeName: String?
     let markCodeFrontAnal: String?
     let markCodeBackAnal: String?
     let markCodeFrontImg: String?
     let markCodeBackImg: String?
-    let changeDate: String?
+    let changeDate: Int?
     let markCodeFront: String?
     let markCodeBack: String?
     let medicineEngName: String?
-    let ediCode: String?
+    let ediCode: Int?
 }
 
 extension PillInfoResponseDTO {
