@@ -11,6 +11,11 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+public enum PillInfoType {
+    case pillInfo
+    case pillDescription
+}
+
 public struct SearchDetailFlowAction {
     let popViewController: (Bool) -> Void
     let showImageDetailViewController: ((pillName: String, className: String?, imageURL: URL)) -> Void
@@ -31,7 +36,7 @@ public final class SearchDetailReactor: Reactor {
     }
     
     public enum Mutation {
-        case loadPillInfo(PillInfoModel, PillDescriptionModel?)
+        case loadPillInfo(PillInfoModel, Bool)
         case popViewController
         case showImageDetailView(URL?)
         case copyPasteboard(String?)
@@ -39,7 +44,7 @@ public final class SearchDetailReactor: Reactor {
     
     public struct State {
         @Pulse var pillInfo: PillInfoModel?
-        @Pulse var pillDescription: PillDescriptionModel?
+        @Pulse var hasPillDescription: Bool?
         @Pulse var pasteboardString: String?
     }
     
@@ -48,6 +53,7 @@ public final class SearchDetailReactor: Reactor {
     private let flowAction: SearchDetailFlowAction
     private let disposeBag = DisposeBag()
     private let pillInfo: PillInfoModel
+    private var pillDescription: PillDescriptionModel?
     
     public init(with useCase: SearchUseCase,
                 pillInfo: PillInfoModel,
@@ -57,27 +63,34 @@ public final class SearchDetailReactor: Reactor {
         self.flowAction = flowAction
     }
     
-    private func getInfo(_ indexPath: IndexPath) -> (name: String?, value: String?) {
+    private func getPillInfo(_ indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?) {
         let children = Mirror(reflecting: pillInfo).children
         let index = children.index(children.startIndex, offsetBy: indexPath.row)
         let (name, anyValue) = children[index]
         let value = anyValue as? String
-        return (name: name, value: value)
+        return (pillInfoType: .pillInfo, name: name, value: value)
     }
     
-    private func loadPillDescription() -> Single<PillDescriptionModel?> {
-        return useCase.executePillDescription(pillInfo.medicineSeq)
+    private func getPillDescription(_ indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
+        guard let pillDescription = pillDescription else { return nil }
+        let children = Mirror(reflecting: pillDescription).children
+        let index = children.index(children.startIndex, offsetBy: indexPath.row)
+        let (name, anyValue) = children[index]
+        let value = anyValue as? String
+        return (pillInfoType: .pillDescription, name: name, value: value)
     }
     
     private func loadPillDescription() -> Observable<Mutation> {
         return .create() { [weak self] observable in
             guard let self = self else { return Disposables.create() }
             self.useCase.executePillDescription(self.pillInfo.medicineSeq)
-                .subscribe(onSuccess: { pillDescription in
-                    observable.onNext(.loadPillInfo(self.pillInfo, pillDescription))
+                .subscribe(onSuccess: { [weak self] pillDescription in
+                    guard let self = self else { return }
+                    self.pillDescription = pillDescription
+                    observable.onNext(.loadPillInfo(self.pillInfo, true))
                 }, onFailure: { error in
                     print("error: \(error)")
-                    observable.onNext(.loadPillInfo(self.pillInfo, nil))
+                    observable.onNext(.loadPillInfo(self.pillInfo, false))
                 })
                 .disposed(by: self.disposeBag)
             
@@ -98,7 +111,7 @@ extension SearchDetailReactor {
             let url = URL(string: pillInfo.medicineImage)
             return .just(.showImageDetailView(url))
         case let .didSelectRow(indexPath):
-            let info = getInfo(indexPath)
+            let info = getPillInfo(indexPath)
             return .just(.copyPasteboard(info.value))
         }
     }
@@ -106,9 +119,9 @@ extension SearchDetailReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .loadPillInfo(pillInfo, pillDescription):
+        case let .loadPillInfo(pillInfo, hasPillDescription):
             state.pillInfo = pillInfo
-            state.pillDescription = pillDescription
+            state.hasPillDescription = hasPillDescription
         case .popViewController:
             popViewController()
         case let .showImageDetailView(imageURL):
@@ -127,27 +140,46 @@ extension SearchDetailReactor {
 // MARK: - SearchDetail DataSource
 extension SearchDetailReactor: SearchDetailDataSource {
     public func numberOfSection() -> Int {
-        return 2
+        return pillDescription != nil ? 3 : 2
     }
     
     public func numberOfRows(in section: Int) -> Int {
-        switch section {
-        case 0: return 0
-        case 1: return Mirror(reflecting: pillInfo).children.count
-        default: return 0
+        if let pillDescription = pillDescription {
+            switch section {
+            case 0: return 0
+            case 1: return Mirror(reflecting: pillDescription).children.count
+            case 2: return Mirror(reflecting: pillInfo).children.count
+            default: return 0
+            }
+        } else {
+            switch section {
+            case 0: return 0
+            case 1: return Mirror(reflecting: pillInfo).children.count
+            default: return 0
+        }
         }
     }
     
     public func viewForHeader(in section: Int) -> URL? {
-        switch section {
-        case 0: return URL(string: pillInfo.medicineImage)
-        case 1: return nil
-        default: return nil
+        if case 0 = section {
+            return URL(string: pillInfo.medicineImage)
         }
+        return nil
     }
     
-    public func cellForRow(at indexPath: IndexPath) -> (name: String?, value: String?) {
-        return getInfo(indexPath)
+    public func cellForRow(at indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
+        if pillDescription != nil {
+            switch indexPath.section {
+            case 1: return getPillDescription(indexPath)
+            case 2: return getPillInfo(indexPath)
+            default: return nil
+            }
+        }
+        return getPillInfo(indexPath)
+    }
+    
+    public func hasPillDescription() -> Bool {
+        return pillDescription != nil
     }
 }
 

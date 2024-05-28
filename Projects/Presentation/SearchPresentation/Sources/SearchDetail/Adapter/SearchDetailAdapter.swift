@@ -14,7 +14,8 @@ public protocol SearchDetailDataSource: AnyObject {
     func numberOfSection() -> Int
     func numberOfRows(in section: Int) -> Int
     func viewForHeader(in section: Int) -> URL?
-    func cellForRow(at indexPath: IndexPath) -> (name: String?, value: String?)
+    func cellForRow(at indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)?
+    func hasPillDescription() -> Bool
 }
 
 public protocol SearchDetailDelegate: AnyObject {
@@ -72,24 +73,24 @@ extension SearchDetailAdapter: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        switch section {
-        case 0: return makeImageHeaderView(section)
-        case 1: return nil
-        default: return nil
-        }
+        guard section == 0 else { return nil }
+        return makeImageHeaderView(section)
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchDetailTableViewCell.identifier, for: indexPath) as? SearchDetailTableViewCell else { return .init() }
         guard let data = dataSource?.cellForRow(at: indexPath),
               let name = data.name else { return cell }
-        cell.configure(name: name, value: data.value)
+        cell.configure(data.pillInfoType, name: name, value: data.value)
         return cell
     }
     
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard section == 1 else { return nil }
+        if dataSource?.hasPillDescription() ?? false {
+            guard section == 2 else { return nil }
+        } else {
+            guard section == 1 else { return nil }
+        }
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: TableFooterView.identifier) as? TableFooterView
     }
 }
@@ -105,6 +106,11 @@ extension SearchDetailAdapter: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if dataSource?.hasPillDescription() ?? false {
+            guard section == 2 else { return 0 }
+        } else {
+            guard section == 1 else { return 0 }
+        }
         return delegate?.heightForFooter(in: section) ?? 0
     }
     

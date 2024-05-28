@@ -13,37 +13,11 @@ import PinLayout
 import BasePresentation
 
 enum PillInfoModelName: String {
-    case medicineSeq
-    case medicineName
-    case entpSeq
-    case entpName
-    case chart
-    case medicineImage
-    case printFront
-    case printBack
-    case medicineShape
-    case colorClass1
-    case colorClass2
-    case lineFront
-    case lineBack
-    case lengLong
-    case lengShort
-    case thick
-    case imgRegistTs
-    case classNo
-    case className
-    case etcOtcName
-    case medicinePermitDate
-    case formCodeName
-    case markCodeFrontAnal
-    case markCodeBackAnal
-    case markCodeFrontImg
-    case markCodeBackImg
-    case changeDate
-    case markCodeFront
-    case markCodeBack
-    case medicineEngName
-    case ediCode
+    case medicineSeq, medicineName, entpSeq, entpName, chart, medicineImage, printFront, printBack, medicineShape, colorClass1, colorClass2, lineFront, lineBack, lengLong, lengShort, thick, imgRegistTs, classNo, className, etcOtcName, medicinePermitDate, formCodeName, markCodeFrontAnal, markCodeBackAnal, markCodeFrontImg, markCodeBackImg, changeDate, markCodeFront, markCodeBack, medicineEngName, ediCode
+}
+
+enum PillDescriptionName: String {
+    case medicineSeq, medicineName, entpName, efcyQestim, useMethodQesitm, atpnWarnQesitm, intrcQesitm, seQesitm, depositMethodQesitm
 }
 
 final class SearchDetailTableViewCell: UITableViewCell {
@@ -80,9 +54,15 @@ final class SearchDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func localizeName(name: String) -> String? {
-        guard let test = PillInfoModelName(rawValue: name) else { return nil }
-        switch test {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel.text = nil
+        valueLabel.text = nil
+    }
+    
+    private func localizePillInfoName(name: String) -> String? {
+        guard let name = PillInfoModelName(rawValue: name) else { return nil }
+        switch name {
         case .medicineSeq: return Constants.SearchDetail.medicineSeq
         case .medicineName: return Constants.SearchDetail.medicineName
         case .entpSeq: return Constants.SearchDetail.entpSeq
@@ -117,8 +97,27 @@ final class SearchDetailTableViewCell: UITableViewCell {
         }
     }
     
-    func configure(name: String, value: String?) {
-        nameLabel.text = localizeName(name: name)
+    private func localizePillDescriptionName(name: String) -> String? {
+        guard let name = PillDescriptionName(rawValue: name) else { return nil }
+        switch name {
+        case .medicineSeq: return Constants.SearchDetail.medicineSeq
+        case .medicineName: return Constants.SearchDetail.medicineName
+        case .entpName: return Constants.SearchDetail.entpName
+        case .efcyQestim: return Constants.SearchDetail.efcyQestim
+        case .useMethodQesitm: return Constants.SearchDetail.useMethodQesitm
+        case .atpnWarnQesitm: return Constants.SearchDetail.atpnWarnQesitm
+        case .intrcQesitm: return Constants.SearchDetail.intrcQesitm
+        case .seQesitm: return Constants.SearchDetail.seQesitm
+        case .depositMethodQesitm: return Constants.SearchDetail.depositMethodQesitm
+        }
+    }
+    
+    func configure(_ pillInfoType: PillInfoType, name: String, value: String?) {
+        if pillInfoType == .pillDescription {
+            nameLabel.text = localizePillDescriptionName(name: name)
+        } else {
+            nameLabel.text = localizePillInfoName(name: name)
+        }
         valueLabel.text = value
     }
 }

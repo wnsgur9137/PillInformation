@@ -169,12 +169,11 @@ extension SearchDetailViewController {
             })
             .disposed(by: disposeBag)
         
-        reactor.pulse(\.$pillDescription)
+        reactor.pulse(\.$hasPillDescription)
             .filter { $0 != nil }
             .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { pillDescription in
-                guard let pillDescription = pillDescription else { return }
-                print("🚨pillDescription:\n\(pillDescription)")
+            .subscribe(onNext: { _ in
+                self.contentTableView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -201,15 +200,12 @@ extension SearchDetailViewController: SearchDetailDelegate {
     }
     
     public func heightForHeader(in section: Int) -> CGFloat {
-        switch section {
-        case 0: return imageHeaderViewHeight
-        case 1: return 0
-        default: return 0
-        }
+        guard section == 0 else { return 0 }
+        return imageHeaderViewHeight
     }
     
     public func heightForFooter(in section: Int) -> CGFloat {
-        return section == 1 ? footerViewHeight : 0
+        return footerViewHeight
     }
     
     public func scrollViewDidScroll(_ contentOffset: CGPoint) {

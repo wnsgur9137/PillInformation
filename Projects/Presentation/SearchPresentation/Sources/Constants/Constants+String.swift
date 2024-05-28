@@ -58,4 +58,12 @@ extension Constants.SearchDetail {
     static let markCodeBack: String = "마크코드(뒷면)"
     static let medicineEngName: String = "품목영문명"
     static let ediCode: String = "보험코드"
+    
+    static let efcyQestim: String = "효능"
+    static let useMethodQesitm: String = "사용법"
+    static let atpnWarnQesitm: String = "경고"
+    static let atpnQesitm: String = "주의사항"
+    static let intrcQesitm: String = "상호작용"
+    static let seQesitm: String = "부작용"
+    static let depositMethodQesitm: String = "보관법"
 }

@@ -17,17 +17,19 @@ public struct PillDescription {
     let efcyQestim: String?
     let useMethodQesitm: String?
     let atpnWarnQesitm: String?
+    let atpnQesitm: String?
     let intrcQesitm: String?
     let seQesitm: String?
     let depositMethodQesitm: String?
     
-    public init(medicineSeq: Int, medicineName: String, entpName: String, efcyQestim: String?, useMethodQesitm: String?, atpnWarnQesitm: String?, intrcQesitm: String?, seQesitm: String?, depositMethodQesitm: String?) {
+    public init(medicineSeq: Int, medicineName: String, entpName: String, efcyQestim: String?, useMethodQesitm: String?, atpnWarnQesitm: String?, atpnQesitm: String?, intrcQesitm: String?, seQesitm: String?, depositMethodQesitm: String?) {
         self.medicineSeq = medicineSeq
         self.medicineName = medicineName
         self.entpName = entpName
         self.efcyQestim = efcyQestim
         self.useMethodQesitm = useMethodQesitm
         self.atpnWarnQesitm = atpnWarnQesitm
+        self.atpnQesitm = atpnQesitm
         self.intrcQesitm = intrcQesitm
         self.seQesitm = seQesitm
         self.depositMethodQesitm = depositMethodQesitm
