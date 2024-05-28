@@ -52,45 +52,72 @@ public final class SearchDetailReactor: Reactor {
     private let useCase: SearchUseCase
     private let flowAction: SearchDetailFlowAction
     private let disposeBag = DisposeBag()
-    private let pillInfo: PillInfoModel
-    private var pillDescription: PillDescriptionModel?
+    
+    private var pill: PillModel
     
     public init(with useCase: SearchUseCase,
                 pillInfo: PillInfoModel,
                 flowAction: SearchDetailFlowAction) {
+        self.pill = .init(info: pillInfo)
         self.useCase = useCase
-        self.pillInfo = pillInfo
         self.flowAction = flowAction
     }
     
-    private func getPillInfo(_ indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?) {
-        let children = Mirror(reflecting: pillInfo).children
-        let index = children.index(children.startIndex, offsetBy: indexPath.row)
-        let (name, anyValue) = children[index]
-        let value = anyValue as? String
-        return (pillInfoType: .pillInfo, name: name, value: value)
+    private func anyToString(_ anyValue: Any) -> String? {
+        switch anyValue {
+        case let stringValue as String: return stringValue
+        case let intValue as Int: return "\(intValue)"
+        case let floatValue as Float: return "\(floatValue)"
+        default: return nil
+        }
     }
     
-    private func getPillDescription(_ indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
-        guard let pillDescription = pillDescription else { return nil }
-        let children = Mirror(reflecting: pillDescription).children
+    private func getPillInfo(_ indexPath: IndexPath, type: PillInfoType) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
+        var children: Mirror.Children?
+        
+        switch type {
+        case .pillInfo: 
+            children = Mirror(reflecting: pill.info).children
+        case .pillDescription:
+            guard let description = pill.description else { return nil }
+            children = Mirror(reflecting: description).children
+        }
+        
+        guard let children = children else { return nil }
         let index = children.index(children.startIndex, offsetBy: indexPath.row)
         let (name, anyValue) = children[index]
-        let value = anyValue as? String
-        return (pillInfoType: .pillDescription, name: name, value: value)
+        let value = anyToString(anyValue)
+        return (pillInfoType: type, name: name, value: value)
+    }
+    
+    private func getPasteboardValue(indexPath: IndexPath) -> String? {
+        if pill.description != nil {
+            switch indexPath.section {
+            case 1: return getPillInfo(indexPath, type: .pillDescription)?.value
+            case 2: return getPillInfo(indexPath, type: .pillInfo)?.value
+            default: return nil
+            }
+        } else {
+            guard indexPath.section == 1 else { return nil }
+            return getPillInfo(indexPath, type: .pillInfo)?.value
+        }
     }
     
     private func loadPillDescription() -> Observable<Mutation> {
         return .create() { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.useCase.executePillDescription(self.pillInfo.medicineSeq)
+            self.useCase.executePillDescription(self.pill.info.medicineSeq)
                 .subscribe(onSuccess: { [weak self] pillDescription in
                     guard let self = self else { return }
-                    self.pillDescription = pillDescription
-                    observable.onNext(.loadPillInfo(self.pillInfo, true))
+                    guard let pillDescription = pillDescription else {
+                        observable.onNext(.loadPillInfo(self.pill.info, false))
+                        return
+                    }
+                    self.pill.addDescription(pillDescription)
+                    observable.onNext(.loadPillInfo(self.pill.info, true))
                 }, onFailure: { error in
                     print("error: \(error)")
-                    observable.onNext(.loadPillInfo(self.pillInfo, false))
+                    observable.onNext(.loadPillInfo(self.pill.info, false))
                 })
                 .disposed(by: self.disposeBag)
             
@@ -108,11 +135,11 @@ extension SearchDetailReactor {
         case .popViewController:
             return .just(.popViewController)
         case .didTapImageView:
-            let url = URL(string: pillInfo.medicineImage)
+            let url = URL(string: pill.info.medicineImage)
             return .just(.showImageDetailView(url))
         case let .didSelectRow(indexPath):
-            let info = getPillInfo(indexPath)
-            return .just(.copyPasteboard(info.value))
+            let info = getPasteboardValue(indexPath: indexPath)
+            return .just(.copyPasteboard(info))
         }
     }
     
@@ -126,8 +153,8 @@ extension SearchDetailReactor {
             popViewController()
         case let .showImageDetailView(imageURL):
             presentImageDetailViewController(
-                medicineName: pillInfo.medicineName,
-                className: pillInfo.className,
+                medicineName: pill.info.medicineName,
+                className: pill.info.className,
                 imageURL: imageURL
             )
         case let .copyPasteboard(value):
@@ -140,46 +167,39 @@ extension SearchDetailReactor {
 // MARK: - SearchDetail DataSource
 extension SearchDetailReactor: SearchDetailDataSource {
     public func numberOfSection() -> Int {
-        return pillDescription != nil ? 3 : 2
+        return pill.description != nil ? 3 : 2
     }
     
     public func numberOfRows(in section: Int) -> Int {
-        if let pillDescription = pillDescription {
-            switch section {
-            case 0: return 0
-            case 1: return Mirror(reflecting: pillDescription).children.count
-            case 2: return Mirror(reflecting: pillInfo).children.count
-            default: return 0
-            }
+        if let pillDescription = pill.description {
+            if case 1 = section { return Mirror(reflecting: pillDescription).children.count }
+            if case 2 = section { return Mirror(reflecting: pill.info).children.count }
         } else {
-            switch section {
-            case 0: return 0
-            case 1: return Mirror(reflecting: pillInfo).children.count
-            default: return 0
+            if case 1 = section { return Mirror(reflecting: pill.info).children.count }
         }
-        }
+        return 0
     }
     
     public func viewForHeader(in section: Int) -> URL? {
         if case 0 = section {
-            return URL(string: pillInfo.medicineImage)
+            return URL(string: pill.info.medicineImage)
         }
         return nil
     }
     
     public func cellForRow(at indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
-        if pillDescription != nil {
-            switch indexPath.section {
-            case 1: return getPillDescription(indexPath)
-            case 2: return getPillInfo(indexPath)
-            default: return nil
-            }
+        guard pill.description != nil else {
+            return getPillInfo(indexPath, type: .pillInfo)
         }
-        return getPillInfo(indexPath)
+        switch indexPath.section {
+        case 1: return getPillInfo(indexPath, type: .pillDescription)
+        case 2: return getPillInfo(indexPath, type: .pillInfo)
+        default: return nil
+        }
     }
     
     public func hasPillDescription() -> Bool {
-        return pillDescription != nil
+        return pill.description != nil
     }
 }
 

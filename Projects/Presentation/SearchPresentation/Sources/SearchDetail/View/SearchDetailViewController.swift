@@ -209,8 +209,8 @@ extension SearchDetailViewController: SearchDetailDelegate {
     }
     
     public func scrollViewDidScroll(_ contentOffset: CGPoint) {
-        let isHidden = contentOffset.y <= self.imageHeaderViewHeight - self.view.safeAreaInsets.top
-        UIView.animate(withDuration: 0.5) {
+        let isHidden = contentOffset.y <= self.imageHeaderViewHeight - (self.view.safeAreaInsets.top + 30)
+        UIView.animate(withDuration: 0.2) {
             self.navigationView.backgroundColor = isHidden ? nil : Constants.Color.background
             self.navigationTitleLabel.alpha = isHidden ? 0 : 1
         }
