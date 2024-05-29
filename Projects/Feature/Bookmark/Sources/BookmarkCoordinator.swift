@@ -15,6 +15,10 @@ public protocol BookmarkCoordinatorDependencies {
     func makeBookmarkViewController(flowAction: BookmarkFlowAction) -> BookmarkViewController
 }
 
+public protocol BookmarkTabDependencies {
+    func showMyPage()
+}
+
 public protocol BookmarkCoordinator: Coordinator {
     
 }
@@ -26,12 +30,15 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     public var type: CoordinatorType { .bookmark }
     
     private let dependencies: BookmarkCoordinatorDependencies
+    private let tabDependencies: BookmarkTabDependencies
     private weak var bookmarkViewController: BookmarkViewController?
     
     public init(navigationController: UINavigationController,
-                dependencies: BookmarkCoordinatorDependencies) {
+                dependencies: BookmarkCoordinatorDependencies,
+                tabDependencies: BookmarkTabDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        self.tabDependencies = tabDependencies
     }
     
     public func start() {
@@ -39,9 +46,15 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     }
     
     public func showBookmarkViewController() {
-        let flowAction = BookmarkFlowAction()
+        let flowAction = BookmarkFlowAction(
+            showMyPage: showMyPage
+        )
         let viewController = dependencies.makeBookmarkViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         bookmarkViewController = viewController
+    }
+    
+    public func showMyPage() {
+        tabDependencies.showMyPage()
     }
 }

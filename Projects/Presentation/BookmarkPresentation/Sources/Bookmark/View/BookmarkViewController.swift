@@ -82,7 +82,10 @@ extension BookmarkViewController {
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
-        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: BookmarkReactor) {

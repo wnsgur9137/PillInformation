@@ -50,6 +50,8 @@ public final class HomeViewController: UIViewController, View {
     public var disposeBag = DisposeBag()
     private lazy var noticeTableRowHeight: CGFloat = 50.0
     
+    private let didSelectNoticeSubject: PublishSubject<Int> = .init()
+    
     // MARK: - LifeCycle
     
     public static func create(with reactor: HomeReactor) -> HomeViewController {
@@ -67,7 +69,6 @@ public final class HomeViewController: UIViewController, View {
                                   dataSource: reactor,
                                   delegate: self)
         }
-        setupSearchButtons()
         setupLayout()
     }
     
@@ -87,23 +88,27 @@ public final class HomeViewController: UIViewController, View {
     }
 }
 
-// MARK: - Methods
-extension HomeViewController {
-    private func setupSearchButtons() {
-        searchTextFieldView.searchTextField.rx.tapGesture()
-            .skip(1)
-            .subscribe(onNext: { [weak self] _ in
-                self?.reactor?.changeTab(index: 2)
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: - Binding
 extension HomeViewController {
     private func bindAction(_ reactor: HomeReactor) {
-        self.rx.viewDidLoad
+        rx.viewDidLoad
             .map { Reactor.Action.loadNotices }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.searchTextField.rx.tapGesture()
+            .skip(1)
+            .map { _ in Reactor.Action.changeTab(2) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectNoticeSubject
+            .map { row in Reactor.Action.didSelectNotice(row)}
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -131,7 +136,7 @@ extension HomeViewController {
 // MARK: - HomeAdapter Delegate
 extension HomeViewController: HomeAdapterDelegate {
     public func didSelectRow(at indexPath: IndexPath) {
-        reactor?.didSelectNoticeRow(at: indexPath.row)
+        didSelectNoticeSubject.onNext(indexPath.row)
     }
     
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {

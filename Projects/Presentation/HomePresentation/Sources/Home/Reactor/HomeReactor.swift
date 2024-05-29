@@ -14,21 +14,30 @@ import RxCocoa
 public struct HomeFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
     let changeTabIndex: (Int) -> Void
+    let showMyPage: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
-                changeTabIndex: @escaping (Int) -> Void) {
+                changeTabIndex: @escaping (Int) -> Void,
+                showMyPage: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.changeTabIndex = changeTabIndex
+        self.showMyPage = showMyPage
     }
 }
 
 public final class HomeReactor: Reactor {
     public enum Action {
         case loadNotices
+        case changeTab(Int)
+        case didTapUserButton
+        case didSelectNotice(Int)
     }
     
     public enum Mutation {
         case isLoadedNotices
+        case changeTab(Int)
+        case showMyPage
+        case showNoticeDetail(Int)
         case loadError
     }
     
@@ -78,6 +87,12 @@ extension HomeReactor {
         switch action {
         case .loadNotices:
             return loadNotice()
+        case let .changeTab(index):
+            return .just(.changeTab(index))
+        case .didTapUserButton:
+            return .just(.showMyPage)
+        case let .didSelectNotice(row):
+            return .just(.showNoticeDetail(row))
         }
     }
     
@@ -86,6 +101,12 @@ extension HomeReactor {
         switch mutation {
         case .isLoadedNotices:
             state.noticeCount = notices.count
+        case let .changeTab(index):
+            changeTab(index: index)
+        case .showMyPage:
+            showMyPage()
+        case let .showNoticeDetail(row):
+            didSelectNoticeRow(at: row)
         case .loadError:
             state.isFailedLoadNotices = Void()
         }
@@ -95,12 +116,16 @@ extension HomeReactor {
 
 // MARK: - Flow Action
 extension HomeReactor {
-    func didSelectNoticeRow(at index: Int) {
+    private func didSelectNoticeRow(at index: Int) {
         flowAction.showNoticeDetailViewController(self.notices[index])
     }
     
-    func changeTab(index: Int) {
+    private func changeTab(index: Int) {
         flowAction.changeTabIndex(index)
+    }
+    
+    private func showMyPage() {
+        flowAction.showMyPage()
     }
 }
 

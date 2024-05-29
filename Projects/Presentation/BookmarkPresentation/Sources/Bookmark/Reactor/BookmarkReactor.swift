@@ -12,18 +12,20 @@ import RxSwift
 import RxCocoa
 
 public struct BookmarkFlowAction {
-    public init() {
-        
+    let showMyPage: () -> Void
+    
+    public init(showMyPage: @escaping () -> Void) {
+        self.showMyPage = showMyPage
     }
 }
 
 public final class BookmarkReactor: Reactor {
     public enum Action {
-        
+        case didTapUserButton
     }
     
     public enum Mutation {
-        
+        case showMyPage
     }
     
     public struct State {
@@ -43,14 +45,16 @@ public final class BookmarkReactor: Reactor {
 extension BookmarkReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-            
+        case .didTapUserButton:
+            return .just(.showMyPage)
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-            
+        case .showMyPage:
+            showMyPage()
         }
         return state
     }
@@ -69,5 +73,7 @@ extension BookmarkReactor: BookmarkAdapterDataSource {
 
 // MARK: - Flow Action
 extension BookmarkReactor {
-    
+    private func showMyPage() {
+        flowAction.showMyPage()
+    }
 }

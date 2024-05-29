@@ -13,9 +13,15 @@ import RxCocoa
 
 public struct NoticeDetailFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
+    let popViewController: (Bool) -> Void
+    let showMyPage: () -> Void
     
-    public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void) {
+    public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
+                popViewController: @escaping (Bool) -> Void,
+                showMyPage: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
+        self.popViewController = popViewController
+        self.showMyPage = showMyPage
     }
 }
 
@@ -23,10 +29,16 @@ public final class NoticeDetailReactor: Reactor {
     public enum Action {
         case loadNotice
         case loadOtherNotices
+        case popViewController
+        case didTapUserButton
+        case didSelectNotice(Int)
     }
     public enum Mutation {
         case loadNotice(NoticeModel)
         case loadOtherNotices
+        case popViewController
+        case showMyPage
+        case showNoticeDetail(Int)
     }
     public struct State {
         var notice: NoticeModel?
@@ -60,6 +72,7 @@ extension NoticeDetailReactor {
         switch action {
         case .loadNotice:
             return .just(.loadNotice(self.notice))
+            
         case .loadOtherNotices:
             return loadOtherNotices()
                 .flatMap { [weak self] notices -> Observable<Mutation> in
@@ -68,6 +81,15 @@ extension NoticeDetailReactor {
                     self?.otherNotices = Array(filteredNotices.shuffled().prefix(3))
                     return .just(.loadOtherNotices)
                 }
+            
+        case .popViewController:
+            return .just(.popViewController)
+            
+        case .didTapUserButton:
+            return .just(.showMyPage)
+            
+        case let .didSelectNotice(row):
+            return .just(.showNoticeDetail(row))
         }
     }
     
@@ -78,6 +100,12 @@ extension NoticeDetailReactor {
             state.notice = notice
         case .loadOtherNotices:
             state.isLoadedOtherNotices = Void()
+        case .popViewController:
+            popViewController(animated: true)
+        case .showMyPage:
+            showMyPage()
+        case let .showNoticeDetail(row):
+            didSelectNoticeRow(at: row)
         }
         return state
     }
@@ -85,8 +113,16 @@ extension NoticeDetailReactor {
 
 // MARK: - Flow Action
 extension NoticeDetailReactor {
-    func didSelectNoticeRow(at index: Int) {
+    private func didSelectNoticeRow(at index: Int) {
         flowAction.showNoticeDetailViewController(self.otherNotices[index])
+    }
+    
+    private func popViewController(animated: Bool = true) {
+        flowAction.popViewController(animated)
+    }
+    
+    private func showMyPage() {
+        flowAction.showMyPage()
     }
 }
 

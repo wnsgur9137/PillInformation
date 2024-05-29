@@ -95,6 +95,11 @@ extension SearchViewController {
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchReactor) {
