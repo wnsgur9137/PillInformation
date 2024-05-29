@@ -22,7 +22,11 @@ public final class DefaultSearchRepository: SearchRepository {
 }
 
 extension DefaultSearchRepository {
-    public func executePill(keyword: String) -> Single<PillInfoList> {
-        return networkManager.requestPill(keyword: keyword).map { $0.toDomain() }
+    public func executePill(keyword: String) -> Single<[PillInfo]> {
+        return networkManager.requestPill(keyword: keyword).map { $0.map { $0.toDomain() } }
+    }
+    
+    public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?> {
+        return networkManager.requestPillDescription(medicineSeq).map { $0?.toDomain() }
     }
 }

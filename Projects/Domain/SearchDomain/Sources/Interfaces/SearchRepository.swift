@@ -10,5 +10,6 @@ import Foundation
 import RxSwift
 
 public protocol SearchRepository {
-    func executePill(keyword: String) -> Single<PillInfoList>
+    func executePill(keyword: String) -> Single<[PillInfo]>
+    func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?>
 }

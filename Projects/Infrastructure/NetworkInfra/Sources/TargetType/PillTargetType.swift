@@ -11,8 +11,8 @@ import Moya
 
 public enum PillTargetType {
     case getPillList(name: String)
-    case getPillShapeList(shape: String, color: String, line: String)
-    case getPillInfo(name: String)
+    case getPillShapeList(shape: String, color: String, line: String, code: String)
+    case getPillDescription(medicineSeq: Int)
 }
 
 extension PillTargetType: MoyaErrorHandleable {
@@ -22,9 +22,9 @@ extension PillTargetType: MoyaErrorHandleable {
     
     public var path: String {
         switch self {
-        case .getPillList: return "/getMedicineListName"
-        case .getPillShapeList: return "/getMedicineListShape/"
-        case .getPillInfo: return "/getMedicineInfo/"
+        case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
+        case .getPillShapeList: return "/pill/getPillsWithShape"
+        case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
         }
     }
     
@@ -33,7 +33,7 @@ extension PillTargetType: MoyaErrorHandleable {
         // GET
         case .getPillList: return .get
         case .getPillShapeList: return .get
-        case .getPillInfo: return .get
+        case .getPillDescription: return .get
         }
     }
     
@@ -43,16 +43,17 @@ extension PillTargetType: MoyaErrorHandleable {
     
     public var parameters: [String: Any]? {
         switch self {
-        case let .getPillList(name):
-            return ["medicineName": name]
+        case .getPillList:
+            return nil
             
-        case let .getPillShapeList(shape, color, line):
-            return ["medicineShape": shape,
-                    "medicineColor": color,
-                    "medicineLine": line]
+        case let .getPillShapeList(shape, color, line, code):
+            return ["shape": shape,
+                    "color": color,
+                    "line": line,
+                    "code": code]
             
-        case let .getPillInfo(name):
-            return ["medicineName": name]
+        case .getPillDescription:
+            return nil
         }
     }
     
@@ -228,7 +229,7 @@ extension PillTargetType {
                 """.utf8
             )
             
-        case .getPillInfo:
+        case .getPillDescription:
             return Data(
                 """
                 {

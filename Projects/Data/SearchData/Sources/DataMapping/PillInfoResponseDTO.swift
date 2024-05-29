@@ -10,15 +10,10 @@ import Foundation
 
 import SearchDomain
 
-public struct PillInfoListResponseDTO: Decodable {
-    let resultCount: Int
-    let medicineItem: [PillInfoResponseDTO]
-}
-
 public struct PillInfoResponseDTO: Decodable {
-    let medicineSeq: String
+    let medicineSeq: Int
     let medicineName: String
-    let entpSeq: String
+    let entpSeq: Int
     let entpName: String
     let chart: String?
     let medicineImage: String
@@ -29,34 +24,28 @@ public struct PillInfoResponseDTO: Decodable {
     let colorClass2: String?
     let lineFront: String?
     let lineBack: String?
-    let lengLong: String?
-    let lengShort: String?
-    let thick: String?
-    let imgRegistTs: String
-    let classNo: String?
+    let lengLong: Float?
+    let lengShort: Float?
+    let thick: Float?
+    let imgRegistTs: Int
+    let classNo: Int?
     let className: String?
     let etcOtcName: String
-    let medicinePermitDate: String
+    let medicinePermitDate: Int
     let formCodeName: String?
     let markCodeFrontAnal: String?
     let markCodeBackAnal: String?
     let markCodeFrontImg: String?
     let markCodeBackImg: String?
-    let changeDate: String?
+    let changeDate: Int?
     let markCodeFront: String?
     let markCodeBack: String?
     let medicineEngName: String?
-    let ediCode: String?
-}
-
-extension PillInfoListResponseDTO {
-    public func toDomain() -> PillInfoList {
-        return .init(resultCount: self.resultCount, medicineItem: self.medicineItem.map { $0.toDomain() })
-    }
+    let ediCode: Int?
 }
 
 extension PillInfoResponseDTO {
-    public func toDomain() -> PillInfo {
+    func toDomain() -> PillInfo {
         return .init(medicineSeq: self.medicineSeq, medicineName: self.medicineName, entpSeq: self.entpSeq, entpName: self.entpName, chart: self.chart, medicineImage: self.medicineImage, printFront: self.printFront, printBack: self.printBack, medicineShape: self.medicineShape, colorClass1: self.colorClass1, colorClass2: self.colorClass2, lineFront: self.lineFront, lineBack: self.lineBack, lengLong: self.lengLong, lengShort: self.lengShort, thick: self.thick, imgRegistTs: self.imgRegistTs, classNo: self.classNo, className: self.className, etcOtcName: self.etcOtcName, medicinePermitDate: self.medicinePermitDate, formCodeName: self.formCodeName, markCodeFrontAnal: self.markCodeFrontAnal, markCodeBackAnal: self.markCodeBackAnal, markCodeFrontImg: self.markCodeFrontImg, markCodeBackImg: self.markCodeBackImg, changeDate: self.changeDate, markCodeFront: self.markCodeFront, markCodeBack: self.markCodeBack, medicineEngName: self.medicineEngName, ediCode: self.ediCode)
     }
 }

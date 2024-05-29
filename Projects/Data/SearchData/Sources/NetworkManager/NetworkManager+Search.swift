@@ -14,7 +14,11 @@ import NetworkInfra
 import SearchDomain
 
 extension NetworkManager {
-    public func requestPill(keyword: String) -> Single<PillInfoListResponseDTO> {
-        return requestObject(.getPillList(name: keyword), type: PillInfoListResponseDTO.self)
+    public func requestPill(keyword: String) -> Single<[PillInfoResponseDTO]> {
+        return requestObject(.getPillList(name: keyword), type: [PillInfoResponseDTO].self)
+    }
+    
+    public func requestPillDescription(_ medicineSeq: Int) -> Single<PillDescriptionDTO?> {
+        return requestObject(.getPillDescription(medicineSeq: medicineSeq), type: PillDescriptionDTO?.self)
     }
 }

@@ -134,7 +134,7 @@ extension TimerReactor {
 
 // MARK: - TimerAdapterDataSource
 extension TimerReactor: TimerAdapterDataSource {
-    public func numberOfRowsIn(section: Int) -> Int {
+    public func numberOfRows(in section: Int) -> Int {
         switch section {
         case 0: return operationTimerData.count
         case 1: return nonOperationTimerData.count

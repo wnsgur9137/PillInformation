@@ -17,8 +17,8 @@ extension NetworkManager {
         return requestObject(.getUser(token: token), type: UserDTO.self)
     }
     
-    public func signin(identifier: String) -> Single<UserDTO> {
-        return requestObject(.signup(identifier: identifier), type: UserDTO.self)
+    public func signin(identifier: String, social: String) -> Single<UserDTO> {
+        return requestObject(.signup(identifier: identifier, social: social), type: UserDTO.self)
     }
     
     public func signin(accessToken: String) -> Single<UserDTO> {

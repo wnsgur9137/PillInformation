@@ -15,7 +15,7 @@ public final class NavigationView: UIView {
     
     private let backwardButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.NavigationView.Image.backward, for: .normal)
+        button.setImage(Constants.Image.backward, for: .normal)
         button.tintColor = Constants.Color.systemBlue
         return button
     }()

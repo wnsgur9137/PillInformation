@@ -16,10 +16,11 @@ extension Constants {
         public static let camera: UIImage = UIImage(systemName: "camera") ?? UIImage()
         public static let pills: UIImage = UIImage(systemName: "pills") ?? UIImage()
         public static let plus: UIImage = UIImage(systemName: "plus") ?? UIImage()
+        public static let backward: UIImage = .init(systemName: "chevron.backward") ?? UIImage()
+        public static let pasteboard: UIImage = UIImage(systemName: "doc.on.clipboard.fill") ?? UIImage()
     }
 }
 
 extension Constants.NavigationView.Image {
     static let titleImage: UIImage = .init(named: "TitleLogo") ?? UIImage()
-    static let backward: UIImage = .init(systemName: "chevron.backward") ?? UIImage()
 }

@@ -14,6 +14,14 @@ public final class SearchTextFieldView: UIView {
     
     private let rootContainerView = UIView()
     
+    public lazy var dismissButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Image.backward, for: .normal)
+        button.tintColor = Constants.Color.systemBlue
+        button.setTitleColor(Constants.Color.systemBlue, for: .normal)
+        return button
+    }()
+    
     private let searchIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Image.magnifyingglass
@@ -46,9 +54,9 @@ public final class SearchTextFieldView: UIView {
         return button
     }()
     
-    public init() {
-        super.init(frame: .zero)
-        setupLayout()
+    public init(hasDismiss: Bool = false) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 68.0))
+        setupLayout(hasDismiss)
     }
     
     required init?(coder: NSCoder) {
@@ -63,14 +71,23 @@ public final class SearchTextFieldView: UIView {
 
 // MARK: - Layout
 extension SearchTextFieldView {
-    private func setupLayout() {
+    private func setupLayout(_ hasDismiss: Bool) {
         addSubview(rootContainerView)
         
         rootContainerView.flex
             .direction(.row)
+            .backgroundColor(Constants.Color.systemBackground)
+            .padding(10.0, 24.0, 10.0, 24.0)
             .define { rootView in
+                if hasDismiss {
+                    rootView.addItem(dismissButton)
+                        .width(36.0)
+                        .height(100%)
+                }
+                
                 rootView.addItem()
                     .backgroundColor(Constants.Color.systemBackground)
+                    .border(0.5, Constants.Color.systemLightGray)
                     .cornerRadius(12.0)
                     .height(48.0)
                     .grow(1.0)
@@ -100,5 +117,6 @@ extension SearchTextFieldView {
     
     private func setupSubviewLayout() {
         rootContainerView.pin.all()
+        rootContainerView.flex.layout()
     }
 }

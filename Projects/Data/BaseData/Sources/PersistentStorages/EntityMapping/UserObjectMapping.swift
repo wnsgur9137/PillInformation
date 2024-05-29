@@ -18,8 +18,9 @@ class UserObject: Object {
     @Persisted var isAgreeNighttimeNoti: Bool
     @Persisted var accessToken: String
     @Persisted var refreshToken: String
+    @Persisted var social: String
     
-    convenience init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String) {
+    convenience init(id: Int, isAgreeAppPolicy: Bool, isAgreeAgePolicy: Bool, isAgreePrivacyPolicy: Bool, isAgreeDaytimeNoti: Bool, isAgreeNighttimeNoti: Bool, accessToken: String, refreshToken: String, social: String) {
         self.init()
         self.id = id
         self.isAgreeAppPolicy = isAgreeAppPolicy
@@ -29,6 +30,7 @@ class UserObject: Object {
         self.isAgreeNighttimeNoti = isAgreeNighttimeNoti
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        self.social = social
     }
     
     
@@ -42,11 +44,12 @@ class UserObject: Object {
         self.isAgreeNighttimeNoti = userDTO.isAgreeNighttimeNoti
         self.accessToken = userDTO.accessToken
         self.refreshToken = userDTO.refreshToken
+        self.social = userDTO.social
     }
 }
 
 extension UserObject {
     func toDTO() -> UserDTO {
-        return .init(id: self.id, isAgreeAppPolicy: self.isAgreeAppPolicy, isAgreeAgePolicy: self.isAgreeAgePolicy, isAgreePrivacyPolicy: self.isAgreePrivacyPolicy, isAgreeDaytimeNoti: self.isAgreeDaytimeNoti, isAgreeNighttimeNoti: self.isAgreeNighttimeNoti, accessToken: self.accessToken, refreshToken: self.refreshToken)
+        return .init(id: self.id, isAgreeAppPolicy: self.isAgreeAppPolicy, isAgreeAgePolicy: self.isAgreeAgePolicy, isAgreePrivacyPolicy: self.isAgreePrivacyPolicy, isAgreeDaytimeNoti: self.isAgreeDaytimeNoti, isAgreeNighttimeNoti: self.isAgreeNighttimeNoti, accessToken: self.accessToken, refreshToken: self.refreshToken, social: self.social)
     }
 }

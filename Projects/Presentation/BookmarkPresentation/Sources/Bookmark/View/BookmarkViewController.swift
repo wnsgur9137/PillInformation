@@ -53,7 +53,8 @@ public final class BookmarkViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
+        rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = BookmarkAdapter(tableView: bookmarkTableView,
                                       dataSource: reactor,
@@ -103,8 +104,8 @@ extension BookmarkViewController: BookmarkAdapterDelegate {
 // MARK: - Layout
 extension BookmarkViewController {
     private func setupLayout() {
+        view.addSubview(searchTextFieldView)
         view.addSubview(rootContainerView)
-        rootContainerView.addSubview(searchTextFieldView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -117,21 +118,16 @@ extension BookmarkViewController {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin
-            .left().right().bottom().top(view.safeAreaInsets.top)
-        searchTextFieldView.pin
-            .left(24.0)
-            .right(24.0)
-            .height(48.0)
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
         searchTextFieldView.flex.layout()
+        rootContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
         
         scrollView.pin
-            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
-        
+
         contentView.pin.top().horizontally()
-        
         contentView.flex.layout()
         scrollView.contentSize = contentView.frame.size
     }

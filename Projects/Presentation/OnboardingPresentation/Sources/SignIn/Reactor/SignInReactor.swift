@@ -21,6 +21,11 @@ public enum SignInType {
     case signin
 }
 
+enum Social: String {
+    case apple
+    case kakao
+}
+
 public struct SignInFlowAction {
     let showOnboardingPolicyViewController: (UserModel) -> Void
     let showMainScene: () -> Void
@@ -83,9 +88,9 @@ public final class SignInReactor: Reactor {
         return KakaoService.isKakaoTalkLoginAvailable() ? KakaoService.loginWithKakaoTalk() : KakaoService.loginWithKakaoAccount()
     }
     
-    private func signin(identifier: String) -> Single<Mutation> {
+    private func signin(identifier: String, social: String) -> Single<Mutation> {
         return .create { observable in
-            self.userUseCase.signin(identifier: identifier)
+            self.userUseCase.signin(identifier: identifier, social: social)
                 .subscribe(onSuccess: { userModel in
                     if userModel.isAgreeRequredPolicies {
                         observable(.success(.signin))
@@ -106,7 +111,7 @@ public final class SignInReactor: Reactor {
         return .create { observable in
             self.loadAppleEmail()
                 .flatMap { email -> Single<Mutation> in
-                    return self.signin(identifier: email)
+                    return self.signin(identifier: email, social: Social.apple.rawValue)
                 }
                 .subscribe(onSuccess: { mutation in
                     observable.onNext(mutation)
@@ -126,7 +131,7 @@ public final class SignInReactor: Reactor {
                     return KakaoService.loadUserID()
                 }
                 .flatMap { userID -> Single<Mutation> in
-                    return self.signin(identifier: "\(userID)")
+                    return self.signin(identifier: "\(userID)", social: Social.kakao.rawValue)
                 }
                 .subscribe(onSuccess: { mutation in
                     observable.onNext(mutation)

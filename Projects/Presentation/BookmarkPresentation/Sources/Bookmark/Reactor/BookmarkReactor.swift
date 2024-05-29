@@ -58,7 +58,7 @@ extension BookmarkReactor {
 
 // MARK: - BookmarkAdapter DataSource
 extension BookmarkReactor: BookmarkAdapterDataSource {
-    public func numberOfRowsIn(section: Int) -> Int {
+    public func numberOfRows(in: Int) -> Int {
         return 0
     }
     

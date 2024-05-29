@@ -31,16 +31,38 @@ public final class SearchDIContainer {
 
 // MARK: - SearchCoordinatorDependencies
 extension SearchDIContainer: SearchCoordinatorDependencies {
-    public func makeSearchRepository() -> SearchRepository {
+    private func makeSearchRepository() -> SearchRepository {
         return DefaultSearchRepository(networkManager: dependencies.networkManager)
     }
-    public func makeSearchUseCase() -> SearchUseCase {
+    private func makeSearchUseCase() -> SearchUseCase {
         return DefaultSearchUseCase(with: makeSearchRepository())
     }
-    public func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {
-        return SearchReactor(with: makeSearchUseCase(), flowAction: flowAction)
+    
+    private func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {
+        return SearchReactor(flowAction: flowAction)
     }
     public func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController {
         return SearchViewController().create(with: makeSearchReactor(flowAction: flowAction))
+    }
+    
+    private func makeSearchResultReactor(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultReactor {
+        return SearchResultReactor(with: makeSearchUseCase(), keyword: keyword, flowAction: flowAction)
+    }
+    public func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController {
+        return SearchResultViewController.create(with: makeSearchResultReactor(keyword: keyword, flowAction: flowAction))
+    }
+    
+    private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
+        return SearchDetailReactor(with: makeSearchUseCase(), pillInfo: pillInfo, flowAction: flowAction)
+    }
+    public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController {
+        return SearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
+    }
+    
+    private func makeImageDetailReactor(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailReactor {
+        return ImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction)
+    }
+    public func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController {
+        return ImageDetailViewController.create(with: makeImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction))
     }
 }

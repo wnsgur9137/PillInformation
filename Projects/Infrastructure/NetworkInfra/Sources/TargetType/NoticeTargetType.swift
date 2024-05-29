@@ -26,9 +26,9 @@ extension NoticeTargetType: MoyaErrorHandleable {
         switch self {
         case .getAllNotices: return "/notice/allNotices"
         case let .getNotice(noticeID): return "notice/\(noticeID)"
-        case .setNotice: return "/notice/setNotice/"
-        case .updateNotice: return "/notice/updateNotice/"
-        case .deleteNotice: return "/notice/deleteNotice/"
+        case .setNotice: return "/notice/setNotice"
+        case .updateNotice: return "/notice/updateNotice"
+        case .deleteNotice: return "/notice/deleteNotice"
         }
     }
     

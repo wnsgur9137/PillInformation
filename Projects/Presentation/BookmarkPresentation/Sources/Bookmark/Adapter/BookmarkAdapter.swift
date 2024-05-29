@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol BookmarkAdapterDataSource: AnyObject {
-    func numberOfRowsIn(section: Int) -> Int
+    func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath)
 }
 
@@ -42,7 +42,7 @@ public final class BookmarkAdapter: NSObject {
 // MARK: - UITableView DataSource
 extension BookmarkAdapter: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource?.numberOfRowsIn(section: section) ?? 0
+        return dataSource?.numberOfRows(in: section) ?? 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

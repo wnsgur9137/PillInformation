@@ -24,7 +24,7 @@ public struct Notice {
 }
 
 extension Notice {
-    public func toModel() -> NoticeModel {
+    func toModel() -> NoticeModel {
         return .init(title: self.title,
                      writer: self.writer,
                      content: self.content,

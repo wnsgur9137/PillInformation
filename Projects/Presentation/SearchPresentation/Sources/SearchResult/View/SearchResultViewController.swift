@@ -18,19 +18,30 @@ import BasePresentation
 
 public final class SearchResultViewController: UIViewController, View {
     
-    private let navigationView = NavigationView(useTextField: true)
-    private let keyboardBackgroundView = UIView()
+    private let searchTextFieldView = SearchTextFieldView(hasDismiss: true)
+    private let searchResultEmptyView: SearchResultEmptyView = {
+        let view = SearchResultEmptyView()
+        view.isHidden = true
+        return view
+    }()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = Constants.Color.background
         return collectionView
     }()
     
     private let footerView = FooterView()
     
+    // MARK: - Properties
+    
     public var disposeBag = DisposeBag()
     private var adapter: SearchResultAdapter?
+    
+    private let searchRelay: PublishRelay<String?> = .init()
+    private let didSelectItemRelay: PublishRelay<IndexPath> = .init()
+    
     
     // MARK: - LifeCycle
     public static func create(with reactor: SearchResultReactor) -> SearchResultViewController {
@@ -41,14 +52,19 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
-                                               dataSource: reactor,
-                                               deleagte: self)
+                                               textField: searchTextFieldView.searchTextField,
+                                               collectionViewDataSource: reactor,
+                                               collectionViewDelegate: self,
+                                               textFieldDelegate: self)
         }
-        setupKeyboard()
-        setupLayout()
+        addSubviews()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -60,68 +76,116 @@ public final class SearchResultViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
-}
-
-// MARK: - Methods
-extension SearchResultViewController {
-    private func setupKeyboard() {
-        keyboardBackgroundView.rx.tapGesture()
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.view.endEditing(true)
-            })
-            .disposed(by: disposeBag)
-        
-        rx.showKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = false
-            })
-            .disposed(by: disposeBag)
-        
-        rx.hideKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = true
-            })
-            .disposed(by: disposeBag)
+    
+    private func showAlert(title: String?, message: String?) {
+        let title = AlertText(text: title ?? "")
+        let message = AlertText(text: message ?? "")
+        let confirmButton = AlertButtonInfo(title: Constants.confirm)
+        AlertViewer()
+            .showSingleButtonAlert(self,
+                                   title: title,
+                                   message: message,
+                                   confirmButtonInfo: confirmButton)
     }
 }
 
 // MARK: - Binding
 extension SearchResultViewController {
     private func bindAction(_ reactor: SearchResultReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        searchTextFieldView.dismissButton.rx.tap
+            .map { Reactor.Action.dismiss }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchRelay
+            .map { text in
+                Reactor.Action.search(text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectItemRelay
+            .map { indexPath in
+                Reactor.Action.didSelectItem(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchResultReactor) {
+        reactor.state
+            .map { $0.keyword }
+            .bind(to: searchTextFieldView.searchTextField.rx.text)
+            .disposed(by: disposeBag)
         
+        reactor.pulse(\.$reloadData)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] _ in
+                self?.searchResultEmptyView.isHidden = true
+                self?.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$isEmpty)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.searchResultEmptyView.isHidden = false
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$alertContents)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] content in
+                self?.showAlert(title: content?.title, message: content?.message)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
-// MARK: - SearchResultAdapter Delegate
-extension SearchResultViewController: SearchResultAdapterDelegate {
-    
+// MARK: - SearchResultAdapter CollectionViewDelegate
+extension SearchResultViewController: SearchResultCollectionViewDelegate {
+    public func didSelectItem(at indexPath: IndexPath) {
+        didSelectItemRelay.accept(indexPath)
+    }
+}
+
+// MARK: - SearchResultAdapter TextFieldDelegate
+extension SearchResultViewController: SearchResultTextFieldDelegate {
+    public func shouldReturn(text: String?) {
+        searchRelay.accept(text)
+    }
 }
 
 // MARK: - Layout
 extension SearchResultViewController {
-    private func setupLayout() {
+    private func addSubviews() {
         view.addSubview(collectionView)
-        view.addSubview(keyboardBackgroundView)
-        view.addSubview(navigationView)
-        
-        collectionView.flex.define { collectionView in
-            
-        }
+        view.addSubview(searchTextFieldView)
+        view.addSubview(searchResultEmptyView)
     }
     
     private func setupSubviewLayout() {
-        keyboardBackgroundView.pin.all()
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        collectionView.pin.all()
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
+        searchTextFieldView.flex.layout()
+        
+        collectionView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom()
         collectionView.flex.layout()
+        
+        searchResultEmptyView.pin
+            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .horizontally()
+            .bottom(view.safeAreaInsets.bottom)
+        searchResultEmptyView.flex.layout()
     }
     
     private func updateSubviewLayout() {

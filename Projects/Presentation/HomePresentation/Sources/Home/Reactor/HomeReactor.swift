@@ -106,7 +106,7 @@ extension HomeReactor {
 
 // MARK: - HomeAdapter DataSource
 extension HomeReactor: HomeAdapterDataSource {
-    public func numberOfRowsIn(section: Int) -> Int {
+    public func numberOfRows(in section: Int) -> Int {
         return notices.count
     }
     

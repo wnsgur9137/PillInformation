@@ -8,20 +8,10 @@
 
 import Foundation
 
-public struct PillInfoListModel {
-    let resultCount: Int
-    let medicineItem: [PillInfoModel]
-    
-    public init(resultCount: Int, medicineItem: [PillInfoModel]) {
-        self.resultCount = resultCount
-        self.medicineItem = medicineItem
-    }
-}
-
 public struct PillInfoModel {
-    let medicineSeq: String
+    let medicineSeq: Int
     let medicineName: String
-    let entpSeq: String
+    let entpSeq: Int
     let entpName: String
     let chart: String?
     let medicineImage: String
@@ -32,26 +22,26 @@ public struct PillInfoModel {
     let colorClass2: String?
     let lineFront: String?
     let lineBack: String?
-    let lengLong: String?
-    let lengShort: String?
-    let thick: String?
-    let imgRegistTs: String
-    let classNo: String?
+    let lengLong: Float?
+    let lengShort: Float?
+    let thick: Float?
+    let imgRegistTs: Int
+    let classNo: Int?
     let className: String?
     let etcOtcName: String
-    let medicinePermitDate: String
+    let medicinePermitDate: Int
     let formCodeName: String?
     let markCodeFrontAnal: String?
     let markCodeBackAnal: String?
     let markCodeFrontImg: String?
     let markCodeBackImg: String?
-    let changeDate: String?
+    let changeDate: Int?
     let markCodeFront: String?
     let markCodeBack: String?
     let medicineEngName: String?
-    let ediCode: String?
+    let ediCode: Int?
     
-    public init(medicineSeq: String, medicineName: String, entpSeq: String, entpName: String, chart: String?, medicineImage: String, printFront: String?, printBack: String?, medicineShape: String, colorClass1: String?, colorClass2: String?, lineFront: String?, lineBack: String?, lengLong: String?, lengShort: String?, thick: String?, imgRegistTs: String, classNo: String?, className: String?, etcOtcName: String, medicinePermitDate: String, formCodeName: String?, markCodeFrontAnal: String?, markCodeBackAnal: String?, markCodeFrontImg: String?, markCodeBackImg: String?, changeDate: String?, markCodeFront: String?, markCodeBack: String?, medicineEngName: String?, ediCode: String?) {
+    public init(medicineSeq: Int, medicineName: String, entpSeq: Int, entpName: String, chart: String?, medicineImage: String, printFront: String?, printBack: String?, medicineShape: String, colorClass1: String?, colorClass2: String?, lineFront: String?, lineBack: String?, lengLong: Float?, lengShort: Float?, thick: Float?, imgRegistTs: Int, classNo: Int?, className: String?, etcOtcName: String, medicinePermitDate: Int, formCodeName: String?, markCodeFrontAnal: String?, markCodeBackAnal: String?, markCodeFrontImg: String?, markCodeBackImg: String?, changeDate: Int?, markCodeFront: String?, markCodeBack: String?, medicineEngName: String?, ediCode: Int?) {
         self.medicineSeq = medicineSeq
         self.medicineName = medicineName
         self.entpSeq = entpSeq

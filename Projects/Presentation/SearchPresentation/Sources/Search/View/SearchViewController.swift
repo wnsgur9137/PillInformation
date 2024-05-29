@@ -25,12 +25,6 @@ public final class SearchViewController: UIViewController, View {
     private let contentView = UIView()
     private let searchTextFieldView = SearchTextFieldView()
     
-    private let keyboardBackgroundView: UIView = {
-        let view = UIView()
-        view.isHidden = true
-        return view
-    }()
-    
     private let recentCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -64,13 +58,15 @@ public final class SearchViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.systemBackground
+        rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchAdapter(collectionView: recentCollectionView,
-                                         dataSource: reactor,
-                                         delegate: self)
+                                         textField: searchTextFieldView.searchTextField,
+                                         collectionViewDataSource: reactor,
+                                         collectionViewDelegate: self,
+                                         textFieldDelegate: self)
         }
-        setupKeyboard()
         setupLayout()
     }
     
@@ -90,33 +86,6 @@ public final class SearchViewController: UIViewController, View {
     }
 }
 
-// MARK: - Methods
-extension SearchViewController {
-    private func setupKeyboard() {
-        searchTextFieldView.searchTextField.delegate = self
-        keyboardBackgroundView.rx.tapGesture()
-            .asDriver()
-            .drive(onNext: { [weak self] _ in
-                self?.view.endEditing(true)
-            })
-            .disposed(by: disposeBag)
-        
-        rx.showKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = false
-            })
-            .disposed(by: disposeBag)
-        
-        rx.hideKeyboard
-            .asDriver(onErrorDriveWith: .never())
-            .drive(onNext: { [weak self] _ in
-                self?.keyboardBackgroundView.isHidden = true
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: - Binding
 extension SearchViewController {
     private func bindAction(_ reactor: SearchReactor) {
@@ -133,49 +102,35 @@ extension SearchViewController {
             .map { $0.alertContents }
             .bind(onNext: { contents in
                 guard let contents = contents else { return }
-                let alert = UIAlertController(
-                    title: contents.title,
-                    message: contents.message,
-                    preferredStyle: .alert
-                )
-                let confirm = UIAlertAction(
-                    title: "확인",
-                    style: .default
-                )
-                alert.addAction(confirm)
-                self.present(alert, animated: true)
-            })
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.pillList }
-            .bind(onNext: { list in
-                print("list: \(list)")
+                let title = AlertText(text: contents.title)
+                let message = AlertText(text: contents.message ?? "")
+                let confirmButtonInfo = AlertButtonInfo(title: "확인")
+                AlertViewer()
+                    .showSingleButtonAlert(self, 
+                                           title: title,
+                                           message: message,
+                                           confirmButtonInfo: confirmButtonInfo)
             })
             .disposed(by: disposeBag)
     }
 }
-
-// MARK: - UITextFieldDelegate
-extension SearchViewController: UITextFieldDelegate {
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == searchTextFieldView.searchTextField {
-            searchRelay.accept(textField.text)
-        }
-        return true
-    }
-}
-
-// MARK: - SearchAdapter Delegate
-extension SearchViewController: SearchAdapterDelegate {
+// MARK: - SearchAdapter ColectionViewDelegate
+extension SearchViewController: SearchCollectionViewDelegate {
     
+}
+
+// MARK: - SearchAdapter TextFieldDelegate
+extension SearchViewController: SearchTextFieldDelegate {
+    public func shouldReturn(text: String?) {
+        searchRelay.accept(text)
+    }
 }
 
 // MARK: - Layout
 extension SearchViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
-        rootContainerView.addSubview(searchTextFieldView)
+        view.addSubview(searchTextFieldView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -192,16 +147,11 @@ extension SearchViewController {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin
-            .left().right().bottom().top(view.safeAreaInsets.top)
-        searchTextFieldView.pin
-            .left(24.0)
-            .right(24.0)
-            .height(48.0)
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
         searchTextFieldView.flex.layout()
-        
+        rootContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
         scrollView.pin
-            .top(to: searchTextFieldView.edge.bottom).marginTop(10.0)
+            .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
         
