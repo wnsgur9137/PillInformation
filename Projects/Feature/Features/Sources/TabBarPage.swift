@@ -13,7 +13,6 @@ enum TabBarPage {
     case bookmark
     case search
     case alarm
-    case myPage
     
     init?(index: Int) {
         switch index {
@@ -21,7 +20,6 @@ enum TabBarPage {
         case 1: self = .bookmark
         case 2: self = .search
         case 3: self = .alarm
-        case 4: self = .myPage
         default: return nil
         }
     }
@@ -32,7 +30,6 @@ enum TabBarPage {
         case .bookmark: return "즐겨찾기"
         case .search: return "검색"
         case .alarm: return "알람"
-        case .myPage: return "내정보"
         }
     }
     
@@ -42,7 +39,6 @@ enum TabBarPage {
         case .bookmark: return 1
         case .search: return 2
         case .alarm: return 3
-        case .myPage: return 4
         }
     }
     
@@ -52,7 +48,6 @@ enum TabBarPage {
         case .bookmark: return UIImage(systemName: "star")
         case .search: return UIImage(systemName: "magnifyingglass")
         case .alarm: return UIImage(systemName: "deskclock")
-        case .myPage: return UIImage(systemName: "person")
         }
     }
     
@@ -62,7 +57,6 @@ enum TabBarPage {
         case .bookmark: return UIImage(systemName: "star.fill")
         case .search: return UIImage()
         case .alarm: return UIImage()
-        case .myPage: return UIImage()
         }
     }
 }

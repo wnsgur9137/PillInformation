@@ -49,7 +49,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     }
     
     public func start() {
-        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm, .myPage]
+        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm]
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }
@@ -99,15 +99,6 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             alarmCoordinator.finishDelegate = self
             alarmCoordinator.start()
             childCoordinators.append(alarmCoordinator)
-            
-        case .myPage:
-            let myPageCoordinator = DefaultMyPageCoordinator(
-                navigationController: navigationController,
-                dependencies: myPageDIContainer
-            )
-            myPageCoordinator.finishDelegate = self
-            myPageCoordinator.start()
-            childCoordinators.append(myPageCoordinator)
         }
         
         return navigationController
@@ -118,12 +109,27 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         tabBarController?.selectedIndex = TabBarPage.home.orderNumber()
     }
     
-    private func presentMyPage() {
-        tabBarController?.present(myPageDIContainer.makeMyPageViewController(), animated: true)
+    private func makeMyPageCoordinator() {
+        guard let tabBarController = tabBarController else { return }
+        let navigationController = UINavigationController()
+        navigationController.setNavigationBarHidden(true, animated: false)
+        let myPageCoordinator = DefaultMyPageCoordinator(
+            tabBarController: tabBarController,
+            navigationController: navigationController,
+            dependencies: myPageDIContainer
+        )
+        myPageCoordinator.finishDelegate = self
+        myPageCoordinator.start()
+        childCoordinators.append(myPageCoordinator)
     }
     
     public func showMyPage() {
-        presentMyPage()
+        let test = childCoordinators.filter { $0.type == .myPage }.first as? MyPageCoordinator
+        guard let test = test else {
+            makeMyPageCoordinator()
+            return
+        }
+        test.start()
     }
 }
 
@@ -132,6 +138,7 @@ extension DefaultTabBarCoordinator: CoordinatorFinishDelegate {
     public func coordinatorDidFinish(childCoordinator: Coordinator) {
         childCoordinators = childCoordinators.filter{ $0.type != childCoordinator.type }
         navigationController?.viewControllers.removeAll()
+        
 //        switch childCoordinator.type {
 //        case .home:
 //            navigationController?.viewControllers.removeAll()

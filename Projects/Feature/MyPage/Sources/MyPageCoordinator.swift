@@ -21,6 +21,7 @@ public protocol MyPageCoordinator: Coordinator {
 
 public final class DefaultMyPageCoordinator: MyPageCoordinator {
     public weak var finishDelegate: CoordinatorFinishDelegate?
+    public weak var tabBarController: UITabBarController?
     public weak var navigationController: UINavigationController?
     public var childCoordinators: [Coordinator] = []
     public var type: CoordinatorType { .myPage }
@@ -28,8 +29,10 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     private let dependencies: MyPageCoordinatorDependencies
     private weak var myPageViewController: MyPageViewController?
     
-    public init(navigationController: UINavigationController,
+    public init(tabBarController: UITabBarController,
+                navigationController: UINavigationController,
                 dependencies: MyPageCoordinatorDependencies) {
+        self.tabBarController = tabBarController
         self.navigationController = navigationController
         self.dependencies = dependencies
     }
@@ -40,7 +43,10 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     
     public func showMyPageViewController() {
         let viewController = dependencies.makeMyPageViewController()
-        navigationController?.pushViewController(viewController, animated: false)
+        tabBarController?.present(viewController, animated: true)
         myPageViewController = viewController
+        myPageViewController?.didDisappear = {
+            self.finish()
+        }
     }
 }

@@ -9,6 +9,9 @@
 import UIKit
 
 public final class MyPageViewController: UIViewController {
+    
+    public var didDisappear: (() -> Void)?
+    
     private let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -23,5 +26,10 @@ public final class MyPageViewController: UIViewController {
         view.addSubview(label)
         label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        didDisappear?()
     }
 }
