@@ -42,7 +42,7 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
         return SearchReactor(flowAction: flowAction)
     }
     public func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController {
-        return SearchViewController().create(with: makeSearchReactor(flowAction: flowAction))
+        return SearchViewController.create(with: makeSearchReactor(flowAction: flowAction))
     }
     
     private func makeSearchResultReactor(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultReactor {

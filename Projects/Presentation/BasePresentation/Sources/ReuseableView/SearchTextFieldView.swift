@@ -35,6 +35,7 @@ public final class SearchTextFieldView: UIView {
         textField.placeholder = "Search"
         textField.font = Constants.Font.suiteMedium(14.0)
         textField.textColor = Constants.Color.systemLabel
+        textField.returnKeyType = .search
         return textField
     }()
     

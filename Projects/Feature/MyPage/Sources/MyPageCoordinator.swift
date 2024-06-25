@@ -12,7 +12,7 @@ import MyPagePresentation
 import BasePresentation
 
 public protocol MyPageCoordinatorDependencies {
-    func makeMyPageViewController() -> MyPageViewController
+    func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController
 }
 
 public protocol MyPageCoordinator: Coordinator {
@@ -42,7 +42,8 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     }
     
     public func showMyPageViewController() {
-        let viewController = dependencies.makeMyPageViewController()
+        let flowAction = MyPageFlowAction()
+        let viewController = dependencies.makeMyPageViewController(flowAction: flowAction)
         tabBarController?.present(viewController, animated: true)
         myPageViewController = viewController
         myPageViewController?.didDisappear = {

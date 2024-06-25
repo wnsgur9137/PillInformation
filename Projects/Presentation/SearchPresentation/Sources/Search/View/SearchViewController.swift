@@ -50,7 +50,7 @@ public final class SearchViewController: UIViewController, View {
     
     // MARK: - LifeCycle
     
-    public func create(with reactor: SearchReactor) -> SearchViewController {
+    public static func create(with reactor: SearchReactor) -> SearchViewController {
         let viewController = SearchViewController()
         viewController.reactor = reactor
         return viewController
