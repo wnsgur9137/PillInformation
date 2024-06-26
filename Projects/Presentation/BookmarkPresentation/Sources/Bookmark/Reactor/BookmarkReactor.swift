@@ -22,10 +22,12 @@ public struct BookmarkFlowAction {
 public final class BookmarkReactor: Reactor {
     public enum Action {
         case didTapUserButton
+        case didSelectRow(IndexPath)
     }
     
     public enum Mutation {
         case showMyPage
+        case showPillDetailViewController
     }
     
     public struct State {
@@ -47,6 +49,8 @@ extension BookmarkReactor {
         switch action {
         case .didTapUserButton:
             return .just(.showMyPage)
+        case let .didSelectRow(indexPath):
+            return .just(.showPillDetailViewController)
         }
     }
     
@@ -55,6 +59,8 @@ extension BookmarkReactor {
         switch mutation {
         case .showMyPage:
             showMyPage()
+        case .showPillDetailViewController:
+            break
         }
         return state
     }

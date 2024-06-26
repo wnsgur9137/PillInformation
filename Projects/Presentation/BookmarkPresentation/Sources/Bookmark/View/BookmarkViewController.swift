@@ -91,14 +91,19 @@ extension BookmarkViewController {
     private func bindState(_ reactor: BookmarkReactor) {
         
     }
+    
+    private func bindAdapter(_ reactor: BookmarkReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - BookmarkAdapter Delegate
 extension BookmarkViewController: BookmarkAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        
-    }
-    
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return bookmarkTableViewHeight
     }
