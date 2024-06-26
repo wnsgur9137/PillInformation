@@ -66,8 +66,6 @@ public final class NoticeDetailViewController: UIViewController, View {
     public var disposeBag = DisposeBag()
     private var adapter: NoticeDetailAdapter?
     
-    private let didSelectNoticeSubject: PublishSubject<Int> = .init()
-    
     // MARK: - LifeCycle
     
     public static func create(with reactor: NoticeDetailReactor) -> NoticeDetailViewController {
@@ -81,8 +79,8 @@ public final class NoticeDetailViewController: UIViewController, View {
         view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = NoticeDetailAdapter(tableView: otherNoticeTableView,
-                                               dataSource: reactor,
-                                               delegate: self)
+                                               dataSource: reactor)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -120,11 +118,6 @@ extension NoticeDetailViewController {
             .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        didSelectNoticeSubject
-            .map { row in Reactor.Action.didSelectNotice(row) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: NoticeDetailReactor) {
@@ -147,12 +140,14 @@ extension NoticeDetailViewController {
             })
             .disposed(by: disposeBag)
     }
-}
-
-// MARK: - NoticeDetail Delegate
-extension NoticeDetailViewController: NoticeDetailAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        didSelectNoticeSubject.onNext(indexPath.row)
+    
+    private func bindAdapter(_ reactor: NoticeDetailReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 

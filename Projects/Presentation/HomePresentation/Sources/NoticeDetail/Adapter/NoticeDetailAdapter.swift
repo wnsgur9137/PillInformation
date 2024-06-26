@@ -7,29 +7,24 @@
 //
 
 import UIKit
+import RxSwift
 
 public protocol NoticeDetailAdapterDataSource: AnyObject {
     func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> NoticeModel?
 }
 
-public protocol NoticeDetailAdapterDelegate: AnyObject {
-    func didSelectRow(at indexPath: IndexPath)
-}
-
 public final class NoticeDetailAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: NoticeDetailAdapterDataSource?
-    private weak var delegate: NoticeDetailAdapterDelegate?
+    let didSelectRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView,
-         dataSource: NoticeDetailAdapterDataSource,
-         delegate: NoticeDetailAdapterDelegate) {
+         dataSource: NoticeDetailAdapterDataSource) {
         tableView.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
         tableView.isScrollEnabled = false
         self.tableView = tableView
         self.dataSource = dataSource
-        self.delegate = delegate
         super.init()
         
         tableView.dataSource = self
@@ -55,6 +50,6 @@ extension NoticeDetailAdapter: UITableViewDataSource {
 // MARK: - UITableView Delegate
 extension NoticeDetailAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
 }

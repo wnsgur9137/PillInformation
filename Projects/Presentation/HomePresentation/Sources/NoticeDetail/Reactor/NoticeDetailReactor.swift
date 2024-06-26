@@ -31,14 +31,14 @@ public final class NoticeDetailReactor: Reactor {
         case loadOtherNotices
         case popViewController
         case didTapUserButton
-        case didSelectNotice(Int)
+        case didSelectNotice(IndexPath)
     }
     public enum Mutation {
         case loadNotice(NoticeModel)
         case loadOtherNotices
         case popViewController
         case showMyPage
-        case showNoticeDetail(Int)
+        case showNoticeDetail(IndexPath)
     }
     public struct State {
         var notice: NoticeModel?
@@ -88,8 +88,8 @@ extension NoticeDetailReactor {
         case .didTapUserButton:
             return .just(.showMyPage)
             
-        case let .didSelectNotice(row):
-            return .just(.showNoticeDetail(row))
+        case let .didSelectNotice(indexPath):
+            return .just(.showNoticeDetail(indexPath))
         }
     }
     
@@ -104,8 +104,8 @@ extension NoticeDetailReactor {
             popViewController(animated: true)
         case .showMyPage:
             showMyPage()
-        case let .showNoticeDetail(row):
-            didSelectNoticeRow(at: row)
+        case let .showNoticeDetail(indexPath):
+            showNoticeDetailViewController(at: indexPath)
         }
         return state
     }
@@ -113,8 +113,8 @@ extension NoticeDetailReactor {
 
 // MARK: - Flow Action
 extension NoticeDetailReactor {
-    private func didSelectNoticeRow(at index: Int) {
-        flowAction.showNoticeDetailViewController(self.otherNotices[index])
+    private func showNoticeDetailViewController(at indexPath: IndexPath) {
+        flowAction.showNoticeDetailViewController(self.otherNotices[indexPath.row])
     }
     
     private func popViewController(animated: Bool = true) {
