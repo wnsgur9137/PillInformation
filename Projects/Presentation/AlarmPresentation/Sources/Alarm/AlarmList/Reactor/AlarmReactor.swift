@@ -25,10 +25,19 @@ public struct AlarmFlowAction {
 public final class AlarmReactor: Reactor {
     public enum Action {
         case viewWillAppear
+        case didSelectRow(IndexPath)
+        case didSelectToggleButton(IndexPath)
+        case didSelectWeekButton(indexPath: IndexPath, buttonType: AlarmWeekButton)
+        case didSelectAddButton
+        case delete(IndexPath)
     }
     
     public enum Mutation {
         case loadAlarm
+        case showAlarmDetailViewController(IndexPath?)
+        case changeActiveAlarm(IndexPath)
+        case changeWeek(IndexPath, AlarmWeekButton)
+        case delete(IndexPath)
         case error(Error?)
     }
     
@@ -117,51 +126,16 @@ public final class AlarmReactor: Reactor {
             .disposed(by: disposeBag)
     }
     
-    private func delete(alarm: AlarmModel?) {
-        guard let alarm = alarm else { return }
-        self.useCase.delete(alarm.id)
-            .subscribe(onSuccess: { _ in })
-            .disposed(by: disposeBag)
-    }
-}
-
-// MARK: - React
-extension AlarmReactor {
-    public func mutate(action: Action) -> Observable<Mutation> {
-        switch action {
-        case .viewWillAppear:
-            return loadAlarm()
-        }
-    }
-    
-    public func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
-        switch mutation {
-        case .loadAlarm:
-            state.alarmCellCount = alarms.count
-            
-        case let .error(error):
-            state.isError = error
-        }
-        return state
-    }
-}
-
-extension AlarmReactor {
-    func didSelectAddButton() {
-        showAlarmDetailViewController()
-    }
-    
-    func didSelectToggleButton(at indexPath: IndexPath) {
+    private func changeActiveAlarm(at indexPath: IndexPath) {
         var alarm = alarms[indexPath.row]
         alarm.isActive = !alarm.isActive
         alarm.isActive ? addNotification(alarm: alarm, index: indexPath.row) : deleteNotification(id: alarm.id)
         update(alarm: alarm, index: indexPath.row)
     }
     
-    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton) {
+    private func changeWeek(at indexPath: IndexPath, buttonType: AlarmWeekButton) {
         var alarm = alarms[indexPath.row]
-        switch button {
+        switch buttonType {
         case .sunday: alarm.week.sunday = !alarm.week.sunday
         case .monday: alarm.week.monday = !alarm.week.monday
         case .tuesday: alarm.week.tuesday = !alarm.week.tuesday
@@ -173,14 +147,64 @@ extension AlarmReactor {
         update(alarm: alarm, index: indexPath.row)
     }
     
-    func didSelectRow(at indexPath: IndexPath) {
-        showAlarmDetailViewController(alarms[indexPath.row])
+    private func delete(indexPath: IndexPath) {
+        let alarm = alarms[indexPath.row]
+        self.useCase.delete(alarm.id)
+            .subscribe(onSuccess: { _ in })
+            .disposed(by: disposeBag)
+        self.alarms.remove(at: indexPath.row)
+    }
+}
+
+// MARK: - React
+extension AlarmReactor {
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .viewWillAppear:
+            return loadAlarm()
+        case let .didSelectRow(indexPath):
+            return .just(.showAlarmDetailViewController(indexPath))
+            
+        case let .didSelectToggleButton(indexPath):
+            return .just(.changeActiveAlarm(indexPath))
+            
+        case let .didSelectWeekButton(indexPath, buttonType):
+            return .just(.changeWeek(indexPath, buttonType))
+            
+        case .didSelectAddButton:
+            return .just(.showAlarmDetailViewController(nil))
+            
+        case let .delete(indexPath):
+            return .just(.delete(indexPath))
+        }
     }
     
-    func delete(indexPath: IndexPath) {
-        let alarm = alarms[indexPath.row]
-        delete(alarm: alarm)
-        self.alarms.remove(at: indexPath.row)
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var state = state
+        switch mutation {
+        case .loadAlarm:
+            state.alarmCellCount = alarms.count
+            
+        case let .error(error):
+            state.isError = error
+            
+        case let .showAlarmDetailViewController(indexPath):
+            guard let indexPath = indexPath else {
+                showAlarmDetailViewController()
+                break
+            }
+            showAlarmDetailViewController(alarms[indexPath.row])
+            
+        case let .changeActiveAlarm(indexPath):
+            changeActiveAlarm(at: indexPath)
+            
+        case let .changeWeek(indexPath, buttonType):
+            changeWeek(at: indexPath, buttonType: buttonType)
+            
+        case let .delete(indexPath):
+            delete(indexPath: indexPath)
+        }
+        return state
     }
 }
 
