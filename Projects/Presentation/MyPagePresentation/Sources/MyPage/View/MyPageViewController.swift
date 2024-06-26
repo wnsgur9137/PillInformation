@@ -21,6 +21,13 @@ public final class MyPageViewController: UIViewController, View {
     
     private let rootContainerView = UIView()
     
+    private let dismissButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.MyPage.Image.xmark, for: .normal)
+        button.tintColor = Constants.Color.systemBlack
+        return button
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "MyPage"
@@ -81,7 +88,11 @@ public final class MyPageViewController: UIViewController, View {
 // MARK: - Binding
 extension MyPageViewController {
     private func bindAction(_ reactor: MyPageReactor) {
-        
+        dismissButton.rx.tap
+            .bind {
+                self.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: MyPageReactor) {
@@ -107,6 +118,7 @@ extension MyPageViewController: MyPageAdapterDelegate {
 extension MyPageViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
+        rootContainerView.addSubview(dismissButton)
         
         rootContainerView.flex.define { rootView in
             rootView.addItem(titleLabel)
@@ -119,6 +131,7 @@ extension MyPageViewController {
     private func setupSubviewLayout() {
         rootContainerView.pin.all()
         rootContainerView.flex.layout()
+        dismissButton.pin.top(24.0).right(12.0).width(48.0).height(48.0)
     }
     
     private func updateSubviewLayout() {

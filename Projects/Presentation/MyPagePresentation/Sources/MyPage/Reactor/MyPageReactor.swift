@@ -11,8 +11,9 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
+
 public struct MyPageFlowAction {
-    
     
     public init() {
         
@@ -22,7 +23,7 @@ public struct MyPageFlowAction {
 public final class MyPageReactor: Reactor {
     public enum MyPageAlert {
         case warning
-        case logout
+        case signout
         case withdrawal
     }
     
@@ -35,14 +36,14 @@ public final class MyPageReactor: Reactor {
         case showAppPolicyViewController
         case showPrivacyPolicyViewController
         case showOpensourceLicenseViewController
-        case logout
+        case signout
         case withdrawal
         case showAlert(MyPageAlert)
     }
     
     public struct State {
         @Pulse var warningAlert: (title: String, message: String?)?
-        @Pulse var logoutAlert: Void?
+        @Pulse var signoutAlert: Void?
         @Pulse var withdrawalAlert: Void?
     }
     
@@ -58,22 +59,22 @@ public final class MyPageReactor: Reactor {
     }
     
     public var initialState = State()
-    public let flowAction: MyPageFlowAction
+    private let flowAction: MyPageFlowAction
     private let disposeBag = DisposeBag()
     
     private var appSettingTitles: [String] = [
-        "앱 알림 설정",
+        Constants.MyPage.appAlarmSetting,
     ]
     
     private var appInfoTitles: [String] = [
-        "이용약관",
-        "개인정보 처리방침",
-        "오픈소스 라이센스"
+        Constants.MyPage.appPolicy,
+        Constants.MyPage.privacyPolicy,
+        Constants.MyPage.opensourceLicense
     ]
     
     private var accountOptionTitles: [String] = [
-        "로그아웃",
-        "회원 탈퇴"
+        Constants.MyPage.signout,
+        Constants.MyPage.withdrawal
     ]
     
     public init(flowAction: MyPageFlowAction) {
@@ -95,7 +96,7 @@ public final class MyPageReactor: Reactor {
             
         case MyPageSection.accountOption.rawValue:
             switch indexPath.row {
-            case 0: return .just(.showAlert(.logout))
+            case 0: return .just(.showAlert(.signout))
             case 1: return .just(.showAlert(.withdrawal))
             default: break
             }
@@ -105,7 +106,7 @@ public final class MyPageReactor: Reactor {
         return nil
     }
     
-    private func logout() {
+    private func signout() {
         
     }
     
@@ -138,15 +139,15 @@ extension MyPageReactor {
         case .showOpensourceLicenseViewController:
             showOpensourceLicenseViewController()
             
-        case .logout:
-            logout()
+        case .signout:
+            signout()
             
         case .withdrawal:
             withdrawal()
             
         case let .showAlert(myPageAlert):
             switch myPageAlert {
-            case .logout: break
+            case .signout: break
             case .withdrawal: break
             case .warning: break
             }
