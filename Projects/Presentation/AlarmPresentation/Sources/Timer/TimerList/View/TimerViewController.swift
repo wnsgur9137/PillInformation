@@ -48,6 +48,7 @@ public final class TimerViewController: UIViewController, View {
             self.adapter = TimerAdapter(tableView: timerTableView,
                                         dataSource: reactor,
                                         delegate: self)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -79,28 +80,37 @@ extension TimerViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func bindAdapter(_ reactor: TimerReactor) {
+        adapter?.didSelectAddButton
+            .map { Reactor.Action.didSelectAddButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.deleteRow
+            .map { indexPath in
+                Reactor.Action.deleteRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - TimerAdapterDelegate
 extension TimerViewController: TimerAdapterDelegate {
-    public func didSelectAddButton() {
-        reactor?.showTimerDetailViewController()
-    }
-    
-    public func didSelectRow(at indexPath: IndexPath) {
-        reactor?.didSelectRow(at: indexPath)
-    }
-    
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return timerTableViewRowHeight
     }
     
     public func heightForHeader(in section: Int) -> CGFloat {
         return timerTableViewHeaderHeight
-    }
-    
-    public func deleteRow(at indexPath: IndexPath) {
-        reactor?.delete(indexPath: indexPath)
     }
 }
 

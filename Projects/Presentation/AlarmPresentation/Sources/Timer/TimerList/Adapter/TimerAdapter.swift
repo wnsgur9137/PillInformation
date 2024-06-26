@@ -17,17 +17,17 @@ public protocol TimerAdapterDataSource: AnyObject {
 }
 
 public protocol TimerAdapterDelegate: AnyObject {
-    func didSelectAddButton()
-    func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
     func heightForHeader(in section: Int) -> CGFloat
-    func deleteRow(at indexPath: IndexPath)
 }
 
 public final class TimerAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: TimerAdapterDataSource?
     private weak var delegate: TimerAdapterDelegate?
+    let didSelectAddButton = PublishSubject<Void>()
+    let didSelectRow = PublishSubject<IndexPath>()
+    let deleteRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView,
          dataSource: TimerAdapterDataSource,
@@ -72,9 +72,7 @@ extension TimerAdapter: UITableViewDataSource {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimerTableHeaderView.identifier) as? TimerTableHeaderView else { return nil }
         if section == 0 {
             headerView.addButton.rx.tap
-                .subscribe(onNext: { [weak self] in
-                    self?.delegate?.didSelectAddButton()
-                })
+                .bind(to: didSelectAddButton)
                 .disposed(by: headerView.disposeBag)
         }
         headerView.configure(isOperationHeader: section == 0)
@@ -86,7 +84,7 @@ extension TimerAdapter: UITableViewDataSource {
 extension TimerAdapter: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
     
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -100,7 +98,7 @@ extension TimerAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             tableView.beginUpdates()
-            delegate?.deleteRow(at: indexPath)
+            deleteRow.onNext(indexPath)
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.endUpdates()
         }

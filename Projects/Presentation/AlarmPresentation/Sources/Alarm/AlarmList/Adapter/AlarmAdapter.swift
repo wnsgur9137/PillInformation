@@ -102,9 +102,7 @@ extension AlarmAdapter: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AlarmTableHeaderView.identifier) as? AlarmTableHeaderView else { return nil }
         headerView.addButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.didSelectAddButton.onNext(Void())
-            })
+            .bind(to: didSelectAddButton)
             .disposed(by: headerView.disposeBag)
         return headerView
     }
