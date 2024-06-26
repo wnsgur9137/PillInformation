@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 import BasePresentation
 
@@ -19,8 +20,8 @@ public protocol SearchDetailDataSource: AnyObject {
 }
 
 public protocol SearchDetailDelegate: AnyObject {
-    func didSelectSection(at section: Int)
-    func didSelectRow(at indexPath: IndexPath)
+//    func didSelectSection(at section: Int)
+//    func didSelectRow(at indexPath: IndexPath)
     func heightForHeader(in section: Int) -> CGFloat
     func heightForFooter(in section: Int) -> CGFloat
     func scrollViewDidScroll(_ contentOffset: CGPoint)
@@ -30,6 +31,8 @@ public final class SearchDetailAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: SearchDetailDataSource?
     private weak var delegate: SearchDetailDelegate?
+    let didSelectSection = PublishSubject<Int>()
+    let didSelectRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView,
          dataSource: SearchDetailDataSource,
@@ -55,7 +58,7 @@ public final class SearchDetailAdapter: NSObject {
         headerView.imageView.rx.tapGesture()
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.delegate?.didSelectSection(at: section)
+                self?.didSelectSection.onNext(section)
             })
             .disposed(by: headerView.disposeBag)
         return headerView
@@ -98,7 +101,7 @@ extension SearchDetailAdapter: UITableViewDataSource {
 // MARK: - UITableView Delegate
 extension SearchDetailAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

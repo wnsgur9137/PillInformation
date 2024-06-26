@@ -64,9 +64,6 @@ public final class SearchDetailViewController: UIViewController, View {
     private let imageHeaderViewHeight: CGFloat = 300.0
     private let footerViewHeight: CGFloat = 300.0
     
-    private let didTapImageHeaderViewSubject: PublishSubject<Void> = .init()
-    private let didSelectRowSubject: PublishSubject<IndexPath> = .init()
-    
     // MARK: - LifeCycle
     public static func create(with reactor: SearchDetailReactor) -> SearchDetailViewController {
         let viewController = SearchDetailViewController()
@@ -83,6 +80,7 @@ public final class SearchDetailViewController: UIViewController, View {
                 dataSource: reactor,
                 delegate: self
             )
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -147,16 +145,6 @@ extension SearchDetailViewController {
             .map { Reactor.Action.popViewController }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        didTapImageHeaderViewSubject
-            .map { _ in Reactor.Action.didTapImageView }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        didSelectRowSubject
-            .map { indexPath in Reactor.Action.didSelectRow(indexPath) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchDetailReactor) {
@@ -186,19 +174,27 @@ extension SearchDetailViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func bindAdapter(_ reactor: SearchDetailReactor) {
+        adapter?.didSelectSection
+            .filter { $0 != 0 }
+            .map { _ in
+                Reactor.Action.didTapImageView
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - SearchDetail Delegate
 extension SearchDetailViewController: SearchDetailDelegate {
-    public func didSelectSection(at section: Int) {
-        guard section == 0 else { return }
-        didTapImageHeaderViewSubject.onNext(Void())
-    }
-    
-    public func didSelectRow(at indexPath: IndexPath) {
-        didSelectRowSubject.onNext(indexPath)
-    }
-    
     public func heightForHeader(in section: Int) -> CGFloat {
         guard section == 0 else { return 0 }
         return imageHeaderViewHeight
