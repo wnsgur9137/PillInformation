@@ -50,8 +50,6 @@ public final class HomeViewController: UIViewController, View {
     public var disposeBag = DisposeBag()
     private lazy var noticeTableRowHeight: CGFloat = 50.0
     
-    private let didSelectNoticeSubject: PublishSubject<Int> = .init()
-    
     // MARK: - LifeCycle
     
     public static func create(with reactor: HomeReactor) -> HomeViewController {
@@ -68,6 +66,7 @@ public final class HomeViewController: UIViewController, View {
             adapter = HomeAdapter(tableView: noticeTableView,
                                   dataSource: reactor,
                                   delegate: self)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -106,11 +105,6 @@ extension HomeViewController {
             .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        didSelectNoticeSubject
-            .map { row in Reactor.Action.didSelectNotice(row)}
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeReactor) {
@@ -131,14 +125,19 @@ extension HomeViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func bindAdapter(_ reactor: HomeReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - HomeAdapter Delegate
 extension HomeViewController: HomeAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        didSelectNoticeSubject.onNext(indexPath.row)
-    }
-    
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return noticeTableRowHeight
     }

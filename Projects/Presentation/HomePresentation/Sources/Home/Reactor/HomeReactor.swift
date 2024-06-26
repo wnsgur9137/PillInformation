@@ -30,14 +30,14 @@ public final class HomeReactor: Reactor {
         case loadNotices
         case changeTab(Int)
         case didTapUserButton
-        case didSelectNotice(Int)
+        case didSelectNotice(IndexPath)
     }
     
     public enum Mutation {
         case isLoadedNotices
         case changeTab(Int)
         case showMyPage
-        case showNoticeDetail(Int)
+        case showNoticeDetail(IndexPath)
         case loadError
     }
     
@@ -91,8 +91,8 @@ extension HomeReactor {
             return .just(.changeTab(index))
         case .didTapUserButton:
             return .just(.showMyPage)
-        case let .didSelectNotice(row):
-            return .just(.showNoticeDetail(row))
+        case let .didSelectNotice(indexPath)
+            return .just(.showNoticeDetail(indexPath))
         }
     }
     
@@ -105,8 +105,8 @@ extension HomeReactor {
             changeTab(index: index)
         case .showMyPage:
             showMyPage()
-        case let .showNoticeDetail(row):
-            didSelectNoticeRow(at: row)
+        case let .showNoticeDetail(indexPath):
+            showNoticeDetailViewController(at: indexPath)
         case .loadError:
             state.isFailedLoadNotices = Void()
         }
@@ -116,8 +116,8 @@ extension HomeReactor {
 
 // MARK: - Flow Action
 extension HomeReactor {
-    private func didSelectNoticeRow(at index: Int) {
-        flowAction.showNoticeDetailViewController(self.notices[index])
+    private func showNoticeDetailViewController(at indexPath: IndexPath) {
+        flowAction.showNoticeDetailViewController(self.notices[indexPath.row])
     }
     
     private func changeTab(index: Int) {

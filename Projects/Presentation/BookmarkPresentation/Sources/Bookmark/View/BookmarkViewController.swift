@@ -59,6 +59,7 @@ public final class BookmarkViewController: UIViewController, View {
             adapter = BookmarkAdapter(tableView: bookmarkTableView,
                                       dataSource: reactor,
                                       delegate: self)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
