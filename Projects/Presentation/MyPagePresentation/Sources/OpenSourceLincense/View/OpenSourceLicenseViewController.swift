@@ -1,5 +1,5 @@
 //
-//  OpenSourceLicneseViewController.swift
+//  OpenSourceLicenseViewController.swift
 //  MyPagePresentation
 //
 //  Created by JunHyeok Lee on 6/26/24.
@@ -15,7 +15,7 @@ import FlexLayout
 
 import BasePresentation
 
-public final class OpenSourceLicneseViewController: UIViewController, View {
+public final class OpenSourceLicenseViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
@@ -27,8 +27,8 @@ public final class OpenSourceLicneseViewController: UIViewController, View {
     
     // MARK: - Life cycle
     
-    public static func create(with reactor: OpenSourceLicenseReactor) -> OpenSourceLicneseViewController {
-        let viewController = OpenSourceLicneseViewController()
+    public static func create(with reactor: OpenSourceLicenseReactor) -> OpenSourceLicenseViewController {
+        let viewController = OpenSourceLicenseViewController()
         viewController.reactor = reactor
         return viewController
     }
@@ -48,7 +48,7 @@ public final class OpenSourceLicneseViewController: UIViewController, View {
 }
 
 // MARK: - Binding
-extension OpenSourceLicneseViewController {
+extension OpenSourceLicenseViewController {
     private func bindAction(_ reactor: OpenSourceLicenseReactor) {
         
     }
@@ -59,7 +59,7 @@ extension OpenSourceLicneseViewController {
 }
 
 // MARK: - Layout
-extension OpenSourceLicneseViewController {
+extension OpenSourceLicenseViewController {
     private func setupLayout() {
         
     }

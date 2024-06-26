@@ -37,4 +37,25 @@ extension MyPageDIContainer: MyPageCoordinatorDependencies {
     public func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController {
         return MyPageViewController.create(with: makeMyPageReactor(flowAction: flowAction))
     }
+    
+    private func makeAlarmSettingReactor(flowAction: AlarmSettingFlowAction) -> AlarmSettingReactor {
+        return AlarmSettingReactor(flowAction: flowAction)
+    }
+    public func makeAlarmSettingViewController(flowAction: AlarmSettingFlowAction) -> AlarmSettingViewController {
+        return AlarmSettingViewController.create(with: makeAlarmSettingReactor(flowAction: flowAction))
+    }
+    
+    private func makePolicyReactor(flowAction: PolicyFlowAction) -> PolicyReactor {
+        return PolicyReactor(flowAction: flowAction)
+    }
+    public func makePolicyViewController(flowAction: PolicyFlowAction) -> PolicyViewController {
+        return PolicyViewController.create(with: makePolicyReactor(flowAction: flowAction))
+    }
+    
+    private func makeOpenSourceLicenseReactor(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseReactor {
+        return OpenSourceLicenseReactor(flowAction: flowAction)
+    }
+    public func makeOpenSourceLicenseViewController(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseViewController {
+        return OpenSourceLicenseViewController.create(with: makeOpenSourceLicenseReactor(flowAction: flowAction))
+    }
 }

@@ -13,10 +13,22 @@ import RxCocoa
 
 import BasePresentation
 
+public enum Policy {
+    case app
+    case privacy
+}
+
 public struct MyPageFlowAction {
+    let showAlarmSettingViewController: () -> Void
+    let showPolicyViewController: (Policy) -> Void
+    let showOpenSourceLicenseViewController: () -> Void
     
-    public init() {
-        
+    public init(showAlarmSettingViewController: @escaping(()->Void),
+                showPolicyViewController: @escaping((Policy)->Void),
+                showOpenSourceLicenseViewController: @escaping(()->Void)) {
+        self.showAlarmSettingViewController = showAlarmSettingViewController
+        self.showPolicyViewController = showPolicyViewController
+        self.showOpenSourceLicenseViewController = showOpenSourceLicenseViewController
     }
 }
 
@@ -51,11 +63,6 @@ public final class MyPageReactor: Reactor {
         case appSetting = 0
         case appInfo = 1
         case accountOption = 2
-    }
-    
-    private enum Policy {
-        case app
-        case privacy
     }
     
     public var initialState = State()
