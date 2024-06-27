@@ -11,9 +11,10 @@ import Foundation
 import BasePresentation
 
 extension Constants {
-    struct MyPage {
-        
-    }
+    struct MyPage { }
+    struct AlarmSetting { }
+    struct Policy { }
+    struct OpenSourceLicense { }
 }
 
 extension Constants.MyPage {
@@ -23,4 +24,10 @@ extension Constants.MyPage {
     static let opensourceLicense: String = "오픈소스 라이센스"
     static let signout: String = "로그아웃"
     static let withdrawal: String = "회원 탈퇴"
+}
+
+extension Constants.AlarmSetting {
+    static let loadErrorTitle: String = "불러오기에 실패했습니다."
+    static let tryAgain: String = "다시 시도해주세요."
+    static let changeErrorTitle: String = "변경에 실패했습니다."
 }

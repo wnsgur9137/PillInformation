@@ -9,6 +9,7 @@
 import Foundation
 
 import NetworkInfra
+import BaseData
 import MyPageData
 import MyPageDomain
 import MyPagePresentation
@@ -38,8 +39,17 @@ extension MyPageDIContainer: MyPageCoordinatorDependencies {
         return MyPageViewController.create(with: makeMyPageReactor(flowAction: flowAction))
     }
     
+    private func makeUserRepository() -> UserRepository {
+        return DefaultUserRepository(networkManager: dependencies.networkManager)
+    }
+    private func makeUserMyPageRepository() -> UserMyPageRepository {
+        return DefaultUserMyPageRepository(userRepository: makeUserRepository())
+    }
+    private func makeAlarmSettingUseCase() -> AlarmSettingUseCase {
+        return DefaultAlarmSettingUseCase(with: makeUserMyPageRepository())
+    }
     private func makeAlarmSettingReactor(flowAction: AlarmSettingFlowAction) -> AlarmSettingReactor {
-        return AlarmSettingReactor(flowAction: flowAction)
+        return AlarmSettingReactor(with: makeAlarmSettingUseCase(), flowAction: flowAction)
     }
     public func makeAlarmSettingViewController(flowAction: AlarmSettingFlowAction) -> AlarmSettingViewController {
         return AlarmSettingViewController.create(with: makeAlarmSettingReactor(flowAction: flowAction))

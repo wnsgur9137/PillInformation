@@ -34,4 +34,8 @@ extension NetworkManager {
                                          token: token),
                              type: UserDTO.self)
     }
+    
+    public func deleteUser(token: String) -> Single<Void> {
+        return .just(Void())
+    }
 }

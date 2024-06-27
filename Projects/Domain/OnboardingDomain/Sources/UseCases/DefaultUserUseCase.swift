@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 import BaseDomain
+import BasePresentation
 import OnboardingPresentation
 
 public final class DefaultUserUseCase: UserUseCase {

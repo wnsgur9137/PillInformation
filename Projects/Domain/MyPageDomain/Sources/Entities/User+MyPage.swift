@@ -1,6 +1,6 @@
 //
-//  User+Onboarding.swift
-//  OnboardingDomain
+//  User+MyPage.swift
+//  MyPageDomain
 //
 //  Created by JunHyeok Lee on 6/27/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
@@ -20,3 +20,4 @@ extension User {
         return .init(id: self.id, isAgreeAppPolicy: self.isAgreeAppPolicy, isAgreeAgePolicy: self.isAgreeAgePolicy, isAgreePrivacyPolicy: self.isAgreePrivacyPolicy, isAgreeDaytimeNoti: self.isAgreeDaytimeNoti, isAgreeNighttimeNoti: self.isAgreeNighttimeNoti, accessToken: self.accessToken, refreshToken: self.refreshToken, social: self.social)
     }
 }
+

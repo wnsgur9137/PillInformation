@@ -10,6 +10,7 @@ import UIKit
 
 import NetworkInfra
 import BaseData
+import BasePresentation
 import OnboardingData
 import OnboardingDomain
 import OnboardingPresentation
