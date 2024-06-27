@@ -38,7 +38,7 @@ public final class MyPageViewController: UIViewController, View {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        
+        tableView.isScrollEnabled = false
         return tableView
     }()
     
@@ -56,8 +56,7 @@ public final class MyPageViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
-        rootContainerView.backgroundColor = Constants.Color.background
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = MyPageAdapter(
                 tableView: tableView,
@@ -129,7 +128,7 @@ extension MyPageViewController {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.all()
+        rootContainerView.pin.all(view.safeAreaInsets)
         rootContainerView.flex.layout()
         dismissButton.pin.top(24.0).right(12.0).width(48.0).height(48.0)
     }

@@ -91,7 +91,7 @@ extension HomeReactor {
             return .just(.changeTab(index))
         case .didTapUserButton:
             return .just(.showMyPage)
-        case let .didSelectNotice(indexPath)
+        case let .didSelectNotice(indexPath):
             return .just(.showNoticeDetail(indexPath))
         }
     }

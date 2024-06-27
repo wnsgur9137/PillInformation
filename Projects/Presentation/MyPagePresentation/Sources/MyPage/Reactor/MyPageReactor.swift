@@ -13,18 +13,18 @@ import RxCocoa
 
 import BasePresentation
 
-public enum Policy {
+public enum PolicyType {
     case app
     case privacy
 }
 
 public struct MyPageFlowAction {
     let showAlarmSettingViewController: () -> Void
-    let showPolicyViewController: (Policy) -> Void
+    let showPolicyViewController: (PolicyType) -> Void
     let showOpenSourceLicenseViewController: () -> Void
     
     public init(showAlarmSettingViewController: @escaping(()->Void),
-                showPolicyViewController: @escaping((Policy)->Void),
+                showPolicyViewController: @escaping((PolicyType)->Void),
                 showOpenSourceLicenseViewController: @escaping(()->Void)) {
         self.showAlarmSettingViewController = showAlarmSettingViewController
         self.showPolicyViewController = showPolicyViewController
@@ -93,7 +93,7 @@ public final class MyPageReactor: Reactor {
         case MyPageSection.appSetting.rawValue:
             return .just(.showAlarmViewController)
             
-        case MyPageSection.appInfo.rawValue: break
+        case MyPageSection.appInfo.rawValue:
             switch indexPath.row {
             case 0: return .just(.showAppPolicyViewController)
             case 1: return .just(.showPrivacyPolicyViewController)
@@ -166,18 +166,15 @@ extension MyPageReactor {
 // MARK: - Flow Action
 extension MyPageReactor {
     private func showAlarmViewController() {
-        
+        flowAction.showAlarmSettingViewController()
     }
     
-    private func showPolicyViewController(_ policy: Policy) {
-        switch policy {
-        case .app: break
-        case .privacy: break
-        }
+    private func showPolicyViewController(_ policyType: PolicyType) {
+        flowAction.showPolicyViewController(policyType)
     }
     
     private func showOpensourceLicenseViewController() {
-        
+        flowAction.showOpenSourceLicenseViewController()
     }
     
     private func showOnboardingScene() {

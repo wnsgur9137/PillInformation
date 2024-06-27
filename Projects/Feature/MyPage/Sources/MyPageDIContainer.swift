@@ -45,11 +45,11 @@ extension MyPageDIContainer: MyPageCoordinatorDependencies {
         return AlarmSettingViewController.create(with: makeAlarmSettingReactor(flowAction: flowAction))
     }
     
-    private func makePolicyReactor(flowAction: PolicyFlowAction) -> PolicyReactor {
-        return PolicyReactor(flowAction: flowAction)
+    private func makePolicyReactor(policyType: PolicyType, flowAction: PolicyFlowAction) -> PolicyReactor {
+        return PolicyReactor(policyType: policyType, flowAction: flowAction)
     }
-    public func makePolicyViewController(flowAction: PolicyFlowAction) -> PolicyViewController {
-        return PolicyViewController.create(with: makePolicyReactor(flowAction: flowAction))
+    public func makePolicyViewController(policyType: PolicyType, flowAction: PolicyFlowAction) -> PolicyViewController {
+        return PolicyViewController.create(with: makePolicyReactor(policyType: policyType, flowAction: flowAction))
     }
     
     private func makeOpenSourceLicenseReactor(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseReactor {

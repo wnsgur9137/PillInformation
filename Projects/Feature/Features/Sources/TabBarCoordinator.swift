@@ -124,12 +124,12 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     }
     
     public func showMyPage() {
-        let test = childCoordinators.filter { $0.type == .myPage }.first as? MyPageCoordinator
-        guard let test = test else {
+        guard let myPageCoordinator = childCoordinators.filter({ $0.type == .myPage }).first as? MyPageCoordinator else {
+            print("maekMyPageCoordinator")
             makeMyPageCoordinator()
             return
         }
-        test.start()
+        myPageCoordinator.start()
     }
 }
 

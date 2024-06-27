@@ -21,23 +21,30 @@ public struct PolicyFlowAction {
 
 public final class PolicyReactor: Reactor {
     public enum Action {
-        case test
+        case viewDidLoad
     }
     
     public enum Mutation {
-        case test
+        case loadPolicy
     }
     
     public struct State {
-        
+        var url: URL?
     }
     
     public var initialState = State()
     private let flowAction: PolicyFlowAction
     private let disposeBag = DisposeBag()
+    private let policyType: PolicyType
     
-    public init(flowAction: PolicyFlowAction) {
+    public init(policyType: PolicyType,
+                flowAction: PolicyFlowAction) {
+        self.policyType = policyType
         self.flowAction = flowAction
+    }
+    
+    private func loadPolicy() {
+        
     }
 }
 
@@ -45,14 +52,16 @@ public final class PolicyReactor: Reactor {
 extension PolicyReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        default: return .just(.test)
+        case .viewDidLoad:
+            return .just(.loadPolicy)
         }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        default: break
+        case .loadPolicy:
+            state.url = URL(string: "https://naver.com")
         }
         return state
     }

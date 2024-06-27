@@ -14,7 +14,7 @@ import BasePresentation
 public protocol MyPageCoordinatorDependencies {
     func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController
     func makeAlarmSettingViewController(flowAction: AlarmSettingFlowAction) -> AlarmSettingViewController
-    func makePolicyViewController(flowAction: PolicyFlowAction) -> PolicyViewController
+    func makePolicyViewController(policyType: PolicyType, flowAction: PolicyFlowAction) -> PolicyViewController
     func makeOpenSourceLicenseViewController(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseViewController
 }
 
@@ -54,7 +54,11 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
             showOpenSourceLicenseViewController: showOpenSourceLicenseViewController
         )
         let viewController = dependencies.makeMyPageViewController(flowAction: flowAction)
-        tabBarController?.present(viewController, animated: true)
+        
+        navigationController?.pushViewController(viewController, animated: false)
+        guard let navigationController = navigationController else { return }
+        navigationController.modalPresentationStyle = .overFullScreen
+        tabBarController?.present(navigationController, animated: true)
         myPageViewController = viewController
         myPageViewController?.didDisappear = {
             self.finish()
@@ -68,9 +72,12 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
         alarmSettingViewController = viewController
     }
     
-    private func showPolicyViewController(_ policy: Policy) {
+    private func showPolicyViewController(_ policyType: PolicyType) {
         let flowAction = PolicyFlowAction()
-        let viewController = dependencies.makePolicyViewController(flowAction: flowAction)
+        let viewController = dependencies.makePolicyViewController(
+            policyType: policyType,
+            flowAction: flowAction
+        )
         navigationController?.pushViewController(viewController, animated: true)
         policyViewController = viewController
     }
