@@ -19,16 +19,18 @@ final class AlarmSettingTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteSemiBold(24.0)
         return label
     }()
     
     private let contentLabel: UILabel = {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteMedium(18.0)
         return label
     }()
     
-    private let toggleButton: UISwitch = {
+    let toggleButton: UISwitch = {
         let button = UISwitch()
         return button
     }()
@@ -57,12 +59,13 @@ final class AlarmSettingTableViewCell: UITableViewCell {
 // MARK: - Layout
 extension AlarmSettingTableViewCell {
     private func setupLayout() {
-        addSubview(rootContainerView)
+        contentView.addSubview(rootContainerView)
         
-        rootContainerView.flex.define { rootView in
+        rootContainerView.flex
+            .direction(.row)
+            .define { rootView in
             rootView.addItem()
                 .grow(1.0)
-                .direction(.column)
                 .define { labelStack in
                     labelStack.addItem(titleLabel)
                     labelStack.addItem(contentLabel)

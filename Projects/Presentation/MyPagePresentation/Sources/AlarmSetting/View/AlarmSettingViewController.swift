@@ -51,6 +51,7 @@ public final class AlarmSettingViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = AlarmSettingAdapter(
                 tableView: tableView,
@@ -61,9 +62,19 @@ public final class AlarmSettingViewController: UIViewController, View {
         setupLayout()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     public func bind(reactor: AlarmSettingReactor) {
@@ -71,13 +82,15 @@ public final class AlarmSettingViewController: UIViewController, View {
         bindState(reactor)
     }
     
-    private func showSingleAlert(_ contents: (title: String, message: String?)) {
+    private func showErrorAlert(_ contents: (title: String, message: String?)) {
         AlertViewer()
             .showSingleButtonAlert(
                 self,
                 title: AlertText(text: contents.title),
                 message: AlertText(text: contents.message ?? ""),
-                confirmButtonInfo: .init(title: Constants.confirm)
+                confirmButtonInfo: AlertButtonInfo(title: Constants.confirm, action: {
+                    self.navigationController?.popViewController(animated: true)
+                })
             )
     }
 }
@@ -105,7 +118,7 @@ extension AlarmSettingViewController {
             .asDriver(onErrorDriveWith: .never())
             .drive { [weak self] errorContents in
                 guard let errorContents = errorContents else { return }
-                self?.showSingleAlert(errorContents)
+                self?.showErrorAlert(errorContents)
             }
             .disposed(by: disposeBag)
     }
@@ -133,7 +146,7 @@ extension AlarmSettingViewController {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.all()
+        rootContainerView.pin.all(view.safeAreaInsets)
         rootContainerView.flex.layout()
     }
 }

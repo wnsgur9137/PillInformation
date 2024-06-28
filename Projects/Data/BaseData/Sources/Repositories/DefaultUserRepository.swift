@@ -49,7 +49,7 @@ extension DefaultUserRepository {
         return .create() { single in
             self.userStorage.getTokens(userID: userID)
                 .flatMap { accessToken, refreshToken in
-                    self.networkManager.getUser(token: accessToken)
+                    return self.networkManager.getUser(token: accessToken)
                 }
                 .subscribe(onSuccess: { userDTO in
                     single(.success(userDTO))

@@ -59,18 +59,23 @@ public final class AlarmSettingReactor: Reactor {
                 flowAction: AlarmSettingFlowAction) {
         self.alarmSettingUseCase = alarmSettingUseCase
         self.flowAction = flowAction
-        
-        loadUserAlarmSetting()
     }
     
-    private func loadUserAlarmSetting() {
-        self.alarmSettingUseCase.fetchAlarmSetting()
-            .subscribe(onSuccess: { [weak self] userAlarmSetting in
-                self?.userAlarmSetting = userAlarmSetting
-            }, onFailure: { [weak self] error in
-                self?.userAlarmSetting = nil
-            })
-            .disposed(by: disposeBag)
+    private func loadUserAlarmSetting() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.alarmSettingUseCase.fetchAlarmSetting()
+                .subscribe(onSuccess: { [weak self] userAlarmSetting in
+                    self?.userAlarmSetting = userAlarmSetting
+                    observable.onNext(.reloadData)
+                }, onFailure: { [weak self] error in
+                    self?.userAlarmSetting = nil
+                    observable.onNext(.error(.load))
+                })
+                .disposed(by: disposeBag)
+            
+            return Disposables.create()
+        }
     }
     
     private func changeAlarm(at indexPath: IndexPath) -> Observable<Mutation> {
@@ -125,10 +130,7 @@ extension AlarmSettingReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .viewDidLoad:
-            guard let userAlarmSetting = userAlarmSetting else {
-                return .just(.error(.load))
-            }
-            return .just(.reloadData)
+            return loadUserAlarmSetting()
             
         case let .didSelectRow(indexPath):
             return changeAlarm(at: indexPath)
