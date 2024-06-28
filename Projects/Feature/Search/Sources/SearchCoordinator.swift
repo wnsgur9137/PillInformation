@@ -33,7 +33,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     public var type: CoordinatorType { .search }
     
     private let dependencies: SearchCoordinatorDependencies
-    private let tabDependencies: SearchTabDependencies
+    private let tabDependencies: SearchTabDependencies?
     private weak var searchViewController: SearchViewController?
     private weak var searchResultViewController: SearchResultViewController?
     private weak var searchDetailViewController: SearchDetailViewController?
@@ -41,7 +41,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     public init(navigationController: UINavigationController,
                 dependencies: SearchCoordinatorDependencies,
-                tabDependencies: SearchTabDependencies) {
+                tabDependencies: SearchTabDependencies?) {
         self.navigationController = navigationController
         self.dependencies = dependencies
         self.tabDependencies = tabDependencies
@@ -106,6 +106,6 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     }
     
     private func showMyPage() {
-        tabDependencies.showMyPage()
+        tabDependencies?.showMyPage()
     }
 }

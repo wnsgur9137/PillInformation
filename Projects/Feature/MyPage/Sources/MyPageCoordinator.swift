@@ -35,7 +35,7 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     private weak var policyViewController: PolicyViewController?
     private weak var openSourceLicenseViewController: OpenSourceLicenseViewController?
     
-    public init(tabBarController: UITabBarController,
+    public init(tabBarController: UITabBarController?,
                 navigationController: UINavigationController,
                 dependencies: MyPageCoordinatorDependencies) {
         self.tabBarController = tabBarController

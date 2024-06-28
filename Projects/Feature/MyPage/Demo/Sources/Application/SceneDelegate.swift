@@ -1,21 +1,21 @@
 //
 //  SceneDelegate.swift
-//  SearchDemoApp
+//  MyPageDemoApp
 //
-//  Created by JunHyeok Lee on 5/7/24.
+//  Created by JunHyeok Lee on 6/28/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import UIKit
 
-import Search
+import MyPage
 import BasePresentation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    let searchDemoAppDIContainer = SearchDemoAppDIContainer()
-    var searchCoordinator: SearchCoordinator?
+    let myPageDemoAppDIContainer = MyPageDemoAppDIContainer()
+    var myPageCoordinator: MyPageCoordinator?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -29,13 +29,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.view.backgroundColor = Constants.Color.background
         window?.rootViewController = navigationController
-        let searchDIContainer = searchDemoAppDIContainer.makeSearchDIContainer()
-        searchCoordinator = DefaultSearchCoordinator(
+        let myPageDIContainer = myPageDemoAppDIContainer.makeMyPageDIContainer()
+        myPageCoordinator = DefaultMyPageCoordinator(
+            tabBarController: nil,
             navigationController: navigationController,
-            dependencies: searchDIContainer,
-            tabDependencies: nil
+            dependencies: myPageDIContainer
         )
-        searchCoordinator?.start()
+        myPageCoordinator?.start()
         window?.makeKeyAndVisible()
         return
     }
