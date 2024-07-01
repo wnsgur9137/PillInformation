@@ -12,6 +12,7 @@ let project: Project = .project(
     name: "MyPagePresentation",
     product: .staticFramework,
     dependencies: [
-        .Project.Feature.Presentation.Base
+        .Project.Feature.Presentation.Base,
+        .SPM.UI.AcknowList
     ]
 )

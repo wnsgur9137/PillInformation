@@ -61,11 +61,4 @@ extension MyPageDIContainer: MyPageCoordinatorDependencies {
     public func makePolicyViewController(policyType: PolicyType, flowAction: PolicyFlowAction) -> PolicyViewController {
         return PolicyViewController.create(with: makePolicyReactor(policyType: policyType, flowAction: flowAction))
     }
-    
-    private func makeOpenSourceLicenseReactor(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseReactor {
-        return OpenSourceLicenseReactor(flowAction: flowAction)
-    }
-    public func makeOpenSourceLicenseViewController(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseViewController {
-        return OpenSourceLicenseViewController.create(with: makeOpenSourceLicenseReactor(flowAction: flowAction))
-    }
 }
