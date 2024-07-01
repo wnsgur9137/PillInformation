@@ -14,9 +14,9 @@ import RxCocoa
 import BasePresentation
 
 public struct AlarmSettingFlowAction {
-    
-    public init() {
-        
+    let popViewController: (Bool) -> Void
+    public init(popViewController: @escaping ((Bool)->Void)) {
+        self.popViewController = popViewController
     }
 }
 
@@ -31,16 +31,18 @@ public final class AlarmSettingReactor: Reactor {
     public enum Action {
         case viewDidLoad
         case didSelectRow(IndexPath)
+        case popViewController
     }
     
     public enum Mutation {
         case error(AlarmSettingError)
         case reloadData
+        case popViewController
     }
     
     public struct State {
         var reloadData: Void?
-        @Pulse var errorAlertContents: ErrorContents?
+        @Pulse var errorAlertContents: (contents: ErrorContents, needDismiss: Bool)?
     }
     
     private enum AlarmType: Int {
@@ -79,11 +81,9 @@ public final class AlarmSettingReactor: Reactor {
     }
     
     private func changeAlarm(at indexPath: IndexPath) -> Observable<Mutation> {
-        
         guard var userAlarmSetting = userAlarmSetting else {
             return .just(.error(.change))
         }
-        
         switch indexPath.row {
         case AlarmType.day.rawValue:
             userAlarmSetting.isAgreeDaytimeNoti = !userAlarmSetting.isAgreeDaytimeNoti
@@ -93,7 +93,6 @@ public final class AlarmSettingReactor: Reactor {
             
         default: return .just(.error(.change))
         }
-        
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
             self.alarmSettingUseCase.updateAlarmSetting(userAlarmSetting)
@@ -101,26 +100,26 @@ public final class AlarmSettingReactor: Reactor {
                     self?.userAlarmSetting = userAlarmSetting
                     return observable.onNext(.reloadData)
                 }, onFailure: { error in
-                    return observable.onError(error)
+                    return observable.onNext(.error(.change))
                 })
                 .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
     
-    private func makeErrorAlertContents(_ error: AlarmSettingError) -> ErrorContents {
+    private func makeErrorAlertContents(_ error: AlarmSettingError) -> (contents: ErrorContents, needDismiss: Bool) {
         switch error {
         case .load:
-            return (
+            return ((
                 title: Constants.AlarmSetting.loadErrorTitle,
                 message: Constants.AlarmSetting.tryAgain
-            )
+            ), needDismiss: true)
             
         case .change:
-            return (
+            return ((
                 title: Constants.AlarmSetting.changeErrorTitle,
                 message: Constants.AlarmSetting.tryAgain
-            )
+            ), needDismiss: false)
         }
     }
 }
@@ -134,6 +133,9 @@ extension AlarmSettingReactor {
             
         case let .didSelectRow(indexPath):
             return changeAlarm(at: indexPath)
+            
+        case .popViewController:
+            return .just(.popViewController)
         }
     }
     
@@ -145,6 +147,9 @@ extension AlarmSettingReactor {
             
         case let .error(error):
             state.errorAlertContents = makeErrorAlertContents(error)
+            
+        case .popViewController:
+            popViewController()
         }
         return state
     }
@@ -152,7 +157,9 @@ extension AlarmSettingReactor {
 
 // MARK: - Flow action
 extension AlarmSettingReactor {
-    
+    private func popViewController(_ animated: Bool = true) {
+        flowAction.popViewController(animated)
+    }
 }
 
 // MARK: - AlarmSettingAdapter DataSource
@@ -163,9 +170,17 @@ extension AlarmSettingReactor: AlarmSettingAdapterDataSource {
     
     public func cellForRow(at indexPath: IndexPath) -> AlarmSettingCellInfo {
         if indexPath.row == 0 {
-            return .init(title: "낮", content: "동의하라", isAgree: true)
+            return .init(
+                title: Constants.AlarmSetting.dayNotiTitle,
+                content: Constants.AlarmSetting.dayNotiDescription,
+                isAgree: userAlarmSetting?.isAgreeDaytimeNoti ?? false
+            )
         } else {
-            return .init(title: "밤", content: "동의하람마", isAgree: false)
+            return .init(
+                title: Constants.AlarmSetting.nightNotiTitle,
+                content: Constants.AlarmSetting.nightNotiDescription,
+                isAgree: userAlarmSetting?.isAgreeNighttimeNoti ?? false
+            )
         }
     }
 }

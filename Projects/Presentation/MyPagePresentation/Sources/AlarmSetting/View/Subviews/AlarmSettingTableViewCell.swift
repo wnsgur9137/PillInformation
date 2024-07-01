@@ -20,13 +20,15 @@ final class AlarmSettingTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = Constants.Color.systemLabel
         label.font = Constants.Font.suiteSemiBold(24.0)
+        label.numberOfLines = 0
         return label
     }()
     
     private let contentLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.systemDarkGray
         label.font = Constants.Font.suiteMedium(18.0)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -39,10 +41,13 @@ final class AlarmSettingTableViewCell: UITableViewCell {
         titleLabel.text = contents.title
         contentLabel.text = contents.content
         toggleButton.isOn = contents.isAgree
+        
+        setupSubviewLayout()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         setupLayout()
     }
     
@@ -54,6 +59,12 @@ final class AlarmSettingTableViewCell: UITableViewCell {
         super.layoutSubviews()
         setupSubviewLayout()
     }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        self.contentView.bounds.size.width = size.width
+        self.contentView.flex.layout(mode: .adjustHeight)
+        return self.contentView.frame.size
+    }
 }
 
 // MARK: - Layout
@@ -63,18 +74,20 @@ extension AlarmSettingTableViewCell {
         
         rootContainerView.flex
             .direction(.row)
+            .alignItems(.center)
             .define { rootView in
-            rootView.addItem()
-                .grow(1.0)
-                .define { labelStack in
-                    labelStack.addItem(titleLabel)
-                    labelStack.addItem(contentLabel)
-                }
-            rootView.addItem(toggleButton)
-                .alignSelf(.center)
-                .width(144.0)
-                .height(144.0)
-        }
+                rootView.addItem()
+                    .margin(12.0)
+                    .width(80%)
+                    .define { labelStack in
+                        labelStack.addItem(titleLabel)
+                        labelStack.addItem(contentLabel)
+                    }
+                rootView.addItem(toggleButton)
+                    .margin(12.0)
+                    .width(20%)
+                    .grow(0.5)
+            }
     }
     
     private func setupSubviewLayout() {

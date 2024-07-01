@@ -17,7 +17,8 @@ public protocol AlarmSettingAdapterDataSource: AnyObject {
 public final class AlarmSettingAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: AlarmSettingAdapterDataSource?
-    let didSelectRow = PublishSubject<IndexPath>()
+    private let disposeBag = DisposeBag()
+    let didSelectSwitch = PublishSubject<IndexPath>()
     
     public init(tableView: UITableView, 
                 dataSource: AlarmSettingAdapterDataSource?) {
@@ -41,6 +42,13 @@ extension AlarmSettingAdapter: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AlarmSettingTableViewCell.identifier, for: indexPath) as? AlarmSettingTableViewCell else { return .init() }
         guard let contents = dataSource?.cellForRow(at: indexPath) else { return cell }
         cell.configure(contents)
+        
+        cell.toggleButton.rx.isOn
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                self?.didSelectSwitch.onNext(indexPath)
+            })
+            .disposed(by: disposeBag)
         return cell
     }
 }

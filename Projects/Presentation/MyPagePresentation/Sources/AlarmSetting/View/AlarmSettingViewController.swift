@@ -23,6 +23,7 @@ public final class AlarmSettingViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.text = Constants.AlarmSetting.title
         label.textColor = Constants.Color.systemLabel
         label.font = Constants.Font.suiteBold(32.0)
         return label
@@ -40,6 +41,7 @@ public final class AlarmSettingViewController: UIViewController, View {
     
     public var disposeBag = DisposeBag()
     private var adapter: AlarmSettingAdapter?
+    private let popViewController = PublishSubject<Void>()
     
     // MARK: - Life cycle
     
@@ -82,14 +84,15 @@ public final class AlarmSettingViewController: UIViewController, View {
         bindState(reactor)
     }
     
-    private func showErrorAlert(_ contents: (title: String, message: String?)) {
+    private func showErrorAlert(_ contents: (title: String, message: String?), needDismiss: Bool) {
         AlertViewer()
             .showSingleButtonAlert(
                 self,
                 title: AlertText(text: contents.title),
                 message: AlertText(text: contents.message ?? ""),
-                confirmButtonInfo: AlertButtonInfo(title: Constants.confirm, action: {
-                    self.navigationController?.popViewController(animated: true)
+                confirmButtonInfo: AlertButtonInfo(title: Constants.confirm, action: { [weak self] in
+                    guard needDismiss else { return }
+                    self?.popViewController.onNext(Void())
                 })
             )
     }
@@ -100,6 +103,11 @@ extension AlarmSettingViewController {
     private func bindAction(_ reactor: AlarmSettingReactor) {
         rx.viewDidLoad
             .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        popViewController
+            .map { Reactor.Action.popViewController }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -118,13 +126,13 @@ extension AlarmSettingViewController {
             .asDriver(onErrorDriveWith: .never())
             .drive { [weak self] errorContents in
                 guard let errorContents = errorContents else { return }
-                self?.showErrorAlert(errorContents)
+                self?.showErrorAlert(errorContents.contents, needDismiss: errorContents.needDismiss)
             }
             .disposed(by: disposeBag)
     }
     
     private func bindAdapter(_ reactor: AlarmSettingReactor) {
-        adapter?.didSelectRow
+        adapter?.didSelectSwitch
             .map { indexPath in
                 Reactor.Action.didSelectRow(indexPath)
             }
@@ -142,6 +150,7 @@ extension AlarmSettingViewController {
             rootView.addItem(titleLabel)
                 .margin(24.0, 12.0, 24.0, 12.0)
             rootView.addItem(tableView)
+                .grow(1.0)
         }
     }
     

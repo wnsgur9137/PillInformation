@@ -66,7 +66,9 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     }
     
     private func showAlarmSettingViewController() {
-        let flowAction = AlarmSettingFlowAction()
+        let flowAction = AlarmSettingFlowAction(
+            popViewController: popViewController
+        )
         let viewController = dependencies.makeAlarmSettingViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         alarmSettingViewController = viewController
@@ -87,5 +89,9 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
         let viewController = dependencies.makeOpenSourceLicenseViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         openSourceLicenseViewController = viewController
+    }
+    
+    private func popViewController(_ animated: Bool) {
+        navigationController?.popViewController(animated: animated)
     }
 }

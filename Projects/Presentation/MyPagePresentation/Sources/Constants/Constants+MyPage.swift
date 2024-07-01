@@ -27,7 +27,12 @@ extension Constants.MyPage {
 }
 
 extension Constants.AlarmSetting {
+    static let title: String = "Alarm"
     static let loadErrorTitle: String = "불러오기에 실패했습니다."
     static let tryAgain: String = "다시 시도해주세요."
     static let changeErrorTitle: String = "변경에 실패했습니다."
+    static let dayNotiTitle: String = "주간 알림 수신 동의"
+    static let dayNotiDescription: String = "PillInformation이 제공하는 주간 알림을 받습니다."
+    static let nightNotiTitle: String = "야간 알림 수신 동의"
+    static let nightNotiDescription: String = "PillInformation이 제공하는 야간 알림을 받습니다."
 }
