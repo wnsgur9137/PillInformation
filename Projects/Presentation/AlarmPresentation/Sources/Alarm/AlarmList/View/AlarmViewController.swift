@@ -44,6 +44,7 @@ public final class AlarmViewController: UIViewController, View {
             adapter = AlarmAdapter(tableView: alarmTableView,
                                    dataSource: reactor,
                                    delegate: self)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -75,36 +76,51 @@ extension AlarmViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func bindAdapter(_ reactor: AlarmReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectToggleButton
+            .map { indexPath in
+                Reactor.Action.didSelectToggleButton(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectWeekButton
+            .map { indexPath, buttonType in
+                Reactor.Action.didSelectWeekButton(indexPath: indexPath, buttonType: buttonType)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectAddButton
+            .map { Reactor.Action.didSelectAddButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.deleteRow
+            .map { indexPath in
+                Reactor.Action.delete(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - AlarmAdapter Delegate
 extension AlarmViewController: AlarmAdapterDelegate {
-    func didSelectRow(at indexPath: IndexPath) {
-        reactor?.didSelectRow(at: indexPath)
-    }
-    
-    func didSelectToggleButton(at indexPath: IndexPath) {
-        reactor?.didSelectToggleButton(at: indexPath)
-    }
-    
-    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton) {
-        reactor?.didSelectWeekButton(at: indexPath, button: button)
-    }
-    
-    func didSelectAddButton() {
-        reactor?.didSelectAddButton()
-    }
-    
     func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return alarmTableViewRowHeight
     }
     
     func heightForHeader(in section: Int) -> CGFloat {
         return alarmTableViewHeaderHeight
-    }
-    
-    func deleteRow(at indexPath: IndexPath) {
-        reactor?.delete(indexPath: indexPath)
     }
 }
 

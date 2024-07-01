@@ -7,39 +7,29 @@
 //
 
 import UIKit
+import RxSwift
 
 public protocol SearchResultCollectionViewDataSource: AnyObject {
     func numberOfItems(in: Int) -> Int
     func cellForItem(at indexPath: IndexPath) -> PillInfoModel
 }
 
-public protocol SearchResultCollectionViewDelegate: AnyObject {
-    func didSelectItem(at indexPath: IndexPath)
-}
-
-public protocol SearchResultTextFieldDelegate: AnyObject {
-    func shouldReturn(text: String?)
-}
-
 public final class SearchResultAdapter: NSObject {
     private let collectionView: UICollectionView
     private let textField: UITextField
     private weak var collectionViewDataSource: SearchResultCollectionViewDataSource?
-    private weak var collectionViewDelegate: SearchResultCollectionViewDelegate?
-    private weak var textFieldDelegate: SearchResultTextFieldDelegate?
+    
+    let didSelectItem = PublishSubject<IndexPath>()
+    let shouldReturn = PublishSubject<String?>()
     
     init(collectionView: UICollectionView,
          textField: UITextField,
-         collectionViewDataSource: SearchResultCollectionViewDataSource,
-         collectionViewDelegate: SearchResultCollectionViewDelegate,
-         textFieldDelegate: SearchResultTextFieldDelegate) {
+         collectionViewDataSource: SearchResultCollectionViewDataSource) {
         collectionView.register(SearchResultCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultCollectionViewCell.identifier)
         
         self.collectionView = collectionView
         self.textField = textField
         self.collectionViewDataSource = collectionViewDataSource
-        self.collectionViewDelegate = collectionViewDelegate
-        self.textFieldDelegate = textFieldDelegate
         super.init()
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -65,7 +55,7 @@ extension SearchResultAdapter: UICollectionViewDataSource {
 // MARK: - UICollectionView Delegate
 extension SearchResultAdapter: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionViewDelegate?.didSelectItem(at: indexPath)
+        didSelectItem.onNext(indexPath)
     }
 }
 
@@ -79,7 +69,7 @@ extension SearchResultAdapter: UICollectionViewDelegateFlowLayout {
 // MARK: - UITextField Delegate
 extension SearchResultAdapter: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textFieldDelegate?.shouldReturn(text: textField.text)
+        shouldReturn.onNext(textField.text)
         return true
     }
 }

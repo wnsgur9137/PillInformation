@@ -24,10 +24,15 @@ public struct TimerFlowAction {
 public final class TimerReactor: Reactor {
     public enum Action {
         case viewWillAppear
+        case didSelectAddButton
+        case didSelectRow(IndexPath)
+        case deleteRow(IndexPath)
     }
     
     public enum Mutation {
         case loadTimerData
+        case showTimerDetailViewController(IndexPath?)
+        case delete(IndexPath)
         case loadError
     }
     
@@ -75,7 +80,16 @@ public final class TimerReactor: Reactor {
             .disposed(by: disposeBag)
     }
     
-    private func delete(timerModel: TimerModel?) {
+    private func delete(indexPath: IndexPath) {
+        var timerModel: TimerModel?
+        if indexPath.section == 0 {
+            timerModel = operationTimerData[indexPath.row]
+            operationTimerData.remove(at: indexPath.row)
+        } else if indexPath.section == 1 {
+            timerModel = nonOperationTimerData[indexPath.row]
+            nonOperationTimerData.remove(at: indexPath.row)
+        }
+        
         guard let timerModel = timerModel else { return }
         self.useCase.delete(timerModel.id)
             .subscribe(onSuccess: { _ in })
@@ -89,6 +103,15 @@ extension TimerReactor {
         switch action {
         case .viewWillAppear:
             return loadTimerData()
+            
+        case .didSelectAddButton:
+            return .just(.showTimerDetailViewController(nil))
+            
+        case let .didSelectRow(indexPath):
+            return .just(.showTimerDetailViewController(indexPath))
+            
+        case let .deleteRow(indexPath):
+            return .just(.delete(indexPath))
         }
     }
     
@@ -97,38 +120,17 @@ extension TimerReactor {
         switch mutation {
         case .loadTimerData:
             state.timerCellCount = operationTimerData.count + nonOperationTimerData.count
+            
         case .loadError:
             state.isError = state.isError.update(Void())
+            
+        case let .showTimerDetailViewController(indexPath):
+            showTimerDetailViewController(at: indexPath)
+            
+        case let .delete(indexPath):
+            delete(indexPath: indexPath)
         }
         return state
-    }
-}
-
-extension TimerReactor {
-    func didSelectAddButton() {
-        showTimerDetailViewController()
-    }
-    
-    func didSelectRow(at indexPath: IndexPath) {
-        var timerModel: TimerModel?
-        if indexPath.section == 0 {
-            timerModel = operationTimerData[indexPath.row]
-        } else if indexPath.section == 1 {
-            timerModel = nonOperationTimerData[indexPath.row]
-        }
-        showTimerDetailViewController(timerModel: timerModel)
-    }
-    
-    func delete(indexPath: IndexPath) {
-        var timerModel: TimerModel?
-        if indexPath.section == 0 {
-            timerModel = operationTimerData[indexPath.row]
-            operationTimerData.remove(at: indexPath.row)
-        } else if indexPath.section == 1 {
-            timerModel = nonOperationTimerData[indexPath.row]
-            nonOperationTimerData.remove(at: indexPath.row)
-        }
-        delete(timerModel: timerModel)
     }
 }
 
@@ -157,7 +159,18 @@ extension TimerReactor: TimerAdapterDataSource {
 
 // MARK: - FlowAction
 extension TimerReactor {
-    func showTimerDetailViewController(timerModel: TimerModel? = nil) {
+    func showTimerDetailViewController(at indexPath: IndexPath? = nil) {
+        guard let indexPath = indexPath else {
+            flowAction.showTimerDetailViewController(nil)
+            return
+        }
+        
+        var timerModel: TimerModel?
+        if indexPath.section == 0 {
+            timerModel = operationTimerData[indexPath.row]
+        } else if indexPath.section == 1 {
+            timerModel = nonOperationTimerData[indexPath.row]
+        }
         flowAction.showTimerDetailViewController(timerModel)
     }
 }

@@ -19,9 +19,12 @@ enum SearchError: String, Error {
 
 public struct SearchFlowAction {
     let showSearchResultViewController: (String) -> Void
+    let showMyPage: () -> Void
     
-    public init(showSearchResultViewController: @escaping (String) -> Void) {
+    public init(showSearchResultViewController: @escaping (String) -> Void,
+                showMyPage: @escaping () -> Void) {
         self.showSearchResultViewController = showSearchResultViewController
+        self.showMyPage = showMyPage
     }
 }
 
@@ -30,10 +33,12 @@ public final class SearchReactor: Reactor {
     
     public enum Action {
         case search(String?)
+        case didTapUserButton
     }
     
     public enum Mutation {
         case showSearchResultViewController(String)
+        case showMyPage
         case error(Error)
     }
     
@@ -86,7 +91,11 @@ extension SearchReactor {
                 return .just(.error(SearchError.tooShortKeyword))
             }
             return .just(.showSearchResultViewController(keyword))
+            
+        case .didTapUserButton:
+            return .just(.showMyPage)
         }
+
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
@@ -97,6 +106,9 @@ extension SearchReactor {
             
         case let .error(error):
             state.alertContents = handle(error)
+            
+        case .showMyPage:
+            showMyPage()
         }
         return state
     }
@@ -106,6 +118,10 @@ extension SearchReactor {
 extension SearchReactor {
     private func showSearchResultViewController(keyword: String) {
         flowAction.showSearchResultViewController(keyword)
+    }
+    
+    private func showMyPage() {
+        flowAction.showMyPage()
     }
 }
 

@@ -18,6 +18,10 @@ public protocol SearchCoordinatorDependencies {
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
 }
 
+public protocol SearchTabDependencies {
+    func showMyPage()
+}
+
 public protocol SearchCoordinator: Coordinator {
     func showSearchViewController()
 }
@@ -29,15 +33,18 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     public var type: CoordinatorType { .search }
     
     private let dependencies: SearchCoordinatorDependencies
+    private let tabDependencies: SearchTabDependencies?
     private weak var searchViewController: SearchViewController?
     private weak var searchResultViewController: SearchResultViewController?
     private weak var searchDetailViewController: SearchDetailViewController?
     private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,
-                dependencies: SearchCoordinatorDependencies) {
+                dependencies: SearchCoordinatorDependencies,
+                tabDependencies: SearchTabDependencies?) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        self.tabDependencies = tabDependencies
     }
     
     public func start() {
@@ -46,7 +53,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     public func showSearchViewController() {
         let flowAction = SearchFlowAction(
-            showSearchResultViewController: showSearchResultViewController
+            showSearchResultViewController: showSearchResultViewController,
+            showMyPage: showMyPage
         )
         let viewController = dependencies.makeSearchViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
@@ -56,7 +64,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     private func showSearchResultViewController(keyword: String) {
         let flowAction = SearchResultFlowAction(
             popViewController: popViewController,
-            showSearchDetailViewController: showSearchDetailViewController
+            showSearchDetailViewController: showSearchDetailViewController,
+            showMyPage: showMyPage
         )
         let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -94,5 +103,9 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     private func dismiss(animated: Bool = true) {
         navigationController?.dismiss(animated: animated)
+    }
+    
+    private func showMyPage() {
+        tabDependencies?.showMyPage()
     }
 }

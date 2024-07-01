@@ -32,7 +32,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let searchDIContainer = searchDemoAppDIContainer.makeSearchDIContainer()
         searchCoordinator = DefaultSearchCoordinator(
             navigationController: navigationController,
-            dependencies: searchDIContainer
+            dependencies: searchDIContainer,
+            tabDependencies: nil
         )
         searchCoordinator?.start()
         window?.makeKeyAndVisible()

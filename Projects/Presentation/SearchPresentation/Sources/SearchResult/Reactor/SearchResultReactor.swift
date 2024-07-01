@@ -16,11 +16,14 @@ import BasePresentation
 public struct SearchResultFlowAction {
     let popViewController: (Bool) -> Void
     let showSearchDetailViewController: (PillInfoModel) -> Void
+    let showMyPage: () -> Void
     
     public init(popViewController: @escaping (Bool) -> Void,
-                showSearchDetailViewController: @escaping (PillInfoModel) -> Void) {
+                showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
+                showMyPage: @escaping () -> Void) {
         self.popViewController = popViewController
         self.showSearchDetailViewController = showSearchDetailViewController
+        self.showMyPage = showMyPage
     }
 }
 
@@ -32,6 +35,7 @@ public final class SearchResultReactor: Reactor {
         case dismiss
         case search(String?)
         case didSelectItem(IndexPath)
+        case didTapUserButton
     }
     
     public enum Mutation {
@@ -40,6 +44,7 @@ public final class SearchResultReactor: Reactor {
         case isEmptyResult
         case error(Error)
         case showSearchDetail(PillInfoModel)
+        case showMyPage
     }
     
     public struct State {
@@ -134,6 +139,9 @@ extension SearchResultReactor {
             
         case let .didSelectItem(indexPath):
             return .just(.showSearchDetail(results[indexPath.item]))
+            
+        case .didTapUserButton:
+            return .just(.showMyPage)
         }
     }
     
@@ -157,6 +165,9 @@ extension SearchResultReactor {
             
         case let .showSearchDetail(pillInfo):
             showSearchDetailViewController(pillInfo)
+            
+        case .showMyPage:
+            showMyPage()
         }
         return state
     }
@@ -170,6 +181,10 @@ extension SearchResultReactor {
     
     private func showSearchDetailViewController(_ pillInfo: PillInfoModel) {
         flowAction.showSearchDetailViewController(pillInfo)
+    }
+    
+    private func showMyPage() {
+        flowAction.showMyPage()
     }
 }
 

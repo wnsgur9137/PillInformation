@@ -2,14 +2,14 @@
 //  User+Onboarding.swift
 //  OnboardingDomain
 //
-//  Created by JunHyeok Lee on 4/2/24.
+//  Created by JunHyeok Lee on 6/27/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 
 import BaseDomain
-import OnboardingPresentation
+import BasePresentation
 
 extension User {
     static func makeUser(userModel: UserModel) -> User {

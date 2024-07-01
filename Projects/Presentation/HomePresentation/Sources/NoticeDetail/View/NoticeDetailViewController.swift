@@ -17,10 +17,12 @@ import BasePresentation
 
 public final class NoticeDetailViewController: UIViewController, View {
     
+    private let rootContainerView = UIView()
+    private let searchTextFieldView = SearchTextFieldView(hasDismiss: true)
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
-    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: true)
+//    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: true)
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -77,22 +79,15 @@ public final class NoticeDetailViewController: UIViewController, View {
         view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = NoticeDetailAdapter(tableView: otherNoticeTableView,
-                                               dataSource: reactor,
-                                               delegate: self)
+                                               dataSource: reactor)
+            bindAdapter(reactor)
         }
-        setupBackwardButtonAction()
         setupLayout()
     }
     
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
-    }
-    
-    private func setupBackwardButtonAction() {
-        navigationView.setupBackwardButton(UIAction { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        })
     }
     
     public func bind(reactor: NoticeDetailReactor) {
@@ -104,13 +99,23 @@ public final class NoticeDetailViewController: UIViewController, View {
 // MARK: - Binding
 extension NoticeDetailViewController {
     private func bindAction(_ reactor: NoticeDetailReactor) {
-        self.rx.viewDidLoad
+        rx.viewDidLoad
             .flatMap { _ in
                 Observable.concat(
                     Observable.just(Reactor.Action.loadNotice),
                     Observable.just(Reactor.Action.loadOtherNotices)
                 )
             }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.dismissButton.rx.tap
+            .map { Reactor.Action.popViewController }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -135,12 +140,14 @@ extension NoticeDetailViewController {
             })
             .disposed(by: disposeBag)
     }
-}
-
-// MARK: - NoticeDetail Delegate
-extension NoticeDetailViewController: NoticeDetailAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        reactor?.didSelectNoticeRow(at: indexPath.row)
+    
+    private func bindAdapter(_ reactor: NoticeDetailReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 
@@ -148,64 +155,65 @@ extension NoticeDetailViewController: NoticeDetailAdapterDelegate {
 extension NoticeDetailViewController {
     private func setupLayout() {
         let defaultMargin = UIEdgeInsets(top: 24.0, left: 12.0, bottom: 0, right: 12.0)
-        view.addSubview(scrollView)
-        view.addSubview(navigationView)
+        view.addSubview(rootContainerView)
+        view.addSubview(searchTextFieldView)
+        rootContainerView.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-        scrollView.flex.define { scrollView in
-            scrollView.addItem(contentView)
-                .marginTop(navigationView.height)
-                .define { contentView in
-                    contentView.addItem(titleLabel)
-                        .margin(defaultMargin)
-                    contentView.addItem(writerLabel)
-                        .margin(defaultMargin)
-                        .marginTop(12.0)
-                    
-                    contentView.addItem()
-                        .height(1.0)
-                        .backgroundColor(Constants.Color.systemLabel)
-                        .margin(defaultMargin)
-                    
-                    contentView.addItem(contentLabel)
-                        .margin(defaultMargin)
-                    
-                    contentView.addItem()
-                        .height(1.0)
-                        .backgroundColor(Constants.Color.systemLabel)
-                        .margin(defaultMargin)
-                    
-                    contentView.addItem(otherNoticeLabel)
-                        .margin(defaultMargin)
-                        .marginLeft(24.0)
-                    contentView.addItem(otherNoticeTableView)
-                        .margin(defaultMargin)
-                        .grow(1.0)
-                    
-                    contentView.addItem()
-                        .height(1.0)
-                        .backgroundColor(Constants.Color.systemLabel)
-                        .margin(defaultMargin)
-                    
-                    contentView.addItem(footerView)
-                        .marginTop(48.0)
-            }
+        contentView.flex.define { contentView in
+            contentView.addItem(titleLabel)
+                .margin(defaultMargin)
+            contentView.addItem(writerLabel)
+                .margin(defaultMargin)
+                .marginTop(12.0)
+            
+            contentView.addItem()
+                .height(1.0)
+                .backgroundColor(Constants.Color.systemLabel)
+                .margin(defaultMargin)
+            
+            contentView.addItem(contentLabel)
+                .margin(defaultMargin)
+            
+            contentView.addItem()
+                .height(1.0)
+                .backgroundColor(Constants.Color.systemLabel)
+                .margin(defaultMargin)
+            
+            contentView.addItem(otherNoticeLabel)
+                .margin(defaultMargin)
+                .marginLeft(24.0)
+            contentView.addItem(otherNoticeTableView)
+                .margin(defaultMargin)
+                .grow(1.0)
+            
+            contentView.addItem()
+                .height(1.0)
+                .backgroundColor(Constants.Color.systemLabel)
+                .margin(defaultMargin)
+            
+            contentView.addItem(footerView)
+                .marginTop(48.0)
         }
     }
     
     private func setupSubviewLayout() {
-        navigationView.pin.left().right().top(view.safeAreaInsets.top)
-        navigationView.flex.layout()
-        scrollView.pin.all()
-        scrollView.flex.layout()
+        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
+        searchTextFieldView.flex.layout()
+        rootContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
+        
+        scrollView.pin
+            .top()
+            .horizontally()
+            .bottom(view.safeAreaInsets.bottom)
+        
+        contentView.pin.top().horizontally()
         contentView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
     
     private func updateSubviewLayout() {
         contentView.flex.layout(mode: .adjustHeight)
-        scrollView.flex.layout()
-        scrollView.contentSize = CGSize(width: contentView.frame.width,
-                                        height: contentView.frame.height + navigationView.height)
+        scrollView.contentSize = contentView.frame.size
     }
 }

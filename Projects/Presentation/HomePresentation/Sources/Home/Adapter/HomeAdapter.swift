@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 public protocol HomeAdapterDataSource: AnyObject {
     func numberOfRows(in section: Int) -> Int
@@ -14,7 +15,6 @@ public protocol HomeAdapterDataSource: AnyObject {
 }
 
 public protocol HomeAdapterDelegate: AnyObject {
-    func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
 }
 
@@ -23,6 +23,7 @@ public final class HomeAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: HomeAdapterDataSource?
     private weak var delegate: HomeAdapterDelegate?
+    let didSelectRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView,
          dataSource: HomeAdapterDataSource,
@@ -60,7 +61,7 @@ extension HomeAdapter: UITableViewDataSource {
 // MARK: - UITableView Delegate
 extension HomeAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

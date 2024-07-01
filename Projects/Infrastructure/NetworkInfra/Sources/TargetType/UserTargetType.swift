@@ -50,7 +50,7 @@ extension UserTargetType: MoyaErrorHandleable {
     public var headers: [String : String]? {
         switch self {
         case let .getUser(token):
-            return ["token": "\(token)"]
+            return ["accessToken": "\(token)"]
             
         case let .signup(identifier, _):
             return ["identifier": "\(identifier)"]
@@ -59,7 +59,7 @@ extension UserTargetType: MoyaErrorHandleable {
             return ["accessToken": "\(accessToken)"]
             
         case let .updateUser(_, _, _, _, _, token):
-            return ["token": "\(token)"]
+            return ["accessToken": "\(token)"]
         }
     }
     

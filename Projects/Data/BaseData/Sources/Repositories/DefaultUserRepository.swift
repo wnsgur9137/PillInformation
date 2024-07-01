@@ -16,6 +16,7 @@ public protocol UserRepository {
     func signinUser(identifier: String, social: String) -> Single<UserDTO>
     func signinUser(accessToken: String) -> Single<UserDTO>
     func postUser(_ user: UserDTO) -> Single<UserDTO>
+    func deleteUser(_ userID: Int) -> Single<Void>
     
     func fetchUserStorage(userID: Int) -> Single<UserDTO>
     func fetchFirstUser() -> Single<UserDTO>
@@ -48,7 +49,7 @@ extension DefaultUserRepository {
         return .create() { single in
             self.userStorage.getTokens(userID: userID)
                 .flatMap { accessToken, refreshToken in
-                    self.networkManager.getUser(token: accessToken)
+                    return self.networkManager.getUser(token: accessToken)
                 }
                 .subscribe(onSuccess: { userDTO in
                     single(.success(userDTO))
@@ -107,6 +108,23 @@ extension DefaultUserRepository {
                 }
                 .subscribe(onSuccess: { userDTO in
                     single(.success(userDTO))
+                }, onFailure: { error in
+                    single(.failure(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    public func deleteUser(_ userID: Int) -> Single<Void> {
+        return .create() { single in
+            userStorage.getTokens(userID: userID)
+                .flatMap { accessToken, refreshToken -> Single<Void> in
+                    return networkManager.deleteUser(token: accessToken)
+                }
+                .subscribe(onSuccess: { void in
+                    single(.success(void))
                 }, onFailure: { error in
                     single(.failure(error))
                 })

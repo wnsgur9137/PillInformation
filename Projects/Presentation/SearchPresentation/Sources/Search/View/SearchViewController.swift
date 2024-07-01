@@ -50,7 +50,7 @@ public final class SearchViewController: UIViewController, View {
     
     // MARK: - LifeCycle
     
-    public func create(with reactor: SearchReactor) -> SearchViewController {
+    public static func create(with reactor: SearchReactor) -> SearchViewController {
         let viewController = SearchViewController()
         viewController.reactor = reactor
         return viewController
@@ -93,6 +93,11 @@ extension SearchViewController {
             .map { text in
                 Reactor.Action.search(text)
             }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }

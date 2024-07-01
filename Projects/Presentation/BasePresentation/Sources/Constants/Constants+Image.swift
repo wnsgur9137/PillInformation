@@ -18,6 +18,7 @@ extension Constants {
         public static let plus: UIImage = UIImage(systemName: "plus") ?? UIImage()
         public static let backward: UIImage = .init(systemName: "chevron.backward") ?? UIImage()
         public static let pasteboard: UIImage = UIImage(systemName: "doc.on.clipboard.fill") ?? UIImage()
+        public static let personFill: UIImage = .init(systemName: "person.fill") ?? UIImage()
     }
 }
 

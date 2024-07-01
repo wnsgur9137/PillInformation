@@ -35,6 +35,7 @@ public final class SearchTextFieldView: UIView {
         textField.placeholder = "Search"
         textField.font = Constants.Font.suiteMedium(14.0)
         textField.textColor = Constants.Color.systemLabel
+        textField.returnKeyType = .search
         return textField
     }()
     
@@ -46,11 +47,11 @@ public final class SearchTextFieldView: UIView {
         return button
     }()
     
-    public let photoSearchButton: UIButton = {
+    public let userIconButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.Color.systemBlue
-        button.setImage(Constants.Image.camera, for: .normal)
-        button.tintColor = Constants.Color.systemWhite
+        button.setImage(Constants.Image.personFill, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.tintColor = Constants.Color.systemLightGray
         return button
     }()
     
@@ -107,11 +108,12 @@ extension SearchTextFieldView {
                     .marginLeft(16.0)
                     .cornerRadius(12.0)
                 
-                rootView.addItem(photoSearchButton)
+                rootView.addItem(userIconButton)
                     .width(48.0)
                     .height(48.0)
                     .marginLeft(8.0)
-                    .cornerRadius(12.0)
+                    .cornerRadius(24.0)
+                    .border(0.5, Constants.Color.systemLightGray)
         }
     }
     

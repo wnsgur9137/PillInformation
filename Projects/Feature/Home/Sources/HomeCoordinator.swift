@@ -18,6 +18,7 @@ public protocol HomeCoordinatorDependencies {
 
 public protocol HomeTabDependencies {
     func changeTab(index: Int)
+    func showMyPage()
 }
 
 public protocol HomeCoordinator: Coordinator {
@@ -50,7 +51,8 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     public func showHomeViewController() {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
-            changeTabIndex: tabDependencies.changeTab
+            changeTabIndex: tabDependencies.changeTab,
+            showMyPage: showMyPage
         )
         let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
@@ -58,9 +60,21 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     }
     
     private func showNoticeDetailViewController(notice: NoticeModel) {
-        let flowAction = NoticeDetailFlowAction(showNoticeDetailViewController: showNoticeDetailViewController)
+        let flowAction = NoticeDetailFlowAction(
+            showNoticeDetailViewController: showNoticeDetailViewController,
+            popViewController: popViewController,
+            showMyPage: showMyPage
+        )
         let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         noticeDetailViewController = viewController
+    }
+    
+    private func popViewController(animated: Bool) {
+        navigationController?.popViewController(animated: animated)
+    }
+    
+    private func showMyPage() {
+        tabDependencies.showMyPage()
     }
 }

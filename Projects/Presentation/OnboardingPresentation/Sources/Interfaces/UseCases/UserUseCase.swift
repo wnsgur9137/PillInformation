@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import BasePresentation
+
 public protocol UserUseCase {
     func executeUser(userID: Int) -> Single<UserModel>
     func signin(identifier: String, social: String) -> Single<UserModel>

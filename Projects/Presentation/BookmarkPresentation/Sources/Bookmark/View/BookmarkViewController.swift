@@ -59,6 +59,7 @@ public final class BookmarkViewController: UIViewController, View {
             adapter = BookmarkAdapter(tableView: bookmarkTableView,
                                       dataSource: reactor,
                                       delegate: self)
+            bindAdapter(reactor)
         }
         setupLayout()
     }
@@ -82,20 +83,28 @@ extension BookmarkViewController {
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
-        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: BookmarkReactor) {
         
     }
+    
+    private func bindAdapter(_ reactor: BookmarkReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - BookmarkAdapter Delegate
 extension BookmarkViewController: BookmarkAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        
-    }
-    
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return bookmarkTableViewHeight
     }

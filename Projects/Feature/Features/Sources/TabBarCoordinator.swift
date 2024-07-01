@@ -49,7 +49,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     }
     
     public func start() {
-        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm, .myPage]
+        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm]
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }
@@ -75,7 +75,8 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         case .bookmark:
             let bookmarkCoordinator = DefaultBookmarkCoordinator(
                 navigationController: navigationController,
-                dependencies: bookmarkDIContainer
+                dependencies: bookmarkDIContainer,
+                tabDependencies: self
             )
             bookmarkCoordinator.finishDelegate = self
             bookmarkCoordinator.start()
@@ -83,7 +84,8 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         case .search:
             let searchCoordinator = DefaultSearchCoordinator(
                 navigationController: navigationController,
-                dependencies: searchDIContainer
+                dependencies: searchDIContainer,
+                tabDependencies: self
             )
             searchCoordinator.finishDelegate = self
             searchCoordinator.start()
@@ -97,15 +99,6 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             alarmCoordinator.finishDelegate = self
             alarmCoordinator.start()
             childCoordinators.append(alarmCoordinator)
-            
-        case .myPage:
-            let myPageCoordinator = DefaultMyPageCoordinator(
-                navigationController: navigationController,
-                dependencies: myPageDIContainer
-            )
-            myPageCoordinator.finishDelegate = self
-            myPageCoordinator.start()
-            childCoordinators.append(myPageCoordinator)
         }
         
         return navigationController
@@ -115,6 +108,28 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         tabBarController?.setViewControllers(controllers, animated: true)
         tabBarController?.selectedIndex = TabBarPage.home.orderNumber()
     }
+    
+    private func makeMyPageCoordinator() {
+        guard let tabBarController = tabBarController else { return }
+        let navigationController = UINavigationController()
+        navigationController.setNavigationBarHidden(true, animated: false)
+        let myPageCoordinator = DefaultMyPageCoordinator(
+            tabBarController: tabBarController,
+            navigationController: navigationController,
+            dependencies: myPageDIContainer
+        )
+        myPageCoordinator.finishDelegate = self
+        myPageCoordinator.start()
+        childCoordinators.append(myPageCoordinator)
+    }
+    
+    public func showMyPage() {
+        guard let myPageCoordinator = childCoordinators.filter({ $0.type == .myPage }).first as? MyPageCoordinator else {
+            makeMyPageCoordinator()
+            return
+        }
+        myPageCoordinator.start()
+    }
 }
 
 // MARK: - CoordinatorFinishDelegate
@@ -122,6 +137,7 @@ extension DefaultTabBarCoordinator: CoordinatorFinishDelegate {
     public func coordinatorDidFinish(childCoordinator: Coordinator) {
         childCoordinators = childCoordinators.filter{ $0.type != childCoordinator.type }
         navigationController?.viewControllers.removeAll()
+        
 //        switch childCoordinator.type {
 //        case .home:
 //            navigationController?.viewControllers.removeAll()
@@ -142,4 +158,14 @@ extension DefaultTabBarCoordinator: HomeTabDependencies {
     public func changeTab(index: Int) {
         tabBarController?.selectedIndex = index
     }
+}
+
+// MARK: - BookmarkDependencies
+extension DefaultTabBarCoordinator: BookmarkTabDependencies {
+    
+}
+
+// MARK: - SearchDependencies
+extension DefaultTabBarCoordinator: SearchTabDependencies {
+    
 }

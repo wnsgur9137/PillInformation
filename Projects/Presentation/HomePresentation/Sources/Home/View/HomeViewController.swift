@@ -66,8 +66,8 @@ public final class HomeViewController: UIViewController, View {
             adapter = HomeAdapter(tableView: noticeTableView,
                                   dataSource: reactor,
                                   delegate: self)
+            bindAdapter(reactor)
         }
-        setupSearchButtons()
         setupLayout()
     }
     
@@ -87,23 +87,22 @@ public final class HomeViewController: UIViewController, View {
     }
 }
 
-// MARK: - Methods
-extension HomeViewController {
-    private func setupSearchButtons() {
-        searchTextFieldView.searchTextField.rx.tapGesture()
-            .skip(1)
-            .subscribe(onNext: { [weak self] _ in
-                self?.reactor?.changeTab(index: 2)
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 // MARK: - Binding
 extension HomeViewController {
     private func bindAction(_ reactor: HomeReactor) {
-        self.rx.viewDidLoad
+        rx.viewDidLoad
             .map { Reactor.Action.loadNotices }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.searchTextField.rx.tapGesture()
+            .skip(1)
+            .map { _ in Reactor.Action.changeTab(2) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -126,14 +125,19 @@ extension HomeViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func bindAdapter(_ reactor: HomeReactor) {
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - HomeAdapter Delegate
 extension HomeViewController: HomeAdapterDelegate {
-    public func didSelectRow(at indexPath: IndexPath) {
-        reactor?.didSelectNoticeRow(at: indexPath.row)
-    }
-    
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return noticeTableRowHeight
     }

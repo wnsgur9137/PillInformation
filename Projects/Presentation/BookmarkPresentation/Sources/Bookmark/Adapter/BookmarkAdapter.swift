@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 public protocol BookmarkAdapterDataSource: AnyObject {
     func numberOfRows(in section: Int) -> Int
@@ -14,7 +15,6 @@ public protocol BookmarkAdapterDataSource: AnyObject {
 }
 
 public protocol BookmarkAdapterDelegate: AnyObject {
-    func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
 }
 
@@ -23,6 +23,7 @@ public final class BookmarkAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: BookmarkAdapterDataSource?
     private weak var delegate: BookmarkAdapterDelegate?
+    let didSelectRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView, 
          dataSource: BookmarkAdapterDataSource,
@@ -53,7 +54,7 @@ extension BookmarkAdapter: UITableViewDataSource {
 // MARK: - UITableView Delegate
 extension BookmarkAdapter: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

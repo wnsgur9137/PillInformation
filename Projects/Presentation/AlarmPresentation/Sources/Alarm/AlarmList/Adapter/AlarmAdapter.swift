@@ -16,29 +16,29 @@ protocol AlarmAdapterDataSource: AnyObject {
 }
 
 protocol AlarmAdapterDelegate: AnyObject {
-    func didSelectAddButton()
-    func didSelectToggleButton(at indexPath: IndexPath)
-    func didSelectWeekButton(at indexPath: IndexPath, button: AlarmAdapter.WeekButton)
-    func didSelectRow(at indexPath: IndexPath)
     func heightForRow(at indexPath: IndexPath) -> CGFloat
     func heightForHeader(in section: Int) -> CGFloat
-    func deleteRow(at indexPath: IndexPath)
+}
+
+public enum AlarmWeekButton: Int {
+    case sunday
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
 }
 
 final class AlarmAdapter: NSObject {
-    enum WeekButton: Int {
-        case sunday
-        case monday
-        case tuesday
-        case wednesday
-        case thursday
-        case friday
-        case saturday
-    }
-    
     private let tableView: UITableView
     private weak var dataSource: AlarmAdapterDataSource?
     private weak var delegate: AlarmAdapterDelegate?
+    let didSelectRow = PublishSubject<IndexPath>()
+    let didSelectToggleButton = PublishSubject<IndexPath>()
+    let didSelectWeekButton = PublishSubject<(IndexPath, AlarmWeekButton)>()
+    let didSelectAddButton = PublishSubject<Void>()
+    let deleteRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView, 
          dataSource: AlarmAdapterDataSource?,
@@ -73,7 +73,7 @@ extension AlarmAdapter: UITableViewDataSource {
         cell.toggleButton.rx.tapGesture()
             .skip(1)
             .subscribe(onNext: { [weak self] _ in
-                self?.delegate?.didSelectToggleButton(at: indexPath)
+                self?.didSelectToggleButton.onNext(indexPath)
             })
             .disposed(by: cell.disposeBag)
         
@@ -90,8 +90,8 @@ extension AlarmAdapter: UITableViewDataSource {
         weekButtons.enumerated().forEach { index, button in
             button.rx.tap
                 .subscribe(onNext: { [weak self] in
-                    guard let buttonType = WeekButton(rawValue: index) else { return }
-                    self?.delegate?.didSelectWeekButton(at: indexPath, button: buttonType)
+                    guard let buttonType = AlarmWeekButton(rawValue: index) else { return }
+                    self?.didSelectWeekButton.onNext((indexPath, buttonType))
                     button.isSelected = !button.isSelected
                 })
                 .disposed(by: cell.disposeBag)
@@ -102,9 +102,7 @@ extension AlarmAdapter: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AlarmTableHeaderView.identifier) as? AlarmTableHeaderView else { return nil }
         headerView.addButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.delegate?.didSelectAddButton()
-            })
+            .bind(to: didSelectAddButton)
             .disposed(by: headerView.disposeBag)
         return headerView
     }
@@ -113,7 +111,7 @@ extension AlarmAdapter: UITableViewDataSource {
 // MARK: - UITableView Delegate
 extension AlarmAdapter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.didSelectRow(at: indexPath)
+        didSelectRow.onNext(indexPath)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -127,7 +125,7 @@ extension AlarmAdapter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             tableView.beginUpdates()
-            delegate?.deleteRow(at: indexPath)
+            deleteRow.onNext(indexPath)
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.endUpdates()
         }

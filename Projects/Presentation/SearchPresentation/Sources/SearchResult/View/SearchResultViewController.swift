@@ -39,10 +39,6 @@ public final class SearchResultViewController: UIViewController, View {
     public var disposeBag = DisposeBag()
     private var adapter: SearchResultAdapter?
     
-    private let searchRelay: PublishRelay<String?> = .init()
-    private let didSelectItemRelay: PublishRelay<IndexPath> = .init()
-    
-    
     // MARK: - LifeCycle
     public static func create(with reactor: SearchResultReactor) -> SearchResultViewController {
         let viewController = SearchResultViewController()
@@ -56,9 +52,8 @@ public final class SearchResultViewController: UIViewController, View {
         if let reactor = reactor {
             self.adapter = SearchResultAdapter(collectionView: collectionView,
                                                textField: searchTextFieldView.searchTextField,
-                                               collectionViewDataSource: reactor,
-                                               collectionViewDelegate: self,
-                                               textFieldDelegate: self)
+                                               collectionViewDataSource: reactor)
+            bindAdapter(reactor)
         }
         addSubviews()
     }
@@ -102,17 +97,8 @@ extension SearchResultViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        searchRelay
-            .map { text in
-                Reactor.Action.search(text)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        didSelectItemRelay
-            .map { indexPath in
-                Reactor.Action.didSelectItem(indexPath)
-            }
+        searchTextFieldView.userIconButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -147,19 +133,21 @@ extension SearchResultViewController {
             })
             .disposed(by: disposeBag)
     }
-}
-
-// MARK: - SearchResultAdapter CollectionViewDelegate
-extension SearchResultViewController: SearchResultCollectionViewDelegate {
-    public func didSelectItem(at indexPath: IndexPath) {
-        didSelectItemRelay.accept(indexPath)
-    }
-}
-
-// MARK: - SearchResultAdapter TextFieldDelegate
-extension SearchResultViewController: SearchResultTextFieldDelegate {
-    public func shouldReturn(text: String?) {
-        searchRelay.accept(text)
+    
+    private func bindAdapter(_ reactor: SearchResultReactor) {
+        adapter?.didSelectItem
+            .map { indexPath in
+                Reactor.Action.didSelectItem(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.shouldReturn
+            .map { keyword in
+                Reactor.Action.search(keyword)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 
