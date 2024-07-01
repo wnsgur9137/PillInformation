@@ -10,12 +10,12 @@ import UIKit
 
 import MyPagePresentation
 import BasePresentation
+import AcknowList
 
 public protocol MyPageCoordinatorDependencies {
     func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController
     func makeAlarmSettingViewController(flowAction: AlarmSettingFlowAction) -> AlarmSettingViewController
     func makePolicyViewController(policyType: PolicyType, flowAction: PolicyFlowAction) -> PolicyViewController
-    func makeOpenSourceLicenseViewController(flowAction: OpenSourceLicenseFlowAction) -> OpenSourceLicenseViewController
 }
 
 public protocol MyPageCoordinator: Coordinator {
@@ -33,7 +33,6 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     private weak var myPageViewController: MyPageViewController?
     private weak var alarmSettingViewController: AlarmSettingViewController?
     private weak var policyViewController: PolicyViewController?
-    private weak var openSourceLicenseViewController: OpenSourceLicenseViewController?
     
     public init(tabBarController: UITabBarController?,
                 navigationController: UINavigationController,
@@ -85,10 +84,10 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     }
     
     private func showOpenSourceLicenseViewController() {
-        let flowAction = OpenSourceLicenseFlowAction()
-        let viewController = dependencies.makeOpenSourceLicenseViewController(flowAction: flowAction)
+        let viewController = AcknowListViewController()
+        viewController.title = "OpenSource License"
+        navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.pushViewController(viewController, animated: true)
-        openSourceLicenseViewController = viewController
     }
     
     private func popViewController(_ animated: Bool) {

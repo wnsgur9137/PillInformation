@@ -56,6 +56,7 @@ public extension TargetDependency.SPM.UI {
     static let Lottie: TargetDependency = .external(name: "Lottie")
     static let Tabman: TargetDependency = .external(name: "Tabman")
     static let IQKeyboardManager: TargetDependency = .external(name: "IQKeyboardManagerSwift")
+    static let AcknowList: TargetDependency = .external(name: "AcknowList")
 }
 public extension TargetDependency.SPM.Test {
     static let RxBlocking: TargetDependency = .external(name: "RxBlocking")

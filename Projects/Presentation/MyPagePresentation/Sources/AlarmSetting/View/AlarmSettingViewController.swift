@@ -150,6 +150,7 @@ extension AlarmSettingViewController {
             rootView.addItem(titleLabel)
                 .margin(24.0, 12.0, 24.0, 12.0)
             rootView.addItem(tableView)
+                .margin(12.0)
                 .grow(1.0)
         }
     }
