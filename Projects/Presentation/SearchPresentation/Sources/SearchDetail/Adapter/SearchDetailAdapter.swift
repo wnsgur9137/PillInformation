@@ -20,8 +20,6 @@ public protocol SearchDetailDataSource: AnyObject {
 }
 
 public protocol SearchDetailDelegate: AnyObject {
-//    func didSelectSection(at section: Int)
-//    func didSelectRow(at indexPath: IndexPath)
     func heightForHeader(in section: Int) -> CGFloat
     func heightForFooter(in section: Int) -> CGFloat
     func scrollViewDidScroll(_ contentOffset: CGPoint)

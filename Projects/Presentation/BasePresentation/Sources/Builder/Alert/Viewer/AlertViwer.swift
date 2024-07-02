@@ -133,13 +133,13 @@ extension AlertViewer {
     public func showDualButtonAlert(_ viewController: UIViewController,
                             image: UIImage? = nil,
                             title: AlertText?,
-                            message: AlertAttributedText? = nil,
+                            attributedMessage: AlertAttributedText? = nil,
                             confirmButtonInfo: AlertButtonInfo,
                             cancelButtonInfo: AlertButtonInfo) {
         let alertBuilder = AlertBuilder()
             .setupPopupImage(image)
             .addTitleLabel(title)
-            .addMessageLabel(message)
+            .addMessageLabel(attributedMessage)
             .setupCancelButton(.init(title: cancelButtonInfo.title,
                                      isEnabled: cancelButtonInfo.isEnabled,
                                      action: {

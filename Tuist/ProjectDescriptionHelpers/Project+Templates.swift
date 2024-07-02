@@ -58,7 +58,8 @@ public let defaultInfoPlist: [String: Plist.Value] = [
     ],
     "UISupportedInterfaceOrientations~ipad": [
         "UIInterfaceOrientationPortrait"
-    ]
+    ],
+    "NSPhotoLibraryAddUsageDescription": "Test"
 ]
 
 extension Project {
