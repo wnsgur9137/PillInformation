@@ -177,7 +177,7 @@ extension SearchDetailViewController {
     
     private func bindAdapter(_ reactor: SearchDetailReactor) {
         adapter?.didSelectSection
-            .filter { $0 != 0 }
+            .filter { $0 == 0 }
             .map { _ in
                 Reactor.Action.didTapImageView
             }
