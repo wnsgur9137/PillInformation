@@ -131,6 +131,12 @@ public final class ImageDetailViewController: UIViewController, View {
         bindState(reactor)
     }
     
+    private func showActivityViewController() {
+        guard let image = imageView.image else { return }
+        let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityViewController, animated: true)
+    }
+    
     private func showPermissionAlert() {
         AlertViewer()
             .showDualButtonAlert(
@@ -238,8 +244,9 @@ extension ImageDetailViewController {
             .disposed(by: disposeBag)
         
         shareButton.rx.tap
-            .map { Reactor.Action.didTapSharedButton }
-            .bind(to: reactor.action)
+            .subscribe(onNext: {
+                self.showActivityViewController()
+            })
             .disposed(by: disposeBag)
         
         downloadButton.rx.tap

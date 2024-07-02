@@ -24,14 +24,12 @@ public final class ImageDetailReactor: Reactor {
     public enum Action {
         case viewDidLoad
         case dismiss
-        case didTapSharedButton
         case didTapDownloadButton
     }
     
     public enum Mutation {
         case loadData
         case dismiss
-        case shared
         case isDeniedPermission
         case download
     }
@@ -83,8 +81,6 @@ extension ImageDetailReactor {
             return .just(.loadData)
         case .dismiss:
             return .just(.dismiss)
-        case .didTapSharedButton:
-            return .just(.shared)
         case .didTapDownloadButton:
             return checkPhotoPermission()
         }
@@ -99,8 +95,6 @@ extension ImageDetailReactor {
             state.imageURL = imageURL
             state.pillName = pillName
             state.className = className
-        case .shared:
-            break
         case .isDeniedPermission:
             state.isDeniedPermission = Void()
         case .download:
