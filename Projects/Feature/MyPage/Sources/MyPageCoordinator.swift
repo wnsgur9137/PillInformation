@@ -50,7 +50,8 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
         let flowAction = MyPageFlowAction(
             showAlarmSettingViewController: showAlarmSettingViewController,
             showPolicyViewController: showPolicyViewController,
-            showOpenSourceLicenseViewController: showOpenSourceLicenseViewController
+            showOpenSourceLicenseViewController: showOpenSourceLicenseViewController,
+            showOnboardingScene: showOnboardingScene
         )
         let viewController = dependencies.makeMyPageViewController(flowAction: flowAction)
         
@@ -92,5 +93,9 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     
     private func popViewController(_ animated: Bool) {
         navigationController?.popViewController(animated: animated)
+    }
+    
+    private func showOnboardingScene() {
+        NotificationCenter.default.post(name: Notification.Name("showOnboardingScene"), object: nil)
     }
 }

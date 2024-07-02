@@ -22,13 +22,16 @@ public struct MyPageFlowAction {
     let showAlarmSettingViewController: () -> Void
     let showPolicyViewController: (PolicyType) -> Void
     let showOpenSourceLicenseViewController: () -> Void
+    let showOnboardingScene: () -> Void
     
     public init(showAlarmSettingViewController: @escaping(()->Void),
                 showPolicyViewController: @escaping((PolicyType)->Void),
-                showOpenSourceLicenseViewController: @escaping(()->Void)) {
+                showOpenSourceLicenseViewController: @escaping(()->Void),
+                showOnboardingScene: @escaping(()->Void)) {
         self.showAlarmSettingViewController = showAlarmSettingViewController
         self.showPolicyViewController = showPolicyViewController
         self.showOpenSourceLicenseViewController = showOpenSourceLicenseViewController
+        self.showOnboardingScene = showOnboardingScene
     }
 }
 
@@ -37,10 +40,14 @@ public final class MyPageReactor: Reactor {
         case warning
         case signout
         case withdrawal
+        case signoutError
+        case withdrawalError
     }
     
     public enum Action {
         case didSelectRow(IndexPath)
+        case signOut
+        case withdrawal
     }
     
     public enum Mutation {
@@ -48,15 +55,13 @@ public final class MyPageReactor: Reactor {
         case showAppPolicyViewController
         case showPrivacyPolicyViewController
         case showOpensourceLicenseViewController
-        case signout
-        case withdrawal
+        case showOnboardingScene
         case showAlert(MyPageAlert)
     }
     
     public struct State {
-        @Pulse var warningAlert: (title: String, message: String?)?
-        @Pulse var signoutAlert: Void?
-        @Pulse var withdrawalAlert: Void?
+        @Pulse var alert: MyPageAlert?
+        @Pulse var dismiss: Bool?
     }
     
     private enum MyPageSection: Int {
@@ -66,6 +71,7 @@ public final class MyPageReactor: Reactor {
     }
     
     public var initialState = State()
+    private let userUseCase: UserUseCase
     private let flowAction: MyPageFlowAction
     private let disposeBag = DisposeBag()
     
@@ -84,7 +90,9 @@ public final class MyPageReactor: Reactor {
         Constants.MyPage.withdrawal
     ]
     
-    public init(flowAction: MyPageFlowAction) {
+    public init(with useCase: UserUseCase,
+                flowAction: MyPageFlowAction) {
+        self.userUseCase = useCase
         self.flowAction = flowAction
     }
     
@@ -113,12 +121,34 @@ public final class MyPageReactor: Reactor {
         return nil
     }
     
-    private func signout() {
-        
+    private func signout() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.userUseCase.signOut()
+                .subscribe(onSuccess: {
+                    observable.onNext(.showOnboardingScene)
+                }, onFailure: { error in
+                    observable.onNext(.showAlert(.signoutError))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
     
-    private func withdrawal() {
-        
+    private func withdrawal() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.userUseCase.withdrawal()
+                .subscribe(onSuccess: {
+                    observable.onNext(.showOnboardingScene)
+                }, onFailure: { error in
+                    observable.onNext(.showAlert(.withdrawalError))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
 }
 
@@ -128,6 +158,12 @@ extension MyPageReactor {
         switch action {
         case let .didSelectRow(indexPath):
             return didSelectRow(indexPath) ?? .just(.showAlert(.warning))
+            
+        case .signOut:
+            return signout()
+            
+        case .withdrawal:
+            return withdrawal()
         }
     }
     
@@ -146,18 +182,12 @@ extension MyPageReactor {
         case .showOpensourceLicenseViewController:
             showOpensourceLicenseViewController()
             
-        case .signout:
-            signout()
-            
-        case .withdrawal:
-            withdrawal()
+        case .showOnboardingScene:
+            showOnboardingScene()
+            state.dismiss = true
             
         case let .showAlert(myPageAlert):
-            switch myPageAlert {
-            case .signout: break
-            case .withdrawal: break
-            case .warning: break
-            }
+            state.alert = myPageAlert
         }
         return state
     }
@@ -178,7 +208,7 @@ extension MyPageReactor {
     }
     
     private func showOnboardingScene() {
-        
+        flowAction.showOnboardingScene()
     }
 }
 
