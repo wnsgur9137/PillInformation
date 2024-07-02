@@ -106,17 +106,17 @@ extension AlertViewer {
             .setupPopupImage(image)
             .addTitleLabel(title)
             .addMessageLabel(message)
-            .setupConfirmButton(.init(title: confirmButtonInfo.title,
-                                      isEnabled: confirmButtonInfo.isEnabled,
-                                      action: {
-                dimmed.removeFromSuperview()
-                confirmButtonInfo.action()
-            }))
             .setupCancelButton(.init(title: cancelButtonInfo.title,
                                      isEnabled: cancelButtonInfo.isEnabled,
                                      action: {
                 dimmed.removeFromSuperview()
                 cancelButtonInfo.action()
+            }))
+            .setupConfirmButton(.init(title: confirmButtonInfo.title,
+                                      isEnabled: confirmButtonInfo.isEnabled,
+                                      action: {
+                dimmed.removeFromSuperview()
+                confirmButtonInfo.action()
             }))
         
         attachAlert(viewController: viewController, alert: alertBuilder.alert)
@@ -130,7 +130,7 @@ extension AlertViewer {
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
     ///   - cancelButtonInfo: 취소 버튼 설정 정보
-    public func showDualButtonAlet(_ viewController: UIViewController,
+    public func showDualButtonAlert(_ viewController: UIViewController,
                             image: UIImage? = nil,
                             title: AlertText?,
                             message: AlertAttributedText? = nil,
@@ -140,17 +140,17 @@ extension AlertViewer {
             .setupPopupImage(image)
             .addTitleLabel(title)
             .addMessageLabel(message)
-            .setupConfirmButton(.init(title: confirmButtonInfo.title,
-                                      isEnabled: confirmButtonInfo.isEnabled,
-                                      action: {
-                dimmed.removeFromSuperview()
-                confirmButtonInfo.action()
-            }))
             .setupCancelButton(.init(title: cancelButtonInfo.title,
                                      isEnabled: cancelButtonInfo.isEnabled,
                                      action: {
                 dimmed.removeFromSuperview()
                 cancelButtonInfo.action()
+            }))
+            .setupConfirmButton(.init(title: confirmButtonInfo.title,
+                                      isEnabled: confirmButtonInfo.isEnabled,
+                                      action: {
+                dimmed.removeFromSuperview()
+                confirmButtonInfo.action()
             }))
         
         attachAlert(viewController: viewController, alert: alertBuilder.alert)

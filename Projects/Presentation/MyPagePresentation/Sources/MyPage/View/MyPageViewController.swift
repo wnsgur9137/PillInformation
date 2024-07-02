@@ -30,7 +30,7 @@ public final class MyPageViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "MyPage"
+        label.text = Constants.MyPage.myPage
         label.textColor = .label
         label.font = Constants.Font.suiteBold(36.0)
         return label
@@ -47,6 +47,9 @@ public final class MyPageViewController: UIViewController, View {
     public var didDisappear: (() -> Void)?
     public var disposeBag = DisposeBag()
     private var adapter: MyPageAdapter?
+    
+    private let signout = PublishSubject<Void>()
+    private let withdraw = PublishSubject<Void>()
     
     public static func create(with reactor: MyPageReactor) -> MyPageViewController {
         let viewController = MyPageViewController()
@@ -87,6 +90,61 @@ public final class MyPageViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func showWarningAlert(_ type: MyPageReactor.MyPageAlert) {
+        var title: String = ""
+        switch type {
+        case .signoutError:
+            title = Constants.MyPage.signoutError
+        case .withdrawalError:
+            title = Constants.MyPage.withdrwalError
+        case .warning:
+            title = Constants.MyPage.loadError
+        default: return
+        }
+        
+        AlertViewer()
+            .showSingleButtonAlert(
+                self,
+                title: .init(text: title),
+                message: .init(text: Constants.MyPage.tryAgain),
+                confirmButtonInfo: .init(title: Constants.confirm) {
+                    guard type == .warning else { return }
+                    self.dismiss(animated: true)
+                }
+            )
+    }
+    
+    private func showAlert(_ type: MyPageReactor.MyPageAlert) {
+        var title: String = ""
+        var message: AlertText?
+        var confirm: String = ""
+        switch type {
+        case .signout: 
+            title = Constants.MyPage.askSignout
+            confirm = Constants.confirm
+        case .withdrawal:
+            title = Constants.MyPage.askWithdrawal
+            confirm = Constants.MyPage.withdraw
+            message = .init(text: Constants.MyPage.withdrawalMessage)
+        default : return
+        }
+        
+        AlertViewer()
+            .showDualButtonAlert(
+                self,
+                title: .init(text: title),
+                message: message,
+                confirmButtonInfo: .init(title: confirm) {
+                    switch type {
+                    case .signout: self.signout.onNext(Void())
+                    case .withdrawal: self.withdraw.onNext(Void())
+                    default: break
+                    }
+                },
+                cancelButtonInfo: .init(title: Constants.cancel)
+            )
+    }
 }
 
 // MARK: - Binding
@@ -97,10 +155,38 @@ extension MyPageViewController {
                 self.dismiss(animated: true)
             }
             .disposed(by: disposeBag)
+        
+        signout
+            .map { Reactor.Action.signOut }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        withdraw
+            .map { Reactor.Action.withdrawal }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: MyPageReactor) {
+        reactor.pulse(\.$alert)
+            .filter { $0 != nil }
+            .asDriver(onErrorDriveWith: .never())
+            .drive { type in
+                guard let type = type else { return }
+                if type == .signout || type == .withdrawal {
+                    self.showAlert(type)
+                }
+                self.showWarningAlert(type)
+            }
+            .disposed(by: disposeBag)
         
+        reactor.pulse(\.$dismiss)
+            .filter { $0 != nil}
+            .asDriver(onErrorDriveWith: .never())
+            .drive { animated in
+                self.dismiss(animated: animated ?? true)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func bindAdapter(_ reactor: MyPageReactor) {

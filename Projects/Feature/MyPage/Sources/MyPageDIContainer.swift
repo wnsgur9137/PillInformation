@@ -32,8 +32,11 @@ public final class MyPageDIContainer {
 
 // MARK: - MyPageCoordinatorDependencies
 extension MyPageDIContainer: MyPageCoordinatorDependencies {
+    private func makeUserUseCase() -> UserUseCase {
+        return DefaultUserMyPageUseCase(with: makeUserMyPageRepository())
+    }
     private func makeMyPageReactor(flowAction: MyPageFlowAction) -> MyPageReactor {
-        return MyPageReactor(flowAction: flowAction)
+        return MyPageReactor(with: makeUserUseCase(), flowAction: flowAction)
     }
     public func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController {
         return MyPageViewController.create(with: makeMyPageReactor(flowAction: flowAction))

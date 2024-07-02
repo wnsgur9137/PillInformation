@@ -15,6 +15,7 @@ import MyPagePresentation
 
 public final class DefaultUserMyPageUseCase: UserUseCase {
     private let userRepository: UserMyPageRepository
+    private let disposeBag = DisposeBag()
     
     public init(with userRepository: UserMyPageRepository) {
         self.userRepository = userRepository
@@ -46,10 +47,6 @@ extension DefaultUserMyPageUseCase {
             }
     }
     
-    public func delete(userID: Int) -> Single<Void> {
-        return userRepository.deleteUser(userID: userID)
-    }
-    
     public func fetchUserStorage(userID: Int) -> Single<UserModel> {
         return userRepository.fetchStorage(userID: userID).map { $0.toModel() }
     }
@@ -58,7 +55,37 @@ extension DefaultUserMyPageUseCase {
         return userRepository.fetchFirstUserStorage().map { $0.toModel() }
     }
     
-    public func deleteStorage(userID: Int) -> Single<Void> {
-        return userRepository.deleteStorage(userID: userID)
+    public func signOut() -> Single<Void> {
+        return .create() { single in
+            self.fetchFirstUserStorage()
+                .flatMap { user in
+                    return self.userRepository.deleteStorage(userID: user.id)
+                }
+                .subscribe(onSuccess: { _ in
+                    single(.success(Void()))
+                }, onFailure: { error in
+                    single(.failure(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    public func withdrawal() -> Single<Void> {
+        return .create() { single in
+            self.fetchFirstUserStorage()
+                .subscribe(onSuccess: { user in
+                    Single.zip(
+                        self.userRepository.deleteUser(userID: user.id),
+                        self.userRepository.deleteStorage(userID: user.id)
+                    ).subscribe(onSuccess: { _ in
+                        single(.success(Void()))
+                    }, onFailure: { error in
+                        single(.failure(error))
+                    })
+                    .disposed(by: self.disposeBag)
+                })
+        }
     }
 }

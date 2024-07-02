@@ -71,6 +71,11 @@ public final class AlertView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private func swapButtonStackView() {
+        buttonStackView.removeArrangedSubview(confirmButton)
+        buttonStackView.addArrangedSubview(confirmButton)
+    }
 }
 
 extension AlertView {
@@ -117,6 +122,7 @@ extension AlertView {
     
     func setupCancelButton() {
         buttonStackView.addArrangedSubview(cancelButton)
+        swapButtonStackView()
     }
 }
 
