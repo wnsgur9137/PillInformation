@@ -42,6 +42,40 @@ public struct PillInfoResponseDTO: Decodable {
     let markCodeBack: String?
     let medicineEngName: String?
     let ediCode: Int?
+    
+    init(pillInfo: PillInfo) {
+        self.medicineSeq = pillInfo.medicineSeq
+        self.medicineName = pillInfo.medicineName
+        self.entpSeq = pillInfo.entpSeq
+        self.entpName = pillInfo.entpName
+        self.chart = pillInfo.chart
+        self.medicineImage = pillInfo.medicineImage
+        self.printFront = pillInfo.printFront
+        self.printBack = pillInfo.printBack
+        self.medicineShape = pillInfo.medicineShape
+        self.colorClass1 = pillInfo.colorClass1
+        self.colorClass2 = pillInfo.colorClass2
+        self.lineFront = pillInfo.lineFront
+        self.lineBack = pillInfo.lineBack
+        self.lengLong = pillInfo.lengLong
+        self.lengShort = pillInfo.lengShort
+        self.thick = pillInfo.thick
+        self.imgRegistTs = pillInfo.imgRegistTs
+        self.classNo = pillInfo.classNo
+        self.className = pillInfo.className
+        self.etcOtcName = pillInfo.etcOtcName
+        self.medicinePermitDate = pillInfo.medicinePermitDate
+        self.formCodeName = pillInfo.formCodeName
+        self.markCodeFrontAnal = pillInfo.markCodeFrontAnal
+        self.markCodeBackAnal = pillInfo.markCodeBackAnal
+        self.markCodeFrontImg = pillInfo.markCodeFrontImg
+        self.markCodeBackImg = pillInfo.markCodeBackImg
+        self.changeDate = pillInfo.changeDate
+        self.markCodeFront = pillInfo.markCodeFront
+        self.markCodeBack = pillInfo.markCodeBack
+        self.medicineEngName = pillInfo.medicineEngName
+        self.ediCode = pillInfo.ediCode
+    }
 }
 
 extension PillInfoResponseDTO {

@@ -10,6 +10,11 @@ import UIKit
 
 import BasePresentation
 
+extension Constants.SearchResult.Image {
+    static let star: UIImage = UIImage(systemName: "star") ?? UIImage()
+    static let starFill: UIImage = UIImage(systemName: "star.fill") ?? UIImage()
+}
+
 extension Constants.SearchDetail.Image {
     
 }

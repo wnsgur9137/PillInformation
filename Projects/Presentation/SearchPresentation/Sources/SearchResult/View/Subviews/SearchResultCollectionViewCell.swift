@@ -11,6 +11,7 @@ import FlexLayout
 import PinLayout
 import Kingfisher
 import SkeletonView
+import RxSwift
 
 import BasePresentation
 
@@ -47,6 +48,22 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    let bookmarkButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.SearchResult.Image.star, for: .normal)
+        button.tintColor = Constants.Color.systemYellow
+        return button
+    }()
+    
+    private var isBookmarked: Bool = false {
+        didSet {
+            let image = isBookmarked ? Constants.SearchResult.Image.starFill : Constants.SearchResult.Image.star
+            bookmarkButton.setImage(image, for: .normal)
+        }
+    }
+    
+    let disposeBag = DisposeBag()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.addShadow()
@@ -75,7 +92,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         imageView.isSkeletonable = true
     }
     
-    func configure(_ info: PillInfoModel) {
+    func configure(_ info: PillInfoModel, isBookmarked: Bool = false) {
         if let url = URL(string: info.medicineImage) {
             imageView.kf.setImage(with: url) { _ in
                 self.imageView.hideSkeleton()
@@ -84,6 +101,8 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         titleLabel.text = info.medicineName
         classLabel.text = info.className
         etcOtcLabel.text = info.etcOtcName
+        let bookmarkImage = isBookmarked ? Constants.SearchResult.Image.starFill : Constants.SearchResult.Image.star
+        bookmarkButton.setImage(bookmarkImage, for: .normal)
         titleLabel.flex.markDirty()
         classLabel.flex.markDirty()
         etcOtcLabel.flex.markDirty()
@@ -99,6 +118,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
 extension SearchResultCollectionViewCell {
     private func setupLayout() {
         contentView.addSubview(rootFlexContainerView)
+        contentView.addSubview(bookmarkButton)
         
         rootFlexContainerView.flex
             .alignItems(.center)
@@ -121,7 +141,7 @@ extension SearchResultCollectionViewCell {
                     .justifyContent(.center)
                     .define { labelStack in
                         labelStack.addItem(titleLabel)
-                            .width(100%)
+                            .width(85%)
                         labelStack.addItem().define {
                             $0.addItem(classLabel)
                             $0.addItem(etcOtcLabel)
@@ -137,5 +157,11 @@ extension SearchResultCollectionViewCell {
             .right(12.0)
             .bottom()
         rootFlexContainerView.flex.layout()
+        
+        bookmarkButton.pin
+            .top(12.0)
+            .right(12.0)
+            .width(48.0)
+            .height(48.0)
     }
 }

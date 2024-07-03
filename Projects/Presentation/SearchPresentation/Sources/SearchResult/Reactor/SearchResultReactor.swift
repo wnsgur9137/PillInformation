@@ -31,10 +31,12 @@ public final class SearchResultReactor: Reactor {
     typealias AlertContents = (title: String, message: String?)
     
     public enum Action {
-        case viewDidLoad
+        case loadPills
+        case loadBookmark
         case dismiss
         case search(String?)
         case didSelectItem(IndexPath)
+        case didSelectBookmark(IndexPath)
         case didTapUserButton
     }
     
@@ -57,14 +59,18 @@ public final class SearchResultReactor: Reactor {
     public var initialState = State()
     public let flowAction: SearchResultFlowAction
     private let searchUseCase: SearchUseCase
+    private let bookmarkUseCase: BookmarkUseCase
     private var keyword: String
     private var results: [PillInfoModel] = []
+    private var bookmarkSeqs: [Int] = []
     private let disposeBag = DisposeBag()
     
-    public init(with useCase: SearchUseCase,
+    public init(searchUseCase: SearchUseCase,
+                bookmarkUseCase: BookmarkUseCase,
                 keyword: String,
                 flowAction: SearchResultFlowAction) {
-        self.searchUseCase = useCase
+        self.searchUseCase = searchUseCase
+        self.bookmarkUseCase = bookmarkUseCase
         self.keyword = keyword
         self.flowAction = flowAction
     }
@@ -77,6 +83,21 @@ public final class SearchResultReactor: Reactor {
                     self.results = pills
                     let mutation: Mutation = pills.count > 0 ? .reloadData : .isEmptyResult
                     observable.onNext(mutation)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    private func loadBookmark() -> Observable<Mutation> {
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.bookmarkUseCase.fetchPillSeqs()
+                .subscribe(onSuccess: { seqs in
+                    self.bookmarkSeqs = seqs
+                    observable.onNext(.reloadData)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
                 })
@@ -115,17 +136,61 @@ public final class SearchResultReactor: Reactor {
             
         }
     }
+    
+    private func saveBookmark(pillInfo: PillInfoModel) -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            
+            self.bookmarkUseCase.savePill(pillInfo: pillInfo)
+                .subscribe(onSuccess: { seqs in
+                    self.bookmarkSeqs = seqs
+                    observable.onNext(.reloadData)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func deleteBookmark(medicineSeq: Int) -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            
+            self.bookmarkUseCase.deletePill(medicineSeq: medicineSeq)
+                .subscribe(onSuccess: { seqs in
+                    self.bookmarkSeqs = seqs
+                    observable.onNext(.reloadData)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func bookmark(_ indexPath: IndexPath) -> Observable<Mutation> {
+        let pillInfo = results[indexPath.item]
+        let isBookmarked = bookmarkSeqs.contains(pillInfo.medicineSeq)
+        
+        return isBookmarked ? deleteBookmark(medicineSeq: pillInfo.medicineSeq) : saveBookmark(pillInfo: pillInfo)
+    }
 }
 
 // MARK: - React
 extension SearchResultReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .viewDidLoad: 
+        case .loadPills: 
             if let error = validate(keyword: keyword) {
                 return .just(.error(error))
             }
             return loadPills(keyword: keyword)
+            
+        case .loadBookmark:
+            return loadBookmark()
             
         case .dismiss:
             return .just(.dismiss)
@@ -139,6 +204,9 @@ extension SearchResultReactor {
             
         case let .didSelectItem(indexPath):
             return .just(.showSearchDetail(results[indexPath.item]))
+            
+        case let .didSelectBookmark(indexPath):
+            return bookmark(indexPath)
             
         case .didTapUserButton:
             return .just(.showMyPage)
@@ -194,7 +262,9 @@ extension SearchResultReactor: SearchResultCollectionViewDataSource {
         return results.count
     }
     
-    public func cellForItem(at indexPath: IndexPath) -> PillInfoModel {
-        return results[indexPath.item]
+    public func cellForItem(at indexPath: IndexPath) -> (pill: PillInfoModel, isBookmarked: Bool) {
+        let pill = results[indexPath.item]
+        let isBookmarked = bookmarkSeqs.contains(pill.medicineSeq)
+        return (pill, isBookmarked)
     }
 }
