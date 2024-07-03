@@ -10,13 +10,6 @@ import Foundation
 import RxSwift
 import RealmSwift
 
-enum RealmError: Error {
-    case save
-    case fetch
-    case update
-    case delete
-}
-
 enum KeychainError: Error {
     case isNullAppBundleID
     case save

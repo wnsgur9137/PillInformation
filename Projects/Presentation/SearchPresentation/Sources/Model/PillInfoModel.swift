@@ -9,37 +9,37 @@
 import Foundation
 
 public struct PillInfoModel {
-    let medicineSeq: Int
-    let medicineName: String
-    let entpSeq: Int
-    let entpName: String
-    let chart: String?
-    let medicineImage: String
-    let printFront: String?
-    let printBack: String?
-    let medicineShape: String
-    let colorClass1: String?
-    let colorClass2: String?
-    let lineFront: String?
-    let lineBack: String?
-    let lengLong: Float?
-    let lengShort: Float?
-    let thick: Float?
-    let imgRegistTs: Int
-    let classNo: Int?
-    let className: String?
-    let etcOtcName: String
-    let medicinePermitDate: Int
-    let formCodeName: String?
-    let markCodeFrontAnal: String?
-    let markCodeBackAnal: String?
-    let markCodeFrontImg: String?
-    let markCodeBackImg: String?
-    let changeDate: Int?
-    let markCodeFront: String?
-    let markCodeBack: String?
-    let medicineEngName: String?
-    let ediCode: Int?
+    public let medicineSeq: Int
+    public let medicineName: String
+    public let entpSeq: Int
+    public let entpName: String
+    public let chart: String?
+    public let medicineImage: String
+    public let printFront: String?
+    public let printBack: String?
+    public let medicineShape: String
+    public let colorClass1: String?
+    public let colorClass2: String?
+    public let lineFront: String?
+    public let lineBack: String?
+    public let lengLong: Float?
+    public let lengShort: Float?
+    public let thick: Float?
+    public let imgRegistTs: Int
+    public let classNo: Int?
+    public let className: String?
+    public let etcOtcName: String
+    public let medicinePermitDate: Int
+    public let formCodeName: String?
+    public let markCodeFrontAnal: String?
+    public let markCodeBackAnal: String?
+    public let markCodeFrontImg: String?
+    public let markCodeBackImg: String?
+    public let changeDate: Int?
+    public let markCodeFront: String?
+    public let markCodeBack: String?
+    public let medicineEngName: String?
+    public let ediCode: Int?
     
     public init(medicineSeq: Int, medicineName: String, entpSeq: Int, entpName: String, chart: String?, medicineImage: String, printFront: String?, printBack: String?, medicineShape: String, colorClass1: String?, colorClass2: String?, lineFront: String?, lineBack: String?, lengLong: Float?, lengShort: Float?, thick: Float?, imgRegistTs: Int, classNo: Int?, className: String?, etcOtcName: String, medicinePermitDate: Int, formCodeName: String?, markCodeFrontAnal: String?, markCodeBackAnal: String?, markCodeFrontImg: String?, markCodeBackImg: String?, changeDate: Int?, markCodeFront: String?, markCodeBack: String?, medicineEngName: String?, ediCode: Int?) {
         self.medicineSeq = medicineSeq

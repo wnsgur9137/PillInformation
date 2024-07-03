@@ -88,7 +88,12 @@ public final class SearchResultViewController: UIViewController, View {
 extension SearchResultViewController {
     private func bindAction(_ reactor: SearchResultReactor) {
         rx.viewDidLoad
-            .map { Reactor.Action.viewDidLoad }
+            .map { Reactor.Action.loadPills }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        rx.viewWillAppear
+            .map { Reactor.Action.loadBookmark }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -138,6 +143,13 @@ extension SearchResultViewController {
         adapter?.didSelectItem
             .map { indexPath in
                 Reactor.Action.didSelectItem(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectBookmark
+            .map { indexPath in
+                Reactor.Action.didSelectBookmark(indexPath)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)

@@ -11,7 +11,7 @@ import RxSwift
 
 public protocol SearchResultCollectionViewDataSource: AnyObject {
     func numberOfItems(in: Int) -> Int
-    func cellForItem(at indexPath: IndexPath) -> PillInfoModel
+    func cellForItem(at indexPath: IndexPath) -> (pill: PillInfoModel, isBookmarked: Bool)
 }
 
 public final class SearchResultAdapter: NSObject {
@@ -20,6 +20,7 @@ public final class SearchResultAdapter: NSObject {
     private weak var collectionViewDataSource: SearchResultCollectionViewDataSource?
     
     let didSelectItem = PublishSubject<IndexPath>()
+    let didSelectBookmark = PublishSubject<IndexPath>()
     let shouldReturn = PublishSubject<String?>()
     
     init(collectionView: UICollectionView,
@@ -47,7 +48,11 @@ extension SearchResultAdapter: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCollectionViewCell.identifier, for: indexPath) as? SearchResultCollectionViewCell else { return .init() }
         guard let data = collectionViewDataSource?.cellForItem(at: indexPath) else { return cell }
         cell.showAnimatedGradientSkeleton()
-        cell.configure(data)
+        cell.configure(data.pill, isBookmarked: data.isBookmarked)
+        cell.bookmarkButton.rx.tap
+            .map { return indexPath }
+            .bind(to: didSelectBookmark)
+            .disposed(by: cell.disposeBag)
         return cell
     }
 }
