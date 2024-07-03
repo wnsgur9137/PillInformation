@@ -14,7 +14,7 @@ import SearchDomain
 public final class DefaultBookmarkRepository: BookmarkRepository {
     private let bookmarkStorage: BookmarkStorage
     
-    public init(bookmarkStorage: BookmarkStorage) {
+    public init(bookmarkStorage: BookmarkStorage = DefaultBookmarkStorage()) {
         self.bookmarkStorage = bookmarkStorage
     }
 }
