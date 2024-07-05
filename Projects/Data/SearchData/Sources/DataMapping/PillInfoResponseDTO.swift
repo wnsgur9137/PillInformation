@@ -77,7 +77,7 @@ public struct PillInfoResponseDTO: Decodable {
         self.ediCode = ediCode
     }
     
-    init(pillInfo: PillInfo) {
+    public init(pillInfo: PillInfo) {
         self.medicineSeq = pillInfo.medicineSeq
         self.medicineName = pillInfo.medicineName
         self.entpSeq = pillInfo.entpSeq
