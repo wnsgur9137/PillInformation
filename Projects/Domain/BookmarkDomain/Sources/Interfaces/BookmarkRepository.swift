@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import BaseDomain
+
 public protocol BookmarkRepository {
     func executePillSeqs() -> Single<[Int]>
     func savePill(pillInfo: PillInfo) -> Single<[Int]>

@@ -8,7 +8,7 @@
 
 import Foundation
 
-import SearchDomain
+import BaseDomain
 
 public struct PillInfoResponseDTO: Decodable {
     let medicineSeq: Int

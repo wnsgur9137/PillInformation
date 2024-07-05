@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 
+import BasePresentation
+
 public protocol SearchResultCollectionViewDataSource: AnyObject {
     func numberOfItems(in: Int) -> Int
     func cellForItem(at indexPath: IndexPath) -> (pill: PillInfoModel, isBookmarked: Bool)

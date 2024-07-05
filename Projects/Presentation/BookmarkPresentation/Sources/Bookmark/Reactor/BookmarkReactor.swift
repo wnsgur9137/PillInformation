@@ -11,6 +11,8 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
+
 public struct BookmarkFlowAction {
     let showMyPage: () -> Void
     

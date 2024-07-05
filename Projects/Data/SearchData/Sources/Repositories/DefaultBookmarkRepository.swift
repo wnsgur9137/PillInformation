@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 
+import BaseDomain
 import SearchDomain
 
 public final class DefaultBookmarkRepository: BookmarkRepository {

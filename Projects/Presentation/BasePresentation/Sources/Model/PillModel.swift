@@ -1,18 +1,18 @@
 //
 //  PillModel.swift
-//  SearchPresentation
+//  BasePresentation
 //
-//  Created by JunHyeok Lee on 5/28/24.
+//  Created by JunHyeok Lee on 7/5/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 
 public struct PillModel {
-    let info: PillInfoModel
-    private(set) var description: PillDescriptionModel?
+    public let info: PillInfoModel
+    public var description: PillDescriptionModel?
     
-    public init(info: PillInfoModel, 
+    public init(info: PillInfoModel,
                 description: PillDescriptionModel? = nil) {
         self.info = info
         self.description = description

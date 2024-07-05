@@ -9,6 +9,8 @@
 import Foundation
 
 import NetworkInfra
+import BasePresentation
+import BaseDomain
 import SearchData
 import SearchDomain
 import SearchPresentation

@@ -8,6 +8,7 @@
 
 import Foundation
 
+import BaseDomain
 import BookmarkDomain
 
 public struct PillDescriptionDTO: Decodable {

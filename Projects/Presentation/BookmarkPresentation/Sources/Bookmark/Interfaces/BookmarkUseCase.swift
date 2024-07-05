@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import BasePresentation
+
 public protocol BookmarkUseCase {
     func fetchPillSeqs () -> Single<[Int]>
     func savePill(pillInfo: PillInfoModel) -> Single<[Int]>

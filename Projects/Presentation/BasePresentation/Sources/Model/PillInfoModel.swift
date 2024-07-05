@@ -1,6 +1,6 @@
 //
-//  PillInfo.swift
-//  BookmarkDomain
+//  PillInfoModel.swift
+//  BasePresentation
 //
 //  Created by JunHyeok Lee on 7/5/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
@@ -8,9 +8,7 @@
 
 import Foundation
 
-import BookmarkPresentation
-
-public struct PillInfo {
+public struct PillInfoModel {
     public let medicineSeq: Int
     public let medicineName: String
     public let entpSeq: Int
@@ -75,45 +73,5 @@ public struct PillInfo {
         self.markCodeBack = markCodeBack
         self.medicineEngName = medicineEngName
         self.ediCode = ediCode
-    }
-    
-    public init(pillInfoModel: PillInfoModel) {
-        self.medicineSeq = pillInfoModel.medicineSeq
-        self.medicineName = pillInfoModel.medicineName
-        self.entpSeq = pillInfoModel.entpSeq
-        self.entpName = pillInfoModel.entpName
-        self.chart = pillInfoModel.chart
-        self.medicineImage = pillInfoModel.medicineImage
-        self.printFront = pillInfoModel.printFront
-        self.printBack = pillInfoModel.printBack
-        self.medicineShape = pillInfoModel.medicineShape
-        self.colorClass1 = pillInfoModel.colorClass1
-        self.colorClass2 = pillInfoModel.colorClass2
-        self.lineFront = pillInfoModel.lineFront
-        self.lineBack = pillInfoModel.lineBack
-        self.lengLong = pillInfoModel.lengLong
-        self.lengShort = pillInfoModel.lengShort
-        self.thick = pillInfoModel.thick
-        self.imgRegistTs = pillInfoModel.imgRegistTs
-        self.classNo = pillInfoModel.classNo
-        self.className = pillInfoModel.className
-        self.etcOtcName = pillInfoModel.etcOtcName
-        self.medicinePermitDate = pillInfoModel.medicinePermitDate
-        self.formCodeName = pillInfoModel.formCodeName
-        self.markCodeFrontAnal = pillInfoModel.markCodeFrontAnal
-        self.markCodeBackAnal = pillInfoModel.markCodeBackAnal
-        self.markCodeFrontImg = pillInfoModel.markCodeFrontImg
-        self.markCodeBackImg = pillInfoModel.markCodeBackImg
-        self.changeDate = pillInfoModel.changeDate
-        self.markCodeFront = pillInfoModel.markCodeFront
-        self.markCodeBack = pillInfoModel.markCodeBack
-        self.medicineEngName = pillInfoModel.medicineEngName
-        self.ediCode = pillInfoModel.ediCode
-    }
-}
-
-extension PillInfo {
-    func toModel() -> PillInfoModel {
-        return .init(medicineSeq: self.medicineSeq, medicineName: self.medicineName, entpSeq: self.entpSeq, entpName: self.entpName, chart: self.chart, medicineImage: self.medicineImage, printFront: self.printFront, printBack: self.printBack, medicineShape: self.medicineShape, colorClass1: self.colorClass1, colorClass2: self.colorClass2, lineFront: self.lineFront, lineBack: self.lineBack, lengLong: self.lengLong, lengShort: self.lengShort, thick: self.thick, imgRegistTs: self.imgRegistTs, classNo: self.classNo, className: self.className, etcOtcName: self.etcOtcName, medicinePermitDate: self.medicinePermitDate, formCodeName: self.formCodeName, markCodeFrontAnal: self.markCodeFrontAnal, markCodeBackAnal: self.markCodeBackAnal, markCodeFrontImg: self.markCodeFrontImg, markCodeBackImg: self.markCodeBackImg, changeDate: self.changeDate, markCodeFront: self.markCodeFront, markCodeBack: self.markCodeBack, medicineEngName: self.medicineEngName, ediCode: self.ediCode)
     }
 }

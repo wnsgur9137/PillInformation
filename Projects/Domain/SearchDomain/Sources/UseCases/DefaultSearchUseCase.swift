@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 import SearchPresentation
+import BaseDomain
+import BasePresentation
 
 public final class DefaultSearchUseCase: SearchUseCase {
     

@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 import BookmarkDomain
+import BaseDomain
 
 public final class DefaultBookmarkRepository: BookmarkRepository {
     private let bookmarkStorage: BookmarkStorage

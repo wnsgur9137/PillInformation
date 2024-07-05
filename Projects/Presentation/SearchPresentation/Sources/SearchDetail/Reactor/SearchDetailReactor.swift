@@ -11,6 +11,8 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
+
 public enum PillInfoType {
     case pillInfo
     case pillDescription

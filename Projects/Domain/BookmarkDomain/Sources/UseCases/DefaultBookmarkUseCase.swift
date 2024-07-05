@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 import BookmarkPresentation
+import BaseDomain
+import BasePresentation
 
 public final class DefaultBookmarkUseCase: BookmarkUseCase {
     private let bookmarkRepository: BookmarkRepository
@@ -25,7 +27,7 @@ extension DefaultBookmarkUseCase {
     }
     
     public func savePill(pillInfo: PillInfoModel) -> Single<[Int]> {
-        let pillInfo = PillInfo(pillInfoModel: pillInfo)
+        let pillInfo = PillInfo.makePillInfo(pillInfo)
         return bookmarkRepository.savePill(pillInfo: pillInfo)
     }
     

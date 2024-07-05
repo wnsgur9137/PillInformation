@@ -1,8 +1,8 @@
 //
 //  PillDescriptionModel.swift
-//  SearchPresentation
+//  BasePresentation
 //
-//  Created by JunHyeok Lee on 5/24/24.
+//  Created by JunHyeok Lee on 7/5/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 

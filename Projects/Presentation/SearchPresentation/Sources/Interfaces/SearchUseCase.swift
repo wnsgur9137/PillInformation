@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import BasePresentation
+
 public protocol SearchUseCase {
     func executePill(keyword: String) -> Single<[PillInfoModel]>
     func executePillDescription(_ medicineSeq: Int) -> Single<PillDescriptionModel?>

@@ -9,8 +9,9 @@
 import Foundation
 import RxSwift
 
-import SearchDomain
 import NetworkInfra
+import BaseDomain
+import SearchDomain
 
 public final class DefaultSearchRepository: SearchRepository {
     private let networkManager: NetworkManager
