@@ -11,6 +11,8 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
+import BasePresentation
+
 enum SearchError: String, Error {
     case emptyKeyword
     case tooShortKeyword
@@ -48,9 +50,13 @@ public final class SearchReactor: Reactor {
     
     public var initialState = State()
     public let flowAction: SearchFlowAction
+    private let recentKeywordUseCase: RecentKeywordUseCase
     private let disposeBag = DisposeBag()
+    private var recentKeywords: [String] = []
     
-    public init(flowAction: SearchFlowAction) {
+    public init(with recentKeywordUseCase: RecentKeywordUseCase,
+                flowAction: SearchFlowAction) {
+        self.recentKeywordUseCase = recentKeywordUseCase
         self.flowAction = flowAction
     }
     
@@ -76,6 +82,38 @@ public final class SearchReactor: Reactor {
             
         }
     }
+    
+    private func fetchRecentKeywords() {
+        recentKeywordUseCase.fetchRecentKeywords()
+            .subscribe(onSuccess: { [weak self] keywords in
+                self?.recentKeywords = keywords
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func saveRecentKeyword(_ keyword: String) {
+        recentKeywordUseCase.saveRecentKeyword(keyword)
+            .subscribe(onSuccess: { [weak self] keywords in
+                self?.recentKeywords = keywords
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func deleteRecentKeyword(_ keyword: String) {
+        recentKeywordUseCase.deleteRecnetKeyword(keyword)
+            .subscribe(onSuccess: { [weak self] keywords in
+                self?.recentKeywords = keywords
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func deleteAllRecentKeywords() {
+        recentKeywordUseCase.deleteAll()
+            .subscribe(onSuccess: { [weak self] in
+                self?.recentKeywords = []
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - Reactor
@@ -90,6 +128,7 @@ extension SearchReactor {
             guard keyword.count >= 2 else {
                 return .just(.error(SearchError.tooShortKeyword))
             }
+            saveRecentKeyword(keyword)
             return .just(.showSearchResultViewController(keyword))
             
         case .didTapUserButton:
