@@ -81,7 +81,7 @@ extension DefaultBookmarkStorage: BookmarkStorage {
         if let pillInfoObject = fetch(for: response.medicineSeq) {
             return getPillSeqs()
         }
-        guard save(for: PillInfoObject(pillInfoDTO: response)) else {
+        guard save(for: PillInfoObject.makePillInfoObject(response)) else {
             return .error(RealmError.save)
         }
         return getPillSeqs()
