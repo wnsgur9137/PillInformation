@@ -10,12 +10,10 @@ import Foundation
 import RealmSwift
 
 final class RecentKeywordObject: Object {
-    @Persisted(primaryKey: true) public var id: Int
-    @Persisted public var keyword: String
+    @Persisted(primaryKey: true) public var keyword: String
     
-    public convenience init(id: Int, keyword: String) {
+    public convenience init(keyword: String) {
         self.init()
-        self.id = id
         self.keyword = keyword
     }
 }

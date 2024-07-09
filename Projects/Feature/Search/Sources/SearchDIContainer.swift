@@ -47,8 +47,15 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
         return DefaultBookmarkUseCase(bookmarkRepository: makeBookmarkRepository())
     }
     
+    private func makeRecentKeywordRepository() -> RecentKeywordRepository {
+        return DefaultRecentKeywordRepository()
+    }
+    private func makeRecentKeywordUseCase() -> RecentKeywordUseCase {
+        return DefaultRecentKeywordUseCase(recentKeywordRepository: makeRecentKeywordRepository())
+    }
+    
     private func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {
-        return SearchReactor(flowAction: flowAction)
+        return SearchReactor(with: makeRecentKeywordUseCase(), flowAction: flowAction)
     }
     public func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController {
         return SearchViewController.create(with: makeSearchReactor(flowAction: flowAction))
