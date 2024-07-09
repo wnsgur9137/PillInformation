@@ -14,7 +14,7 @@ import SearchDomain
 public final class DefaultRecentKeywordRepository: RecentKeywordRepository {
     private let recentKeywordStorage: RecentKeywordStorage
     
-    public init(recentKeywordStorage: RecentKeywordStorage) {
+    public init(recentKeywordStorage: RecentKeywordStorage = DefaultRecentKeywordStorage()) {
         self.recentKeywordStorage = recentKeywordStorage
     }
 }

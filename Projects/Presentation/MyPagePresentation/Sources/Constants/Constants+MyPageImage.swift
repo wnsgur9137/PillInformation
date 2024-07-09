@@ -13,7 +13,3 @@ import BasePresentation
 extension Constants.MyPage {
     struct Image { }
 }
-
-extension Constants.MyPage.Image {
-    static let xmark: UIImage = UIImage(systemName: "xmark") ?? UIImage()
-}

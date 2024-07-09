@@ -7,41 +7,44 @@
 //
 
 import UIKit
+import RxSwift
 
-public protocol SearchCollectionViewDataSource: AnyObject {
-    func numberOfItems(in section: Int) -> Int
-    func cellForItem(at indexPath: IndexPath) -> String
-}
-
-public protocol SearchCollectionViewDelegate: AnyObject {
+public protocol SearchAdapterDataSource: AnyObject {
+    func collectionViewNumberOfItems(in section: Int) -> Int
+    func collectionViewCellForItem(at indexPath: IndexPath) -> String
     
-}
-
-public protocol SearchTextFieldDelegate: AnyObject {
-    func shouldReturn(text: String?)
+    func tableViewNumberOfRows(in section: Int) -> Int
+    func tableViewCellForRow(at indexPath: IndexPath) -> String
 }
 
 public final class SearchAdapter: NSObject {
     private let collectionView: UICollectionView
+    private let tableView: UITableView
     private let textField: UITextField
-    private weak var collectionViewDataSource: SearchCollectionViewDataSource?
-    private weak var collectionViewDelegate: SearchCollectionViewDelegate?
-    private weak var textFieldDelegate: SearchTextFieldDelegate?
+    private weak var dataSource: SearchAdapterDataSource?
+    let shouldReturn = PublishSubject<String?>()
+    let didSelectCollectionViewItem = PublishSubject<IndexPath>()
+    let didSelectTableViewRow = PublishSubject<IndexPath>()
+    let didSelectTableViewDeleteButton = PublishSubject<IndexPath>()
+    let didSelectTableViewDeleteAllButton = PublishSubject<Void>()
+    private let disposeBag = DisposeBag()
     
     init(collectionView: UICollectionView,
+         tableView: UITableView,
          textField: UITextField,
-         collectionViewDataSource: SearchCollectionViewDataSource,
-         collectionViewDelegate: SearchCollectionViewDelegate,
-         textFieldDelegate: SearchTextFieldDelegate) {
+         dataSource: SearchAdapterDataSource) {
         collectionView.register(SearchRecentCollectionViewCell.self, forCellWithReuseIdentifier: SearchRecentCollectionViewCell.identifier)
+        tableView.register(RecentTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: RecentTableViewHeaderView.identifier)
+        tableView.register(RecentTableViewCell.self, forCellReuseIdentifier: RecentTableViewCell.identifier)
         self.collectionView = collectionView
+        self.tableView = tableView
         self.textField = textField
-        self.collectionViewDataSource = collectionViewDataSource
-        self.collectionViewDelegate = collectionViewDelegate
-        self.textFieldDelegate = textFieldDelegate
+        self.dataSource = dataSource
         super.init()
         collectionView.dataSource = self
         collectionView.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
         textField.delegate = self
     }
 }
@@ -49,12 +52,12 @@ public final class SearchAdapter: NSObject {
 // MARK: - UICollectionView DataSource
 extension SearchAdapter: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionViewDataSource?.numberOfItems(in: section) ?? 0
+        return dataSource?.collectionViewNumberOfItems(in: section) ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchRecentCollectionViewCell.identifier, for: indexPath) as? SearchRecentCollectionViewCell else { return .init() }
-        guard let text = collectionViewDataSource?.cellForItem(at: indexPath) else { return cell }
+        guard let text = dataSource?.collectionViewCellForItem(at: indexPath) else { return cell }
         cell.configure(text: text)
         return cell
     }
@@ -62,13 +65,56 @@ extension SearchAdapter: UICollectionViewDataSource {
 
 // MARK: - UICollectionView Delegate
 extension SearchAdapter: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        didSelectCollectionViewItem.onNext(indexPath)
+    }
+}
+
+// MARK: - UITableView DataSource
+extension SearchAdapter: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource?.tableViewNumberOfRows(in: section) ?? 0
+    }
     
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentTableViewHeaderView.identifier) as? RecentTableViewHeaderView else { return nil }
+        view.deleteAllButton.rx.tap
+            .bind(to: didSelectTableViewDeleteAllButton)
+            .disposed(by: view.disposeBag)
+        return view
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RecentTableViewCell.identifier, for: indexPath) as? RecentTableViewCell else { return .init() }
+        guard let title = dataSource?.tableViewCellForRow(at: indexPath) else { return cell }
+        cell.configure(text: title)
+        cell.deleteButton.rx.tap
+            .map { indexPath }
+            .bind(to: didSelectTableViewDeleteButton)
+            .disposed(by: cell.disposeBag)
+        return cell
+    }
+}
+
+// MARK: - UITableView Delegate
+extension SearchAdapter: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectTableViewRow.onNext(indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 80.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }
 
 // MARK: - UITextField Delegate
 extension SearchAdapter: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textFieldDelegate?.shouldReturn(text: textField.text)
+        shouldReturn.onNext(textField.text)
         return true
     }
 }

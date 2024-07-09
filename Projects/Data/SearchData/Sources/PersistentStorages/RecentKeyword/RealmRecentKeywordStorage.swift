@@ -76,8 +76,10 @@ extension DefaultRecentKeywordStorage: RecentKeywordStorage {
     }
     
     public func setRecentKeyword(_ keyword: String) -> Single<[String]> {
-        let id = fetchCount()
-        let object = RecentKeywordObject(id: id, keyword: keyword)
+        if let object = fetch(for: keyword) {
+            guard delete(for: object) else { return .error(RealmError.delete) }
+        }
+        let object = RecentKeywordObject(keyword: keyword)
         guard save(for: object) else { return .error(RealmError.save) }
         return .just(fetchAll())
     }
