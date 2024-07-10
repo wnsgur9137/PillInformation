@@ -1,5 +1,5 @@
 //
-//  RecentKeywordStorage.swift
+//  KeywordStorage.swift
 //  SearchData
 //
 //  Created by JunHyeok Lee on 7/8/24.
@@ -9,9 +9,9 @@
 import Foundation
 import RxSwift
 
-public protocol RecentKeywordStorage {
+public protocol KeywordStorage {
     func getRecentKeywords() -> Single<[String]>
     func setRecentKeyword(_ keyword: String) -> Single<[String]>
-    func delete(_ keyword: String) -> Single<[String]>
-    func deleteAll() -> Single<Void>
+    func deleteRecentKeyword(_ keyword: String) -> Single<[String]>
+    func deleteAllRecentKeyword() -> Single<Void>
 }

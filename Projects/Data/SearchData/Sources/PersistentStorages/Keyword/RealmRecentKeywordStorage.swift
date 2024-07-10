@@ -1,5 +1,5 @@
 //
-//  RealmRecentKeywordStorage.swift
+//  RealmKeywordStorage.swift
 //  SearchData
 //
 //  Created by JunHyeok Lee on 7/8/24.
@@ -12,7 +12,7 @@ import RealmSwift
 
 import BaseData
 
-public final class DefaultRecentKeywordStorage {
+public final class DefaultKeywordStorage {
     private let realm: Realm
     
     public init() {
@@ -70,7 +70,7 @@ public final class DefaultRecentKeywordStorage {
     }
 }
 
-extension DefaultRecentKeywordStorage: RecentKeywordStorage {
+extension DefaultKeywordStorage: KeywordStorage {
     public func getRecentKeywords() -> Single<[String]> {
         return .just(fetchAll())
     }
@@ -84,7 +84,7 @@ extension DefaultRecentKeywordStorage: RecentKeywordStorage {
         return .just(fetchAll())
     }
     
-    public func delete(_ keyword: String) -> Single<[String]> {
+    public func deleteRecentKeyword(_ keyword: String) -> Single<[String]> {
         guard let object = fetch(for: keyword) else {
             return .just(fetchAll())
         }
@@ -92,7 +92,7 @@ extension DefaultRecentKeywordStorage: RecentKeywordStorage {
         return .just(fetchAll())
     }
     
-    public func deleteAll() -> Single<Void> {
+    public func deleteAllRecentKeyword() -> Single<Void> {
         return deleteAll() ? .just(Void()) : .error(RealmError.delete)
     }
 }

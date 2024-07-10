@@ -30,4 +30,12 @@ extension DefaultSearchUseCase {
     public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescriptionModel?> {
         return searchRepository.executePillDescription(medicineSeq).map { $0?.toModel() }
     }
+    
+    public func executePillHits(_ medicineSeq: Int) -> Single<PillHitsModel> {
+        return searchRepository.executePillHits(medicineSeq: medicineSeq).map { $0.toModel() }
+    }
+    
+    public func updatePillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsModel> {
+        return searchRepository.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toModel() }
+    }
 }

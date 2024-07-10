@@ -30,4 +30,12 @@ extension DefaultSearchRepository {
     public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?> {
         return networkManager.requestPillDescription(medicineSeq).map { $0?.toDomain() }
     }
+    
+    public func executePillHits(medicineSeq: Int) -> Single<PillHits> {
+        return networkManager.requestPillHits(medicineSeq).map { $0.toDomain() }
+    }
+    
+    public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHits> {
+        return networkManager.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toDomain() }
+    }
 }

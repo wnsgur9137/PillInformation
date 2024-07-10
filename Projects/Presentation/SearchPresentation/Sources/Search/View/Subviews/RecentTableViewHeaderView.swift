@@ -59,7 +59,7 @@ extension RecentTableViewHeaderView {
         contentView.addSubview(rootContainerView)
         rootContainerView.flex
             .direction(.row)
-            .justifyContent(.center)
+            .alignItems(.center)
             .padding(12.0)
             .define { rootView in
                 rootView.addItem(titleLabel)

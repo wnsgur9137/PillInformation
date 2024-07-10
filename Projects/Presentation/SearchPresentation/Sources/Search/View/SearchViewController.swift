@@ -23,7 +23,15 @@ public final class SearchViewController: UIViewController, View {
     private let rootContainerView = UIView()
     private let searchTextFieldView = SearchTextFieldView()
     
-    private let recentCollectionView: UICollectionView = {
+    private let recommendLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.Search.recommendKeyword
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteBold(24.0)
+        return label
+    }()
+    
+    private let recommendCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -34,15 +42,6 @@ public final class SearchViewController: UIViewController, View {
         let tableView = UITableView()
         return tableView
     }()
-    
-    private let label: UILabel = {
-        let label = UILabel()
-        label.text = "Search"
-        label.textColor = .label
-        return label
-    }()
-    
-    private let footerView = FooterView()
     
     // MARK: - Properties
     
@@ -65,7 +64,7 @@ public final class SearchViewController: UIViewController, View {
         rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchAdapter(
-                collectionView: recentCollectionView,
+                collectionView: recommendCollectionView,
                 tableView: recentTableView,
                 textField: searchTextFieldView.searchTextField,
                 dataSource: reactor
@@ -171,10 +170,20 @@ extension SearchViewController {
         view.addSubview(searchTextFieldView)
         
         rootContainerView.flex.define { rootView in
-            rootView.addItem(recentCollectionView)
-                .margin(UIEdgeInsets(top: 12.0, left: 0, bottom: 12.0, right: 0))
+            rootView.addItem()
+                .marginTop(12.0)
+                .backgroundColor(Constants.Color.systemBackground)
+                .height(80.0)
+                .justifyContent(.center)
+                .define {
+                    $0.addItem(recommendLabel)
+                        .marginTop(10.0)
+                        .marginLeft(12.0)
+                }
+            rootView.addItem(recommendCollectionView)
                 .height(60.0)
             rootView.addItem(recentTableView)
+                .marginTop(12.0)
                 .grow(1.0)
         }
     }

@@ -57,17 +57,13 @@ public final class SearchReactor: Reactor {
     
     public var initialState = State()
     public let flowAction: SearchFlowAction
-    private let recentKeywordUseCase: RecentKeywordUseCase
+    private let keywordUseCase: KeywordUseCase
     private let disposeBag = DisposeBag()
-    private var recentKeywords: [String] = [] {
-        didSet {
-            print("🚨recentKeywords: \(recentKeywords)")
-        }
-    }
+    private var recentKeywords: [String] = []
     
-    public init(with recentKeywordUseCase: RecentKeywordUseCase,
+    public init(with keywordUseCase: KeywordUseCase,
                 flowAction: SearchFlowAction) {
-        self.recentKeywordUseCase = recentKeywordUseCase
+        self.keywordUseCase = keywordUseCase
         self.flowAction = flowAction
     }
     
@@ -97,7 +93,7 @@ public final class SearchReactor: Reactor {
     private func fetchRecentKeywords() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.fetchRecentKeywords()
+            self.keywordUseCase.fetchRecentKeywords()
                 .subscribe(onSuccess: { [weak self] keywords in
                     self?.recentKeywords = keywords.reversed()
                     observable.onNext(.loadedRecentKeyword)
@@ -111,7 +107,7 @@ public final class SearchReactor: Reactor {
     }
     
     private func saveRecentKeyword(_ keyword: String) {
-        recentKeywordUseCase.saveRecentKeyword(keyword)
+        keywordUseCase.saveRecentKeyword(keyword)
             .subscribe(onSuccess: { [weak self] keywords in
                 self?.recentKeywords = keywords.reversed()
             })
@@ -121,7 +117,7 @@ public final class SearchReactor: Reactor {
     private func deleteRecentKeyword(_ keyword: String) -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.deleteRecnetKeyword(keyword)
+            self.keywordUseCase.deleteRecentKeyword(keyword)
                 .subscribe(onSuccess: { [weak self] keywords in
                     self?.recentKeywords = keywords.reversed()
                     observable.onNext(.loadedRecentKeyword)
@@ -136,7 +132,7 @@ public final class SearchReactor: Reactor {
     private func deleteAllRecentKeywords() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.deleteAll()
+            self.keywordUseCase.deleteAllRecentKeyword()
                 .subscribe(onSuccess: { [weak self] in
                     self?.recentKeywords = []
                     observable.onNext(.loadedRecentKeyword)

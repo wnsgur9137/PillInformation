@@ -13,6 +13,9 @@ public enum PillTargetType {
     case getPillList(name: String)
     case getPillShapeList(shape: String, color: String, line: String, code: String)
     case getPillDescription(medicineSeq: Int)
+    case getRecommendPillNames
+    case getPillHits(medicineSeq: Int)
+    case postPillHits(medicineSeq: Int, medicineName: String)
 }
 
 extension PillTargetType: MoyaErrorHandleable {
@@ -25,6 +28,9 @@ extension PillTargetType: MoyaErrorHandleable {
         case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
         case .getPillShapeList: return "/pill/getPillsWithShape"
         case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
+        case .getRecommendPillNames: return "/recommendMedicine"
+        case let .getPillHits(medicineSeq): return "/medicineHits/\(medicineSeq)"
+        case .postPillHits: return "/medicineHits"
         }
     }
     
@@ -34,6 +40,11 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getPillList: return .get
         case .getPillShapeList: return .get
         case .getPillDescription: return .get
+        case .getRecommendPillNames: return .get
+        case .getPillHits: return .get
+            
+        // POST
+        case .postPillHits: return .post
         }
     }
     
@@ -54,6 +65,18 @@ extension PillTargetType: MoyaErrorHandleable {
             
         case .getPillDescription:
             return nil
+            
+        case .getRecommendPillNames:
+            return nil
+            
+        case let .getPillHits(medicineSeq):
+            return ["medicineSeq": medicineSeq]
+            
+        case let .postPillHits(medicineSeq, medicineName):
+            return [
+                "medicineSeq": medicineSeq,
+                "medicineName": medicineName
+            ]
         }
     }
     
@@ -250,6 +273,34 @@ extension PillTargetType {
                 """.utf8
             )
             
+        case .getRecommendPillNames:
+            return Data(
+                """
+                [
+                    "타이레놀",
+                    "테스트레놀",
+                    "또있넹"
+                ]
+                """.utf8
+            )
+            
+        case .getPillHits:
+            return Data(
+            """
+            "medicine_seq": 123456,
+            "medicine_name": "테스트레놀",
+            "hits": 1
+            """.utf8
+            )
+            
+        case .postPillHits:
+            return Data(
+            """
+            "medicine_seq": 123456,
+            "medicine_name": "테스트레놀",
+            "hits": 1
+            """.utf8
+            )
         }
     }
 }

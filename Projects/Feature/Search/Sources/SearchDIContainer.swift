@@ -47,11 +47,11 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
         return DefaultBookmarkUseCase(bookmarkRepository: makeBookmarkRepository())
     }
     
-    private func makeRecentKeywordRepository() -> RecentKeywordRepository {
-        return DefaultRecentKeywordRepository()
+    private func makeRecentKeywordRepository() -> KeywordRepository {
+        return DefaultKeywordRepository(networkManager: dependencies.networkManager)
     }
-    private func makeRecentKeywordUseCase() -> RecentKeywordUseCase {
-        return DefaultRecentKeywordUseCase(recentKeywordRepository: makeRecentKeywordRepository())
+    private func makeRecentKeywordUseCase() -> KeywordUseCase {
+        return DefaultKeywordUseCase(keywordRepository: makeRecentKeywordRepository())
     }
     
     private func makeSearchReactor(flowAction: SearchFlowAction) -> SearchReactor {

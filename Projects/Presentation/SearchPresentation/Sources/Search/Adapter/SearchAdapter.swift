@@ -33,7 +33,7 @@ public final class SearchAdapter: NSObject {
          tableView: UITableView,
          textField: UITextField,
          dataSource: SearchAdapterDataSource) {
-        collectionView.register(SearchRecentCollectionViewCell.self, forCellWithReuseIdentifier: SearchRecentCollectionViewCell.identifier)
+        collectionView.register(RecommendKeywordCollectionViewCell.self, forCellWithReuseIdentifier: RecommendKeywordCollectionViewCell.identifier)
         tableView.register(RecentTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: RecentTableViewHeaderView.identifier)
         tableView.register(RecentTableViewCell.self, forCellReuseIdentifier: RecentTableViewCell.identifier)
         self.collectionView = collectionView
@@ -56,7 +56,7 @@ extension SearchAdapter: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchRecentCollectionViewCell.identifier, for: indexPath) as? SearchRecentCollectionViewCell else { return .init() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendKeywordCollectionViewCell.identifier, for: indexPath) as? RecommendKeywordCollectionViewCell else { return .init() }
         guard let text = dataSource?.collectionViewCellForItem(at: indexPath) else { return cell }
         cell.configure(text: text)
         return cell
