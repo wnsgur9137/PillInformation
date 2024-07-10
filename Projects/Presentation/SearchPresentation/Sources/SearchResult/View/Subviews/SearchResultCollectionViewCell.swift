@@ -48,6 +48,23 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let utilView = UIView()
+    
+    private let hitsImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = Constants.SearchResult.Image.eye
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = Constants.Color.systemLabel
+        return imageView
+    }()
+    
+    private let hitsLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteRegular(18.0)
+        return label
+    }()
+    
     let bookmarkButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.SearchResult.Image.star, for: .normal)
@@ -92,7 +109,9 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         imageView.isSkeletonable = true
     }
     
-    func configure(_ info: PillInfoModel, isBookmarked: Bool = false) {
+    func configure(_ info: PillInfoModel, 
+                   isBookmarked: Bool = false,
+                   hits: Int = 0) {
         if let url = URL(string: info.medicineImage) {
             imageView.kf.setImage(with: url) { _ in
                 self.imageView.hideSkeleton()
@@ -107,6 +126,10 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         classLabel.flex.markDirty()
         etcOtcLabel.flex.markDirty()
         rootFlexContainerView.flex.layout()
+        
+        hitsLabel.text = "\(hits)"
+        hitsLabel.flex.markDirty()
+        utilView.flex.layout()
     }
     
     func showSkeletonImageView() {
@@ -118,7 +141,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
 extension SearchResultCollectionViewCell {
     private func setupLayout() {
         contentView.addSubview(rootFlexContainerView)
-        contentView.addSubview(bookmarkButton)
+        contentView.addSubview(utilView)
         
         rootFlexContainerView.flex
             .alignItems(.center)
@@ -148,6 +171,24 @@ extension SearchResultCollectionViewCell {
                         }
                     }
         }
+        
+        utilView.flex
+            .direction(.row)
+            .alignItems(.center)
+            .justifyContent(.end)
+            .define { view in
+                view.addItem().grow(1.0)
+                view.addItem(hitsImageView)
+                    .height(24.0)
+                    .width(24.0)
+                view.addItem(hitsLabel)
+                    .marginLeft(4.0)
+                    .height(40.0)
+                view.addItem(bookmarkButton)
+                    .marginLeft(12.0)
+                    .width(48.0)
+                    .height(48.0)
+        }
     }
     
     private func setupSubviewLayout() {
@@ -158,10 +199,11 @@ extension SearchResultCollectionViewCell {
             .bottom()
         rootFlexContainerView.flex.layout()
         
-        bookmarkButton.pin
-            .top(12.0)
+        utilView.pin
+            .top(8.0)
+            .left(40%)
             .right(12.0)
-            .width(48.0)
             .height(48.0)
+        utilView.flex.layout()
     }
 }
