@@ -110,8 +110,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(_ info: PillInfoModel, 
-                   isBookmarked: Bool = false,
-                   hits: Int = 0) {
+                   isBookmarked: Bool = false) {
         if let url = URL(string: info.medicineImage) {
             imageView.kf.setImage(with: url) { _ in
                 self.imageView.hideSkeleton()
@@ -127,7 +126,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         etcOtcLabel.flex.markDirty()
         rootFlexContainerView.flex.layout()
         
-        hitsLabel.text = "\(hits)"
+        hitsLabel.text = "\(info.hits)"
         hitsLabel.flex.markDirty()
         utilView.flex.layout()
     }

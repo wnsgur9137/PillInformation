@@ -9,9 +9,9 @@
 import Foundation
 
 public struct PillHitsModel {
-    let medicineSeq: Int
-    let medicineName: String
-    let hits: Int
+    public let medicineSeq: Int
+    public let medicineName: String
+    public let hits: Int
     
     public init(medicineSeq: Int, medicineName: String, hits: Int) {
         self.medicineSeq = medicineSeq

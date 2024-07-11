@@ -42,7 +42,7 @@ extension NetworkProvider {
 //                    print("response: \(String(describing: String(data: response.data, encoding: .utf8)))")
                 },
                 onError: { rawError in
-                    print("🚨ERROR-\(route.path)")
+                    print("🚨ERROR - \(route.path)")
                     switch rawError {
                     case NetworkError.requestTimedOut:
                         print("NetworkError: TimedOut")

@@ -15,10 +15,13 @@ import SearchDomain
 
 public final class DefaultSearchRepository: SearchRepository {
     private let networkManager: NetworkManager
+    private let hitHistoriesStorage: PillHitHistoriesStorage
     private let disposeBag = DisposeBag()
     
-    public init(networkManager: NetworkManager) {
+    public init(networkManager: NetworkManager,
+                hitHistoriesStorage: PillHitHistoriesStorage = PillHitHistoreisStorage()) {
         self.networkManager = networkManager
+        self.hitHistoriesStorage = hitHistoriesStorage
     }
 }
 
@@ -37,5 +40,13 @@ extension DefaultSearchRepository {
     
     public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHits> {
         return networkManager.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toDomain() }
+    }
+    
+    public func saveHitHistories(_ hitHistoreis: [Int]) {
+        return hitHistoriesStorage.saveHitHistories(hitHistoreis)
+    }
+    
+    public func loadHitHistories() -> [Int] {
+        return hitHistoriesStorage.loadHitHistories()
     }
 }
