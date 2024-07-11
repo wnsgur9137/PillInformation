@@ -93,6 +93,11 @@ public final class SearchViewController: UIViewController, View {
 // MARK: - Binding
 extension SearchViewController {
     private func bindAction(_ reactor: SearchReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.loadRecommendKeyword }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         rx.viewDidAppear
             .map { Reactor.Action.loadRecentKeyword }
             .bind(to: reactor.action)
@@ -124,6 +129,13 @@ extension SearchViewController {
                                            title: title,
                                            message: message,
                                            confirmButtonInfo: confirmButtonInfo)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.reloadCollectionViewData }
+            .bind(onNext: {
+                self.recommendCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
         

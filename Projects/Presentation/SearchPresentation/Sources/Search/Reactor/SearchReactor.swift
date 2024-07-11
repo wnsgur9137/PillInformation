@@ -34,6 +34,7 @@ public final class SearchReactor: Reactor {
     typealias AlertContents = (title: String, message: String?)
     
     public enum Action {
+        case loadRecommendKeyword
         case loadRecentKeyword
         case search(String?)
         case didTapUserButton
@@ -44,6 +45,7 @@ public final class SearchReactor: Reactor {
     }
     
     public enum Mutation {
+        case loadedRecommendKeyword
         case loadedRecentKeyword
         case showSearchResultViewController(String)
         case showMyPage
@@ -51,14 +53,16 @@ public final class SearchReactor: Reactor {
     }
     
     public struct State {
-        var alertContents: AlertContents?
+        var reloadCollectionViewData: Void?
         var reloadTableViewData: Void?
+        var alertContents: AlertContents?
     }
     
     public var initialState = State()
     public let flowAction: SearchFlowAction
     private let keywordUseCase: KeywordUseCase
     private let disposeBag = DisposeBag()
+    private var recommendKeywords: [String] = []
     private var recentKeywords: [String] = []
     
     public init(with keywordUseCase: KeywordUseCase,
@@ -90,7 +94,22 @@ public final class SearchReactor: Reactor {
         }
     }
     
-    private func fetchRecentKeywords() -> Observable<Mutation> {
+    private func loadRecommendKeywords() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            keywordUseCase.fetchRecommendKeywords()
+                .subscribe(onSuccess: { [weak self] keywords in
+                    self?.recommendKeywords = keywords
+                    observable.onNext(.loadedRecommendKeyword)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    private func loadRecentKeywords() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
             self.keywordUseCase.fetchRecentKeywords()
@@ -149,8 +168,11 @@ public final class SearchReactor: Reactor {
 extension SearchReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .loadRecommendKeyword:
+            return loadRecommendKeywords()
+            
         case .loadRecentKeyword:
-            return fetchRecentKeywords()
+            return loadRecentKeywords()
             
         case let .search(keyword):
             guard let keyword = keyword,
@@ -167,7 +189,9 @@ extension SearchReactor {
             return .just(.showMyPage)
             
         case let .didSelectCollectionViewItem(indexPath):
-            return .just(.showSearchResultViewController(""))
+            let keyword = recommendKeywords[indexPath.item]
+            saveRecentKeyword(keyword)
+            return .just(.showSearchResultViewController(keyword))
             
         case let .didSelectTableViewRow(indexPath):
             let keyword = recentKeywords[indexPath.row]
@@ -187,6 +211,9 @@ extension SearchReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
+        case .loadedRecommendKeyword:
+            state.reloadCollectionViewData = Void()
+            
         case .loadedRecentKeyword:
             state.reloadTableViewData = Void()
             
@@ -217,14 +244,11 @@ extension SearchReactor {
 // MARK: - SearchAdapter DataSource
 extension SearchReactor: SearchAdapterDataSource {
     public func collectionViewNumberOfItems(in section: Int) -> Int {
-        return 5
+        return recommendKeywords.count
     }
     
     public func collectionViewCellForItem(at indexPath: IndexPath) -> String {
-        if indexPath.item == 2 {
-            return "테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀"
-        }
-        return "테스트레놀"
+        return recommendKeywords[indexPath.item]
     }
     
     public func tableViewNumberOfRows(in section: Int) -> Int {
