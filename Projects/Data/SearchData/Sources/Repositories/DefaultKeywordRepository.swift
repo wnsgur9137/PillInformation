@@ -41,6 +41,6 @@ extension DefaultKeywordRepository {
     }
     
     public func executeRecommendKeywords() -> Single<[String]> {
-        return networkManager.requestRecommendPillNames()
+        return networkManager.requestRecommendKeyword()
     }
 }

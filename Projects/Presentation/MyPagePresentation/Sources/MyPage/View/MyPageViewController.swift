@@ -23,7 +23,7 @@ public final class MyPageViewController: UIViewController, View {
     
     private let dismissButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.MyPage.Image.xmark, for: .normal)
+        button.setImage(Constants.Image.xmark, for: .normal)
         button.tintColor = Constants.Color.systemBlack
         return button
     }()

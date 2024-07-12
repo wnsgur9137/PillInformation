@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 
+import BasePresentation
+
 public protocol SearchAdapterDataSource: AnyObject {
     func collectionViewNumberOfItems(in section: Int) -> Int
     func collectionViewCellForItem(at indexPath: IndexPath) -> String
@@ -67,6 +69,18 @@ extension SearchAdapter: UICollectionViewDataSource {
 extension SearchAdapter: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         didSelectCollectionViewItem.onNext(indexPath)
+    }
+}
+
+extension SearchAdapter: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let text = dataSource?.collectionViewCellForItem(at: indexPath) else { return CGSize() }
+        let textSize = (text as NSString).size(withAttributes: [
+            NSAttributedString.Key.font: Constants.Font.suiteMedium(20.0)
+        ])
+        let width = ceil(textSize.width) + 24.0
+        let height = 40.0
+        return CGSize(width: width, height: height)
     }
 }
 

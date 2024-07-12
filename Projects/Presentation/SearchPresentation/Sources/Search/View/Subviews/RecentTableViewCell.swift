@@ -76,7 +76,6 @@ extension RecentTableViewCell {
                     .minHeight(40.0)
                 rootView.addItem(deleteButton)
                     .width(15%)
-                    .backgroundColor(.yellow.withAlphaComponent(0.2))
         }
     }
     

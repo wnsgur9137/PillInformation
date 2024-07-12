@@ -49,6 +49,7 @@ public final class SearchViewController: UIViewController, View {
     private var adapter: SearchAdapter?
     
     private let searchRelay: PublishRelay<String?> = .init()
+    private let deleteAllRecentKeywords: PublishRelay<Void> = .init()
     
     // MARK: - LifeCycle
     
@@ -114,12 +115,17 @@ extension SearchViewController {
             .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        deleteAllRecentKeywords
+            .map { Reactor.Action.deleteAllRecentKeywords }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchReactor) {
-        reactor.state
-            .map { $0.alertContents }
-            .bind(onNext: { contents in
+        reactor.pulse(\.$alertContents)
+            .filter { $0 != nil }
+            .subscribe(onNext: { contents in
                 guard let contents = contents else { return }
                 let title = AlertText(text: contents.title)
                 let message = AlertText(text: contents.message ?? "")
@@ -132,17 +138,24 @@ extension SearchViewController {
             })
             .disposed(by: disposeBag)
         
-        reactor.state
-            .map { $0.reloadCollectionViewData }
-            .bind(onNext: {
+        reactor.pulse(\.$reloadCollectionViewData)
+            .filter { $0 != nil }
+            .subscribe(onNext: { _ in
                 self.recommendCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
         
-        reactor.state
-            .map { $0.reloadTableViewData }
-            .bind(onNext: {
+        reactor.pulse(\.$reloadTableViewData)
+            .filter { $0 != nil }
+            .subscribe(onNext: { _ in
                 self.recentTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$showDeleteAllRecentKeywordAlert)
+            .filter { $0 != nil }
+            .subscribe(onNext: { _ in
+                self.showDeleteAllAlert()
             })
             .disposed(by: disposeBag)
     }
@@ -172,6 +185,21 @@ extension SearchViewController {
             .map { Reactor.Action.didSelectTableViewDeleteAllButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+    }
+}
+
+extension SearchViewController {
+    private func showDeleteAllAlert() {
+        AlertViewer()
+            .showDualButtonAlert(
+                self,
+                title: .init(text: "최근 검색 결과를\n모두 삭제하시겠습니까?"),
+                message: nil,
+                confirmButtonInfo: .init(title: "삭제") {
+                    self.deleteAllRecentKeywords.accept(Void())
+                },
+                cancelButtonInfo: .init(title: "취소")
+            )
     }
 }
 

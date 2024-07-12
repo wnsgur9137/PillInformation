@@ -32,7 +32,7 @@ public final class PolicyViewController: UIViewController, View {
     
     private let backButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.MyPage.Image.xmark, for: .normal)
+        button.setImage(Constants.Image.xmark, for: .normal)
         button.tintColor = Constants.Color.systemLabel
         return button
     }()

@@ -16,6 +16,7 @@ import BasePresentation
 enum SearchError: String, Error {
     case emptyKeyword
     case tooShortKeyword
+    case noHaveRecentKeyword
     case `default`
 }
 
@@ -42,6 +43,7 @@ public final class SearchReactor: Reactor {
         case didSelectTableViewRow(IndexPath)
         case didSelectTableViewDeleteButton(IndexPath)
         case didSelectTableViewDeleteAllButton
+        case deleteAllRecentKeywords
     }
     
     public enum Mutation {
@@ -49,13 +51,15 @@ public final class SearchReactor: Reactor {
         case loadedRecentKeyword
         case showSearchResultViewController(String)
         case showMyPage
+        case showDeleteAllRecentKeywordAlert
         case error(Error)
     }
     
     public struct State {
-        var reloadCollectionViewData: Void?
-        var reloadTableViewData: Void?
-        var alertContents: AlertContents?
+        @Pulse var reloadCollectionViewData: Void?
+        @Pulse var reloadTableViewData: Void?
+        @Pulse var alertContents: AlertContents?
+        @Pulse var showDeleteAllRecentKeywordAlert: Void?
     }
     
     public var initialState = State()
@@ -86,6 +90,10 @@ public final class SearchReactor: Reactor {
         case .tooShortKeyword:
             return (title: "알림",
                     message: "알약명을 두 글자 이상 입력해주세요.")
+            
+        case .noHaveRecentKeyword:
+            return (title: "알림",
+                    message: "삭제할 검색 기록이 없습니다.")
             
         default:
             return (title: "알림",
@@ -203,6 +211,9 @@ extension SearchReactor {
             return deleteRecentKeyword(keyword)
             
         case .didSelectTableViewDeleteAllButton:
+            return recentKeywords.count > 0 ? .just(.showDeleteAllRecentKeywordAlert) : .just(.error(SearchError.noHaveRecentKeyword))
+            
+        case .deleteAllRecentKeywords:
             return deleteAllRecentKeywords()
         }
 
@@ -222,6 +233,9 @@ extension SearchReactor {
             
         case let .error(error):
             state.alertContents = handle(error)
+            
+        case .showDeleteAllRecentKeywordAlert:
+            state.showDeleteAllRecentKeywordAlert = Void()
             
         case .showMyPage:
             showMyPage()

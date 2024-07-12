@@ -69,15 +69,10 @@ public final class SearchResultReactor: Reactor {
                 bookmarkUseCase: BookmarkUseCase,
                 keyword: String,
                 flowAction: SearchResultFlowAction) {
-        print("🚨init")
         self.searchUseCase = searchUseCase
         self.bookmarkUseCase = bookmarkUseCase
         self.keyword = keyword
         self.flowAction = flowAction
-    }
-    
-    deinit {
-        print("🐛deInit")
     }
     
     private func loadPills(keyword: String) -> Observable<Mutation> {

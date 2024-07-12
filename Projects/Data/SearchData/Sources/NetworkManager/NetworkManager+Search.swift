@@ -33,4 +33,8 @@ extension NetworkManager {
     public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsDTO> {
         return requestObject(.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName), type: PillHitsDTO.self)
     }
+    
+    public func requestRecommendKeyword() -> Single<[String]> {
+        return requestObject(.getRecommendKeyword, type: [String].self)
+    }
 }

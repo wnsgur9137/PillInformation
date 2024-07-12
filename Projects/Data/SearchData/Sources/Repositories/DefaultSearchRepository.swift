@@ -49,4 +49,8 @@ extension DefaultSearchRepository {
     public func loadHitHistories() -> [Int] {
         return hitHistoriesStorage.loadHitHistories()
     }
+    
+    public func executeRecommendKeyword() -> Single<[String]> {
+        return networkManager.requestRecommendKeyword()
+    }
 }

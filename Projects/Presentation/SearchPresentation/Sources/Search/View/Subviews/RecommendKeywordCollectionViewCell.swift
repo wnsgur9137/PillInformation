@@ -38,12 +38,6 @@ final class RecommendKeywordCollectionViewCell: UICollectionViewCell {
         setupSubviewLayout()
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        self.contentView.bounds.size.height = size.height
-        self.contentView.flex.layout(mode: .adjustWidth)
-        return self.contentView.frame.size
-    }
-    
     func configure(text: String) {
         label.text = text
         label.flex.markDirty()
@@ -64,6 +58,8 @@ extension RecommendKeywordCollectionViewCell {
             .justifyContent(.center)
             .define { rootView in
             rootView.addItem(label)
+                    .marginLeft(12.0)
+                    .marginRight(12.0)
                     .width(100%)
                     .height(100%)
         }

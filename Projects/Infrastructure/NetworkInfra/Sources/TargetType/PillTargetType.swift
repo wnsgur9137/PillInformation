@@ -16,6 +16,7 @@ public enum PillTargetType {
     case getRecommendPillNames
     case getPillHits(medicineSeq: Int)
     case postPillHits(medicineSeq: Int, medicineName: String)
+    case getRecommendKeyword
 }
 
 extension PillTargetType: MoyaErrorHandleable {
@@ -31,6 +32,7 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getRecommendPillNames: return "/recommendMedicine"
         case let .getPillHits(medicineSeq): return "/medicineHits/\(medicineSeq)"
         case .postPillHits: return "/medicineHits"
+        case .getRecommendKeyword: return "/searchKeyword/recommendKeywords"
         }
     }
     
@@ -42,6 +44,7 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getPillDescription: return .get
         case .getRecommendPillNames: return .get
         case .getPillHits: return .get
+        case .getRecommendKeyword: return .get
             
         // POST
         case .postPillHits: return .post
@@ -77,6 +80,9 @@ extension PillTargetType: MoyaErrorHandleable {
                 "medicineSeq": medicineSeq,
                 "medicineName": medicineName
             ]
+            
+        case .getRecommendKeyword:
+            return nil
         }
     }
     
@@ -299,6 +305,18 @@ extension PillTargetType {
             "medicine_seq": 123456,
             "medicine_name": "테스트레놀",
             "hits": 1
+            """.utf8
+            )
+        case .getRecommendKeyword:
+            return Data(
+            """
+            [
+                "검색어1",
+                "하핳헿",
+                "테스트테스트",
+                "호이",
+                "열글자열글자열글자열"
+            ]
             """.utf8
             )
         }
