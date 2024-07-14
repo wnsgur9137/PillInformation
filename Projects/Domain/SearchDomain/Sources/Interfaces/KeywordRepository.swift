@@ -1,5 +1,5 @@
 //
-//  RecentKeywordRepository.swift
+//  KeywordRepository.swift
 //  SearchDomain
 //
 //  Created by JunHyeok Lee on 7/9/24.
@@ -9,9 +9,11 @@
 import Foundation
 import RxSwift
 
-public protocol RecentKeywordRepository {
+public protocol KeywordRepository {
     func executeRecentKeywords() -> Single<[String]>
     func setRecentKeyword(_ keyword: String) -> Single<[String]>
-    func delete(_ keyword: String) -> Single<[String]>
-    func deleteAll() -> Single<Void>
+    func deleteRecentKeyword(_ keyword: String) -> Single<[String]>
+    func deleteAllRecentKeyword() -> Single<Void>
+    
+    func executeRecommendKeywords() -> Single<[String]>
 }

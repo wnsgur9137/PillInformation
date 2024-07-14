@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 
+import BasePresentation
+
 public protocol SearchAdapterDataSource: AnyObject {
     func collectionViewNumberOfItems(in section: Int) -> Int
     func collectionViewCellForItem(at indexPath: IndexPath) -> String
@@ -33,7 +35,7 @@ public final class SearchAdapter: NSObject {
          tableView: UITableView,
          textField: UITextField,
          dataSource: SearchAdapterDataSource) {
-        collectionView.register(SearchRecentCollectionViewCell.self, forCellWithReuseIdentifier: SearchRecentCollectionViewCell.identifier)
+        collectionView.register(RecommendKeywordCollectionViewCell.self, forCellWithReuseIdentifier: RecommendKeywordCollectionViewCell.identifier)
         tableView.register(RecentTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: RecentTableViewHeaderView.identifier)
         tableView.register(RecentTableViewCell.self, forCellReuseIdentifier: RecentTableViewCell.identifier)
         self.collectionView = collectionView
@@ -56,7 +58,7 @@ extension SearchAdapter: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchRecentCollectionViewCell.identifier, for: indexPath) as? SearchRecentCollectionViewCell else { return .init() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendKeywordCollectionViewCell.identifier, for: indexPath) as? RecommendKeywordCollectionViewCell else { return .init() }
         guard let text = dataSource?.collectionViewCellForItem(at: indexPath) else { return cell }
         cell.configure(text: text)
         return cell
@@ -67,6 +69,18 @@ extension SearchAdapter: UICollectionViewDataSource {
 extension SearchAdapter: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         didSelectCollectionViewItem.onNext(indexPath)
+    }
+}
+
+extension SearchAdapter: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let text = dataSource?.collectionViewCellForItem(at: indexPath) else { return CGSize() }
+        let textSize = (text as NSString).size(withAttributes: [
+            NSAttributedString.Key.font: Constants.Font.suiteMedium(20.0)
+        ])
+        let width = ceil(textSize.width) + 24.0
+        let height = 40.0
+        return CGSize(width: width, height: height)
     }
 }
 

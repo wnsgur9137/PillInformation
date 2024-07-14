@@ -13,6 +13,10 @@ public enum PillTargetType {
     case getPillList(name: String)
     case getPillShapeList(shape: String, color: String, line: String, code: String)
     case getPillDescription(medicineSeq: Int)
+    case getRecommendPillNames
+    case getPillHits(medicineSeq: Int)
+    case postPillHits(medicineSeq: Int, medicineName: String)
+    case getRecommendKeyword
 }
 
 extension PillTargetType: MoyaErrorHandleable {
@@ -25,6 +29,10 @@ extension PillTargetType: MoyaErrorHandleable {
         case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
         case .getPillShapeList: return "/pill/getPillsWithShape"
         case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
+        case .getRecommendPillNames: return "/recommendMedicine"
+        case let .getPillHits(medicineSeq): return "/medicineHits/\(medicineSeq)"
+        case .postPillHits: return "/medicineHits"
+        case .getRecommendKeyword: return "/searchKeyword/recommendKeywords"
         }
     }
     
@@ -34,6 +42,12 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getPillList: return .get
         case .getPillShapeList: return .get
         case .getPillDescription: return .get
+        case .getRecommendPillNames: return .get
+        case .getPillHits: return .get
+        case .getRecommendKeyword: return .get
+            
+        // POST
+        case .postPillHits: return .post
         }
     }
     
@@ -53,6 +67,21 @@ extension PillTargetType: MoyaErrorHandleable {
                     "code": code]
             
         case .getPillDescription:
+            return nil
+            
+        case .getRecommendPillNames:
+            return nil
+            
+        case let .getPillHits(medicineSeq):
+            return ["medicineSeq": medicineSeq]
+            
+        case let .postPillHits(medicineSeq, medicineName):
+            return [
+                "medicineSeq": medicineSeq,
+                "medicineName": medicineName
+            ]
+            
+        case .getRecommendKeyword:
             return nil
         }
     }
@@ -250,6 +279,46 @@ extension PillTargetType {
                 """.utf8
             )
             
+        case .getRecommendPillNames:
+            return Data(
+                """
+                [
+                    "타이레놀",
+                    "테스트레놀",
+                    "또있넹"
+                ]
+                """.utf8
+            )
+            
+        case .getPillHits:
+            return Data(
+            """
+            "medicine_seq": 123456,
+            "medicine_name": "테스트레놀",
+            "hits": 1
+            """.utf8
+            )
+            
+        case .postPillHits:
+            return Data(
+            """
+            "medicine_seq": 123456,
+            "medicine_name": "테스트레놀",
+            "hits": 1
+            """.utf8
+            )
+        case .getRecommendKeyword:
+            return Data(
+            """
+            [
+                "검색어1",
+                "하핳헿",
+                "테스트테스트",
+                "호이",
+                "열글자열글자열글자열"
+            ]
+            """.utf8
+            )
         }
     }
 }

@@ -16,6 +16,7 @@ import BasePresentation
 enum SearchError: String, Error {
     case emptyKeyword
     case tooShortKeyword
+    case noHaveRecentKeyword
     case `default`
 }
 
@@ -34,6 +35,7 @@ public final class SearchReactor: Reactor {
     typealias AlertContents = (title: String, message: String?)
     
     public enum Action {
+        case loadRecommendKeyword
         case loadRecentKeyword
         case search(String?)
         case didTapUserButton
@@ -41,33 +43,35 @@ public final class SearchReactor: Reactor {
         case didSelectTableViewRow(IndexPath)
         case didSelectTableViewDeleteButton(IndexPath)
         case didSelectTableViewDeleteAllButton
+        case deleteAllRecentKeywords
     }
     
     public enum Mutation {
+        case loadedRecommendKeyword
         case loadedRecentKeyword
         case showSearchResultViewController(String)
         case showMyPage
+        case showDeleteAllRecentKeywordAlert
         case error(Error)
     }
     
     public struct State {
-        var alertContents: AlertContents?
-        var reloadTableViewData: Void?
+        @Pulse var reloadCollectionViewData: Void?
+        @Pulse var reloadTableViewData: Void?
+        @Pulse var alertContents: AlertContents?
+        @Pulse var showDeleteAllRecentKeywordAlert: Void?
     }
     
     public var initialState = State()
     public let flowAction: SearchFlowAction
-    private let recentKeywordUseCase: RecentKeywordUseCase
+    private let keywordUseCase: KeywordUseCase
     private let disposeBag = DisposeBag()
-    private var recentKeywords: [String] = [] {
-        didSet {
-            print("🚨recentKeywords: \(recentKeywords)")
-        }
-    }
+    private var recommendKeywords: [String] = []
+    private var recentKeywords: [String] = []
     
-    public init(with recentKeywordUseCase: RecentKeywordUseCase,
+    public init(with keywordUseCase: KeywordUseCase,
                 flowAction: SearchFlowAction) {
-        self.recentKeywordUseCase = recentKeywordUseCase
+        self.keywordUseCase = keywordUseCase
         self.flowAction = flowAction
     }
     
@@ -76,28 +80,47 @@ public final class SearchReactor: Reactor {
     /// - Returns: Error에 따른 알럿에서 사용할 Title, Message (title: String, message: String?)
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
-            return (title: "알림",
-                    message: "알 수 없는 오류가 발생했습니다.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.serverError)
         }
         switch error {
         case .emptyKeyword:
             fallthrough
             
         case .tooShortKeyword:
-            return (title: "알림",
-                    message: "알약명을 두 글자 이상 입력해주세요.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.tooShortKeywordError)
+            
+        case .noHaveRecentKeyword:
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.noHaveRecentKeyword)
             
         default:
-            return (title: "알림",
-                    message: "서버 오류가 발생했습니다.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.serverError)
             
         }
     }
     
-    private func fetchRecentKeywords() -> Observable<Mutation> {
+    private func loadRecommendKeywords() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.fetchRecentKeywords()
+            keywordUseCase.fetchRecommendKeywords()
+                .subscribe(onSuccess: { [weak self] keywords in
+                    self?.recommendKeywords = keywords
+                    observable.onNext(.loadedRecommendKeyword)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    private func loadRecentKeywords() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.keywordUseCase.fetchRecentKeywords()
                 .subscribe(onSuccess: { [weak self] keywords in
                     self?.recentKeywords = keywords.reversed()
                     observable.onNext(.loadedRecentKeyword)
@@ -111,7 +134,7 @@ public final class SearchReactor: Reactor {
     }
     
     private func saveRecentKeyword(_ keyword: String) {
-        recentKeywordUseCase.saveRecentKeyword(keyword)
+        keywordUseCase.saveRecentKeyword(keyword)
             .subscribe(onSuccess: { [weak self] keywords in
                 self?.recentKeywords = keywords.reversed()
             })
@@ -121,7 +144,7 @@ public final class SearchReactor: Reactor {
     private func deleteRecentKeyword(_ keyword: String) -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.deleteRecnetKeyword(keyword)
+            self.keywordUseCase.deleteRecentKeyword(keyword)
                 .subscribe(onSuccess: { [weak self] keywords in
                     self?.recentKeywords = keywords.reversed()
                     observable.onNext(.loadedRecentKeyword)
@@ -136,7 +159,7 @@ public final class SearchReactor: Reactor {
     private func deleteAllRecentKeywords() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.recentKeywordUseCase.deleteAll()
+            self.keywordUseCase.deleteAllRecentKeyword()
                 .subscribe(onSuccess: { [weak self] in
                     self?.recentKeywords = []
                     observable.onNext(.loadedRecentKeyword)
@@ -153,8 +176,11 @@ public final class SearchReactor: Reactor {
 extension SearchReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .loadRecommendKeyword:
+            return loadRecommendKeywords()
+            
         case .loadRecentKeyword:
-            return fetchRecentKeywords()
+            return loadRecentKeywords()
             
         case let .search(keyword):
             guard let keyword = keyword,
@@ -171,7 +197,9 @@ extension SearchReactor {
             return .just(.showMyPage)
             
         case let .didSelectCollectionViewItem(indexPath):
-            return .just(.showSearchResultViewController(""))
+            let keyword = recommendKeywords[indexPath.item]
+            saveRecentKeyword(keyword)
+            return .just(.showSearchResultViewController(keyword))
             
         case let .didSelectTableViewRow(indexPath):
             let keyword = recentKeywords[indexPath.row]
@@ -183,6 +211,9 @@ extension SearchReactor {
             return deleteRecentKeyword(keyword)
             
         case .didSelectTableViewDeleteAllButton:
+            return recentKeywords.count > 0 ? .just(.showDeleteAllRecentKeywordAlert) : .just(.error(SearchError.noHaveRecentKeyword))
+            
+        case .deleteAllRecentKeywords:
             return deleteAllRecentKeywords()
         }
 
@@ -191,6 +222,9 @@ extension SearchReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
+        case .loadedRecommendKeyword:
+            state.reloadCollectionViewData = Void()
+            
         case .loadedRecentKeyword:
             state.reloadTableViewData = Void()
             
@@ -199,6 +233,9 @@ extension SearchReactor {
             
         case let .error(error):
             state.alertContents = handle(error)
+            
+        case .showDeleteAllRecentKeywordAlert:
+            state.showDeleteAllRecentKeywordAlert = Void()
             
         case .showMyPage:
             showMyPage()
@@ -221,14 +258,11 @@ extension SearchReactor {
 // MARK: - SearchAdapter DataSource
 extension SearchReactor: SearchAdapterDataSource {
     public func collectionViewNumberOfItems(in section: Int) -> Int {
-        return 5
+        return recommendKeywords.count
     }
     
     public func collectionViewCellForItem(at indexPath: IndexPath) -> String {
-        if indexPath.item == 2 {
-            return "테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀테스트레놀"
-        }
-        return "테스트레놀"
+        return recommendKeywords[indexPath.item]
     }
     
     public func tableViewNumberOfRows(in section: Int) -> Int {

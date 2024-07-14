@@ -34,6 +34,10 @@ extension Constants.MyPage {
     static let loadError: String = "로드에 실패했습니다."
     static let signoutError: String = "로그아웃에 실패했습니다."
     static let withdrwalError: String = "회원 탈퇴에 실패했습니다."
+    
+    static let setting: String = "설정"
+    static let policy: String = "이용 약관"
+    static let userInfo: String = "내 정보"
 }
 
 extension Constants.AlarmSetting {

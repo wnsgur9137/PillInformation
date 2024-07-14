@@ -99,7 +99,7 @@ extension AlertViewer {
     public func showDualButtonAlert(_ viewController: UIViewController,
                              image: UIImage? = nil,
                              title: AlertText?,
-                             message: AlertText? = nil,
+                             message: AlertText?,
                              confirmButtonInfo: AlertButtonInfo,
                              cancelButtonInfo: AlertButtonInfo) {
         let alertBuilder = AlertBuilder()

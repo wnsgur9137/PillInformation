@@ -1,5 +1,5 @@
 //
-//  SearchRecentCollectionViewCell.swift
+//  RecommendKeywordCollectionViewCell.swift
 //  Search
 //
 //  Created by JunHyeok Lee on 2/26/24.
@@ -12,12 +12,13 @@ import PinLayout
 
 import BasePresentation
 
-final class SearchRecentCollectionViewCell: UICollectionViewCell {
+final class RecommendKeywordCollectionViewCell: UICollectionViewCell {
     
     private let rootFlexContainerView = UIView()
     
     private let label: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = Constants.Color.systemLabel
         label.font = Constants.Font.suiteMedium(20.0)
         return label
@@ -39,11 +40,13 @@ final class SearchRecentCollectionViewCell: UICollectionViewCell {
     
     func configure(text: String) {
         label.text = text
+        label.flex.markDirty()
+        rootFlexContainerView.flex.layout()
     }
 }
 
 // MARK: - Layout
-extension SearchRecentCollectionViewCell {
+extension RecommendKeywordCollectionViewCell {
     private func setupLayout() {
         let height: CGFloat = 40.0
         contentView.addSubview(rootFlexContainerView)
@@ -55,11 +58,15 @@ extension SearchRecentCollectionViewCell {
             .justifyContent(.center)
             .define { rootView in
             rootView.addItem(label)
+                    .marginLeft(12.0)
+                    .marginRight(12.0)
+                    .width(100%)
+                    .height(100%)
         }
     }
     
     private func setupSubviewLayout() {
         rootFlexContainerView.pin.all()
-        rootFlexContainerView.flex.layout()
+        rootFlexContainerView.flex.layout(mode: .adjustWidth)
     }
 }

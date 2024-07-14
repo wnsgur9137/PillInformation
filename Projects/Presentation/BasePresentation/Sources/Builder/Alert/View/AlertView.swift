@@ -134,7 +134,6 @@ extension AlertView {
         rootStackView.addArrangedSubview(buttonStackView)
         
         buttonStackView.addArrangedSubview(confirmButton)
-        confirmButton.backgroundColor = .yellow.withAlphaComponent(0.3)
     }
     
     private func setupLayoutConstraints() {

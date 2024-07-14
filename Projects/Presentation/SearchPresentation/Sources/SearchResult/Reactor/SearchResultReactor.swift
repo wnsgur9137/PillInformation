@@ -177,6 +177,27 @@ public final class SearchResultReactor: Reactor {
         
         return isBookmarked ? deleteBookmark(medicineSeq: pillInfo.medicineSeq) : saveBookmark(pillInfo: pillInfo)
     }
+    
+    private func updateHits(_ indexPath: IndexPath) -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            let pillInfo = self.results[indexPath.item]
+            self.searchUseCase.updatePillHits(medicineSeq: pillInfo.medicineSeq, medicineName: pillInfo.medicineName)
+                .subscribe(onSuccess: { [weak self] hitInfo in
+                    self?.results[indexPath.item].hits = hitInfo.hits
+                    guard let pillInfo = self?.results[indexPath.item] else { return }
+                    observable.onNext(.showSearchDetail(pillInfo))
+                }, onFailure: { error in
+                    if error is SearchUseCaseError {
+                        observable.onNext(.showSearchDetail(pillInfo))
+                        return
+                    }
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
 }
 
 // MARK: - React
@@ -203,7 +224,7 @@ extension SearchResultReactor {
             return loadPills(keyword: keyword ?? "")
             
         case let .didSelectItem(indexPath):
-            return .just(.showSearchDetail(results[indexPath.item]))
+            return updateHits(indexPath)
             
         case let .didSelectBookmark(indexPath):
             return bookmark(indexPath)
