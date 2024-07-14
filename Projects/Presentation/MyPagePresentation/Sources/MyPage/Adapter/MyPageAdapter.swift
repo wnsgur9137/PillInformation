@@ -9,29 +9,24 @@
 import UIKit
 import RxSwift
 
+import BasePresentation
+
 public protocol MyPageAdapterDataSource: AnyObject {
     func numberOfSections() -> Int
     func numberOfRows(in section: Int) -> Int
     func cellForRow(at indexPath: IndexPath) -> String
 }
 
-public protocol MyPageAdapterDelegate: AnyObject {
-    
-}
-
 public final class MyPageAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: MyPageAdapterDataSource?
-    private weak var delegate: MyPageAdapterDelegate?
     let didSelectRow = PublishSubject<IndexPath>()
     
     init(tableView: UITableView, 
-         dataSource: MyPageAdapterDataSource,
-         delegate: MyPageAdapterDelegate) {
+         dataSource: MyPageAdapterDataSource) {
         tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: MyPageTableViewCell.identifier)
         self.tableView = tableView
         self.dataSource = dataSource
-        self.delegate = delegate
         super.init()
         tableView.dataSource = self
         tableView.delegate = self
@@ -55,7 +50,12 @@ extension MyPageAdapter: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "HeaderTitle"
+        switch section {
+        case 0: return Constants.MyPage.setting
+        case 1: return Constants.MyPage.policy
+        case 2: return Constants.MyPage.userInfo
+        default: return nil
+        }
     }
 }
 

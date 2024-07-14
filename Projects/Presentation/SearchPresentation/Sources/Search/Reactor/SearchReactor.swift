@@ -80,24 +80,24 @@ public final class SearchReactor: Reactor {
     /// - Returns: Error에 따른 알럿에서 사용할 Title, Message (title: String, message: String?)
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
-            return (title: "알림",
-                    message: "알 수 없는 오류가 발생했습니다.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.serverError)
         }
         switch error {
         case .emptyKeyword:
             fallthrough
             
         case .tooShortKeyword:
-            return (title: "알림",
-                    message: "알약명을 두 글자 이상 입력해주세요.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.tooShortKeywordError)
             
         case .noHaveRecentKeyword:
-            return (title: "알림",
-                    message: "삭제할 검색 기록이 없습니다.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.noHaveRecentKeyword)
             
         default:
-            return (title: "알림",
-                    message: "서버 오류가 발생했습니다.")
+            return (title: Constants.Search.alert,
+                    message: Constants.Search.serverError)
             
         }
     }

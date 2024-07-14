@@ -63,8 +63,7 @@ public final class MyPageViewController: UIViewController, View {
         if let reactor = reactor {
             self.adapter = MyPageAdapter(
                 tableView: tableView,
-                dataSource: reactor,
-                delegate: self
+                dataSource: reactor
             )
             bindAdapter(reactor)
         }
@@ -197,11 +196,6 @@ extension MyPageViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
-}
-
-// MARK: - MyPageAdapter TableViewDelegate
-extension MyPageViewController: MyPageAdapterDelegate {
-    
 }
 
 // MARK: - Layout
