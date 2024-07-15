@@ -81,4 +81,11 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
     public func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController {
         return ImageDetailViewController.create(with: makeImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction))
     }
+    
+    private func makeSearchShapeReactor(flowAction: SearchShapeFlowAction) -> SearchShapeReactor {
+        return SearchShapeReactor(flowAction: flowAction)
+    }
+    public func makeSearchShapeViewController(flowAction: SearchShapeFlowAction) -> SearchShapeViewController {
+        return SearchShapeViewController.create(with: makeSearchShapeReactor)
+    }
 }

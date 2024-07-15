@@ -69,3 +69,13 @@ extension Constants.SearchDetail {
     static let seQesitm: String = "부작용"
     static let depositMethodQesitm: String = "보관법"
 }
+
+// MARK: - SearchShape
+extension Constants.SearchShape {
+    static let color: String = "색상"
+    static let shape: String = "모양"
+    static let line: String = "구분선"
+    static let print: String = "문구"
+    static let null: String = "없음"
+    static let other: String = "기타"
+}

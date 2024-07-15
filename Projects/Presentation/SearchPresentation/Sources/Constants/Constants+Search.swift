@@ -23,4 +23,7 @@ extension Constants {
     struct ImageDetail {
         struct Image { }
     }
+    struct SearchShape {
+        struct Image { }
+    }
 }

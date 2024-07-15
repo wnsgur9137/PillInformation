@@ -23,11 +23,14 @@ enum SearchError: String, Error {
 public struct SearchFlowAction {
     let showSearchResultViewController: (String) -> Void
     let showMyPage: () -> Void
+    let showSearchShapeViewController: () -> Void
     
     public init(showSearchResultViewController: @escaping (String) -> Void,
-                showMyPage: @escaping () -> Void) {
+                showMyPage: @escaping () -> Void,
+                showSearchShapeViewController: @escaping () -> Void) {
         self.showSearchResultViewController = showSearchResultViewController
         self.showMyPage = showMyPage
+        self.showSearchShapeViewController = showSearchShapeViewController
     }
 }
 
@@ -43,6 +46,7 @@ public final class SearchReactor: Reactor {
         case didSelectTableViewRow(IndexPath)
         case didSelectTableViewDeleteButton(IndexPath)
         case didSelectTableViewDeleteAllButton
+        case didSelectSearchShapeButton
         case deleteAllRecentKeywords
     }
     
@@ -52,6 +56,7 @@ public final class SearchReactor: Reactor {
         case showSearchResultViewController(String)
         case showMyPage
         case showDeleteAllRecentKeywordAlert
+        case showSearchShapeViewController
         case error(Error)
     }
     
@@ -215,6 +220,9 @@ extension SearchReactor {
             
         case .deleteAllRecentKeywords:
             return deleteAllRecentKeywords()
+            
+        case .didSelectSearchShapeButton:
+            return .just(.showSearchShapeViewController)
         }
 
     }
@@ -239,6 +247,9 @@ extension SearchReactor {
             
         case .showMyPage:
             showMyPage()
+            
+        case .showSearchShapeViewController:
+            showSearchShapeViewController()
         }
         return state
     }
@@ -252,6 +263,10 @@ extension SearchReactor {
     
     private func showMyPage() {
         flowAction.showMyPage()
+    }
+    
+    private func showSearchShapeViewController() {
+        flowAction.showSearchShapeViewController()
     }
 }
 
