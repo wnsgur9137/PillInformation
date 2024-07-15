@@ -56,7 +56,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     public func showSearchViewController() {
         let flowAction = SearchFlowAction(
             showSearchResultViewController: showSearchResultViewController,
-            showMyPage: showMyPage
+            showMyPage: showMyPage,
+            showSearchShapeViewController: showSearchShapeViewController
         )
         let viewController = dependencies.makeSearchViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)

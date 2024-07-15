@@ -120,7 +120,7 @@ public final class SearchResultReactor: Reactor {
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
             return (title: Constants.Search.alert,
-                    message: Constants.Search.unknownError)
+                    message: Constants.Search.serverError)
         }
         switch error {
         case .emptyKeyword:

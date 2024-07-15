@@ -18,6 +18,7 @@ final class SearchShapeCollectionViewHeaderView: UICollectionReusableView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.font = Constants.Font.suiteBold(32.0)
         label.textColor = Constants.Color.systemLabel
         return label
     }()
@@ -53,6 +54,7 @@ extension SearchShapeCollectionViewHeaderView {
         titleLabel.pin
             .left(24.0)
             .right(12.0)
-            .width(of: rootContainerView)
+            .bottom()
+            .height(80%)
     }
 }

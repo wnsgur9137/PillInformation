@@ -28,7 +28,7 @@ extension Constants.ImageDetail.Image {
 extension Constants.SearchShape.Image {
     static let minus: UIImage = UIImage(systemName: "minus") ?? UIImage()
     static let plus: UIImage = UIImage(systemName: "plus") ?? UIImage()
-    static let rectangle: UIImage = UIImage(systemName: "reactangle") ?? UIImage()
+    static let rectangle: UIImage = UIImage(systemName: "rectangle") ?? UIImage()
     static let oval: UIImage = UIImage(systemName: "oval") ?? UIImage()
     static let circle: UIImage = UIImage(systemName: "circle") ?? UIImage()
     static let semiCircle: UIImage = UIImage()

@@ -86,6 +86,6 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
         return SearchShapeReactor(flowAction: flowAction)
     }
     public func makeSearchShapeViewController(flowAction: SearchShapeFlowAction) -> SearchShapeViewController {
-        return SearchShapeViewController.create(with: makeSearchShapeReactor)
+        return SearchShapeViewController.create(with: makeSearchShapeReactor(flowAction: flowAction))
     }
 }

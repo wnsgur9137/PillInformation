@@ -13,16 +13,28 @@ import RxCocoa
 import FlexLayout
 import PinLayout
 
+import BasePresentation
+
 public final class SearchShapeViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
     private let rootContainerView = UIView()
+    
     private let collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collectionView.backgroundColor = Constants.Color.background
         return collectionView
+    }()
+    
+    private let searchButton: UIButton = {
+        let button = UIButton()
+        let color = Constants.Color.systemWhite
+        button.setImage(Constants.Image.magnifyingglass, for: .normal)
+        button.setTitleColor(color, for: .normal)
+        button.tintColor = color
+        return button
     }()
     
     // MARK: - Properties
@@ -38,6 +50,7 @@ public final class SearchShapeViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = SearchShapeAdapter(
                 collectionView: collectionView,
@@ -46,6 +59,16 @@ public final class SearchShapeViewController: UIViewController, View {
             bindAdapter(reactor)
         }
         setupLayout()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -77,10 +100,22 @@ extension SearchShapeViewController {
 // MARK: - Layout
 extension SearchShapeViewController {
     private func setupLayout() {
-        view.addSubview(rootContainerView)
+        view.addSubview(collectionView)
+        view.addSubview(searchButton)
+        
+        searchButton.flex
+            .border(0.5, Constants.Color.systemWhite)
+            .cornerRadius(18.0)
+            .backgroundColor(Constants.Color.googleBlue)
+            .height(48.0)
     }
     
     private func setupSubviewLayout() {
-        
+        collectionView.pin.all(view.safeAreaInsets)
+        searchButton.pin
+            .minWidth(48.0)
+            .height(48.0)
+            .hCenter()
+            .bottom(25.0)
     }
 }

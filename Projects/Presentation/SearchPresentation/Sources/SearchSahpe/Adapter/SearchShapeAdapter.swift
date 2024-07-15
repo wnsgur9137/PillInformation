@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 import BasePresentation
 
@@ -27,9 +28,7 @@ public final class SearchShapeAdapter: NSObject {
     public init(collectionView: UICollectionView, 
                 dataSource: SearchShapeAdapterDataSource) {
         collectionView.register(SearchShapeCollectionViewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchShapeCollectionViewHeaderView.identifier)
-        collectionView.register(LineCollectionViewCell.self, forCellWithReuseIdentifier: LineCollectionViewCell.identifier)
-        collectionView.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
-        collectionView.register(ShapeCollectionViewCell.self, forCellWithReuseIdentifier: ShapeCollectionViewCell.identifier)
+        collectionView.register(SearchShapeCollectionViewCell.self, forCellWithReuseIdentifier: SearchShapeCollectionViewCell.identifier)
         collectionView.register(PrintCollectionViewCell.self, forCellWithReuseIdentifier: PrintCollectionViewCell.identifier)
         
         self.collectionView = collectionView
@@ -66,29 +65,36 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let section = SearchShapeCollectionViewSecton(rawValue: indexPath.section) else { return .init() }
-        switch section {
-        case .color:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell,
-                  let color = dataSource?.colorCellForItem(at: indexPath.item) else { return .init() }
-            cell.configure(color)
-            return cell
-            
-        case .shape:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShapeCollectionViewCell.identifier, for: indexPath) as? ShapeCollectionViewCell,
-                  let shape = dataSource?.shapeCellForItem(at: indexPath.item) else { return .init() }
-            cell.configure(shape)
-            return cell
-            
-        case .line:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LineCollectionViewCell.identifier, for: indexPath) as? LineCollectionViewCell,
-                  let line = dataSource?.lineCellForItem(at: indexPath.item) else { return .init() }
-            cell.configure(line)
-            return cell
-                    
-        case .print:
+        
+        if section == .print {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PrintCollectionViewCell.identifier, for: indexPath) as? PrintCollectionViewCell else { return .init() }
+            cell.textFieldDeleagte(self)
             return cell
         }
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchShapeCollectionViewCell.identifier, for: indexPath) as? SearchShapeCollectionViewCell else { return .init() }
+        
+        switch section {
+        case .shape:
+            guard let shape = dataSource?.shapeCellForItem(at: indexPath.item) else { return .init() }
+            cell.configure(shape)
+        case .color:
+            guard let color = dataSource?.colorCellForItem(at: indexPath.item) else { return .init() }
+            cell.configure(color)
+        case .line:
+            guard let line = dataSource?.lineCellForItem(at: indexPath.item) else { return .init() }
+            cell.configure(line)
+        case .print: return .init()
+        }
+        
+        cell.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { _ in
+                cell.isSelected = !cell.isSelected
+            })
+            .disposed(by: cell.disposeBag)
+        
+        return cell
     }
 }
 
@@ -102,6 +108,25 @@ extension SearchShapeAdapter: UICollectionViewDelegate {
 // MARK: - UICollectionView Delegate FlowLayout
 extension SearchShapeAdapter: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 120.0, height: 120.0)
+        guard let section = SearchShapeCollectionViewSecton(rawValue: indexPath.section) else { return CGSize() }
+        switch section {
+        case .shape: return CGSize(width: 80.0, height: 80.0)
+        case .color: fallthrough
+        case .line: return CGSize(width: 56.0, height: 56.0)
+        case .print: return CGSize(width: collectionView.bounds.width, height: 120.0)
+        }
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 80.0)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 4.0, left: 12.0, bottom: 4.0, right: 12.0)
+    }
+}
+
+// MARK: - UITextField Delegate
+extension SearchShapeAdapter: UITextFieldDelegate {
+    
 }

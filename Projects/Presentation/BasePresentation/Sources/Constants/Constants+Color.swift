@@ -28,10 +28,11 @@ extension Constants {
         public static let systemGreen: UIColor = .systemGreen
         public static let systemPurple: UIColor = .systemPurple
         
+        public static let pink: UIColor = .init(hex: "#FFC0CB") ?? .init()
         public static let lightGreen: UIColor = .green // MARK: - e
-        public static let wine: UIColor = .purple
-        public static let turquoise: UIColor = .green
-        public static let deepBlue: UIColor = .blue
+        public static let wine: UIColor = .init(hex: "#800080") ?? UIColor()
+        public static let turquoise: UIColor = .init(hex: "#40E0D0") ?? UIColor()
+        public static let deepBlue: UIColor = .init(hex: "#00008B") ?? UIColor()
         public static let darkBackground: UIColor = UIColor(hex: "2E2E2E") ?? .darkGray
         public static let dimBlack: UIColor = (UIColor(hex: "#22282A") ?? .black).withAlphaComponent(0.75)
         public static let kakaoYellow: UIColor = UIColor(hex: "#FDDC3F") ?? .systemYellow
