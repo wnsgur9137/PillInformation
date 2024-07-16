@@ -25,13 +25,11 @@ public final class DefaultSearchUseCase: SearchUseCase {
     private func executePillHits(_ medicineSeq: Int) -> Single<PillHitsModel> {
         return searchRepository.executePillHits(medicineSeq: medicineSeq).map { $0.toModel() }
     }
-}
-
-extension DefaultSearchUseCase {
-    public func executePill(keyword: String) -> Single<[PillInfoModel]> {
+    
+    private func executePillData(fetchPills: @escaping () -> Single<[PillInfo]>) -> Single<[PillInfoModel]> {
         return .create { [weak self] single in
             guard let self = self else { return Disposables.create() }
-            self.searchRepository.executePill(keyword: keyword)
+            fetchPills()
                 .flatMap { pills in
                     Observable.from(pills.map { $0.toModel() })
                         .flatMap { info in
@@ -51,9 +49,20 @@ extension DefaultSearchUseCase {
                     single(.failure(error))
                 })
                 .disposed(by: self.disposeBag)
-                
+            
             return Disposables.create()
         }
+    }
+}
+
+extension DefaultSearchUseCase {
+    public func executePill(keyword: String) -> Single<[PillInfoModel]> {
+        return executePillData { self.searchRepository.executePill(keyword: keyword) }
+    }
+    
+    public func executePill(pillShape: PillShapeModel) -> Single<[PillInfoModel]> {
+        let shapeInfo = PillShape.create(model: pillShape)
+        return executePillData { self.searchRepository.executePill(shapeInfo: shapeInfo) }
     }
     
     public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescriptionModel?> {

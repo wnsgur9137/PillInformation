@@ -80,20 +80,46 @@ public final class SearchShapeViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func showAlert(title: String, message: String?) {
+        var messageText: AlertText?
+        if let message = message {
+            messageText = AlertText(text: message)
+        }
+        AlertViewer()
+            .showSingleButtonAlert(
+                self,
+                title: .init(text: title),
+                message: messageText,
+                confirmButtonInfo: .init(title: Constants.confirm)
+            )
+    }
 }
 
 // MARK: - Binding
 extension SearchShapeViewController {
     private func bindAction(_ reactor: SearchShapeReactor) {
-        
+        searchButton.rx.tap
+            .map { Reactor.Action.search }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchShapeReactor) {
-        
+        reactor.pulse(\.$errorAlertContents)
+            .filter { $0 != nil }
+            .subscribe(onNext: { contents in
+                guard let contents = contents else { return }
+                self.showAlert(title: contents.title, message: contents.message)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindAdapter(_ reactor: SearchShapeReactor) {
-        
+        adapter?.didSelectItem
+            .map { values in return Reactor.Action.didSelectShapeButton(values) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 

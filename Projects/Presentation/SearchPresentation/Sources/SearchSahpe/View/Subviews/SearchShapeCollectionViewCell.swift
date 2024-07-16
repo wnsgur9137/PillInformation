@@ -58,6 +58,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     }
     
     private(set) var disposeBag = DisposeBag()
+    private(set) var content: String?
     
     // MARK: - Life cycle
     
@@ -79,6 +80,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
+        content = nil
     }
     
     private func showSelectedImageView(_ isSelected: Bool) {
@@ -146,6 +148,7 @@ extension SearchShapeCollectionViewCell {
     
     /// 모양
     func configure(_ shape: SearchShapeItems) {
+        content = shape.rawValue
         if shape == .other {
             titleLabel.font = Constants.Font.suiteSemiBold(24.0)
             setupTextAttributedString(shape)
@@ -159,6 +162,7 @@ extension SearchShapeCollectionViewCell {
     
     /// 색상
     func configure(_ color: SearchColorItems) {
+        content = color.rawValue
         var backgroundColor: UIColor? = Constants.Color.background
         switch color {
         case .clear:
@@ -222,6 +226,7 @@ extension SearchShapeCollectionViewCell {
     
     /// 구분선
     func configure(_ line: SearchLineItems) {
+        content = line.rawValue
         switch line {
         case .minuse: fallthrough
         case .plus: setupImageAttributedString(line)

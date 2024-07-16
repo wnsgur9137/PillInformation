@@ -67,6 +67,12 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
     public func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController {
         return SearchResultViewController.create(with: makeSearchResultReactor(keyword: keyword, flowAction: flowAction))
     }
+    private func makeSearchResultReactor(shapeInfo: PillShapeModel, flowAction: SearchResultFlowAction) -> SearchResultReactor {
+        return SearchResultReactor(searchUseCase: makeSearchUseCase(), bookmarkUseCase: makeBookmarkUseCase(), shapeInfo: shapeInfo, flowAction: flowAction)
+    }
+    public func makeSearchResultViewController(shapeInfo: PillShapeModel, flowAction: SearchResultFlowAction) -> SearchResultViewController {
+        return SearchResultViewController.create(with: makeSearchResultReactor(shapeInfo: shapeInfo, flowAction: flowAction))
+    }
     
     private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
         return SearchDetailReactor(with: makeSearchUseCase(), pillInfo: pillInfo, flowAction: flowAction)

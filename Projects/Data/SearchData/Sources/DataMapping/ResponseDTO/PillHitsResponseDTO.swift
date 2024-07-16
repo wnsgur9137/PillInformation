@@ -1,5 +1,5 @@
 //
-//  PillHitsDTO.swift
+//  PillHitsResponseDTO.swift
 //  SearchData
 //
 //  Created by JunHyeok Lee on 7/10/24.
@@ -10,7 +10,7 @@ import Foundation
 
 import SearchDomain
 
-public struct PillHitsDTO: Decodable {
+public struct PillHitsResponseDTO: Decodable {
     let medicineSeq: Int
     let medicineName: String
     let hits: Int
@@ -22,7 +22,7 @@ public struct PillHitsDTO: Decodable {
     }
 }
 
-extension PillHitsDTO {
+extension PillHitsResponseDTO {
     func toDomain() -> PillHits {
         return .init(medicineSeq: medicineSeq, medicineName: medicineName, hits: hits)
     }

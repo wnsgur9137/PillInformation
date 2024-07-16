@@ -18,20 +18,29 @@ extension NetworkManager {
         return requestObject(.getPillList(name: keyword), type: [PillInfoResponseDTO].self)
     }
     
-    public func requestPillDescription(_ medicineSeq: Int) -> Single<PillDescriptionDTO?> {
-        return requestObject(.getPillDescription(medicineSeq: medicineSeq), type: PillDescriptionDTO?.self)
+    public func requestPill(_ shapeInfo: SearchShapeRequestDTO) -> Single<[PillInfoResponseDTO]> {
+        return requestObject(.getPillShapeList(
+            shapes: shapeInfo.shapes,
+            colors: shapeInfo.colors,
+            lines: shapeInfo.lines,
+            codes: shapeInfo.codes
+        ), type: [PillInfoResponseDTO].self)
+    }
+    
+    public func requestPillDescription(_ medicineSeq: Int) -> Single<PillDescriptionResponseDTO?> {
+        return requestObject(.getPillDescription(medicineSeq: medicineSeq), type: PillDescriptionResponseDTO?.self)
     }
     
     public func requestRecommendPillNames() -> Single<[String]> {
         return requestObject(.getRecommendPillNames, type: [String].self)
     }
     
-    public func requestPillHits(_ medicineSeq: Int) -> Single<PillHitsDTO> {
-        return requestObject(.getPillHits(medicineSeq: medicineSeq), type: PillHitsDTO.self)
+    public func requestPillHits(_ medicineSeq: Int) -> Single<PillHitsResponseDTO> {
+        return requestObject(.getPillHits(medicineSeq: medicineSeq), type: PillHitsResponseDTO.self)
     }
     
-    public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsDTO> {
-        return requestObject(.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName), type: PillHitsDTO.self)
+    public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsResponseDTO> {
+        return requestObject(.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName), type: PillHitsResponseDTO.self)
     }
     
     public func requestRecommendKeyword() -> Single<[String]> {

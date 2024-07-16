@@ -23,9 +23,9 @@ public protocol SearchShapeAdapterDataSource: AnyObject {
 public final class SearchShapeAdapter: NSObject {
     private let collectionView: UICollectionView
     private weak var dataSource: SearchShapeAdapterDataSource?
-    let didSelectItem: PublishSubject<IndexPath> = .init()
+    let didSelectItem: PublishSubject<(section: SearchShapeCollectionViewSecton, isSelected: Bool, value: String?)> = .init()
     
-    public init(collectionView: UICollectionView, 
+    public init(collectionView: UICollectionView,
                 dataSource: SearchShapeAdapterDataSource) {
         collectionView.register(SearchShapeCollectionViewHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchShapeCollectionViewHeaderView.identifier)
         collectionView.register(SearchShapeCollectionViewCell.self, forCellWithReuseIdentifier: SearchShapeCollectionViewCell.identifier)
@@ -57,7 +57,7 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
         case .color: headerView.configure(Constants.SearchShape.color)
         case .shape: headerView.configure(Constants.SearchShape.shape)
         case .line: headerView.configure(Constants.SearchShape.line)
-        case .print: headerView.configure(Constants.SearchShape.print)
+        case .code: headerView.configure(Constants.SearchShape.print)
         }
         
         return headerView
@@ -66,7 +66,7 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let section = SearchShapeCollectionViewSecton(rawValue: indexPath.section) else { return .init() }
         
-        if section == .print {
+        if section == .code {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PrintCollectionViewCell.identifier, for: indexPath) as? PrintCollectionViewCell else { return .init() }
             cell.textFieldDeleagte(self)
             return cell
@@ -84,13 +84,14 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
         case .line:
             guard let line = dataSource?.lineCellForItem(at: indexPath.item) else { return .init() }
             cell.configure(line)
-        case .print: return .init()
+        case .code: return .init()
         }
         
         cell.rx.tapGesture()
             .when(.recognized)
             .subscribe(onNext: { _ in
                 cell.isSelected = !cell.isSelected
+                self.didSelectItem.onNext((section, cell.isSelected, cell.content))
             })
             .disposed(by: cell.disposeBag)
         
@@ -101,7 +102,6 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
 // MARK: - UICollectionView Delegate
 extension SearchShapeAdapter: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didSelectItem.onNext(indexPath)
     }
 }
 
@@ -113,7 +113,7 @@ extension SearchShapeAdapter: UICollectionViewDelegateFlowLayout {
         case .shape: return CGSize(width: 80.0, height: 80.0)
         case .color: fallthrough
         case .line: return CGSize(width: 56.0, height: 56.0)
-        case .print: return CGSize(width: collectionView.bounds.width, height: 120.0)
+        case .code: return CGSize(width: collectionView.bounds.width, height: 120.0)
         }
     }
     

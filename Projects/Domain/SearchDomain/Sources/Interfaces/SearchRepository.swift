@@ -13,6 +13,7 @@ import BaseDomain
 
 public protocol SearchRepository {
     func executePill(keyword: String) -> Single<[PillInfo]>
+    func executePill(shapeInfo: PillShape) -> Single<[PillInfo]>
     func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?>
     func executePillHits(medicineSeq: Int) -> Single<PillHits>
     func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHits>

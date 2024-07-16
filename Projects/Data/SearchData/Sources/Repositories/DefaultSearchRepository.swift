@@ -30,6 +30,11 @@ extension DefaultSearchRepository {
         return networkManager.requestPill(keyword: keyword).map { $0.map { $0.toDomain() } }
     }
     
+    public func executePill(shapeInfo: PillShape) -> Single<[PillInfo]> {
+        let shapeRequestDTO = SearchShapeRequestDTO.create(shapeInfo: shapeInfo)
+        return networkManager.requestPill(shapeRequestDTO).map { $0.map { $0.toDomain() } }
+    }
+    
     public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?> {
         return networkManager.requestPillDescription(medicineSeq).map { $0?.toDomain() }
     }

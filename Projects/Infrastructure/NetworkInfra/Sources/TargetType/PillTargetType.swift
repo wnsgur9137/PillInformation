@@ -11,7 +11,10 @@ import Moya
 
 public enum PillTargetType {
     case getPillList(name: String)
-    case getPillShapeList(shape: String, color: String, line: String, code: String)
+    case getPillShapeList(shapes: [String]?,
+                          colors: [String]?,
+                          lines: [String]?,
+                          codes: [String]?)
     case getPillDescription(medicineSeq: Int)
     case getRecommendPillNames
     case getPillHits(medicineSeq: Int)
@@ -27,7 +30,7 @@ extension PillTargetType: MoyaErrorHandleable {
     public var path: String {
         switch self {
         case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
-        case .getPillShapeList: return "/pill/getPillsWithShape"
+        case .getPillShapeList: return "/pill/getPillsWithShapeV1"
         case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
         case .getRecommendPillNames: return "/recommendMedicine"
         case let .getPillHits(medicineSeq): return "/medicineHits/\(medicineSeq)"
@@ -60,11 +63,13 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getPillList:
             return nil
             
-        case let .getPillShapeList(shape, color, line, code):
-            return ["shape": shape,
-                    "color": color,
-                    "line": line,
-                    "code": code]
+        case let .getPillShapeList(shapes, colors, lines, codes):
+            var parameters: [String: Any] = [:]
+            if let shapes = shapes { parameters["shapes"] = shapes }
+            if let colors = colors { parameters["colors"] = colors }
+            if let lines = lines { parameters["lines"] = lines }
+            if let codes = codes { parameters["codes"] = codes }
+            return parameters
             
         case .getPillDescription:
             return nil
@@ -87,6 +92,12 @@ extension PillTargetType: MoyaErrorHandleable {
     }
     
     public var task: Moya.Task {
+        if case .getPillShapeList = self,
+           let parameters = parameters {
+            let encoding = URLEncoding(destination: .queryString, arrayEncoding: .noBrackets)
+            return .requestParameters(parameters: parameters, encoding: encoding)
+        }
+        
         if method == .get {
             let encoding: URLEncoding = .queryString
             if let parameters = parameters {
@@ -107,154 +118,148 @@ extension PillTargetType {
         case .getPillList:
             return Data(
                 """
-                {
-                    "resultCount": 2,
-                    "medicineItem": [
-                        {
-                            "medicineSeq": "195900001",
-                            "medicineName": "헤로세친캅셀250밀리그람(클로람페니콜)",
-                            "entpSeq": "19650001",
-                            "entpName": "(주)종근당",
-                            "chart": "이 약은 백색 내지 황백색의 결정 또는 결정성 가루가 들어 있는 상의는 갈색, 하의는 미황색의 캅셀이다.",
-                            "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154601161228500091",
-                            "printFront": "CKD 250",
-                            "printBack": "NULL",
-                            "medicineShape": "장방형",
-                            "colorClass1": "갈색",
-                            "colorClass2": "노랑",
-                            "lineFront": "NULL",
-                            "lineBack": "NULL",
-                            "lengLong": "17.60",
-                            "lengShort": "6.07",
-                            "thick": "6.35",
-                            "imgRegistTs": "20041126",
-                            "classNo": "06150",
-                            "className": "주로 그람양성, 음성균, 리케치아, 비루스에 작용하는 것",
-                            "etcOtcName": "전문의약품",
-                            "medicinePermitDate": "19590707",
-                            "formCodeName": "경질캡슐제, 산제",
-                            "markCodeFrontAnal": "",
-                            "markCodeBackAnal": "",
-                            "markCodeFrontImg": "",
-                            "markCodeBackImg": "",
-                            "changeDate": "20120829",
-                            "markCodeFront": "NULL",
-                            "markCodeBack": "NULL",
-                            "medicineEngName": "Helocetin Cap.",
-                            "ediCode": "NULL"
-                        },
-                        {
-                            "medicineSeq": "195900032",
-                            "medicineName": "디크로다이드정25밀리그램(히드로클로로티아지드)",
-                            "entpSeq": "19580005",
-                            "entpName": "태극제약(주)",
-                            "chart": "주황색의 원형정제",
-                            "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151335258227300060",
-                            "printFront": "TG분할선DCT",
-                            "printBack": "NULL",
-                            "medicineShape": "원형",
-                            "colorClass1": "주황",
-                            "colorClass2": "NULL",
-                            "lineFront": "-",
-                            "lineBack": "NULL",
-                            "lengLong": "7",
-                            "lengShort": "7",
-                            "thick": "3",
-                            "imgRegistTs": "20050616",
-                            "classNo": "02130",
-                            "className": "이뇨제",
-                            "etcOtcName": "전문의약품",
-                            "medicinePermitDate": "19590908",
-                            "formCodeName": "나정",
-                            "markCodeFrontAnal": "",
-                            "markCodeBackAnal": "",
-                            "markCodeFrontImg": "",
-                            "markCodeBackImg": "",
-                            "changeDate": "20140209",
-                            "markCodeFront": "NULL",
-                            "markCodeBack": "NULL",
-                            "medicineEngName": "Dichlodide Tab. 25mg",
-                            "ediCode": "NULL"
-                        }
-                    ]
-                }
+                [
+                    {
+                        "medicineSeq": "195900001",
+                        "medicineName": "헤로세친캅셀250밀리그람(클로람페니콜)",
+                        "entpSeq": "19650001",
+                        "entpName": "(주)종근당",
+                        "chart": "이 약은 백색 내지 황백색의 결정 또는 결정성 가루가 들어 있는 상의는 갈색, 하의는 미황색의 캅셀이다.",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154601161228500091",
+                        "printFront": "CKD 250",
+                        "printBack": "NULL",
+                        "medicineShape": "장방형",
+                        "colorClass1": "갈색",
+                        "colorClass2": "노랑",
+                        "lineFront": "NULL",
+                        "lineBack": "NULL",
+                        "lengLong": "17.60",
+                        "lengShort": "6.07",
+                        "thick": "6.35",
+                        "imgRegistTs": "20041126",
+                        "classNo": "06150",
+                        "className": "주로 그람양성, 음성균, 리케치아, 비루스에 작용하는 것",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590707",
+                        "formCodeName": "경질캡슐제, 산제",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20120829",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Helocetin Cap.",
+                        "ediCode": "NULL"
+                    },
+                    {
+                        "medicineSeq": "195900032",
+                        "medicineName": "디크로다이드정25밀리그램(히드로클로로티아지드)",
+                        "entpSeq": "19580005",
+                        "entpName": "태극제약(주)",
+                        "chart": "주황색의 원형정제",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151335258227300060",
+                        "printFront": "TG분할선DCT",
+                        "printBack": "NULL",
+                        "medicineShape": "원형",
+                        "colorClass1": "주황",
+                        "colorClass2": "NULL",
+                        "lineFront": "-",
+                        "lineBack": "NULL",
+                        "lengLong": "7",
+                        "lengShort": "7",
+                        "thick": "3",
+                        "imgRegistTs": "20050616",
+                        "classNo": "02130",
+                        "className": "이뇨제",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590908",
+                        "formCodeName": "나정",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20140209",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Dichlodide Tab. 25mg",
+                        "ediCode": "NULL"
+                    }
+                ]
                 """.utf8
             )
             
         case .getPillShapeList:
             return Data(
                 """
-                {
-                    "resultCount": 2,
-                    "medicineItem": [
-                        {
-                            "medicineSeq": "195900001",
-                            "medicineName": "헤로세친캅셀250밀리그람(클로람페니콜)",
-                            "entpSeq": "19650001",
-                            "entpName": "(주)종근당",
-                            "chart": "이 약은 백색 내지 황백색의 결정 또는 결정성 가루가 들어 있는 상의는 갈색, 하의는 미황색의 캅셀이다.",
-                            "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154601161228500091",
-                            "printFront": "CKD 250",
-                            "printBack": "NULL",
-                            "medicineShape": "장방형",
-                            "colorClass1": "갈색",
-                            "colorClass2": "노랑",
-                            "lineFront": "NULL",
-                            "lineBack": "NULL",
-                            "lengLong": "17.60",
-                            "lengShort": "6.07",
-                            "thick": "6.35",
-                            "imgRegistTs": "20041126",
-                            "classNo": "06150",
-                            "className": "주로 그람양성, 음성균, 리케치아, 비루스에 작용하는 것",
-                            "etcOtcName": "전문의약품",
-                            "medicinePermitDate": "19590707",
-                            "formCodeName": "경질캡슐제, 산제",
-                            "markCodeFrontAnal": "",
-                            "markCodeBackAnal": "",
-                            "markCodeFrontImg": "",
-                            "markCodeBackImg": "",
-                            "changeDate": "20120829",
-                            "markCodeFront": "NULL",
-                            "markCodeBack": "NULL",
-                            "medicineEngName": "Helocetin Cap.",
-                            "ediCode": "NULL"
-                        },
-                        {
-                            "medicineSeq": "195900032",
-                            "medicineName": "디크로다이드정25밀리그램(히드로클로로티아지드)",
-                            "entpSeq": "19580005",
-                            "entpName": "태극제약(주)",
-                            "chart": "주황색의 원형정제",
-                            "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151335258227300060",
-                            "printFront": "TG분할선DCT",
-                            "printBack": "NULL",
-                            "medicineShape": "원형",
-                            "colorClass1": "주황",
-                            "colorClass2": "NULL",
-                            "lineFront": "-",
-                            "lineBack": "NULL",
-                            "lengLong": "7",
-                            "lengShort": "7",
-                            "thick": "3",
-                            "imgRegistTs": "20050616",
-                            "classNo": "02130",
-                            "className": "이뇨제",
-                            "etcOtcName": "전문의약품",
-                            "medicinePermitDate": "19590908",
-                            "formCodeName": "나정",
-                            "markCodeFrontAnal": "",
-                            "markCodeBackAnal": "",
-                            "markCodeFrontImg": "",
-                            "markCodeBackImg": "",
-                            "changeDate": "20140209",
-                            "markCodeFront": "NULL",
-                            "markCodeBack": "NULL",
-                            "medicineEngName": "Dichlodide Tab. 25mg",
-                            "ediCode": "NULL"
-                        }
-                    ]
-                }
+                [
+                    {
+                        "medicineSeq": "195900001",
+                        "medicineName": "헤로세친캅셀250밀리그람(클로람페니콜)",
+                        "entpSeq": "19650001",
+                        "entpName": "(주)종근당",
+                        "chart": "이 약은 백색 내지 황백색의 결정 또는 결정성 가루가 들어 있는 상의는 갈색, 하의는 미황색의 캅셀이다.",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154601161228500091",
+                        "printFront": "CKD 250",
+                        "printBack": "NULL",
+                        "medicineShape": "장방형",
+                        "colorClass1": "갈색",
+                        "colorClass2": "노랑",
+                        "lineFront": "NULL",
+                        "lineBack": "NULL",
+                        "lengLong": "17.60",
+                        "lengShort": "6.07",
+                        "thick": "6.35",
+                        "imgRegistTs": "20041126",
+                        "classNo": "06150",
+                        "className": "주로 그람양성, 음성균, 리케치아, 비루스에 작용하는 것",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590707",
+                        "formCodeName": "경질캡슐제, 산제",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20120829",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Helocetin Cap.",
+                        "ediCode": "NULL"
+                    },
+                    {
+                        "medicineSeq": "195900032",
+                        "medicineName": "디크로다이드정25밀리그램(히드로클로로티아지드)",
+                        "entpSeq": "19580005",
+                        "entpName": "태극제약(주)",
+                        "chart": "주황색의 원형정제",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151335258227300060",
+                        "printFront": "TG분할선DCT",
+                        "printBack": "NULL",
+                        "medicineShape": "원형",
+                        "colorClass1": "주황",
+                        "colorClass2": "NULL",
+                        "lineFront": "-",
+                        "lineBack": "NULL",
+                        "lengLong": "7",
+                        "lengShort": "7",
+                        "thick": "3",
+                        "imgRegistTs": "20050616",
+                        "classNo": "02130",
+                        "className": "이뇨제",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590908",
+                        "formCodeName": "나정",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20140209",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Dichlodide Tab. 25mg",
+                        "ediCode": "NULL"
+                    }
+                ]
                 """.utf8
             )
             

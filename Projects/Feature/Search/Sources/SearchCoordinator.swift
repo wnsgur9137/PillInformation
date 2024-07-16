@@ -14,6 +14,7 @@ import BasePresentation
 public protocol SearchCoordinatorDependencies {
     func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController
     func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController
+    func makeSearchResultViewController(shapeInfo: PillShapeModel, flowAction: SearchResultFlowAction) -> SearchResultViewController
     func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
     func makeSearchShapeViewController(flowAction: SearchShapeFlowAction) -> SearchShapeViewController
@@ -64,6 +65,13 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
         searchViewController = viewController
     }
     
+    private func showSearchShapeViewController() {
+        let flowAction = SearchShapeFlowAction(showSearchResultViewControler: showSearchResultViewController)
+        let viewController = dependencies.makeSearchShapeViewController(flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        searchShapeViewController = viewController
+    }
+    
     private func showSearchResultViewController(keyword: String) {
         let flowAction = SearchResultFlowAction(
             popViewController: popViewController,
@@ -71,6 +79,17 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
             showMyPage: showMyPage
         )
         let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        searchResultViewController = viewController
+    }
+    
+    private func showSearchResultViewController(shapeInfo: PillShapeModel) {
+        let flowAction = SearchResultFlowAction(
+            popViewController: popViewController,
+            showSearchDetailViewController: showSearchDetailViewController,
+            showMyPage: showMyPage
+        )
+        let viewController = dependencies.makeSearchResultViewController(shapeInfo: shapeInfo, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         searchResultViewController = viewController
     }
@@ -110,12 +129,5 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     
     private func showMyPage() {
         tabDependencies?.showMyPage()
-    }
-    
-    private func showSearchShapeViewController() {
-        let flowAction = SearchShapeFlowAction()
-        let viewController = dependencies.makeSearchShapeViewController(flowAction: flowAction)
-        navigationController?.pushViewController(viewController, animated: true)
-        searchShapeViewController = viewController
     }
 }

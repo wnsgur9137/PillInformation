@@ -79,4 +79,5 @@ extension Constants.SearchShape {
     static let null: String = "없음"
     static let other: String = "기타"
     static let printPlaceholder: String = "알약에 그려진 문구를 입력해 보세요!"
+    static let emptyErrorTitle: String = "한 개 이상을 선택해 주세요"
 }
