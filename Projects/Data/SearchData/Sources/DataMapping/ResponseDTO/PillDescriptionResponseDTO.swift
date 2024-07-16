@@ -1,5 +1,5 @@
 //
-//  PillDescriptionDTO.swift
+//  PillDescriptionResponseDTO.swift
 //  SearchData
 //
 //  Created by JunHyeok Lee on 5/24/24.
@@ -10,7 +10,7 @@ import Foundation
 
 import BaseDomain
 
-public struct PillDescriptionDTO: Decodable {
+public struct PillDescriptionResponseDTO: Decodable {
     let medicineSeq: Int
     let medicineName: String
     let entpName: String
@@ -36,7 +36,7 @@ public struct PillDescriptionDTO: Decodable {
     }
 }
 
-extension PillDescriptionDTO {
+extension PillDescriptionResponseDTO {
     func toDomain() -> PillDescription {
         return .init(medicineSeq: self.medicineSeq, medicineName: self.medicineName, entpName: self.entpName, efcyQestim: self.efcyQestim, useMethodQesitm: self.useMethodQesitm, atpnWarnQesitm: self.atpnWarnQesitm, atpnQesitm: self.atpnQesitm, intrcQesitm: self.intrcQesitm, seQesitm: self.seQesitm, depositMethodQesitm: self.depositMethodQesitm)
     }

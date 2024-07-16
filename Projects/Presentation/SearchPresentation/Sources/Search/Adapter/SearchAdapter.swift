@@ -82,6 +82,10 @@ extension SearchAdapter: UICollectionViewDelegateFlowLayout {
         let height = 40.0
         return CGSize(width: width, height: height)
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 4.0, left: 12.0, bottom: 4.0, right: 12.0)
+    }
 }
 
 // MARK: - UITableView DataSource

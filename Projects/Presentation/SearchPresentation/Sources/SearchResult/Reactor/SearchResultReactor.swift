@@ -60,7 +60,8 @@ public final class SearchResultReactor: Reactor {
     public let flowAction: SearchResultFlowAction
     private let searchUseCase: SearchUseCase
     private let bookmarkUseCase: BookmarkUseCase
-    private var keyword: String
+    private var keyword: String?
+    private var shapeInfo: PillShapeModel?
     private var results: [PillInfoModel] = []
     private var bookmarkSeqs: [Int] = []
     private let disposeBag = DisposeBag()
@@ -75,10 +76,20 @@ public final class SearchResultReactor: Reactor {
         self.flowAction = flowAction
     }
     
-    private func loadPills(keyword: String) -> Observable<Mutation> {
-        return .create() { [weak self] observable in
+    public init(searchUseCase: SearchUseCase,
+                bookmarkUseCase: BookmarkUseCase,
+                shapeInfo: PillShapeModel,
+                flowAction: SearchResultFlowAction) {
+        self.searchUseCase = searchUseCase
+        self.bookmarkUseCase = bookmarkUseCase
+        self.shapeInfo = shapeInfo
+        self.flowAction = flowAction
+    }
+    
+    private func loadPills(loadPills: @escaping () -> Single<[PillInfoModel]>) -> Observable<Mutation> {
+        return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
-            self.searchUseCase.executePill(keyword: keyword)
+            loadPills()
                 .subscribe(onSuccess: { pills in
                     self.results = pills
                     let mutation: Mutation = pills.count > 0 ? .reloadData : .isEmptyResult
@@ -89,6 +100,14 @@ public final class SearchResultReactor: Reactor {
                 .disposed(by: self.disposeBag)
             return Disposables.create()
         }
+    }
+    
+    private func loadPills(keyword: String) -> Observable<Mutation> {
+        return loadPills { self.searchUseCase.executePill(keyword: keyword) }
+    }
+    
+    private func loadPills(shapeInfo: PillShapeModel) -> Observable<Mutation> {
+        return loadPills { self.searchUseCase.executePill(pillShape: shapeInfo) }
     }
     
     private func loadBookmark() -> Observable<Mutation> {
@@ -120,7 +139,7 @@ public final class SearchResultReactor: Reactor {
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
             return (title: Constants.Search.alert,
-                    message: Constants.Search.unknownError)
+                    message: Constants.Search.serverError)
         }
         switch error {
         case .emptyKeyword:
@@ -204,11 +223,17 @@ public final class SearchResultReactor: Reactor {
 extension SearchResultReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .loadPills: 
-            if let error = validate(keyword: keyword) {
-                return .just(.error(error))
+        case .loadPills:
+            if let keyword = keyword {
+                if let error = validate(keyword: keyword) {
+                    return .just(.error(error))
+                }
+                return loadPills(keyword: keyword)
             }
-            return loadPills(keyword: keyword)
+            if let shapeInfo = shapeInfo {
+                return loadPills(shapeInfo: shapeInfo)
+            }
+            return .just(.isEmptyResult)
             
         case .loadBookmark:
             return loadBookmark()
