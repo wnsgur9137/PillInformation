@@ -21,11 +21,12 @@ public protocol SearchCoordinatorDependencies {
 }
 
 public protocol SearchTabDependencies {
-    func showMyPage()
+    func showMyPageViewController()
 }
 
 public protocol SearchCoordinator: Coordinator {
     func showSearchViewController()
+    func showSearchShapeViewController()
 }
 
 public final class DefaultSearchCoordinator: SearchCoordinator {
@@ -57,7 +58,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     public func showSearchViewController() {
         let flowAction = SearchFlowAction(
             showSearchResultViewController: showSearchResultViewController,
-            showMyPage: showMyPage,
+            showMyPageViewController: showMyPageViewController,
             showSearchShapeViewController: showSearchShapeViewController
         )
         let viewController = dependencies.makeSearchViewController(flowAction: flowAction)
@@ -65,7 +66,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
         searchViewController = viewController
     }
     
-    private func showSearchShapeViewController() {
+    public func showSearchShapeViewController() {
         let flowAction = SearchShapeFlowAction(showSearchResultViewControler: showSearchResultViewController)
         let viewController = dependencies.makeSearchShapeViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -76,7 +77,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
         let flowAction = SearchResultFlowAction(
             popViewController: popViewController,
             showSearchDetailViewController: showSearchDetailViewController,
-            showMyPage: showMyPage
+            showSearchShapeViewController: showSearchShapeViewController,
+            showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeSearchResultViewController(keyword: keyword, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -87,7 +89,8 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
         let flowAction = SearchResultFlowAction(
             popViewController: popViewController,
             showSearchDetailViewController: showSearchDetailViewController,
-            showMyPage: showMyPage
+            showSearchShapeViewController: showSearchShapeViewController,
+            showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeSearchResultViewController(shapeInfo: shapeInfo, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -127,7 +130,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
         navigationController?.dismiss(animated: animated)
     }
     
-    private func showMyPage() {
-        tabDependencies?.showMyPage()
+    private func showMyPageViewController() {
+        tabDependencies?.showMyPageViewController()
     }
 }

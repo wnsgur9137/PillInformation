@@ -123,7 +123,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         childCoordinators.append(myPageCoordinator)
     }
     
-    public func showMyPage() {
+    public func showMyPageViewController() {
         guard let myPageCoordinator = childCoordinators.filter({ $0.type == .myPage }).first as? MyPageCoordinator else {
             makeMyPageCoordinator()
             return
@@ -157,6 +157,12 @@ extension DefaultTabBarCoordinator: CoordinatorFinishDelegate {
 extension DefaultTabBarCoordinator: HomeTabDependencies {
     public func changeTab(index: Int) {
         tabBarController?.selectedIndex = index
+    }
+    
+    public func showShapeSearchViewController() {
+        tabBarController?.selectedIndex = TabBarPage.search.orderNumber()
+        guard let searchCoordinator = childCoordinators.filter({ $0 is SearchCoordinator }).first as? SearchCoordinator else { return }
+        searchCoordinator.showSearchShapeViewController()
     }
 }
 

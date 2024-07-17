@@ -14,14 +14,17 @@ import RxCocoa
 public struct HomeFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
     let changeTabIndex: (Int) -> Void
-    let showMyPage: () -> Void
+    let showShapeSearchViewController: () -> Void
+    let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
                 changeTabIndex: @escaping (Int) -> Void,
-                showMyPage: @escaping () -> Void) {
+                showShapeSearchViewController: @escaping () -> Void,
+                showMyPageViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.changeTabIndex = changeTabIndex
-        self.showMyPage = showMyPage
+        self.showShapeSearchViewController = showShapeSearchViewController
+        self.showMyPageViewController = showMyPageViewController
     }
 }
 
@@ -29,6 +32,7 @@ public final class HomeReactor: Reactor {
     public enum Action {
         case loadNotices
         case changeTab(Int)
+        case didTapShapeSearchButton
         case didTapUserButton
         case didSelectNotice(IndexPath)
     }
@@ -36,6 +40,7 @@ public final class HomeReactor: Reactor {
     public enum Mutation {
         case isLoadedNotices
         case changeTab(Int)
+        case showShapeSearch
         case showMyPage
         case showNoticeDetail(IndexPath)
         case loadError
@@ -89,6 +94,8 @@ extension HomeReactor {
             return loadNotice()
         case let .changeTab(index):
             return .just(.changeTab(index))
+        case .didTapShapeSearchButton:
+            return .just(.showShapeSearch)
         case .didTapUserButton:
             return .just(.showMyPage)
         case let .didSelectNotice(indexPath):
@@ -103,8 +110,10 @@ extension HomeReactor {
             state.noticeCount = notices.count
         case let .changeTab(index):
             changeTab(index: index)
+        case .showShapeSearch:
+            showShapeSearchViewController()
         case .showMyPage:
-            showMyPage()
+            showMyPageViewController()
         case let .showNoticeDetail(indexPath):
             showNoticeDetailViewController(at: indexPath)
         case .loadError:
@@ -124,8 +133,12 @@ extension HomeReactor {
         flowAction.changeTabIndex(index)
     }
     
-    private func showMyPage() {
-        flowAction.showMyPage()
+    private func showShapeSearchViewController() {
+        flowAction.showShapeSearchViewController()
+    }
+    
+    private func showMyPageViewController() {
+        flowAction.showMyPageViewController()
     }
 }
 

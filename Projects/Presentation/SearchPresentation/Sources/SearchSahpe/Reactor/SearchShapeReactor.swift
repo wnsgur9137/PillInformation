@@ -21,6 +21,7 @@ public enum SearchShapeCollectionViewSecton: Int, CaseIterable {
     case color
     case line
     case code
+    case searchView
 }
 
 public enum SearchShapeItems: String, CaseIterable {
@@ -89,6 +90,7 @@ public final class SearchShapeReactor: Reactor {
     
     public struct State {
         @Pulse var errorAlertContents: AlertContents?
+        var selectedOptions: [String]?
     }
     
     public var initialState = State()
@@ -150,6 +152,7 @@ public final class SearchShapeReactor: Reactor {
             } else if let index = shapeInfo.codes.firstIndex(of: value) {
                 shapeInfo.codes.remove(at: index)
             }
+        default: break
         }
         
         return .just(.updateShapeInfo(shapeInfo))
@@ -182,6 +185,7 @@ extension SearchShapeReactor {
             
         case let .updateShapeInfo(shapeInfo):
             self.shapeInfo = shapeInfo
+            state.selectedOptions = shapeInfo.shapes + shapeInfo.colors + shapeInfo.lines + shapeInfo.codes
             
         case let .showSearchResultViewController(shapeInfo):
             showSearchResultViewController(shapeInfo: shapeInfo)
@@ -211,18 +215,25 @@ extension SearchShapeReactor: SearchShapeAdapterDataSource {
         case .color: return SearchColorItems.allCases.count
         case .line: return SearchLineItems.allCases.count
         case .code: return 1
+        case .searchView: return 1
         }
     }
     
-    public func colorCellForItem(at item: Int) -> SearchColorItems {
-        return SearchColorItems.allCases[item]
+    public func colorCellForItem(at item: Int) -> (item: SearchColorItems, isSelected: Bool) {
+        let item = SearchColorItems.allCases[item]
+        let isSelected = shapeInfo.colors.contains(item.rawValue)
+        return (item, isSelected)
     }
     
-    public func shapeCellForItem(at item: Int) -> SearchShapeItems {
-        return SearchShapeItems.allCases[item]
+    public func shapeCellForItem(at item: Int) -> (item: SearchShapeItems, isSelected: Bool) {
+        let item = SearchShapeItems.allCases[item]
+        let isSelected = shapeInfo.shapes.contains(item.rawValue)
+        return (item, isSelected)
     }
     
-    public func lineCellForItem(at item: Int) -> SearchLineItems {
-        return SearchLineItems.allCases[item]
+    public func lineCellForItem(at item: Int) -> (item: SearchLineItems, isSelected: Bool) {
+        let item = SearchLineItems.allCases[item]
+        let isSelected = shapeInfo.shapes.contains(item.rawValue)
+        return (item, isSelected)
     }
 }

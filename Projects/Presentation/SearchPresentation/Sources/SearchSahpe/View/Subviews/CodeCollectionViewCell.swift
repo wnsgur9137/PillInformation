@@ -1,5 +1,5 @@
 //
-//  PrintCollectionViewCell.swift
+//  CodeCollectionViewCell.swift
 //  SearchPresentation
 //
 //  Created by JunHyeok Lee on 7/15/24.
@@ -12,7 +12,7 @@ import PinLayout
 
 import BasePresentation
 
-final class PrintCollectionViewCell: UICollectionViewCell {
+final class CodeCollectionViewCell: UICollectionViewCell {
     
     private let rootContainerView = UIView()
     
@@ -43,7 +43,7 @@ final class PrintCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Layout
-extension PrintCollectionViewCell {
+extension CodeCollectionViewCell {
     private func setupLayout() {
         contentView.addSubview(rootContainerView)
         rootContainerView.addSubview(textField)
@@ -54,7 +54,7 @@ extension PrintCollectionViewCell {
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.top().left(12.0).right(12.0).height(50.0)
+        rootContainerView.pin.top().left(12.0).right(12.0).bottom()
         textField.pin.top().left(12.0).right(12.0).bottom()
     }
 }

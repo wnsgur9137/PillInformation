@@ -19,7 +19,25 @@ public final class SearchShapeViewController: UIViewController, View {
     
     // MARK: - UI Instances
     
-    private let rootContainerView = UIView()
+    private let selectedShapeView = UIView()
+    
+    private let selectedShapeLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.SearchShape.selectedShape
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteMedium(22.0)
+        return label
+    }()
+    
+    private let selectedShapeScrollView = UIScrollView()
+    private let selectedShapeContentView = UIView()
+    
+    private let selectedShapeContentLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteRegular(18.0)
+        return label
+    }()
     
     private let collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -28,13 +46,9 @@ public final class SearchShapeViewController: UIViewController, View {
         return collectionView
     }()
     
-    private let searchButton: UIButton = {
-        let button = UIButton()
-        let color = Constants.Color.systemWhite
-        button.setImage(Constants.Image.magnifyingglass, for: .normal)
-        button.setTitleColor(color, for: .normal)
-        button.tintColor = color
-        return button
+    private let navigationSearchButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(title: Constants.Search.search, style: .plain, target: nil, action: nil)
+        return barButton
     }()
     
     // MARK: - Properties
@@ -50,7 +64,9 @@ public final class SearchShapeViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        title = Constants.SearchShape.title
         view.backgroundColor = Constants.Color.background
+        navigationItem.rightBarButtonItem = navigationSearchButton
         if let reactor = reactor {
             adapter = SearchShapeAdapter(
                 collectionView: collectionView,
@@ -64,11 +80,6 @@ public final class SearchShapeViewController: UIViewController, View {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
-    }
-    
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -99,7 +110,7 @@ public final class SearchShapeViewController: UIViewController, View {
 // MARK: - Binding
 extension SearchShapeViewController {
     private func bindAction(_ reactor: SearchShapeReactor) {
-        searchButton.rx.tap
+        navigationSearchButton.rx.tap
             .map { Reactor.Action.search }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -113,11 +124,32 @@ extension SearchShapeViewController {
                 self.showAlert(title: contents.title, message: contents.message)
             })
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.selectedOptions }
+            .filter { $0 != nil }
+            .distinctUntilChanged()
+            .map { selectedOptions -> String? in
+                return selectedOptions?.joined(separator: ", ")
+            }
+            .subscribe(onNext: { [weak self] selectedOptions in
+                guard let self = self else { return }
+                self.selectedShapeContentLabel.text = selectedOptions
+                self.selectedShapeContentLabel.flex.markDirty()
+                self.selectedShapeContentView.flex.layout(mode: .adjustWidth)
+                self.selectedShapeScrollView.contentSize = self.selectedShapeContentView.frame.size
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindAdapter(_ reactor: SearchShapeReactor) {
         adapter?.didSelectItem
             .map { values in return Reactor.Action.didSelectShapeButton(values) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectSearchButton
+            .map { Reactor.Action.search }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -126,22 +158,30 @@ extension SearchShapeViewController {
 // MARK: - Layout
 extension SearchShapeViewController {
     private func setupLayout() {
+        view.addSubview(selectedShapeView)
+        selectedShapeView.addSubview(selectedShapeLabel)
+        selectedShapeView.addSubview(selectedShapeScrollView)
+        selectedShapeScrollView.addSubview(selectedShapeContentView)
         view.addSubview(collectionView)
-        view.addSubview(searchButton)
         
-        searchButton.flex
-            .border(0.5, Constants.Color.systemWhite)
-            .cornerRadius(18.0)
-            .backgroundColor(Constants.Color.googleBlue)
-            .height(48.0)
+        selectedShapeView.flex.backgroundColor(Constants.Color.background)
+        
+        selectedShapeContentView.flex
+            .define { contentView in
+                contentView.addItem(selectedShapeContentLabel)
+                    .height(100%)
+                    .minWidth(100)
+            }
     }
     
     private func setupSubviewLayout() {
-        collectionView.pin.all(view.safeAreaInsets)
-        searchButton.pin
-            .minWidth(48.0)
-            .height(48.0)
-            .hCenter()
-            .bottom(25.0)
+        selectedShapeView.pin.top(view.safeAreaInsets.top).left().right().height(10%).minHeight(100.0)
+        selectedShapeLabel.pin.top(12.0).left(12.0).right(12.0).height(20%)
+        selectedShapeScrollView.pin.top(to: selectedShapeLabel.edge.bottom).left(12.0).right(12.0).bottom(12.0).height(80%)
+        selectedShapeContentView.pin.left().vertically()
+        selectedShapeContentView.flex.layout()
+        selectedShapeScrollView.contentSize = selectedShapeContentView.frame.size
+        
+        collectionView.pin.top(to: selectedShapeView.edge.bottom).left(view.safeAreaInsets.left).right(view.safeAreaInsets.right).bottom(view.safeAreaInsets.bottom)
     }
 }

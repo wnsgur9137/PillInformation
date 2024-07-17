@@ -114,6 +114,11 @@ extension NoticeDetailViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        searchTextFieldView.shapeSearchButton.rx.tap
+            .map { Reactor.Action.didTapSearchShapeButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         searchTextFieldView.userIconButton.rx.tap
             .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)

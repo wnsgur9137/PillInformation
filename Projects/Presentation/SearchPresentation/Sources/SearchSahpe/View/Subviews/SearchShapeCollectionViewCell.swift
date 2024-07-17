@@ -45,9 +45,11 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
     
-    override var isSelected: Bool {
+    
+    /// override var isSelected를 쓰면 cell이 다시 그려질 때 초기화된다..! (default: false)
+    var isSelectedCell: Bool = false {
         didSet {
-            showSelectedImageView(isSelected)
+            showSelectedImageView(isSelectedCell)
         }
     }
     
@@ -147,8 +149,9 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
 extension SearchShapeCollectionViewCell {
     
     /// 모양
-    func configure(_ shape: SearchShapeItems) {
+    func configure(_ shape: SearchShapeItems, isSelected: Bool = false) {
         content = shape.rawValue
+        self.isSelectedCell = isSelected
         if shape == .other {
             titleLabel.font = Constants.Font.suiteSemiBold(24.0)
             setupTextAttributedString(shape)
@@ -161,8 +164,9 @@ extension SearchShapeCollectionViewCell {
     }
     
     /// 색상
-    func configure(_ color: SearchColorItems) {
+    func configure(_ color: SearchColorItems, isSelected: Bool = false) {
         content = color.rawValue
+        self.isSelectedCell = isSelected
         var backgroundColor: UIColor? = Constants.Color.background
         switch color {
         case .clear:
@@ -225,8 +229,9 @@ extension SearchShapeCollectionViewCell {
     
     
     /// 구분선
-    func configure(_ line: SearchLineItems) {
+    func configure(_ line: SearchLineItems, isSelected: Bool = false) {
         content = line.rawValue
+        self.isSelectedCell = isSelected
         switch line {
         case .minuse: fallthrough
         case .plus: setupImageAttributedString(line)
