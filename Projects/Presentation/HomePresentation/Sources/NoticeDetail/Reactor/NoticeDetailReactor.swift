@@ -14,14 +14,17 @@ import RxCocoa
 public struct NoticeDetailFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
     let popViewController: (Bool) -> Void
-    let showMyPage: () -> Void
+    let showSearchShapeViewController: () -> Void
+    let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
                 popViewController: @escaping (Bool) -> Void,
-                showMyPage: @escaping () -> Void) {
+                showSearchShapeViewController: @escaping () -> Void,
+                showMyPageViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.popViewController = popViewController
-        self.showMyPage = showMyPage
+        self.showSearchShapeViewController = showSearchShapeViewController
+        self.showMyPageViewController = showMyPageViewController
     }
 }
 
@@ -30,6 +33,7 @@ public final class NoticeDetailReactor: Reactor {
         case loadNotice
         case loadOtherNotices
         case popViewController
+        case didTapSearchShapeButton
         case didTapUserButton
         case didSelectNotice(IndexPath)
     }
@@ -37,7 +41,8 @@ public final class NoticeDetailReactor: Reactor {
         case loadNotice(NoticeModel)
         case loadOtherNotices
         case popViewController
-        case showMyPage
+        case showSearchShapeViewController
+        case showMyPageViewController
         case showNoticeDetail(IndexPath)
     }
     public struct State {
@@ -85,8 +90,11 @@ extension NoticeDetailReactor {
         case .popViewController:
             return .just(.popViewController)
             
+        case .didTapSearchShapeButton:
+            return .just(.showSearchShapeViewController)
+            
         case .didTapUserButton:
-            return .just(.showMyPage)
+            return .just(.showMyPageViewController)
             
         case let .didSelectNotice(indexPath):
             return .just(.showNoticeDetail(indexPath))
@@ -102,8 +110,10 @@ extension NoticeDetailReactor {
             state.isLoadedOtherNotices = Void()
         case .popViewController:
             popViewController(animated: true)
-        case .showMyPage:
-            showMyPage()
+        case .showSearchShapeViewController:
+            showSearchShapeViewController()
+        case .showMyPageViewController:
+            showMyPageViewController()
         case let .showNoticeDetail(indexPath):
             showNoticeDetailViewController(at: indexPath)
         }
@@ -121,8 +131,12 @@ extension NoticeDetailReactor {
         flowAction.popViewController(animated)
     }
     
-    private func showMyPage() {
-        flowAction.showMyPage()
+    private func showSearchShapeViewController() {
+        flowAction.showSearchShapeViewController()
+    }
+    
+    private func showMyPageViewController() {
+        flowAction.showMyPageViewController()
     }
 }
 

@@ -60,6 +60,7 @@ public final class SearchResultViewController: UIViewController, View {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -99,6 +100,11 @@ extension SearchResultViewController {
         
         searchTextFieldView.dismissButton.rx.tap
             .map { Reactor.Action.dismiss }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.shapeSearchButton.rx.tap
+            .map { Reactor.Action.didTapSearchShapeButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         

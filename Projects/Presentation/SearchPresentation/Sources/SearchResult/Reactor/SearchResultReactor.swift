@@ -16,14 +16,17 @@ import BasePresentation
 public struct SearchResultFlowAction {
     let popViewController: (Bool) -> Void
     let showSearchDetailViewController: (PillInfoModel) -> Void
-    let showMyPage: () -> Void
+    let showSearchShapeViewController: () -> Void
+    let showMyPageViewController: () -> Void
     
     public init(popViewController: @escaping (Bool) -> Void,
                 showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
-                showMyPage: @escaping () -> Void) {
+                showSearchShapeViewController: @escaping () -> Void,
+                showMyPageViewController: @escaping () -> Void) {
         self.popViewController = popViewController
         self.showSearchDetailViewController = showSearchDetailViewController
-        self.showMyPage = showMyPage
+        self.showSearchShapeViewController = showSearchShapeViewController
+        self.showMyPageViewController = showMyPageViewController
     }
 }
 
@@ -37,6 +40,7 @@ public final class SearchResultReactor: Reactor {
         case search(String?)
         case didSelectItem(IndexPath)
         case didSelectBookmark(IndexPath)
+        case didTapSearchShapeButton
         case didTapUserButton
     }
     
@@ -46,7 +50,8 @@ public final class SearchResultReactor: Reactor {
         case isEmptyResult
         case error(Error)
         case showSearchDetail(PillInfoModel)
-        case showMyPage
+        case showSearchShapeViewController
+        case showMyPageViewController
     }
     
     public struct State {
@@ -254,8 +259,11 @@ extension SearchResultReactor {
         case let .didSelectBookmark(indexPath):
             return bookmark(indexPath)
             
+        case .didTapSearchShapeButton:
+            return .just(.showSearchShapeViewController)
+            
         case .didTapUserButton:
-            return .just(.showMyPage)
+            return .just(.showMyPageViewController)
         }
     }
     
@@ -280,8 +288,11 @@ extension SearchResultReactor {
         case let .showSearchDetail(pillInfo):
             showSearchDetailViewController(pillInfo)
             
-        case .showMyPage:
-            showMyPage()
+        case .showSearchShapeViewController:
+            showSearchShapeViewController()
+            
+        case .showMyPageViewController:
+            showMyPageViewController()
         }
         return state
     }
@@ -297,8 +308,12 @@ extension SearchResultReactor {
         flowAction.showSearchDetailViewController(pillInfo)
     }
     
-    private func showMyPage() {
-        flowAction.showMyPage()
+    private func showSearchShapeViewController() {
+        flowAction.showSearchShapeViewController()
+    }
+    
+    private func showMyPageViewController() {
+        flowAction.showMyPageViewController()
     }
 }
 

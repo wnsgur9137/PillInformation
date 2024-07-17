@@ -14,21 +14,26 @@ import RxCocoa
 import BasePresentation
 
 public struct BookmarkFlowAction {
-    let showMyPage: () -> Void
+    let showSearchShapeViewController: () -> Void
+    let showMyPageViewController: () -> Void
     
-    public init(showMyPage: @escaping () -> Void) {
-        self.showMyPage = showMyPage
+    public init(showSearchShapeViewController: @escaping () -> Void,
+                showMyPageViewController: @escaping () -> Void) {
+        self.showSearchShapeViewController = showSearchShapeViewController
+        self.showMyPageViewController = showMyPageViewController
     }
 }
 
 public final class BookmarkReactor: Reactor {
     public enum Action {
+        case didTapSearchShapeButton
         case didTapUserButton
         case didSelectRow(IndexPath)
     }
     
     public enum Mutation {
-        case showMyPage
+        case showSearchShapeViewController
+        case showMyPageViewController
         case showPillDetailViewController
     }
     
@@ -49,8 +54,10 @@ public final class BookmarkReactor: Reactor {
 extension BookmarkReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .didTapSearchShapeButton:
+            return .just(.showSearchShapeViewController)
         case .didTapUserButton:
-            return .just(.showMyPage)
+            return .just(.showMyPageViewController)
         case let .didSelectRow(indexPath):
             return .just(.showPillDetailViewController)
         }
@@ -59,8 +66,10 @@ extension BookmarkReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .showMyPage:
-            showMyPage()
+        case .showSearchShapeViewController:
+            showSearchShapeViewController()
+        case .showMyPageViewController:
+            showMyPageViewController()
         case .showPillDetailViewController:
             break
         }
@@ -81,7 +90,11 @@ extension BookmarkReactor: BookmarkAdapterDataSource {
 
 // MARK: - Flow Action
 extension BookmarkReactor {
-    private func showMyPage() {
-        flowAction.showMyPage()
+    private func showSearchShapeViewController() {
+        flowAction.showSearchShapeViewController()
+    }
+    
+    private func showMyPageViewController() {
+        flowAction.showMyPageViewController()
     }
 }

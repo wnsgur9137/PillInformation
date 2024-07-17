@@ -78,6 +78,7 @@ public final class SearchViewController: UIViewController, View {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchTextFieldView.searchTextField.becomeFirstResponder()
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     public override func viewDidLayoutSubviews() {

@@ -22,14 +22,14 @@ enum SearchError: String, Error {
 
 public struct SearchFlowAction {
     let showSearchResultViewController: (String) -> Void
-    let showMyPage: () -> Void
+    let showMyPageViewController: () -> Void
     let showSearchShapeViewController: () -> Void
     
     public init(showSearchResultViewController: @escaping (String) -> Void,
-                showMyPage: @escaping () -> Void,
+                showMyPageViewController: @escaping () -> Void,
                 showSearchShapeViewController: @escaping () -> Void) {
         self.showSearchResultViewController = showSearchResultViewController
-        self.showMyPage = showMyPage
+        self.showMyPageViewController = showMyPageViewController
         self.showSearchShapeViewController = showSearchShapeViewController
     }
 }
@@ -54,7 +54,7 @@ public final class SearchReactor: Reactor {
         case loadedRecommendKeyword
         case loadedRecentKeyword
         case showSearchResultViewController(String)
-        case showMyPage
+        case showMyPageViewController
         case showDeleteAllRecentKeywordAlert
         case showSearchShapeViewController
         case error(Error)
@@ -199,7 +199,7 @@ extension SearchReactor {
             return .just(.showSearchResultViewController(keyword))
             
         case .didTapUserButton:
-            return .just(.showMyPage)
+            return .just(.showMyPageViewController)
             
         case let .didSelectCollectionViewItem(indexPath):
             let keyword = recommendKeywords[indexPath.item]
@@ -245,8 +245,8 @@ extension SearchReactor {
         case .showDeleteAllRecentKeywordAlert:
             state.showDeleteAllRecentKeywordAlert = Void()
             
-        case .showMyPage:
-            showMyPage()
+        case .showMyPageViewController:
+            showMyPageViewController()
             
         case .showSearchShapeViewController:
             showSearchShapeViewController()
@@ -261,8 +261,8 @@ extension SearchReactor {
         flowAction.showSearchResultViewController(keyword)
     }
     
-    private func showMyPage() {
-        flowAction.showMyPage()
+    private func showMyPageViewController() {
+        flowAction.showMyPageViewController()
     }
     
     private func showSearchShapeViewController() {

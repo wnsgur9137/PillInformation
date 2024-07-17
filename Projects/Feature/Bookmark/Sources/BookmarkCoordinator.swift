@@ -16,7 +16,8 @@ public protocol BookmarkCoordinatorDependencies {
 }
 
 public protocol BookmarkTabDependencies {
-    func showMyPage()
+    func showMyPageViewController()
+    func showShapeSearchViewController()
 }
 
 public protocol BookmarkCoordinator: Coordinator {
@@ -47,14 +48,19 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     
     public func showBookmarkViewController() {
         let flowAction = BookmarkFlowAction(
-            showMyPage: showMyPage
+            showSearchShapeViewController: showSearchShapeViewController,
+            showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeBookmarkViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
         bookmarkViewController = viewController
     }
     
-    public func showMyPage() {
-        tabDependencies.showMyPage()
+    private func showSearchShapeViewController() {
+        tabDependencies.showShapeSearchViewController()
+    }
+    
+    public func showMyPageViewController() {
+        tabDependencies.showMyPageViewController()
     }
 }

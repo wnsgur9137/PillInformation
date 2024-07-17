@@ -18,7 +18,8 @@ public protocol HomeCoordinatorDependencies {
 
 public protocol HomeTabDependencies {
     func changeTab(index: Int)
-    func showMyPage()
+    func showShapeSearchViewController()
+    func showMyPageViewController()
 }
 
 public protocol HomeCoordinator: Coordinator {
@@ -52,7 +53,8 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
             changeTabIndex: tabDependencies.changeTab,
-            showMyPage: showMyPage
+            showShapeSearchViewController: showShapeSearchViewController,
+            showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
@@ -63,7 +65,8 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         let flowAction = NoticeDetailFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
             popViewController: popViewController,
-            showMyPage: showMyPage
+            showSearchShapeViewController: showShapeSearchViewController,
+            showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
@@ -74,7 +77,11 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         navigationController?.popViewController(animated: animated)
     }
     
-    private func showMyPage() {
-        tabDependencies.showMyPage()
+    private func showShapeSearchViewController() {
+        tabDependencies.showShapeSearchViewController()
+    }
+    
+    private func showMyPageViewController() {
+        tabDependencies.showMyPageViewController()
     }
 }
