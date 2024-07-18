@@ -13,6 +13,7 @@ import RxCocoa
 import Lottie
 import FlexLayout
 import PinLayout
+import DeviceCheck
 
 import BasePresentation
 
@@ -52,6 +53,23 @@ public final class SplashViewController: UIViewController, View {
         view.backgroundColor = Constants.Color.background
         setupLayout()
         setupAnimationView()
+        devicecheck()
+    }
+    
+    // TODO: - DeviceCheck을 이용해 앱 관리를 할 수 있음
+    private func devicecheck() {
+        let curDevice = DCDevice.current
+        guard curDevice.isSupported else { return }
+        Task {
+            do {
+                let token = try await curDevice.generateToken()
+                let tokenString = token.base64EncodedString()
+                print("token: \(tokenString)")
+            } catch {
+                print("error: \(error.localizedDescription)")
+            }
+            
+        }
     }
     
     public override func viewDidLayoutSubviews() {

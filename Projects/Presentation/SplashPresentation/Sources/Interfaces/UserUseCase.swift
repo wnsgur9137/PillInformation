@@ -14,4 +14,5 @@ public protocol UserUseCase {
     func fetchUserStorage() -> Single<UserModel>
     func updateUserStorage(_ user: UserModel) -> Single<UserModel>
     func deleteUserStorage() -> Single<Void>
+    func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResultModel>
 }

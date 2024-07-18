@@ -9,15 +9,19 @@
 import Foundation
 import RxSwift
 
+import NetworkInfra
 import BaseData
 import BaseDomain
 import SplashDomain
 
 public struct DefaultUserSplashRepository: UserSplashRepository {
     
+    private let network: NetworkManager
     private let userRepository: UserRepository
     
-    public init(userRepository: UserRepository) {
+    public init(networkManager: NetworkManager,
+                userRepository: UserRepository) {
+        self.network = networkManager
         self.userRepository = userRepository
     }
 }
@@ -38,5 +42,9 @@ extension DefaultUserSplashRepository {
     
     public func deleteUserStorage() -> Single<Void> {
         return userRepository.deleteStorage()
+    }
+    
+    public func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResult> {
+        network.requestDeviceCheck(deviceToken).map { $0.toDomain() }
     }
 }

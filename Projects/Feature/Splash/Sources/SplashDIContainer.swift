@@ -37,7 +37,7 @@ extension SplashDIContainer: SplashCoordinatorDependencies {
     }
     
     public func makeUserSplashRepository() -> UserSplashRepository {
-        return DefaultUserSplashRepository(userRepository: makeUserRepository())
+        return DefaultUserSplashRepository(networkManager: dependencies.networkManager, userRepository: makeUserRepository())
     }
     
     public func makeUserUseCase() -> UserUseCase {

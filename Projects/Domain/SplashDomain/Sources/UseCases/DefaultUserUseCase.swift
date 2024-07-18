@@ -38,4 +38,8 @@ extension DefaultUserUseCase {
     public func deleteUserStorage() -> Single<Void> {
         return userRepository.deleteUserStorage()
     }
+    
+    public func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResultModel> {
+        return userRepository.deviceCheck(deviceToken).map { $0.toModel() }
+    }
 }
