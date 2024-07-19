@@ -45,12 +45,14 @@ public final class MyPageReactor: Reactor {
     }
     
     public enum Action {
+        case viewDidLoad
         case didSelectRow(IndexPath)
         case signOut
         case withdrawal
     }
     
     public enum Mutation {
+        case reloadTableViewData
         case showAlarmViewController
         case showAppPolicyViewController
         case showPrivacyPolicyViewController
@@ -60,6 +62,7 @@ public final class MyPageReactor: Reactor {
     }
     
     public struct State {
+        @Pulse var reloadTableViewData: Void?
         @Pulse var alert: MyPageAlert?
         @Pulse var dismiss: Bool?
     }
@@ -71,6 +74,7 @@ public final class MyPageReactor: Reactor {
     }
     
     public var initialState = State()
+    private var isSigned: Bool = false
     private let userUseCase: UserUseCase
     private let flowAction: MyPageFlowAction
     private let disposeBag = DisposeBag()
@@ -121,6 +125,22 @@ public final class MyPageReactor: Reactor {
         return nil
     }
     
+    private func fetchUser() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.userUseCase.fetchFirstUserStorage()
+                .subscribe(onSuccess: { [weak self] _ in
+                    self?.isSigned = true
+                    observable.onNext(.reloadTableViewData)
+                }, onFailure: { [weak self] _ in
+                    self?.isSigned = false
+                    observable.onNext(.reloadTableViewData)
+                })
+                .disposed(by: disposeBag)
+            return Disposables.create()
+        }
+    }
+    
     private func signout() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
@@ -156,6 +176,9 @@ public final class MyPageReactor: Reactor {
 extension MyPageReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .viewDidLoad:
+            return fetchUser()
+            
         case let .didSelectRow(indexPath):
             return didSelectRow(indexPath) ?? .just(.showAlert(.warning))
             
@@ -170,6 +193,9 @@ extension MyPageReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
+        case .reloadTableViewData:
+            state.reloadTableViewData = Void()
+            
         case .showAlarmViewController:
             showAlarmViewController()
             
@@ -215,7 +241,7 @@ extension MyPageReactor {
 // MARK: - MyPageAdapter TableViewDataSource
 extension MyPageReactor: MyPageAdapterDataSource {
     public func numberOfSections() -> Int {
-        return 3
+        return isSigned ? 3 : 2
     }
     
     public func numberOfRows(in section: Int) -> Int {
