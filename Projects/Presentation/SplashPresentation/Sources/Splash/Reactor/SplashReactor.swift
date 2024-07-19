@@ -77,9 +77,7 @@ public final class SplashReactor: Reactor {
     private func isShownOnboarding(completion: @escaping (Bool) -> Void) {
         splashUseCase.isShownOnboarding()
             .subscribe(onSuccess: { isShown in
-                print("🚨isShown: \(isShown)")
-                completion(false)
-//                completion(isShown)
+                completion(isShown)
             }, onFailure: { error in
                 completion(false)
             })
@@ -149,7 +147,7 @@ extension SplashReactor {
             showMainScene()
             
         case .isNotSignin:
-            showOnboardingScene()
+            showOnboardingSceneLoginViewController()
             
         case .checkOnboarding:
             isShownOnboarding { isShown in

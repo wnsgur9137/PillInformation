@@ -149,6 +149,11 @@ public final class MyPageViewController: UIViewController, View {
 // MARK: - Binding
 extension MyPageViewController {
     private func bindAction(_ reactor: MyPageReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         dismissButton.rx.tap
             .bind {
                 self.dismiss(animated: true)

@@ -96,6 +96,6 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     }
     
     private func showOnboardingScene() {
-        NotificationCenter.default.post(name: Notification.Name("showOnboardingScene"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("showOnboardingSceneSignin"), object: nil)
     }
 }
