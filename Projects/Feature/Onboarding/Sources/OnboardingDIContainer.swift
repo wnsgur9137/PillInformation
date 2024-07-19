@@ -57,15 +57,24 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
                                             makeSignInReactor(flowAction: flowAction))
     }
     
+    // MARK: - Intro
+    public func makeIntroReactor(flowAction: IntroFlowAction) -> IntroReactor {
+        return IntroReactor(flowAction: flowAction)
+    }
+    
+    public func makeIntroViewController(flowAction: IntroFlowAction) -> IntroViewController {
+        return IntroViewController.create(with: makeIntroReactor(flowAction: flowAction))
+    }
+    
     // MARK: - OnboardingPolicy
-    public func makeOnboardingPolicyReactor(user: UserModel,
+    public func makeOnboardingPolicyReactor(user: UserModel?,
                                             flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
         return OnboardingPolicyReactor(user: user,
                                        userUseCase: makeUserUseCase(),
                                        flowAction: flowAction)
     }
     
-    public func makeOnboardingPolicyViewController(user: UserModel,
+    public func makeOnboardingPolicyViewController(user: UserModel?,
                                                    flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {
         return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(user: user,
                                                                                        flowAction: flowAction))

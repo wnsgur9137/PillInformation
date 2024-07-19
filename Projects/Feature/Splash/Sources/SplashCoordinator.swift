@@ -43,6 +43,7 @@ public final class DefaultSplashCoordinator: SplashCoordinator {
     public func showSplashViewController() {
         let flowAction = SplashFlowAction(
             showMainScene: showMainScene,
+            showOnboardingSceneSigninViewController: showOnboardingSceneSigninViewController,
             showOnboardingScene: showOnboardingScene
         )
         let viewController = dependencies.makeSplashViewController(flowAction: flowAction)
@@ -56,6 +57,10 @@ public final class DefaultSplashCoordinator: SplashCoordinator {
     
     public func showMainScene() {
         NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
+    }
+    
+    public func showOnboardingSceneSigninViewController() {
+        NotificationCenter.default.post(name: Notification.Name("showOnboardingSceneSignin"), object: nil)
     }
     
     public func showOnboardingScene() {

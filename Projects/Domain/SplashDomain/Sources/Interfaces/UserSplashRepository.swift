@@ -16,5 +16,6 @@ public protocol UserSplashRepository {
     func fetchUserStorage() -> Single<User>
     func updateStorage(_ user: User) -> Single<User>
     func deleteUserStorage() -> Single<Void>
-    func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResult>
+    func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool>
+    func isShownOnboarding() -> Single<Bool>
 }

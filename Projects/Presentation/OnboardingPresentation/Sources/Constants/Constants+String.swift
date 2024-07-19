@@ -10,6 +10,11 @@ import Foundation
 
 import BasePresentation
 
+extension Constants.Onboarding {
+    static let start: String = "시작하기"
+    static let appDescription: String = "알약 검색 앱 \(Constants.appName)"
+}
+
 extension Constants.SignIn {
     static let appleLogin: String = "Apple 로그인"
     static let kakaoLogin: String = "Kakao 로그인"

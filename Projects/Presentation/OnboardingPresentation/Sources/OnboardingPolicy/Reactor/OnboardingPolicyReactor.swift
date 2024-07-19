@@ -85,9 +85,9 @@ public final class OnboardingPolicyReactor: Reactor {
     private let disposeBag = DisposeBag()
     
     private var policies = PolicyChecked()
-    private var user: UserModel
+    private var user: UserModel?
     
-    public init(user: UserModel,
+    public init(user: UserModel?,
                 userUseCase: UserUseCase,
                 flowAction: OnboardingPolicyFlowAction) {
         self.user = user
@@ -96,6 +96,7 @@ public final class OnboardingPolicyReactor: Reactor {
     }
     
     private func updateUserPolicies() -> Observable<Mutation> {
+        guard let _ = user else { return .just(.confirm) }
         return .create() { observable in
             self.postUserPolicies()
                 .subscribe(onSuccess: { userModel in
@@ -114,8 +115,9 @@ public final class OnboardingPolicyReactor: Reactor {
         }
     }
     
-    private func postUserPolicies() -> Single<UserModel> {
-        user = UserModel(
+    private func postUserPolicies() -> Single<UserModel?> {
+        guard let user = user else { return .just(nil) }
+        self.user = UserModel(
             id: user.id,
             isAgreeAppPolicy: policies.appPolicy,
             isAgreeAgePolicy: policies.agePolicy,
@@ -126,12 +128,23 @@ public final class OnboardingPolicyReactor: Reactor {
             refreshToken: user.refreshToken, 
             social: user.social
         )
-        return userUseCase.post(user)
+        return .create { [weak self] single in
+            guard let self = self else { return Disposables.create() }
+            self.userUseCase.post(user)
+                .subscribe(onSuccess: { user in
+                    single(.success(user))
+                }, onFailure: { error in
+                    single(.failure(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
     }
     
     private func updateUserStorage() -> Observable<Mutation> {
         return .create() { observable in
-            self.userUseCase.updateStorage(self.user)
+            guard let user = self.user else { return Disposables.create() }
+            self.userUseCase.updateStorage(user)
                 .subscribe(onSuccess: { user in
                     observable.onNext(.confirm)
                 }, onFailure: { error in

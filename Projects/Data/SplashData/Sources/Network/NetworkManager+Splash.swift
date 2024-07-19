@@ -17,4 +17,8 @@ extension NetworkManager {
     public func requestDeviceCheck(_ deviceToken: String) -> Single<DeviceCheckResultResponseDTO> {
         return requestObject(.deviceCheck(deviceToken: deviceToken), type: DeviceCheckResultResponseDTO.self)
     }
+    
+    public func requestIsNeedSignIn() -> Single<Bool> {
+        return requestObject(.isNeedSignIn, type: Bool.self)
+    }
 }

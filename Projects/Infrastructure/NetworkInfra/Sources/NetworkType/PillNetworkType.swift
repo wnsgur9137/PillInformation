@@ -15,20 +15,32 @@ struct PillNetworkType: NetworkType {
     let provider: NetworkProvider<T>
     
     static func defaultNetworking(baseURL: String) -> PillNetworkType {
-        return PillNetworkType(provider: NetworkProvider(endpointClosure: PillNetworkType.endpointsClosure(baseURL: baseURL),
-                                                         requestClosure: PillNetworkType.endpointResolver(),
-                                                         stubClosure: PillNetworkType.APIKeysBasedStubBehaviour,
-                                                         plugins: plugins))
+        return PillNetworkType(
+            provider: NetworkProvider(
+                endpointClosure: PillNetworkType.endpointsClosure(baseURL: baseURL),
+                requestClosure: PillNetworkType.endpointResolver(),
+                stubClosure: PillNetworkType.APIKeysBasedStubBehaviour,
+                plugins: plugins
+            )
+        )
     }
     
     static func stubbingNetworking(baseURL: String, needFail: Bool) -> PillNetworkType {
         if needFail {
-            return PillNetworkType(provider: NetworkProvider(endpointClosure: failEndPointsClosure(baseURL: baseURL),
-                                                             requestClosure: PillNetworkType.endpointResolver(),
-                                                             stubClosure: MoyaProvider.immediatelyStub))
+            return PillNetworkType(
+                provider: NetworkProvider(
+                    endpointClosure: failEndPointsClosure(baseURL: baseURL),
+                    requestClosure: PillNetworkType.endpointResolver(),
+                    stubClosure: MoyaProvider.immediatelyStub
+                )
+            )
         }
-        return PillNetworkType(provider: NetworkProvider(endpointClosure: endpointsClosure(baseURL: baseURL),
-                                                         requestClosure: PillNetworkType.endpointResolver(),
-                                                         stubClosure: MoyaProvider.immediatelyStub))
+        return PillNetworkType(
+            provider: NetworkProvider(
+                endpointClosure: endpointsClosure(baseURL: baseURL),
+                requestClosure: PillNetworkType.endpointResolver(),
+                stubClosure: MoyaProvider.immediatelyStub
+            )
+        )
     }
 }

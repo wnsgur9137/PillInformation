@@ -18,11 +18,14 @@ public struct DefaultUserSplashRepository: UserSplashRepository {
     
     private let network: NetworkManager
     private let userRepository: UserRepository
+    private let splashUserDefaultStoarge: SplashUserDefaultStorage
     
     public init(networkManager: NetworkManager,
-                userRepository: UserRepository) {
+                userRepository: UserRepository,
+                splashUserDefaultStorage: SplashUserDefaultStorage = SplashUserDefaultStorage()) {
         self.network = networkManager
         self.userRepository = userRepository
+        self.splashUserDefaultStoarge = splashUserDefaultStorage
     }
 }
 
@@ -44,7 +47,11 @@ extension DefaultUserSplashRepository {
         return userRepository.deleteStorage()
     }
     
-    public func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResult> {
-        network.requestDeviceCheck(deviceToken).map { $0.toDomain() }
+    public func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
+        return splashUserDefaultStoarge.setIsShownOnboarding(isShown)
+    }
+    
+    public func isShownOnboarding() -> Single<Bool> {
+        return splashUserDefaultStoarge.isShownOnbarding()
     }
 }
