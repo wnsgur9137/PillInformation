@@ -24,11 +24,15 @@ extension NetworkType {
     static func endpointsClosure<T>(baseURL: String) -> (T) -> Endpoint where T: TargetType {
         return { target in
             let url = baseURL + target.path
-            return Endpoint(url: url,
-                                    sampleResponseClosure: { .networkResponse(200, target.sampleData )},
-                                    method: target.method,
-                                    task: target.task,
-                                    httpHeaderFields: target.headers)
+            return Endpoint(
+                url: url,
+                sampleResponseClosure: {
+                    .networkResponse(200, target.sampleData )
+                },
+                method: target.method,
+                task: target.task,
+                httpHeaderFields: target.headers
+            )
         }
     }
     
@@ -38,11 +42,13 @@ extension NetworkType {
             let sampleResponseClosure: () -> EndpointSampleResponse = {
                 EndpointSampleResponse.networkResponse(999, target.sampleData)
             }
-            return .init(url: url,
-                         sampleResponseClosure: sampleResponseClosure,
-                         method: target.method,
-                         task: target.task,
-                         httpHeaderFields: target.headers)
+            return .init(
+                url: url,
+                sampleResponseClosure: sampleResponseClosure,
+                method: target.method,
+                task: target.task,
+                httpHeaderFields: target.headers
+            )
         }
     }
     

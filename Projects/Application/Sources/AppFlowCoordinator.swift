@@ -28,12 +28,13 @@ final class AppFlowCoordinator {
         flow.start()
     }
     
-    func startOnboarding(navigationController: UINavigationController) {
+    func startOnboarding(isNeedSignin: Bool,
+                         navigationController: UINavigationController) {
         tabBarController.tabBar.isHidden = true
         tabBarController.viewControllers = [navigationController]
         let onboardingSceneDIContainer = appDIContainer.makeOnboardingSceneDIContainer()
-        let flow = onboardingSceneDIContainer.makeOnboardingViewController(navigationController: navigationController)
-        flow.start()
+        let flow = onboardingSceneDIContainer.makeOnboardingCoordinator(navigationController: navigationController)
+        isNeedSignin ? flow.start() : flow.startNonSignin()
     }
     
     func startSplashView(navigationController: UINavigationController) {

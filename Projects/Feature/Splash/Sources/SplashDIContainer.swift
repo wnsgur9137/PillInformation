@@ -37,11 +37,14 @@ extension SplashDIContainer: SplashCoordinatorDependencies {
     }
     
     public func makeUserSplashRepository() -> UserSplashRepository {
-        return DefaultUserSplashRepository(userRepository: makeUserRepository())
+        return DefaultUserSplashRepository(networkManager: dependencies.networkManager, userRepository: makeUserRepository())
+    }
+    public func makeApplicationRepository() -> ApplicationSplashRepository {
+        return DefaultApplicationSplashRepository(network: dependencies.networkManager)
     }
     
-    public func makeUserUseCase() -> UserUseCase {
-        return DefaultUserUseCase(with: makeUserSplashRepository())
+    public func makeUserUseCase() -> SplashUseCase {
+        return DefaultSplashUseCase(applicationRepository: makeApplicationRepository(), userRepository: makeUserSplashRepository())
     }
     
     public func makeSplashReactor(flowAction: SplashFlowAction) -> SplashReactor {

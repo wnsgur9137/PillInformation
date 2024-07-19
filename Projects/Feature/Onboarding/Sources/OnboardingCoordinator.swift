@@ -13,13 +13,15 @@ import BasePresentation
 
 public protocol OnboardingCoordinatorDependencies {
     func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController
-    func makeOnboardingPolicyViewController(user: UserModel,
+    func makeIntroViewController(flowAction: IntroFlowAction) -> IntroViewController
+    func makeOnboardingPolicyViewController(user: UserModel?,
                                             flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController
 }
 
 public protocol OnboardingCoordinator: Coordinator {
+    func startNonSignin()
     func showSignInViewController()
-    func showOnboardingPolicyViewController(user: UserModel)
+    func showOnboardingPolicyViewController(user: UserModel?)
 }
 
 public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
@@ -30,6 +32,7 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     
     private let dependencies: OnboardingCoordinatorDependencies
     private weak var signInViewController: SignInViewController?
+    private weak var introViewController: IntroViewController?
     private weak var onboardingPolicyViewController: OnboardingPolicyViewController?
     private weak var policyViewController: PolicyViewController?
     
@@ -45,6 +48,10 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
         showSignInViewController()
     }
     
+    public func startNonSignin() {
+        showIntroViewController()
+    }
+    
     public func showSignInViewController() {
         let flowAction = SignInFlowAction(
             showOnboardingPolicyViewController: showOnboardingPolicyViewController,
@@ -55,7 +62,16 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
         signInViewController = viewController
     }
     
-    public func showOnboardingPolicyViewController(user: UserModel) {
+    public func showIntroViewController() {
+        let flowAction = IntroFlowAction(
+            showOnboardingPolicyViewController: showOnboardingPolicyViewController
+        )
+        let viewController = dependencies.makeIntroViewController(flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: false)
+        introViewController = viewController
+    }
+    
+    public func showOnboardingPolicyViewController(user: UserModel?) {
         let flowAction = OnboardingPolicyFlowAction(
             popViewController: self.popViewController,
             showMainScene: self.showMainScene,

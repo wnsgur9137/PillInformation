@@ -11,6 +11,9 @@ import Foundation
 import BasePresentation
 
 extension Constants {
+    struct Onboarding {
+        
+    }
     struct SignIn {
         struct Image { }
     }

@@ -19,6 +19,7 @@ public enum UserTargetType {
                     daytimeNoti: Bool,
                     nighttimeNoti: Bool,
                     token: String)
+    case deviceCheck(deviceToken: String)
 }
 
 extension UserTargetType: MoyaErrorHandleable {
@@ -32,6 +33,7 @@ extension UserTargetType: MoyaErrorHandleable {
         case .signup: return "/user/signup"
         case .signin: return "/user/signin"
         case .updateUser: return "/user/update"
+        case .deviceCheck: return "/user/checkDevice"
         }
     }
     
@@ -44,6 +46,7 @@ extension UserTargetType: MoyaErrorHandleable {
         // POST
         case .signup: return .post
         case .updateUser: return .post
+        case .deviceCheck: return .post
         }
     }
     
@@ -60,6 +63,9 @@ extension UserTargetType: MoyaErrorHandleable {
             
         case let .updateUser(_, _, _, _, _, token):
             return ["accessToken": "\(token)"]
+            
+        case .deviceCheck:
+            return nil
         }
     }
     
@@ -82,6 +88,9 @@ extension UserTargetType: MoyaErrorHandleable {
                 "is_agree_daytime_noti": daytimeNoti,
                 "is_agree_nighttime_noti": nighttimeNoti
             ]
+            
+        case let .deviceCheck(deviceToken):
+            return ["deviceToken": deviceToken]
         }
     }
     
@@ -122,6 +131,18 @@ extension UserTargetType {
             
         case .updateUser:
             return Data()
+            
+        case .deviceCheck:
+            return Data(
+                """
+                {
+                  "status": 200,
+                  "bit0": true,
+                  "bit1": true,
+                  "lastUpdated": "2024-07"
+                }
+                """.utf8
+            )
         }
     }
 }

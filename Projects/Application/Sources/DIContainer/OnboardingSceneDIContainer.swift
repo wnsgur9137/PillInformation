@@ -28,7 +28,7 @@ final class OnboardingSceneDIContainer {
         ))
     }
     
-    func makeOnboardingViewController(navigationController: UINavigationController) -> OnboardingCoordinator {
+    func makeOnboardingCoordinator(navigationController: UINavigationController) -> OnboardingCoordinator {
         return DefaultOnboardingCoordinator(
             navigationController: navigationController,
             dependencies: onboardingDIContainer
