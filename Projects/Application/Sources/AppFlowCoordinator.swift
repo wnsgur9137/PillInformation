@@ -24,7 +24,7 @@ final class AppFlowCoordinator {
     func start() {
         tabBarController.tabBar.isHidden = false
         let mainSceneDIContainer = appDIContainer.makeMainSceneDIContainer()
-        let flow = mainSceneDIContainer.makeTabBarCoordinator(tabBarController: tabBarController)
+        let flow = mainSceneDIContainer.makeTabBarCoordinator(tabBarController: tabBarController, isShowAlarmTab: appDIContainer.appConfiguration.isShowAlarmTab)
         flow.start()
     }
     

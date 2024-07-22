@@ -21,4 +21,8 @@ extension NetworkManager {
     public func requestIsNeedSignIn() -> Single<Bool> {
         return requestObject(.isNeedSignIn, type: Bool.self)
     }
+    
+    public func requestIsShowAlarmTab() -> Single<Bool> {
+        return requestObject(.isShowAlarmTab, type: Bool.self)
+    }
 }

@@ -12,6 +12,7 @@ import RxSwift
 public protocol SplashUseCase {
     func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResultModel>
     func executeIsNeedSignIn() -> Single<Bool>
+    func executeIsShowAlarmTab() -> Single<Bool>
     func signin(accessToken: String) -> Single<UserModel>
     func fetchUserStorage() -> Single<UserModel>
     func updateUserStorage(_ user: UserModel) -> Single<UserModel>

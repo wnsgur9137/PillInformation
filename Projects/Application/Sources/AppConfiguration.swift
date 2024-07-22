@@ -57,4 +57,11 @@ final class AppConfiguration {
         }
         return kakaoNativeAppKey
     }()
+    
+    lazy var isShowAlarmTab: Bool = {
+        guard let isShowAlarmTabString = appConfigurations["IS_SHOW_ALARM_TAB"] else {
+            fatalError("IS_SHOW_ALARM_TAB must not be empty in plist")
+        }
+        return Bool(isShowAlarmTabString) ?? false
+    }()
 }

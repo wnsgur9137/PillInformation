@@ -25,6 +25,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     public var childCoordinators: [Coordinator] = []
     public var type: CoordinatorType { .tab }
     
+    private var isShowAlarmTab: Bool = false
     private let homeDIContainer: HomeDIContainer
     private let bookmarkDIContainer: BookmarkDIContainer
     private let searchDIContainer: SearchDIContainer
@@ -39,17 +40,22 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
                 bookmarkDIContainer: BookmarkDIContainer,
                 searchDIContainer: SearchDIContainer,
                 alarmDIContainer: AlarmDIContainer,
-                myPageDIContainer: MyPageDIContainer) {
+                myPageDIContainer: MyPageDIContainer,
+                isShowAlarmTab: Bool) {
         self.tabBarController = tabBarController
         self.homeDIContainer = homeDIContainer
         self.bookmarkDIContainer = bookmarkDIContainer
         self.searchDIContainer = searchDIContainer
         self.alarmDIContainer = alarmDIContainer
         self.myPageDIContainer = myPageDIContainer
+        self.isShowAlarmTab = isShowAlarmTab
     }
     
     public func start() {
-        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm]
+        var pages: [TabBarPage] = [.home, .search, .bookmark]
+        if isShowAlarmTab {
+            pages.append(.alarm)
+        }
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }
@@ -72,15 +78,6 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             homeCoordinator.start()
             childCoordinators.append(homeCoordinator)
             
-        case .bookmark:
-            let bookmarkCoordinator = DefaultBookmarkCoordinator(
-                navigationController: navigationController,
-                dependencies: bookmarkDIContainer,
-                tabDependencies: self
-            )
-            bookmarkCoordinator.finishDelegate = self
-            bookmarkCoordinator.start()
-            
         case .search:
             let searchCoordinator = DefaultSearchCoordinator(
                 navigationController: navigationController,
@@ -90,6 +87,15 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             searchCoordinator.finishDelegate = self
             searchCoordinator.start()
             childCoordinators.append(searchCoordinator)
+            
+        case .bookmark:
+            let bookmarkCoordinator = DefaultBookmarkCoordinator(
+                navigationController: navigationController,
+                dependencies: bookmarkDIContainer,
+                tabDependencies: self
+            )
+            bookmarkCoordinator.finishDelegate = self
+            bookmarkCoordinator.start()
             
         case .alarm:
             let alarmCoordinator = DefaultAlarmCoordinator(

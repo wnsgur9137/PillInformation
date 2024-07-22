@@ -28,4 +28,8 @@ extension DefaultApplicationSplashRepository {
     public func executeIsNeedSignIn() -> Single<Bool> {
         network.requestIsNeedSignIn()
     }
+    
+    public func executeIsShowAlarmTab() -> Single<Bool> {
+        network.requestIsShowAlarmTab()
+    }
 }

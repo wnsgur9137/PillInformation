@@ -49,14 +49,16 @@ final class MainSceneDIContainer {
         ))
     }
     
-    func makeTabBarCoordinator(tabBarController: UITabBarController) -> TabBarCoordinator {
+    func makeTabBarCoordinator(tabBarController: UITabBarController,
+                               isShowAlarmTab: Bool) -> TabBarCoordinator {
         return DefaultTabBarCoordinator(
             tabBarController: tabBarController,
             homeDIContainer: homeDIContainer,
             bookmarkDIContainer: bookmarkDIContainer,
             searchDIContainer: searchDIContainer,
             alarmDIContainer: alarmDIContainer,
-            myPageDIContainer: myPageDIContainer
+            myPageDIContainer: myPageDIContainer,
+            isShowAlarmTab: isShowAlarmTab
         )
     }
 }

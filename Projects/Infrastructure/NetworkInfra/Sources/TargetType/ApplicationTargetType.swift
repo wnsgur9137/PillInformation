@@ -11,6 +11,7 @@ import Moya
 
 public enum ApplicationTargetType {
     case isNeedSignIn
+    case isShowAlarmTab
 }
 
 extension ApplicationTargetType: MoyaErrorHandleable {
@@ -21,24 +22,28 @@ extension ApplicationTargetType: MoyaErrorHandleable {
     public var path: String {
         switch self {
         case .isNeedSignIn: return "/isNeedSignIn"
+        case .isShowAlarmTab: return "/isShowAlarmTab"
         }
     }
     
     public var method: Moya.Method {
         switch self {
         case .isNeedSignIn: return .get
+        case .isShowAlarmTab: return .get
         }
     }
     
     public var headers: [String : String]? {
         switch self {
         case .isNeedSignIn: return nil
+        case .isShowAlarmTab: return nil
         }
     }
     
     public var parameters: [String: Any]? {
         switch self {
         case .isNeedSignIn: return nil
+        case .isShowAlarmTab: return nil
         }
     }
     
@@ -61,6 +66,13 @@ extension ApplicationTargetType {
     public var sampleData: Data {
         switch self {
         case .isNeedSignIn:
+            return Data(
+                """
+                true
+                """.utf8
+            )
+            
+        case .isShowAlarmTab:
             return Data(
                 """
                 true

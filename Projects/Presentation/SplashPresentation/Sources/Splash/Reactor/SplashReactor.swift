@@ -45,6 +45,7 @@ public final class SplashReactor: Reactor {
     private let disposeBag = DisposeBag()
     private let splashUseCase: SplashUseCase
     private let flowAction: SplashFlowAction
+    private var isShowAlarmTab: Bool = false
     
     public init(with useCase: SplashUseCase,
                 flowAction: SplashFlowAction) {
@@ -92,9 +93,13 @@ public final class SplashReactor: Reactor {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
             self.splashUseCase.executeIsNeedSignIn()
-                .subscribe(onSuccess: { [weak self] isNeed in
+                .flatMap { isNeedSignIn -> Single<(Bool, Bool)> in
+                    return self.splashUseCase.executeIsShowAlarmTab().map { (isNeedSignIn, $0) }
+                }
+                .subscribe(onSuccess: { [weak self] isNeedSignIn, isShowAlarmTab in
                     guard let self = self else { return }
-                    if isNeed {
+                    self.isShowAlarmTab = isShowAlarmTab
+                    if isNeedSignIn {
                         self.checkSignin()
                             .bind(to: observable)
                             .disposed(by: self.disposeBag)

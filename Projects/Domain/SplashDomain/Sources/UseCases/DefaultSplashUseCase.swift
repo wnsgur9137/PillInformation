@@ -33,6 +33,10 @@ extension DefaultSplashUseCase {
         return applicationSplashRepository.executeIsNeedSignIn()
     }
     
+    public func executeIsShowAlarmTab() -> Single<Bool> {
+        return applicationSplashRepository.executeIsShowAlarmTab()
+    }
+    
     public func signin(accessToken: String) -> Single<UserModel> {
         return userSplashRepository.signin(accessToken: accessToken).map { $0.toModel() }
     }
