@@ -35,7 +35,8 @@ public let defaultInfoPlist: [String: Plist.Value] = [
         "MEDICINE_API_URL": "${MEDICINE_API_URL}",
         "MEDICINE_API_KEY": "${MEDICINE_KEY}",
         "MEDICINE_INFO_API_URL": "${MEDICINE_INFO_API_URL}",
-        "MEDICINE_INFO_API_KEY": "${MEDICINE_INFO_API_KEY}"
+        "MEDICINE_INFO_API_KEY": "${MEDICINE_INFO_API_KEY}",
+        "IS_SHOW_ALARM_TAB": "${IS_SHOW_ALARM_TAB}"
     ],
     "NSAppTransportSecurity": [
         "NSAllowsArbitraryLoads": true

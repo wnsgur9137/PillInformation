@@ -25,6 +25,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     public var childCoordinators: [Coordinator] = []
     public var type: CoordinatorType { .tab }
     
+    private var isShowAlarmTab: Bool = false
     private let homeDIContainer: HomeDIContainer
     private let bookmarkDIContainer: BookmarkDIContainer
     private let searchDIContainer: SearchDIContainer
@@ -39,17 +40,22 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
                 bookmarkDIContainer: BookmarkDIContainer,
                 searchDIContainer: SearchDIContainer,
                 alarmDIContainer: AlarmDIContainer,
-                myPageDIContainer: MyPageDIContainer) {
+                myPageDIContainer: MyPageDIContainer,
+                isShowAlarmTab: Bool) {
         self.tabBarController = tabBarController
         self.homeDIContainer = homeDIContainer
         self.bookmarkDIContainer = bookmarkDIContainer
         self.searchDIContainer = searchDIContainer
         self.alarmDIContainer = alarmDIContainer
         self.myPageDIContainer = myPageDIContainer
+        self.isShowAlarmTab = isShowAlarmTab
     }
     
     public func start() {
-        let pages: [TabBarPage] = [.home, .search, .bookmark, .alarm]
+        var pages: [TabBarPage] = [.home, .search, .bookmark]
+        if isShowAlarmTab {
+            pages.append(.alarm)
+        }
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }

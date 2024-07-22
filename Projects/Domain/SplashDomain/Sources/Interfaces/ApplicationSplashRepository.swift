@@ -12,4 +12,5 @@ import RxSwift
 public protocol ApplicationSplashRepository {
     func deviceCheck(_ deviceToken: String) -> Single<DeviceCheckResult>
     func executeIsNeedSignIn() -> Single<Bool>
+    func executeIsShowAlarmTab() -> Single<Bool>
 }
