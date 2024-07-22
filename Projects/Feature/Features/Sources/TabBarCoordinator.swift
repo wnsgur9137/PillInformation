@@ -49,7 +49,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     }
     
     public func start() {
-        let pages: [TabBarPage] = [.home, .bookmark, .search, .alarm]
+        let pages: [TabBarPage] = [.home, .search, .bookmark, .alarm]
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }
@@ -72,15 +72,6 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             homeCoordinator.start()
             childCoordinators.append(homeCoordinator)
             
-        case .bookmark:
-            let bookmarkCoordinator = DefaultBookmarkCoordinator(
-                navigationController: navigationController,
-                dependencies: bookmarkDIContainer,
-                tabDependencies: self
-            )
-            bookmarkCoordinator.finishDelegate = self
-            bookmarkCoordinator.start()
-            
         case .search:
             let searchCoordinator = DefaultSearchCoordinator(
                 navigationController: navigationController,
@@ -90,6 +81,15 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             searchCoordinator.finishDelegate = self
             searchCoordinator.start()
             childCoordinators.append(searchCoordinator)
+            
+        case .bookmark:
+            let bookmarkCoordinator = DefaultBookmarkCoordinator(
+                navigationController: navigationController,
+                dependencies: bookmarkDIContainer,
+                tabDependencies: self
+            )
+            bookmarkCoordinator.finishDelegate = self
+            bookmarkCoordinator.start()
             
         case .alarm:
             let alarmCoordinator = DefaultAlarmCoordinator(

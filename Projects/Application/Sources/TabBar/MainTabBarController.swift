@@ -27,7 +27,7 @@ public final class MainTabBarController: UITabBarController {
         return view
     }()
     
-    private let leftButtonStackView: UIStackView = {
+    private lazy var evenButtonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
@@ -35,7 +35,7 @@ public final class MainTabBarController: UITabBarController {
         return stackView
     }()
     
-    private let rightButtonStackView: UIStackView = {
+    private lazy var leftButtonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
@@ -43,7 +43,15 @@ public final class MainTabBarController: UITabBarController {
         return stackView
     }()
     
-    private let centerButton: CenterButton = {
+    private lazy var rightButtonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+    
+    private lazy var centerButton: CenterButton = {
         let button = CenterButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -74,14 +82,14 @@ public final class MainTabBarController: UITabBarController {
             }
             tabBarButtons[selectedIndex].isSelected = true
             
-            centerButton.isSelected = selectedIndex == 2
+            centerButton.isSelected = selectedIndex == tabBarButtons.count / 2
         }
     }
     
     public override func setViewControllers(_ viewControllers: [UIViewController]?, animated: Bool) {
         super.setViewControllers(viewControllers, animated: animated)
-        
         guard let viewControllers = viewControllers else { return }
+        let isOdd = viewControllers.count % 2 == 1
         removeTabBarItems()
         for (index, item) in viewControllers.enumerated() {
             guard let tabBarItem = item.tabBarItem else { continue }
@@ -95,7 +103,9 @@ public final class MainTabBarController: UITabBarController {
             button.addAction(action, for: .touchUpInside)
             tabBarButtons.append(button)
             
-            if index == 2 {
+            // 탭바 버튼이 홀수인 경우에만 centerButton 설정
+            guard isOdd else { continue }
+            if index == viewControllers.count / 2 {
                 centerButton.imageView.image = tabBarItem.image
                 centerButton.button.addAction(UIAction(handler: { [weak self] _ in
                     self?.selectedIndex = index
@@ -103,7 +113,9 @@ public final class MainTabBarController: UITabBarController {
             }
         }
         
-        setupButtonStackViews()
+        isOdd ? addOddSubviews() : addEvenSubviews()
+        isOdd ? setupOddLayoutConstarints() : setupEvenLayoutConstratins()
+        isOdd ? setupOddButtonStackViews() : setupEvenButtonStackView()
     }
     
     // MARK: - Lifecycle
@@ -132,6 +144,7 @@ public final class MainTabBarController: UITabBarController {
         setupLayoutConstraints()
     }
     
+    /// Remove Buttons
     private func removeTabBarItems() {
         tabBarButtons.removeAll()
         leftButtonStackView.arrangedSubviews.forEach {
@@ -140,29 +153,48 @@ public final class MainTabBarController: UITabBarController {
         rightButtonStackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
+        centerButton.removeFromSuperview()
+        leftButtonStackView.removeFromSuperview()
+        rightButtonStackView.removeFromSuperview()
+        evenButtonStackView.removeFromSuperview()
     }
     
-    private func setupButtonStackViews() {
+    /// Setup Odd Button Layouts
+    private func setupOddButtonStackViews() {
         for (index, button) in tabBarButtons.enumerated() {
-            switch index {
-            case 0: fallthrough
-            case 1: leftButtonStackView.addArrangedSubview(button)
-            case 2:  break
-            case 3: fallthrough
-            case 4: rightButtonStackView.addArrangedSubview(button)
-            default: break
+            let centerIndex = tabBarButtons.count / 2
+            
+            if index < centerIndex {
+                leftButtonStackView.addArrangedSubview(button)
+                continue
+            } else if index == centerIndex {
+                continue
+            } else if index > centerIndex {
+                rightButtonStackView.addArrangedSubview(button)
+                continue
             }
         }
+    }
+    
+    /// Setup Even Button Layouts
+    private func setupEvenButtonStackView() {
+        tabBarButtons.forEach { button in
+            evenButtonStackView.addArrangedSubview(button)
+        }
+        return
     }
 }
 
 // MARK: - UITabBarControllerDelegate
 extension MainTabBarController: UITabBarControllerDelegate {
+    
+    /// Set Previous selected index
     public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         previousSelectedIndex = tabBarController.selectedIndex
         return true
     }
     
+    /// Fade animation
     public func tabBarController(_ tabBarController: UITabBarController, animationControllerForTransitionFrom fromVC: UIViewController, to toVC: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
         let toNavigationViewController = toVC as? UINavigationController
         var toIndex: Int?
@@ -170,8 +202,8 @@ extension MainTabBarController: UITabBarControllerDelegate {
         for viewController in toNavigationViewController?.viewControllers ?? [] {
             switch viewController {
             case is HomeViewController: toIndex = 0
-            case is BookmarkViewController: toIndex = 1
-            case is SearchViewController: toIndex = 2
+            case is SearchViewController: toIndex = 1
+            case is BookmarkViewController: toIndex = 2
             case is AlarmTabBarController: toIndex = 3
             case is MyPageViewController: toIndex = 4
             default: break
@@ -199,9 +231,16 @@ extension MainTabBarController: UITabBarControllerDelegate {
 extension MainTabBarController {
     private func addSubviews() {
         view.addSubview(tabBarView)
+    }
+    
+    private func addOddSubviews() {
         tabBarView.addSubview(leftButtonStackView)
         tabBarView.addSubview(rightButtonStackView)
         tabBarView.addSubview(centerButton)
+    }
+    
+    private func addEvenSubviews() {
+        tabBarView.addSubview(evenButtonStackView)
     }
     
     private func setupLayoutConstraints() {
@@ -209,7 +248,9 @@ extension MainTabBarController {
         tabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tabBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tabBarView.heightAnchor.constraint(equalTo: self.tabBar.heightAnchor).isActive = true
-        
+    }
+    
+    private func setupOddLayoutConstarints() {
         leftButtonStackView.leadingAnchor.constraint(equalTo: tabBarView.leadingAnchor, constant: 20.0).isActive = true
         leftButtonStackView.topAnchor.constraint(equalTo: tabBarView.topAnchor, constant: 12.0).isActive = true
         leftButtonStackView.trailingAnchor.constraint(equalTo: centerButton.leadingAnchor, constant: -17.0).isActive = true
@@ -220,6 +261,12 @@ extension MainTabBarController {
         
         centerButton.topAnchor.constraint(equalTo: tabBarView.topAnchor, constant: -11.0).isActive = true
         centerButton.centerXAnchor.constraint(equalTo: tabBarView.centerXAnchor).isActive = true
+    }
+    
+    private func setupEvenLayoutConstratins() {
+        evenButtonStackView.leadingAnchor.constraint(equalTo: tabBarView.leadingAnchor, constant: 20.0).isActive = true
+        evenButtonStackView.topAnchor.constraint(equalTo: tabBarView.topAnchor, constant: 12.0).isActive = true
+        evenButtonStackView.trailingAnchor.constraint(equalTo: tabBarView.trailingAnchor, constant: -20.0).isActive = true
     }
 }
 
