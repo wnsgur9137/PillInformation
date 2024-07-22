@@ -17,6 +17,7 @@ public enum PillTargetType {
                           codes: [String]?)
     case getPillDescription(medicineSeq: Int)
     case getRecommendPillNames
+    case getRecommendPills
     case getPillHits(medicineSeq: Int)
     case postPillHits(medicineSeq: Int, medicineName: String)
     case getRecommendKeyword
@@ -32,7 +33,8 @@ extension PillTargetType: MoyaErrorHandleable {
         case let .getPillList(name): return "/pill/getPillsWithName/\(name)"
         case .getPillShapeList: return "/pill/getPillsWithShapeV1"
         case let .getPillDescription(medicineSeq: medicineSeq): return "/pill/description/\(medicineSeq)"
-        case .getRecommendPillNames: return "/recommendMedicine"
+        case .getRecommendPillNames: return "/recommendMedicineNames"
+        case .getRecommendPills: return "/pill/recommendPills"
         case let .getPillHits(medicineSeq): return "/medicineHits/\(medicineSeq)"
         case .postPillHits: return "/medicineHits"
         case .getRecommendKeyword: return "/searchKeyword/recommendKeywords"
@@ -46,6 +48,7 @@ extension PillTargetType: MoyaErrorHandleable {
         case .getPillShapeList: return .get
         case .getPillDescription: return .get
         case .getRecommendPillNames: return .get
+        case .getRecommendPills: return .get
         case .getPillHits: return .get
         case .getRecommendKeyword: return .get
             
@@ -75,6 +78,9 @@ extension PillTargetType: MoyaErrorHandleable {
             return nil
             
         case .getRecommendPillNames:
+            return nil
+            
+        case .getRecommendPills:
             return nil
             
         case let .getPillHits(medicineSeq):
@@ -291,6 +297,80 @@ extension PillTargetType {
                     "타이레놀",
                     "테스트레놀",
                     "또있넹"
+                ]
+                """.utf8
+            )
+            
+        case .getRecommendPills:
+            return Data(
+                """
+                [
+                    {
+                        "medicineSeq": "195900001",
+                        "medicineName": "헤로세친캅셀250밀리그람(클로람페니콜)",
+                        "entpSeq": "19650001",
+                        "entpName": "(주)종근당",
+                        "chart": "이 약은 백색 내지 황백색의 결정 또는 결정성 가루가 들어 있는 상의는 갈색, 하의는 미황색의 캅셀이다.",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154601161228500091",
+                        "printFront": "CKD 250",
+                        "printBack": "NULL",
+                        "medicineShape": "장방형",
+                        "colorClass1": "갈색",
+                        "colorClass2": "노랑",
+                        "lineFront": "NULL",
+                        "lineBack": "NULL",
+                        "lengLong": "17.60",
+                        "lengShort": "6.07",
+                        "thick": "6.35",
+                        "imgRegistTs": "20041126",
+                        "classNo": "06150",
+                        "className": "주로 그람양성, 음성균, 리케치아, 비루스에 작용하는 것",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590707",
+                        "formCodeName": "경질캡슐제, 산제",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20120829",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Helocetin Cap.",
+                        "ediCode": "NULL"
+                    },
+                    {
+                        "medicineSeq": "195900032",
+                        "medicineName": "디크로다이드정25밀리그램(히드로클로로티아지드)",
+                        "entpSeq": "19580005",
+                        "entpName": "태극제약(주)",
+                        "chart": "주황색의 원형정제",
+                        "medicineImage": "https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/151335258227300060",
+                        "printFront": "TG분할선DCT",
+                        "printBack": "NULL",
+                        "medicineShape": "원형",
+                        "colorClass1": "주황",
+                        "colorClass2": "NULL",
+                        "lineFront": "-",
+                        "lineBack": "NULL",
+                        "lengLong": "7",
+                        "lengShort": "7",
+                        "thick": "3",
+                        "imgRegistTs": "20050616",
+                        "classNo": "02130",
+                        "className": "이뇨제",
+                        "etcOtcName": "전문의약품",
+                        "medicinePermitDate": "19590908",
+                        "formCodeName": "나정",
+                        "markCodeFrontAnal": "",
+                        "markCodeBackAnal": "",
+                        "markCodeFrontImg": "",
+                        "markCodeBackImg": "",
+                        "changeDate": "20140209",
+                        "markCodeFront": "NULL",
+                        "markCodeBack": "NULL",
+                        "medicineEngName": "Dichlodide Tab. 25mg",
+                        "ediCode": "NULL"
+                    }
                 ]
                 """.utf8
             )

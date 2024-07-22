@@ -32,17 +32,24 @@ public final class HomeDIContainer {
 // MARK: - HomeCoordinatorDependencies
 extension HomeDIContainer: HomeCoordinatorDependencies {
     // Notice
-    public func makeNoticeRepository() -> NoticeRepository {
+    private func makeNoticeRepository() -> NoticeRepository {
         return HomeData.DefaultNoticeRepository(networkManager: dependencies.networkManager)
     }
-    public func makeNoticeUseCase() -> NoticeUseCase {
+    private func makeNoticeUseCase() -> NoticeUseCase {
         return DefaultNoticeUseCase(with: makeNoticeRepository())
+    }
+    
+    // Recommend Pills
+    private func makeRecommendPillRepository() -> RecommendPillRepository {
+        return DefaultRecommendPillRepository(networkManager: dependencies.networkManager)
+    }
+    private func makeRecommendPillUseCase() -> RecommendPillUseCase {
+        return DefaultRecommendPillUseCase(with: makeRecommendPillRepository())
     }
     
     // Home
     public func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
-        return HomeReactor(with: makeNoticeUseCase(),
-                                flowAction: flowAction)
+        return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
     }
     public func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController {
         return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))

@@ -8,19 +8,8 @@
 
 import Foundation
 
-import SearchDomain
-
-public struct PillHitsResponseDTO: Decodable {
-    let medicineSeq: Int
-    let medicineName: String
-    let hits: Int
-    
-    enum CodingKeys: String, CodingKey {
-        case medicineSeq = "medicine_seq"
-        case medicineName = "medicine_name"
-        case hits
-    }
-}
+import BaseData
+import BaseDomain
 
 extension PillHitsResponseDTO {
     func toDomain() -> PillHits {

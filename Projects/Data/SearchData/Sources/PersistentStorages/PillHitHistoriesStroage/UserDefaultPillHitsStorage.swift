@@ -17,12 +17,10 @@ public final class PillHitHistoreisStorage: PillHitHistoriesStorage {
     }
     
     public func saveHitHistories(_ hitHistories: [Int]) {
-        print("🚨\(#function) hitsHistories: \(hitHistories)")
         cache.setObject(hitHistories as NSArray, forKey: hitHistoryKey)
     }
     
     public func loadHitHistories() -> [Int] {
-        print("🚨\(#function) hitsHistories: \(cache.object(forKey: hitHistoryKey) as? [Int] ?? [])")
         return cache.object(forKey: hitHistoryKey) as? [Int] ?? []
     }
 }

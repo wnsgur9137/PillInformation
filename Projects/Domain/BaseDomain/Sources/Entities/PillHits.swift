@@ -1,14 +1,14 @@
 //
-//  PillHitsModel.swift
-//  SearchPresentation
+//  PillHits.swift
+//  BaseDomain
 //
-//  Created by JunHyeok Lee on 7/10/24.
+//  Created by JunHyeok Lee on 7/22/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 
-public struct PillHitsModel {
+public struct PillHits {
     public let medicineSeq: Int
     public let medicineName: String
     public let hits: Int

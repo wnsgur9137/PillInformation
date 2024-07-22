@@ -15,6 +15,7 @@ extension Constants.HomeViewController {
     public static let searchPillByShape: String = "알약 모양으로 검색하기"
     public static let searchPillByPhoto: String = "알약 사진으로 검색하기"
     public static let notice: String = "공지"
+    public static let recommendPills: String = "많이 찾는 알약"
 }
 
 extension Constants.NoticeDetailViewController {
