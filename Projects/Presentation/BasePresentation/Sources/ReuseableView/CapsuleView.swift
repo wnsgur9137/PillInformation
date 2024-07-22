@@ -1,8 +1,8 @@
 //
 //  CapsuleView.swift
-//  SearchPresentation
+//  BasePresentation
 //
-//  Created by JunHyeok Lee on 5/21/24.
+//  Created by JunHyeok Lee on 7/22/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -10,14 +10,12 @@ import UIKit
 import FlexLayout
 import PinLayout
 
-import BasePresentation
-
-final class CapsuleView: UIView {
+public final class CapsuleView: UIView {
     
     private let rootContainerView = UIView()
     
-    let minWidth: CGFloat = 180.0
-    let height: CGFloat = 60.0
+    public let minWidth: CGFloat = 180.0
+    public let height: CGFloat = 60.0
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -35,25 +33,23 @@ final class CapsuleView: UIView {
         return label
     }()
     
-    init(_ text: String? = nil) {
+    public init(_ text: String? = nil) {
         super.init(frame: .zero)
         setupLayout()
-        
-        if let text = text {
-            label.text = text
-        }
+        label.text = text
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         setupSubviewLayout()
     }
 }
 
+// MARK: - Layout
 extension CapsuleView {
     private func setupLayout() {
         addSubview(rootContainerView)
@@ -72,7 +68,7 @@ extension CapsuleView {
                 
                 rootView.addItem(label)
                     .marginLeft(16.0)
-        }
+            }
     }
     
     private func setupSubviewLayout() {
@@ -80,4 +76,3 @@ extension CapsuleView {
         rootContainerView.flex.layout()
     }
 }
-

@@ -1,8 +1,8 @@
 //
 //  SearchDetailTableViewCell.swift
-//  SearchPresentation
+//  BasePresentation
 //
-//  Created by JunHyeok Lee on 5/13/24.
+//  Created by JunHyeok Lee on 7/22/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -10,17 +10,15 @@ import UIKit
 import FlexLayout
 import PinLayout
 
-import BasePresentation
-
-enum PillInfoModelName: String {
+public enum PillInfoModelName: String {
     case medicineSeq, medicineName, entpSeq, entpName, chart, medicineImage, printFront, printBack, medicineShape, colorClass1, colorClass2, lineFront, lineBack, lengLong, lengShort, thick, imgRegistTs, classNo, className, etcOtcName, medicinePermitDate, formCodeName, markCodeFrontAnal, markCodeBackAnal, markCodeFrontImg, markCodeBackImg, changeDate, markCodeFront, markCodeBack, medicineEngName, ediCode
 }
 
-enum PillDescriptionName: String {
+public enum PillDescriptionName: String {
     case medicineSeq, medicineName, entpName, efcyQestim, useMethodQesitm, atpnWarnQesitm, intrcQesitm, seQesitm, depositMethodQesitm
 }
 
-final class SearchDetailTableViewCell: UITableViewCell {
+public final class SearchDetailTableViewCell: UITableViewCell {
     
     private let rootContainerView = UIView()
     
@@ -42,7 +40,7 @@ final class SearchDetailTableViewCell: UITableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = Constants.Color.background
         selectionStyle = .none
@@ -54,7 +52,7 @@ final class SearchDetailTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         nameLabel.text = nil
         valueLabel.text = nil
@@ -63,56 +61,56 @@ final class SearchDetailTableViewCell: UITableViewCell {
     private func localizePillInfoName(name: String) -> String? {
         guard let name = PillInfoModelName(rawValue: name) else { return nil }
         switch name {
-        case .medicineSeq: return Constants.SearchDetail.medicineSeq
-        case .medicineName: return Constants.SearchDetail.medicineName
-        case .entpSeq: return Constants.SearchDetail.entpSeq
-        case .entpName: return Constants.SearchDetail.entpName
-        case .chart: return Constants.SearchDetail.chart
-        case .medicineImage: return Constants.SearchDetail.medicineImage
-        case .printFront: return Constants.SearchDetail.printFront
-        case .printBack: return Constants.SearchDetail.printBack
-        case .medicineShape: return Constants.SearchDetail.medicineShape
-        case .colorClass1: return Constants.SearchDetail.colorClass1
-        case .colorClass2: return Constants.SearchDetail.colorClass2
-        case .lineFront: return Constants.SearchDetail.lineFront
-        case .lineBack: return Constants.SearchDetail.lineBack
-        case .lengLong: return Constants.SearchDetail.lengLong
-        case .lengShort: return Constants.SearchDetail.lengShort
-        case .thick: return Constants.SearchDetail.thick
-        case .imgRegistTs: return Constants.SearchDetail.imgRegistTs
-        case .classNo: return Constants.SearchDetail.classNo
-        case .className: return Constants.SearchDetail.className
-        case .etcOtcName: return Constants.SearchDetail.etcOtcName
-        case .medicinePermitDate: return Constants.SearchDetail.medicinePermitDate
-        case .formCodeName: return Constants.SearchDetail.formCodeName
-        case .markCodeFrontAnal: return Constants.SearchDetail.markCodeFrontAnal
-        case .markCodeBackAnal: return Constants.SearchDetail.markCodeBackAnal
-        case .markCodeFrontImg: return Constants.SearchDetail.markCodeFrontImg
-        case .markCodeBackImg: return Constants.SearchDetail.markCodeBackImg
-        case .changeDate: return Constants.SearchDetail.changeDate
-        case .markCodeFront: return Constants.SearchDetail.markCodeFront
-        case .markCodeBack: return Constants.SearchDetail.markCodeBack
-        case .medicineEngName: return Constants.SearchDetail.medicineEngName
-        case .ediCode: return Constants.SearchDetail.ediCode
+        case .medicineSeq: return Constants.Search.medicineSeq
+        case .medicineName: return Constants.Search.medicineName
+        case .entpSeq: return Constants.Search.entpSeq
+        case .entpName: return Constants.Search.entpName
+        case .chart: return Constants.Search.chart
+        case .medicineImage: return Constants.Search.medicineImage
+        case .printFront: return Constants.Search.printFront
+        case .printBack: return Constants.Search.printBack
+        case .medicineShape: return Constants.Search.medicineShape
+        case .colorClass1: return Constants.Search.colorClass1
+        case .colorClass2: return Constants.Search.colorClass2
+        case .lineFront: return Constants.Search.lineFront
+        case .lineBack: return Constants.Search.lineBack
+        case .lengLong: return Constants.Search.lengLong
+        case .lengShort: return Constants.Search.lengShort
+        case .thick: return Constants.Search.thick
+        case .imgRegistTs: return Constants.Search.imgRegistTs
+        case .classNo: return Constants.Search.classNo
+        case .className: return Constants.Search.className
+        case .etcOtcName: return Constants.Search.etcOtcName
+        case .medicinePermitDate: return Constants.Search.medicinePermitDate
+        case .formCodeName: return Constants.Search.formCodeName
+        case .markCodeFrontAnal: return Constants.Search.markCodeFrontAnal
+        case .markCodeBackAnal: return Constants.Search.markCodeBackAnal
+        case .markCodeFrontImg: return Constants.Search.markCodeFrontImg
+        case .markCodeBackImg: return Constants.Search.markCodeBackImg
+        case .changeDate: return Constants.Search.changeDate
+        case .markCodeFront: return Constants.Search.markCodeFront
+        case .markCodeBack: return Constants.Search.markCodeBack
+        case .medicineEngName: return Constants.Search.medicineEngName
+        case .ediCode: return Constants.Search.ediCode
         }
     }
     
     private func localizePillDescriptionName(name: String) -> String? {
         guard let name = PillDescriptionName(rawValue: name) else { return nil }
         switch name {
-        case .medicineSeq: return Constants.SearchDetail.medicineSeq
-        case .medicineName: return Constants.SearchDetail.medicineName
-        case .entpName: return Constants.SearchDetail.entpName
-        case .efcyQestim: return Constants.SearchDetail.efcyQestim
-        case .useMethodQesitm: return Constants.SearchDetail.useMethodQesitm
-        case .atpnWarnQesitm: return Constants.SearchDetail.atpnWarnQesitm
-        case .intrcQesitm: return Constants.SearchDetail.intrcQesitm
-        case .seQesitm: return Constants.SearchDetail.seQesitm
-        case .depositMethodQesitm: return Constants.SearchDetail.depositMethodQesitm
+        case .medicineSeq: return Constants.Search.medicineSeq
+        case .medicineName: return Constants.Search.medicineName
+        case .entpName: return Constants.Search.entpName
+        case .efcyQestim: return Constants.Search.efcyQestim
+        case .useMethodQesitm: return Constants.Search.useMethodQesitm
+        case .atpnWarnQesitm: return Constants.Search.atpnWarnQesitm
+        case .intrcQesitm: return Constants.Search.intrcQesitm
+        case .seQesitm: return Constants.Search.seQesitm
+        case .depositMethodQesitm: return Constants.Search.depositMethodQesitm
         }
     }
     
-    func configure(_ pillInfoType: PillInfoType, name: String, value: String?) {
+    public func configure(_ pillInfoType: PillInfoType, name: String, value: String?) {
         if pillInfoType == .pillDescription {
             nameLabel.text = localizePillDescriptionName(name: name)
         } else {

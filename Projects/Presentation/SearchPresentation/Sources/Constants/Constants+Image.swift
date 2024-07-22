@@ -16,10 +16,6 @@ extension Constants.SearchResult.Image {
     static let eye: UIImage = UIImage(systemName: "eye") ?? UIImage()
 }
 
-extension Constants.SearchDetail.Image {
-    static let eye: UIImage = UIImage(systemName: "eye") ?? UIImage()
-}
-
 extension Constants.ImageDetail.Image {
     static let share: UIImage = UIImage(systemName: "square.and.arrow.up") ?? UIImage()
     static let download: UIImage = UIImage(systemName: "square.and.arrow.down") ?? UIImage()

@@ -12,4 +12,5 @@ public struct Constants {
     struct NavigationView {
         struct Image { }
     }
+    public struct Search { }
 }

@@ -13,11 +13,6 @@ import RxCocoa
 
 import BasePresentation
 
-public enum PillInfoType {
-    case pillInfo
-    case pillDescription
-}
-
 public struct SearchDetailFlowAction {
     let popViewController: (Bool) -> Void
     let showImageDetailViewController: ((pillName: String, className: String?, imageURL: URL)) -> Void

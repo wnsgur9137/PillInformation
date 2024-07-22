@@ -150,7 +150,7 @@ extension HomeReactor {
         case let .showNoticeDetail(indexPath):
             showNoticeDetailViewController(at: indexPath)
         case let .showPillDetail(indexPath):
-            break
+            showPillDetail(at: indexPath)
         case .loadError:
             state.isFailedLoadNotices = Void()
         }
@@ -162,6 +162,10 @@ extension HomeReactor {
 extension HomeReactor {
     private func showNoticeDetailViewController(at indexPath: IndexPath) {
         flowAction.showNoticeDetailViewController(self.notices[indexPath.row])
+    }
+    
+    private func showPillDetail(at indexPath: IndexPath) {
+        
     }
     
     private func changeTab(index: Int) {

@@ -20,6 +20,7 @@ extension Constants {
         public static let pasteboard: UIImage = UIImage(systemName: "doc.on.clipboard.fill") ?? UIImage()
         public static let personFill: UIImage = .init(systemName: "person.fill") ?? UIImage()
         public static let xmark: UIImage = UIImage(systemName: "xmark") ?? UIImage()
+        public static let eye: UIImage = UIImage(systemName: "eye") ?? UIImage()
     }
 }
 
