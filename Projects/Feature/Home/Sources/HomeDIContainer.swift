@@ -40,7 +40,15 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
         return DefaultNoticeUseCase(with: makeNoticeRepository())
     }
     
-    // Search Detail
+    // Image detail
+    private func makeImageDetailReactor(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailReactor {
+        return ImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction)
+    }
+    public func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController {
+        return ImageDetailViewController.create(with: makeImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction))
+    }
+    
+    // Search detail
     private func makeSearchDetailRepository() -> SearchDetailRepository {
         return DefaultSearchDetailRepository(networkManager: dependencies.networkManager)
     }
