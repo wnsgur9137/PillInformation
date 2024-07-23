@@ -13,7 +13,9 @@ import SearchPresentation
 import BaseDomain
 import BasePresentation
 
-public final class DefaultSearchUseCase: SearchUseCase {
+public protocol SearchTabUseCase: SearchUseCase, SearchDetailUseCase { }
+
+public final class DefaultSearchUseCase: SearchTabUseCase {
     
     private let searchRepository: SearchRepository
     private let disposeBag = DisposeBag()

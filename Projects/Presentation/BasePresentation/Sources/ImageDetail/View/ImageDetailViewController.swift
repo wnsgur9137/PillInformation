@@ -14,8 +14,6 @@ import RxGesture
 import Kingfisher
 import Photos
 
-import BasePresentation
-
 public final class ImageDetailViewController: UIViewController, View {
     
     // MARK: - UI Instances

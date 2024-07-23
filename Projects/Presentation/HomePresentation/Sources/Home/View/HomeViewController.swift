@@ -29,11 +29,29 @@ public final class HomeViewController: UIViewController, View {
         return imageView
     }()
     
+    private let recommendPillLabel: UILabel = {
+        let label = UILabel()
+        label.text = Constants.HomeViewController.recommendPills
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteSemiBold(32.0)
+        return label
+    }()
+    
+    private let recommendPillCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.collectionView?.showsVerticalScrollIndicator = false
+        layout.collectionView?.showsHorizontalScrollIndicator = false
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = false
+        return collectionView
+    }()
+    
     private let noticeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.notice
         label.textColor = Constants.Color.systemLabel
-        label.font = Constants.Font.suiteSemiBold(22.0)
+        label.font = Constants.Font.suiteSemiBold(32.0)
         return label
     }()
     
@@ -64,6 +82,7 @@ public final class HomeViewController: UIViewController, View {
         rootFlexContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = HomeAdapter(tableView: noticeTableView,
+                                  collectionView: recommendPillCollectionView,
                                   dataSource: reactor,
                                   delegate: self)
             bindAdapter(reactor)
@@ -95,6 +114,11 @@ extension HomeViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        rx.viewDidLoad
+            .map { Reactor.Action.loadRecommendPills }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         searchTextFieldView.searchTextField.rx.tapGesture()
             .skip(1)
             .map { _ in Reactor.Action.changeTab(2) }
@@ -113,12 +137,22 @@ extension HomeViewController {
     }
     
     private func bindState(_ reactor: HomeReactor) {
-        reactor.state
-            .map { $0.noticeCount }
+        reactor.pulse(\.$noticeCount)
             .bind(onNext: { noticeCount in
                 let height = self.noticeTableRowHeight * CGFloat(noticeCount)
                 self.noticeTableView.flex.height(height)
                 self.noticeTableView.reloadData()
+                self.updateSubviewLayout()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$recommendPillCount)
+            .bind(onNext: { recommendPillCount in
+                var height = (self.recommendPillCollectionView.bounds.width / 2.1 * 1.6)
+                height = ceil(CGFloat(recommendPillCount) / 2) * height
+                self.recommendPillCollectionView.flex.height(height)
+                
+                self.recommendPillCollectionView.reloadData()
                 self.updateSubviewLayout()
             })
             .disposed(by: disposeBag)
@@ -135,6 +169,13 @@ extension HomeViewController {
         adapter?.didSelectRow
             .map { indexPath in
                 Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectItem
+            .map { indexPath in
+                Reactor.Action.didSelectRecommendPill(indexPath)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -160,6 +201,16 @@ extension HomeViewController {
         contentView.flex.define { contentView in
             contentView.addItem(titleImageView)
                 .height(120)
+            
+            contentView.addItem(recommendPillLabel)
+                .margin(contentMargin)
+                .marginTop(24.0)
+                .marginLeft(36.0)
+            
+            contentView.addItem(recommendPillCollectionView)
+                .cornerRadius(36.0)
+                .backgroundColor(Constants.Color.systemBackground)
+                .margin(contentMargin.top, contentMargin.left / 2.0, contentMargin.bottom, contentMargin.right / 2.0)
             
             contentView.addItem(noticeLabel)
                 .margin(contentMargin)

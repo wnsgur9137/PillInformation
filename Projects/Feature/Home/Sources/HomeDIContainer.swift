@@ -12,6 +12,7 @@ import NetworkInfra
 import HomeData
 import HomeDomain
 import HomePresentation
+import BasePresentation
 
 public final class HomeDIContainer {
     public struct Dependencies {
@@ -32,17 +33,46 @@ public final class HomeDIContainer {
 // MARK: - HomeCoordinatorDependencies
 extension HomeDIContainer: HomeCoordinatorDependencies {
     // Notice
-    public func makeNoticeRepository() -> NoticeRepository {
+    private func makeNoticeRepository() -> NoticeRepository {
         return HomeData.DefaultNoticeRepository(networkManager: dependencies.networkManager)
     }
-    public func makeNoticeUseCase() -> NoticeUseCase {
+    private func makeNoticeUseCase() -> NoticeUseCase {
         return DefaultNoticeUseCase(with: makeNoticeRepository())
+    }
+    
+    // Image detail
+    private func makeImageDetailReactor(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailReactor {
+        return ImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction)
+    }
+    public func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController {
+        return ImageDetailViewController.create(with: makeImageDetailReactor(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction))
+    }
+    
+    // Search detail
+    private func makeSearchDetailRepository() -> SearchDetailRepository {
+        return DefaultSearchDetailRepository(networkManager: dependencies.networkManager)
+    }
+    private func makeSearchDetailUseCase() -> SearchDetailUseCase {
+        return DefaultSearchDetailUseCase(with: makeSearchDetailRepository())
+    }
+    private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
+        return SearchDetailReactor(with: makeSearchDetailUseCase(), pillInfo: pillInfo, flowAction: flowAction)
+    }
+    public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> any SearchDetailViewControllerProtocol {
+        return DefaultSearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
+    }
+    
+    // Recommend Pills
+    private func makeRecommendPillRepository() -> RecommendPillRepository {
+        return DefaultRecommendPillRepository(networkManager: dependencies.networkManager)
+    }
+    private func makeRecommendPillUseCase() -> RecommendPillUseCase {
+        return DefaultRecommendPillUseCase(with: makeRecommendPillRepository())
     }
     
     // Home
     public func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
-        return HomeReactor(with: makeNoticeUseCase(),
-                                flowAction: flowAction)
+        return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
     }
     public func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController {
         return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))

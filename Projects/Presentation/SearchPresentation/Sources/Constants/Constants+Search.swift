@@ -11,16 +11,7 @@ import Foundation
 import BasePresentation
 
 extension Constants {
-    struct Search {
-        struct Image { }
-    }
     struct SearchResult {
-        struct Image { }
-    }
-    struct SearchDetail {
-        struct Image { }
-    }
-    struct ImageDetail {
         struct Image { }
     }
     struct SearchShape {

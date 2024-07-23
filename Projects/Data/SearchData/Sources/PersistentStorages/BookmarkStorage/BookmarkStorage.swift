@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import BaseData
+
 public protocol BookmarkStorage {
     func getPillSeqs() -> Single<[Int]>
     func getPill(medicineSeq: Int) -> Single<PillInfoResponseDTO>

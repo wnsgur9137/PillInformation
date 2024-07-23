@@ -11,6 +11,8 @@ import RxSwift
 import Moya
 
 import NetworkInfra
+import BaseData
+import BaseDomain
 import SearchDomain
 
 extension NetworkManager {

@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 
+import BaseData
 import BaseDomain
 import SearchDomain
 
@@ -26,7 +27,7 @@ extension DefaultBookmarkRepository {
     }
     
     public func savePill(pillInfo: PillInfo) -> Single<[Int]> {
-        let pillInfoDTO = PillInfoResponseDTO(pillInfo: pillInfo)
+        let pillInfoDTO = PillInfoResponseDTO.create(pillInfo: pillInfo)
         return bookmarkStorage.save(response: pillInfoDTO)
     }
     
