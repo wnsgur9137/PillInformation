@@ -36,7 +36,7 @@ extension SearchDIContainer: SearchCoordinatorDependencies {
     private func makeSearchRepository() -> SearchRepository {
         return DefaultSearchRepository(networkManager: dependencies.networkManager)
     }
-    private func makeSearchUseCase() -> SearchUseCase {
+    private func makeSearchUseCase() -> SearchTabUseCase {
         return DefaultSearchUseCase(with: makeSearchRepository())
     }
     

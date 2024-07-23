@@ -13,6 +13,7 @@ import BasePresentation
 
 public protocol HomeCoordinatorDependencies {
     func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController
+    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
     func makeNoticeDetailViewController(notice: NoticeModel, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
 }
 
@@ -36,6 +37,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     private let tabDependencies: HomeTabDependencies
     private weak var homeViewController: HomeViewController?
     private weak var noticeDetailViewController: NoticeDetailViewController?
+    private weak var searchDetailViewController: SearchDetailViewControllerProtocol?
     
     public init(navigationController: UINavigationController,
                 dependencies: HomeCoordinatorDependencies,
@@ -52,6 +54,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     public func showHomeViewController() {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
+            showSearchDetailViewController: showSearchDetailViewController,
             changeTabIndex: tabDependencies.changeTab,
             showShapeSearchViewController: showShapeSearchViewController,
             showMyPageViewController: showMyPageViewController
@@ -71,6 +74,22 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         noticeDetailViewController = viewController
+    }
+    
+    private func showSearchDetailViewController(pillInfo: PillInfoModel) {
+        let flowAction = SearchDetailFlowAction(
+            popViewController: popViewController,
+            showImageDetailViewController: showImageDetailViewController
+        )
+        let viewController = dependencies.makeSearchDetailViewController(pillInfo: pillInfo, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        searchDetailViewController = viewController
+    }
+    
+    private func showImageDetailViewController(pillName: String,
+                                                className: String?,
+                                                imageURL: URL?) {
+        
     }
     
     private func popViewController(animated: Bool) {

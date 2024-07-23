@@ -12,6 +12,7 @@ import NetworkInfra
 import HomeData
 import HomeDomain
 import HomePresentation
+import BasePresentation
 
 public final class HomeDIContainer {
     public struct Dependencies {
@@ -37,6 +38,20 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     }
     private func makeNoticeUseCase() -> NoticeUseCase {
         return DefaultNoticeUseCase(with: makeNoticeRepository())
+    }
+    
+    // Search Detail
+    private func makeSearchDetailRepository() -> SearchDetailRepository {
+        return DefaultSearchDetailRepository(networkManager: dependencies.networkManager)
+    }
+    private func makeSearchDetailUseCase() -> SearchDetailUseCase {
+        return DefaultSearchDetailUseCase(with: makeSearchDetailRepository())
+    }
+    private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
+        return SearchDetailReactor(with: makeSearchDetailUseCase(), pillInfo: pillInfo, flowAction: flowAction)
+    }
+    public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> any SearchDetailViewControllerProtocol {
+        return DefaultSearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
     }
     
     // Recommend Pills

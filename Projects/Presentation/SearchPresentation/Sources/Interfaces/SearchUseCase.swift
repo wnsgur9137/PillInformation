@@ -18,6 +18,5 @@ public enum SearchUseCaseError: Error {
 public protocol SearchUseCase {
     func executePill(keyword: String) -> Single<[PillInfoModel]>
     func executePill(pillShape: PillShapeModel) -> Single<[PillInfoModel]>
-    func executePillDescription(_ medicineSeq: Int) -> Single<PillDescriptionModel?>
     func updatePillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsModel>
 }

@@ -15,8 +15,6 @@ import FlexLayout
 import PinLayout
 import Kingfisher
 
-import BasePresentation
-
 public final class DefaultSearchDetailViewController: UIViewController, View, SearchDetailViewControllerProtocol {
     
     public var searchDetailView = SearchDetailView()

@@ -11,8 +11,6 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 
-import BasePresentation
-
 public struct SearchDetailFlowAction {
     let popViewController: (Bool) -> Void
     let showImageDetailViewController: ((pillName: String, className: String?, imageURL: URL)) -> Void
@@ -46,13 +44,13 @@ public final class SearchDetailReactor: Reactor {
     }
     
     public var initialState = State()
-    private let useCase: SearchUseCase
+    private let useCase: SearchDetailUseCase
     private let flowAction: SearchDetailFlowAction
     private let disposeBag = DisposeBag()
     
     private var pill: PillModel
     
-    public init(with useCase: SearchUseCase,
+    public init(with useCase: SearchDetailUseCase,
                 pillInfo: PillInfoModel,
                 flowAction: SearchDetailFlowAction) {
         self.pill = .init(info: pillInfo)
@@ -73,7 +71,7 @@ public final class SearchDetailReactor: Reactor {
         var children: Mirror.Children?
         
         switch type {
-        case .pillInfo: 
+        case .pillInfo:
             children = Mirror(reflecting: pill.info).children
         case .pillDescription:
             guard let description = pill.description else { return nil }

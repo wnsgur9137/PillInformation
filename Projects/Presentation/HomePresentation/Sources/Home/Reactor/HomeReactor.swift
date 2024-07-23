@@ -15,15 +15,18 @@ import BasePresentation
 
 public struct HomeFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
+    let showSearchDetailViewController: (PillInfoModel) -> Void
     let changeTabIndex: (Int) -> Void
     let showShapeSearchViewController: () -> Void
     let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
+                showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
                 changeTabIndex: @escaping (Int) -> Void,
                 showShapeSearchViewController: @escaping () -> Void,
                 showMyPageViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
+        self.showSearchDetailViewController = showSearchDetailViewController
         self.changeTabIndex = changeTabIndex
         self.showShapeSearchViewController = showShapeSearchViewController
         self.showMyPageViewController = showMyPageViewController
@@ -165,7 +168,8 @@ extension HomeReactor {
     }
     
     private func showPillDetail(at indexPath: IndexPath) {
-        
+        let pillInfo = recommendPills[indexPath.item]
+        flowAction.showSearchDetailViewController(pillInfo)
     }
     
     private func changeTab(index: Int) {

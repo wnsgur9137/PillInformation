@@ -9,8 +9,6 @@
 import UIKit
 import RxSwift
 
-import BasePresentation
-
 public protocol SearchDetailDataSource: AnyObject {
     func numberOfSection() -> Int
     func numberOfRows(in section: Int) -> Int
@@ -29,12 +27,12 @@ public final class SearchDetailAdapter: NSObject {
     private let tableView: UITableView
     private weak var dataSource: SearchDetailDataSource?
     private weak var delegate: SearchDetailDelegate?
-    let didSelectSection = PublishSubject<Int>()
-    let didSelectRow = PublishSubject<IndexPath>()
+    public let didSelectSection = PublishSubject<Int>()
+    public let didSelectRow = PublishSubject<IndexPath>()
     
-    init(tableView: UITableView,
-         dataSource: SearchDetailDataSource,
-         delegate: SearchDetailDelegate) {
+    public init(tableView: UITableView,
+                dataSource: SearchDetailDataSource,
+                delegate: SearchDetailDelegate) {
         tableView.register(SearchDetailTableViewImageHeaderView.self, forHeaderFooterViewReuseIdentifier: SearchDetailTableViewImageHeaderView.identifier)
         tableView.register(SearchDetailTableViewCell.self, forCellReuseIdentifier: SearchDetailTableViewCell.identifier)
         tableView.register(TableFooterView.self, forHeaderFooterViewReuseIdentifier: TableFooterView.identifier)

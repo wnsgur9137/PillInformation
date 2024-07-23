@@ -105,7 +105,8 @@ public final class MainTabBarController: UITabBarController {
             
             // 탭바 버튼이 홀수인 경우에만 centerButton 설정
             guard isOdd else { continue }
-            if index == viewControllers.count / 2 {
+            if index == viewControllers.count / 2,
+               index % 2 == 1 {
                 centerButton.imageView.image = tabBarItem.image
                 centerButton.button.addAction(UIAction(handler: { [weak self] _ in
                     self?.selectedIndex = index
@@ -212,7 +213,6 @@ extension MainTabBarController: UITabBarControllerDelegate {
         
         animatorFromDelegate = fromVC as? TabBarAnimatorDelegate
         animatorToDelegate = fromVC as? TabBarAnimatorDelegate
-        
         if previousSelectedIndex < toIndex ?? previousSelectedIndex { // left to right
             tabBarAnimator.fadeDirection = .leftToRight
             previousSelectedIndex = toIndex ?? previousSelectedIndex
