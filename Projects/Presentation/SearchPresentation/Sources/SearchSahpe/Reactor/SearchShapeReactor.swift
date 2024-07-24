@@ -104,7 +104,7 @@ public final class SearchShapeReactor: Reactor {
     
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchShapeError else {
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
         }
         switch error {
@@ -112,7 +112,7 @@ public final class SearchShapeReactor: Reactor {
             return (title: Constants.SearchShape.emptyErrorTitle, message: nil)
             
         case .default:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
         }
     }

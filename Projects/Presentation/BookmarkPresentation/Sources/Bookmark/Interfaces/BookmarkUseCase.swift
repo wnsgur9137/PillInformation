@@ -13,6 +13,7 @@ import BasePresentation
 
 public protocol BookmarkUseCase {
     func fetchPillSeqs () -> Single<[Int]>
+    func fetchPills() -> Single<[PillInfoModel]>
     func savePill(pillInfo: PillInfoModel) -> Single<[Int]>
     func deletePill(medicineSeq: Int) -> Single<[Int]>
     func deleteAll() -> Single<Void>

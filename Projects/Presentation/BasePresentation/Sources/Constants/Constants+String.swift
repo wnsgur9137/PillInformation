@@ -15,6 +15,7 @@ extension Constants {
     
     public static let confirm = "확인"
     public static let cancel = "취소"
+    public static let alert: String = "알림"
 }
 
 extension Constants.NavigationView {

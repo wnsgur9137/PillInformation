@@ -13,6 +13,7 @@ import BaseDomain
 
 public protocol BookmarkRepository {
     func executePillSeqs() -> Single<[Int]>
+    func executePills() -> Single<[PillInfo]>
     func savePill(pillInfo: PillInfo) -> Single<[Int]>
     func deletePill(medicineSeq: Int) -> Single<[Int]>
     func deleteAll() -> Single<Void>

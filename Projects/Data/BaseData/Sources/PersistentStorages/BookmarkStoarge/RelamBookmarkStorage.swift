@@ -1,16 +1,14 @@
 //
-//  RelamBookmarkStorage.swift
-//  BookmarkData
+//  RealmBookmarkStorage.swift
+//  SearchData
 //
-//  Created by JunHyeok Lee on 7/5/24.
+//  Created by JunHyeok Lee on 7/3/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 import RealmSwift
-
-import BaseData
 
 public final class DefaultBookmarkStorage {
     private let realm: Realm
@@ -34,11 +32,6 @@ public final class DefaultBookmarkStorage {
         let pillInfoObject = realm.objects(PillInfoObject.self)
         let filteredPillInfoObject = pillInfoObject.filter("medicineSeq == \(pillSeq)")
         return filteredPillInfoObject.first
-    }
-    
-    private func fetchPills() -> [PillInfoObject] {
-        let info = realm.objects(PillInfoObject.self)
-        return info.compactMap { $0 }
     }
     
     private func fetchSeqs() -> [Int] {
@@ -80,10 +73,6 @@ extension DefaultBookmarkStorage: BookmarkStorage {
             return .error(RealmError.fetch)
         }
         return .just(pillInfoObject.toDTO())
-    }
-    
-    public func getPills() -> Single<[PillInfoResponseDTO]> {
-        return .just(fetchPills().map { $0.toDTO() } )
     }
     
     public func save(response: PillInfoResponseDTO) -> Single<[Int]> {

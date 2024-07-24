@@ -128,6 +128,14 @@ extension SearchResultViewController {
             })
             .disposed(by: disposeBag)
         
+        reactor.pulse(\.$reloadItem)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let indexPath = indexPath else { return }
+                self?.collectionView.reloadItems(at: [indexPath])
+            })
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$isEmpty)
             .filter { $0 != nil }
             .subscribe(on: MainScheduler.instance)

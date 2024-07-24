@@ -31,8 +31,18 @@ public final class BookmarkDIContainer {
 
 // MARK: - BookmarkCoordinatorDependencies
 extension BookmarkDIContainer: BookmarkCoordinatorDependencies {
+    
+    private func makeBookmarkRepository() -> BookmarkRepository {
+        return DefaultBookmarkRepository()
+    }
+    private func makeBookmarkUseCase() -> BookmarkUseCase {
+        return DefaultBookmarkUseCase(bookmarkRepository: makeBookmarkRepository())
+    }
     public func makeBookmarkReactor(flowAction: BookmarkFlowAction) -> BookmarkReactor {
-        return BookmarkReactor(flowAction: flowAction)
+        return BookmarkReactor(
+            bookmarkUseCase: makeBookmarkUseCase(),
+            flowAction: flowAction
+        )
     }
     
     public func makeBookmarkViewController(flowAction: BookmarkFlowAction) -> BookmarkViewController {

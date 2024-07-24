@@ -1,8 +1,8 @@
 //
 //  BookmarkStorage.swift
-//  BookmarkData
+//  SearchData
 //
-//  Created by JunHyeok Lee on 7/5/24.
+//  Created by JunHyeok Lee on 7/3/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -12,7 +12,6 @@ import RxSwift
 public protocol BookmarkStorage {
     func getPillSeqs() -> Single<[Int]>
     func getPill(medicineSeq: Int) -> Single<PillInfoResponseDTO>
-    func getPills() -> Single<[PillInfoResponseDTO]>
     
     func save(response: PillInfoResponseDTO) -> Single<[Int]>
     
