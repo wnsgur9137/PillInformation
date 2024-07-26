@@ -19,13 +19,22 @@ enum BookmarkError: String, Error {
     case `default`
 }
 
+enum BookmarkSection: Int, CaseIterable {
+    case searchTextField
+    case bookmark
+    case footer
+}
+
 public struct BookmarkFlowAction {
     let showSearchShapeViewController: () -> Void
+    let showPillDetailViewController: (PillInfoModel) -> Void
     let showMyPageViewController: () -> Void
     
     public init(showSearchShapeViewController: @escaping () -> Void,
+                showPillDetailViewController: @escaping (PillInfoModel) -> Void,
                 showMyPageViewController: @escaping () -> Void) {
         self.showSearchShapeViewController = showSearchShapeViewController
+        self.showPillDetailViewController = showPillDetailViewController
         self.showMyPageViewController = showMyPageViewController
     }
 }
@@ -180,6 +189,6 @@ extension BookmarkReactor {
     }
     
     private func showPillDetailViewController(_ pillInfo: PillInfoModel) {
-        
+        flowAction.showPillDetailViewController(pillInfo)
     }
 }

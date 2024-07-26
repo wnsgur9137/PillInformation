@@ -20,17 +20,10 @@ public final class BookmarkViewController: UIViewController, View {
     // MARK: - UI Instances
     
     private let rootContainerView = UIView()
-    private let searchTextFieldView = SearchTextFieldView()
+    private let bookmarkHeaderView = BookmarkHeaderView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = Constants.Bookmark.bookmark
-        label.textColor = Constants.Color.systemLabel
-        label.font = Constants.Font.suiteBold(32.0)
-        return label
-    }()
+    private let emptyBookmarkView = EmptyBookmarkView()
     
     private let bookmarkTableView: UITableView = {
         let tableView = UITableView()
@@ -98,16 +91,6 @@ extension BookmarkViewController {
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
-        searchTextFieldView.shapeSearchButton.rx.tap
-            .map { Reactor.Action.didTapSearchShapeButton }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        searchTextFieldView.userIconButton.rx.tap
-            .map { Reactor.Action.didTapUserButton }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
         rx.viewWillAppear
             .map { Reactor.Action.loadBookmarkPills }
             .bind(to: reactor.action)
@@ -116,11 +99,13 @@ extension BookmarkViewController {
     
     private func bindState(_ reactor: BookmarkReactor) {
         reactor.pulse(\.$bookmarkPillCount)
+            .filter { $0 != nil }
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
                 let height = (bookmarkTableViewHeight * CGFloat(count ?? 0)) + 30
                 self.bookmarkTableView.flex.height(height)
                 self.bookmarkTableView.reloadData()
+                self.emptyBookmarkView.flex.display(count == 0 ? .flex : .none)
                 self.updateSubviewLayout()
             })
             .disposed(by: disposeBag)
@@ -168,31 +153,32 @@ extension BookmarkViewController: BookmarkAdapterDelegate {
 // MARK: - Layout
 extension BookmarkViewController {
     private func setupLayout() {
-        view.addSubview(searchTextFieldView)
+        view.addSubview(bookmarkHeaderView)
         view.addSubview(rootContainerView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         contentView.flex.define { contentView in
-            contentView.addItem(titleLabel)
-                .margin(24.0)
             contentView.addItem(bookmarkTableView)
                 .minHeight(40.0)
+            contentView.addItem(emptyBookmarkView)
+                .minHeight(50%)
+                .display(.none)
             contentView.addItem(footerView)
                 .marginTop(24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
-        searchTextFieldView.flex.layout()
-        rootContainerView.pin.left().right().bottom(view.safeAreaInsets.bottom).top(to: searchTextFieldView.edge.bottom)
+        bookmarkHeaderView.pin.left().right().top(view.safeAreaInsets.top)
+        bookmarkHeaderView.flex.layout(mode: .adjustHeight)
+        rootContainerView.pin.left().right().bottom(view.safeAreaInsets.bottom).top(to: bookmarkHeaderView.edge.bottom)
         
         scrollView.pin
             .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
-
+        
         contentView.pin.top().horizontally()
         contentView.flex.layout()
         scrollView.contentSize = contentView.frame.size
