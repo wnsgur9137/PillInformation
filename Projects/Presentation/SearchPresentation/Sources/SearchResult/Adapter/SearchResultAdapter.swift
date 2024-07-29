@@ -52,8 +52,10 @@ extension SearchResultAdapter: UICollectionViewDataSource {
         cell.showAnimatedGradientSkeleton()
         cell.configure(data.pill, isBookmarked: data.isBookmarked)
         cell.bookmarkButton.rx.tap
-            .map { return indexPath }
-            .bind(to: didSelectBookmark)
+            .subscribe(onNext: { [weak self] in
+                self?.didSelectBookmark.onNext(indexPath)
+                cell.isBookmarked = !cell.isBookmarked
+            })
             .disposed(by: cell.disposeBag)
         return cell
     }

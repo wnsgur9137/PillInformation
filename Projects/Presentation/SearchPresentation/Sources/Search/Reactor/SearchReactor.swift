@@ -85,7 +85,7 @@ public final class SearchReactor: Reactor {
     /// - Returns: Error에 따른 알럿에서 사용할 Title, Message (title: String, message: String?)
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
         }
         switch error {
@@ -93,15 +93,15 @@ public final class SearchReactor: Reactor {
             fallthrough
             
         case .tooShortKeyword:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.tooShortKeywordError)
             
         case .noHaveRecentKeyword:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.noHaveRecentKeyword)
             
         default:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
             
         }

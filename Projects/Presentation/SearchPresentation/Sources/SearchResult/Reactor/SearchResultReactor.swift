@@ -47,16 +47,19 @@ public final class SearchResultReactor: Reactor {
     public enum Mutation {
         case dismiss
         case reloadData
+        case reloadItem(IndexPath)
         case isEmptyResult
         case error(Error)
         case showSearchDetail(PillInfoModel)
         case showSearchShapeViewController
         case showMyPageViewController
+        case skip
     }
     
     public struct State {
         var keyword: String?
         @Pulse var reloadData: Void?
+        @Pulse var reloadItem: IndexPath?
         @Pulse var isEmpty: Void?
         @Pulse var alertContents: AlertContents?
     }
@@ -143,7 +146,7 @@ public final class SearchResultReactor: Reactor {
     
     private func handle(_ error: Error) -> AlertContents {
         guard let error = error as? SearchError else {
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
         }
         switch error {
@@ -151,11 +154,11 @@ public final class SearchResultReactor: Reactor {
             fallthrough
             
         case .tooShortKeyword:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.tooShortKeywordError)
             
         default:
-            return (title: Constants.Search.alert,
+            return (title: Constants.alert,
                     message: Constants.Search.serverError)
             
         }
@@ -168,7 +171,7 @@ public final class SearchResultReactor: Reactor {
             self.bookmarkUseCase.savePill(pillInfo: pillInfo)
                 .subscribe(onSuccess: { seqs in
                     self.bookmarkSeqs = seqs
-                    observable.onNext(.reloadData)
+                    observable.onNext(.skip)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
                 })
@@ -185,7 +188,7 @@ public final class SearchResultReactor: Reactor {
             self.bookmarkUseCase.deletePill(medicineSeq: medicineSeq)
                 .subscribe(onSuccess: { seqs in
                     self.bookmarkSeqs = seqs
-                    observable.onNext(.reloadData)
+                    observable.onNext(.skip)
                 }, onFailure: { error in
                     observable.onNext(.error(error))
                 })
@@ -277,7 +280,11 @@ extension SearchResultReactor {
             state.keyword = keyword
             state.reloadData = Void()
             
+        case let .reloadItem(indexPath):
+            state.reloadItem = indexPath
+            
         case .isEmptyResult:
+            state.keyword = keyword
             state.reloadData = Void()
             state.isEmpty = Void()
             
@@ -293,6 +300,9 @@ extension SearchResultReactor {
             
         case .showMyPageViewController:
             showMyPageViewController()
+            
+        case .skip:
+            break
         }
         return state
     }

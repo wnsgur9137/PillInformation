@@ -13,6 +13,8 @@ import BasePresentation
 
 public protocol BookmarkCoordinatorDependencies {
     func makeBookmarkViewController(flowAction: BookmarkFlowAction) -> BookmarkViewController
+    func makePillDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
+    func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
 }
 
 public protocol BookmarkTabDependencies {
@@ -33,6 +35,8 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     private let dependencies: BookmarkCoordinatorDependencies
     private let tabDependencies: BookmarkTabDependencies
     private weak var bookmarkViewController: BookmarkViewController?
+    private weak var pillDetailViewController: SearchDetailViewControllerProtocol?
+    private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: BookmarkCoordinatorDependencies,
@@ -49,6 +53,7 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     public func showBookmarkViewController() {
         let flowAction = BookmarkFlowAction(
             showSearchShapeViewController: showSearchShapeViewController,
+            showPillDetailViewController: showPillDetailViewController,
             showMyPageViewController: showMyPageViewController
         )
         let viewController = dependencies.makeBookmarkViewController(flowAction: flowAction)
@@ -60,7 +65,35 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
         tabDependencies.showShapeSearchViewController()
     }
     
+    private func showPillDetailViewController(pillInfo: PillInfoModel) {
+        let flowAction = SearchDetailFlowAction(
+            popViewController: popViewController,
+            showImageDetailViewController: showImageDetailViewController
+        )
+        let viewController = dependencies.makePillDetailViewController(pillInfo: pillInfo, flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        pillDetailViewController = viewController
+    }
+    
+    private func showImageDetailViewController(pillName: String,
+                                               className: String?,
+                                               imageURL: URL) {
+        let flowAction = ImageDetailFlowAction(dismiss: dismiss)
+        let viewController = dependencies.makeImageDetailViewController(pillName: pillName, className: className, imageURL: imageURL, flowAction: flowAction)
+        viewController.modalPresentationStyle = .overFullScreen
+        navigationController?.present(viewController, animated: true)
+        imageDetailViewController = viewController
+    }
+    
     public func showMyPageViewController() {
         tabDependencies.showMyPageViewController()
+    }
+    
+    private func popViewController(animated: Bool) {
+        navigationController?.popViewController(animated: animated)
+    }
+    
+    private func dismiss(animated: Bool) {
+        navigationController?.dismiss(animated: animated)
     }
 }

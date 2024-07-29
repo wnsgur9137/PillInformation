@@ -33,7 +33,7 @@ public final class SplashViewController: UIViewController, View {
     }()
     
     private let animationView: LottieAnimationView = {
-        let lottieView = LottieAnimationView(name: "loadingAnimation")
+        let lottieView = LottieAnimationView(.loading)
         lottieView.frame = CGRect(x: 0, y: 0, width: 100.0, height: 100.0)
         return lottieView
     }()

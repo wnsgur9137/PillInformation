@@ -170,6 +170,10 @@ extension DefaultTabBarCoordinator: HomeTabDependencies {
         guard let searchCoordinator = childCoordinators.filter({ $0 is SearchCoordinator }).first as? SearchCoordinator else { return }
         searchCoordinator.showSearchShapeViewController()
     }
+    
+    public func showSearchTab() {
+        tabBarController?.selectedIndex = TabBarPage.search.orderNumber()
+    }
 }
 
 // MARK: - BookmarkDependencies

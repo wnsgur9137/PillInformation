@@ -1,25 +1,27 @@
 //
-//  SearchResultCollectionViewCell.swift
-//  Search
+//  BookmarkTableViewCell.swift
+//  BookmarkPresentation
 //
-//  Created by JunHyeok Lee on 2/26/24.
+//  Created by JunHyeok Lee on 7/23/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import UIKit
+import RxSwift
 import FlexLayout
 import PinLayout
 import Kingfisher
 import SkeletonView
-import RxSwift
 
 import BasePresentation
 
-final class SearchResultCollectionViewCell: UICollectionViewCell {
+final class BookmarkTableViewCell: UITableViewCell {
     
-    private let rootFlexContainerView = UIView()
+    // MARK: - UI Instances
     
-    private let imageView: UIImageView = {
+    private let rootContainerView = UIView()
+    
+    private let pillImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -72,17 +74,20 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    var isBookmarked: Bool = false {
+    private var isBookmarked: Bool = false {
         didSet {
             let image = isBookmarked ? Constants.Image.starFill : Constants.Image.star
             bookmarkButton.setImage(image, for: .normal)
         }
     }
     
+    // MARK: - Properties
+    
     var disposeBag = DisposeBag()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
         layer.addShadow()
         setupSkeletonable()
         setupLayout()
@@ -106,25 +111,26 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     private func setupSkeletonable() {
         isSkeletonable = true
         contentView.isSkeletonable = true
-        rootFlexContainerView.isSkeletonable = true
-        imageView.isSkeletonable = true
+        rootContainerView.isSkeletonable = true
+        pillImageView.isSkeletonable = true
     }
     
-    func configure(_ info: PillInfoModel, 
-                   isBookmarked: Bool = false) {
+    func configure(_ info: PillInfoModel,
+                   isBookmarked: Bool = true) {
         if let url = URL(string: info.medicineImage) {
-            imageView.kf.setImage(with: url) { _ in
-                self.imageView.hideSkeleton()
+            pillImageView.kf.setImage(with: url) { _ in
+                self.pillImageView.hideSkeleton()
             }
         }
         titleLabel.text = info.medicineName
         classLabel.text = info.className
         etcOtcLabel.text = info.etcOtcName
-        self.isBookmarked = isBookmarked
+        let bookmarkImage = isBookmarked ? Constants.Image.starFill : Constants.Image.star
+        bookmarkButton.setImage(bookmarkImage, for: .normal)
         titleLabel.flex.markDirty()
         classLabel.flex.markDirty()
         etcOtcLabel.flex.markDirty()
-        rootFlexContainerView.flex.layout()
+        rootContainerView.flex.layout()
         
         hitsLabel.text = "\(info.hits)"
         hitsLabel.flex.markDirty()
@@ -132,17 +138,17 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     }
     
     func showSkeletonImageView() {
-        imageView.showAnimatedGradientSkeleton()
+        pillImageView.showAnimatedGradientSkeleton()
     }
 }
 
 // MARK: - Layout
-extension SearchResultCollectionViewCell {
+extension BookmarkTableViewCell {
     private func setupLayout() {
-        contentView.addSubview(rootFlexContainerView)
+        contentView.addSubview(rootContainerView)
         contentView.addSubview(utilView)
         
-        rootFlexContainerView.flex
+        rootContainerView.flex
             .alignItems(.center)
             .direction(.row)
             .cornerRadius(12.0)
@@ -150,7 +156,7 @@ extension SearchResultCollectionViewCell {
             .border(0.5, Constants.Color.systemLightGray)
             .backgroundColor(Constants.Color.systemBackground)
             .define { rootView in
-                rootView.addItem(imageView)
+                rootView.addItem(pillImageView)
                     .height(100%)
                     .aspectRatio(1)
                     .cornerRadius(12.0)
@@ -191,12 +197,12 @@ extension SearchResultCollectionViewCell {
     }
     
     private func setupSubviewLayout() {
-        rootFlexContainerView.pin
+        rootContainerView.pin
             .top(8.0)
             .left(12.0)
             .right(12.0)
             .bottom()
-        rootFlexContainerView.flex.layout()
+        rootContainerView.flex.layout()
         
         utilView.pin
             .top(8.0)
@@ -206,3 +212,4 @@ extension SearchResultCollectionViewCell {
         utilView.flex.layout()
     }
 }
+

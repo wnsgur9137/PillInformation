@@ -25,6 +25,10 @@ extension DefaultBookmarkRepository {
         return bookmarkStorage.getPillSeqs()
     }
     
+    public func executePills() -> Single<[PillInfo]> {
+        return bookmarkStorage.getPills().map { $0.map { $0.toDomain() } }
+    }
+    
     public func savePill(pillInfo: PillInfo) -> Single<[Int]> {
         let pillInfoDTO = PillInfoResponseDTO(pillInfo: pillInfo)
         return bookmarkStorage.save(response: pillInfoDTO)

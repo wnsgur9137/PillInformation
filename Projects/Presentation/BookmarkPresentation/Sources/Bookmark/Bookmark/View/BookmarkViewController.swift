@@ -20,16 +20,10 @@ public final class BookmarkViewController: UIViewController, View {
     // MARK: - UI Instances
     
     private let rootContainerView = UIView()
-    private let searchTextFieldView = SearchTextFieldView()
+    private let bookmarkHeaderView = BookmarkHeaderView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
-    private let testLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Bookmark"
-        label.textColor = Constants.Color.systemLabel
-        return label
-    }()
+    private let emptyBookmarkView = EmptyBookmarkView()
     
     private let bookmarkTableView: UITableView = {
         let tableView = UITableView()
@@ -41,7 +35,7 @@ public final class BookmarkViewController: UIViewController, View {
     // MARK: - Properties
     private var adapter: BookmarkAdapter?
     public var disposeBag = DisposeBag()
-    private lazy var bookmarkTableViewHeight: CGFloat = 50.0
+    private lazy var bookmarkTableViewHeight: CGFloat = 120.0
     
     // MARK: - Lifecycle
     
@@ -73,35 +67,93 @@ public final class BookmarkViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
-}
-
-// MARK: - Methods
-extension BookmarkViewController {
     
+    private func showSingleAlert(title: String, message: String?) {
+        var messageAlertText: AlertText?
+        if let message {
+            messageAlertText = AlertText(text: message)
+        }
+        AlertViewer()
+            .showSingleButtonAlert(
+                self,
+                title: .init(text: title),
+                message: messageAlertText,
+                confirmButtonInfo: .init(title: Constants.confirm)
+            )
+    }
+    
+    private func setupEmptyBookmarkView(_ dataCount: Int) {
+        let isEmptyData = dataCount == 0
+        emptyBookmarkView.flex.display(isEmptyData ? .flex : .none)
+        isEmptyData ? emptyBookmarkView.playAnimation() : emptyBookmarkView.stopAnimation()
+    }
 }
 
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
-        searchTextFieldView.shapeSearchButton.rx.tap
-            .map { Reactor.Action.didTapSearchShapeButton }
+        rx.viewWillAppear
+            .map { Reactor.Action.loadBookmarkPills }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        searchTextFieldView.userIconButton.rx.tap
-            .map { Reactor.Action.didTapUserButton }
+        bookmarkHeaderView.searchTextField.rx.text.changed
+            .filter { $0 != nil }
+            .map { text in Reactor.Action.filtered(text) }
             .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        bookmarkHeaderView.searchTextField.rx.text.changed
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { text in
+                guard let text = text else { return }
+                text.count > 0 ?  self.bookmarkHeaderView.showDeleteButton() : self.bookmarkHeaderView.hideDeleteButton()
+            })
             .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: BookmarkReactor) {
+        reactor.pulse(\.$bookmarkPillCount)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] count in
+                guard let self = self,
+                      let count = count else { return }
+                let height = (bookmarkTableViewHeight * CGFloat(count)) + 30
+                self.bookmarkTableView.flex.height(height)
+                self.bookmarkTableView.reloadData()
+                self.setupEmptyBookmarkView(count)
+                self.updateSubviewLayout()
+            })
+            .disposed(by: disposeBag)
         
+        reactor.pulse(\.$alertContent)
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { [weak self] contents in
+                guard let title = contents?.title else { return }
+                self?.showSingleAlert(title: title, message: contents?.message)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindAdapter(_ reactor: BookmarkReactor) {
         adapter?.didSelectRow
             .map { indexPath in
                 Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectBookmark
+            .map { indexPath in
+                Reactor.Action.didSelectBookmark(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.deleteRow
+            .map { indexPath in
+                Reactor.Action.deleteRow(indexPath)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -118,29 +170,32 @@ extension BookmarkViewController: BookmarkAdapterDelegate {
 // MARK: - Layout
 extension BookmarkViewController {
     private func setupLayout() {
-        view.addSubview(searchTextFieldView)
+        view.addSubview(bookmarkHeaderView)
         view.addSubview(rootContainerView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         contentView.flex.define { contentView in
-            contentView.addItem(testLabel)
             contentView.addItem(bookmarkTableView)
+                .minHeight(40.0)
+            contentView.addItem(emptyBookmarkView)
+                .minHeight(50%)
+                .display(.none)
             contentView.addItem(footerView)
                 .marginTop(24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        searchTextFieldView.pin.left().right().top(view.safeAreaInsets.top)
-        searchTextFieldView.flex.layout()
-        rootContainerView.pin.left().right().bottom().top(to: searchTextFieldView.edge.bottom)
+        bookmarkHeaderView.pin.left().right().top(view.safeAreaInsets.top)
+        bookmarkHeaderView.flex.layout(mode: .adjustHeight)
+        rootContainerView.pin.left().right().bottom(view.safeAreaInsets.bottom).top(to: bookmarkHeaderView.edge.bottom)
         
         scrollView.pin
             .top()
             .horizontally()
             .bottom(view.safeAreaInsets.bottom)
-
+        
         contentView.pin.top().horizontally()
         contentView.flex.layout()
         scrollView.contentSize = contentView.frame.size

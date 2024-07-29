@@ -12,6 +12,8 @@ import FlexLayout
 
 public final class SearchTextFieldView: UIView {
     
+    static let height: CGFloat = 60.0
+    
     private let rootContainerView = UIView()
     
     public lazy var dismissButton: UIButton = {
@@ -56,7 +58,7 @@ public final class SearchTextFieldView: UIView {
     }()
     
     public init(hasDismiss: Bool = false) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 68.0))
+        super.init(frame: CGRect(x: 0, y: 0, width: 0, height: SearchTextFieldView.height))
         setupLayout(hasDismiss)
     }
     
@@ -119,6 +121,6 @@ extension SearchTextFieldView {
     
     private func setupSubviewLayout() {
         rootContainerView.pin.all()
-        rootContainerView.flex.layout()
+        rootContainerView.flex.layout(mode: .adjustHeight)
     }
 }

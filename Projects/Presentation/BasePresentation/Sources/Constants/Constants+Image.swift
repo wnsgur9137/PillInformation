@@ -24,6 +24,8 @@ extension Constants.Image {
     public static let personFill: UIImage = .init(systemName: "person.fill") ?? UIImage()
     public static let xmark: UIImage = UIImage(systemName: "xmark") ?? UIImage()
     public static let eye: UIImage = UIImage(systemName: "eye") ?? UIImage()
+    public static let star: UIImage = UIImage(systemName: "star") ?? UIImage()
+    public static let starFill: UIImage = UIImage(systemName: "star.fill") ?? UIImage()
 }
 
 extension Constants.NavigationView.Image {

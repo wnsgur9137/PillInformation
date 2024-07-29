@@ -97,10 +97,15 @@ public final class MainTabBarController: UITabBarController {
             button.defaultImage = tabBarItem.image
             button.selectedImage = tabBarItem.image
             button.isSelected = index == 0
-            let action = UIAction(handler: { [weak self] _ in
+            let buttonAction = UIAction(handler: { [weak self] _ in
+                if let currentIndex = self?.selectedIndex,
+                   currentIndex == index,
+                   let navigationController = item as? UINavigationController {
+                    navigationController.popToRootViewController(animated: true)
+                }
                 self?.selectedIndex = index
             })
-            button.addAction(action, for: .touchUpInside)
+            button.addAction(buttonAction, for: .touchUpInside)
             tabBarButtons.append(button)
             
             // 탭바 버튼이 홀수인 경우에만 centerButton 설정
@@ -108,9 +113,7 @@ public final class MainTabBarController: UITabBarController {
             if index == viewControllers.count / 2,
                index % 2 == 1 {
                 centerButton.imageView.image = tabBarItem.image
-                centerButton.button.addAction(UIAction(handler: { [weak self] _ in
-                    self?.selectedIndex = index
-                }), for: .touchUpInside)
+                centerButton.button.addAction(buttonAction, for: .touchUpInside)
             }
         }
         

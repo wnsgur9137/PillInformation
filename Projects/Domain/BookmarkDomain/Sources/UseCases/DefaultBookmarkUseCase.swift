@@ -26,6 +26,10 @@ extension DefaultBookmarkUseCase {
         return bookmarkRepository.executePillSeqs()
     }
     
+    public func fetchPills() -> Single<[PillInfoModel]> {
+        return bookmarkRepository.executePills().map { $0.map { $0.toModel() } }
+    }
+    
     public func savePill(pillInfo: PillInfoModel) -> Single<[Int]> {
         let pillInfo = PillInfo.makePillInfo(pillInfo)
         return bookmarkRepository.savePill(pillInfo: pillInfo)

@@ -124,7 +124,16 @@ extension SearchResultViewController {
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] _ in
                 self?.searchResultEmptyView.isHidden = true
+                self?.searchResultEmptyView.stopAnimation()
                 self?.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$reloadItem)
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let indexPath = indexPath else { return }
+                self?.collectionView.reloadItems(at: [indexPath])
             })
             .disposed(by: disposeBag)
         
@@ -133,6 +142,7 @@ extension SearchResultViewController {
             .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 self?.searchResultEmptyView.isHidden = false
+                self?.searchResultEmptyView.playAnimation()
             })
             .disposed(by: disposeBag)
         

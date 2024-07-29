@@ -55,10 +55,16 @@ public let defaultInfoPlist: [String: Plist.Value] = [
         ]
     ],
     "UISupportedInterfaceOrientations": [
-        "UIInterfaceOrientationPortrait"
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight"
     ],
     "UISupportedInterfaceOrientations~ipad": [
-        "UIInterfaceOrientationPortrait"
+        "UIInterfaceOrientationPortrait",
+        "UIInterfaceOrientationPortraitUpsideDown",
+        "UIInterfaceOrientationLandscapeLeft",
+        "UIInterfaceOrientationLandscapeRight"
     ],
     "NSPhotoLibraryAddUsageDescription": "Test"
 ]
