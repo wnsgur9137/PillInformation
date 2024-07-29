@@ -40,9 +40,23 @@ final class BookmarkHeaderView: UIView {
         return textField
     }()
     
+    let deleteButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Bookmark.Image.xmarkCircle, for: .normal)
+        button.tintColor = Constants.Color.systemLightGray
+        button.alpha = 0
+        return button
+    }()
+    
+    private var isShowDeleteButton: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
+        
+        searchTextField.rightView = deleteButton
+        searchTextField.rightViewMode = .always
+        searchTextField.rightViewRect(forBounds: CGRect(x: searchTextField.bounds.width - 68.0, y: 24.0, width: 48.0, height: 48.0))
     }
     
     required init?(coder: NSCoder) {
@@ -52,6 +66,18 @@ final class BookmarkHeaderView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupSubviewLayout()
+    }
+    
+    func showDeleteButton() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.deleteButton.alpha = 1
+        })
+    }
+    
+    func hideDeleteButton() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.deleteButton.alpha = 0
+        })
     }
 }
 

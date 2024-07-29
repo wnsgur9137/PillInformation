@@ -14,15 +14,18 @@ import RxCocoa
 public struct NoticeDetailFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
     let popViewController: (Bool) -> Void
+    let showSearchTab: () -> Void
     let showSearchShapeViewController: () -> Void
     let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
                 popViewController: @escaping (Bool) -> Void,
+                showSearchTab: @escaping () -> Void,
                 showSearchShapeViewController: @escaping () -> Void,
                 showMyPageViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.popViewController = popViewController
+        self.showSearchTab = showSearchTab
         self.showSearchShapeViewController = showSearchShapeViewController
         self.showMyPageViewController = showMyPageViewController
     }
@@ -33,6 +36,7 @@ public final class NoticeDetailReactor: Reactor {
         case loadNotice
         case loadOtherNotices
         case popViewController
+        case didTapSearchTextField
         case didTapSearchShapeButton
         case didTapUserButton
         case didSelectNotice(IndexPath)
@@ -41,6 +45,7 @@ public final class NoticeDetailReactor: Reactor {
         case loadNotice(NoticeModel)
         case loadOtherNotices
         case popViewController
+        case showSearchTab
         case showSearchShapeViewController
         case showMyPageViewController
         case showNoticeDetail(IndexPath)
@@ -90,6 +95,9 @@ extension NoticeDetailReactor {
         case .popViewController:
             return .just(.popViewController)
             
+        case .didTapSearchTextField:
+            return .just(.showSearchTab)
+            
         case .didTapSearchShapeButton:
             return .just(.showSearchShapeViewController)
             
@@ -110,6 +118,8 @@ extension NoticeDetailReactor {
             state.isLoadedOtherNotices = Void()
         case .popViewController:
             popViewController(animated: true)
+        case .showSearchTab:
+            showSearchTab()
         case .showSearchShapeViewController:
             showSearchShapeViewController()
         case .showMyPageViewController:
@@ -129,6 +139,10 @@ extension NoticeDetailReactor {
     
     private func popViewController(animated: Bool = true) {
         flowAction.popViewController(animated)
+    }
+    
+    private func showSearchTab() {
+        flowAction.showSearchTab()
     }
     
     private func showSearchShapeViewController() {

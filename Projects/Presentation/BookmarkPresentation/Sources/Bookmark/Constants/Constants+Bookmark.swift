@@ -6,7 +6,7 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 import BasePresentation
 
@@ -23,4 +23,8 @@ extension Constants.Bookmark {
     static let serverErrorMessage: String = "서버 오류가 발생했습니다."
     static let emptyBookmark: String = "즐겨찾기한 알약이 없어요"
     static let emptyBookmarkDescription: String = "알약을 검색하고 즐겨찾기를 추가해보세요"
+}
+
+extension Constants.Bookmark.Image {
+    static let xmarkCircle: UIImage = UIImage(systemName: "xmark.circle") ?? UIImage()
 }

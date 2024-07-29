@@ -20,6 +20,7 @@ public protocol HomeCoordinatorDependencies {
 
 public protocol HomeTabDependencies {
     func changeTab(index: Int)
+    func showSearchTab()
     func showShapeSearchViewController()
     func showMyPageViewController()
 }
@@ -57,7 +58,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
             showSearchDetailViewController: showSearchDetailViewController,
-            changeTabIndex: tabDependencies.changeTab,
+            showSearchTab: tabDependencies.showSearchTab,
             showShapeSearchViewController: showShapeSearchViewController,
             showMyPageViewController: showMyPageViewController
         )
@@ -70,6 +71,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         let flowAction = NoticeDetailFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
             popViewController: popViewController,
+            showSearchTab: tabDependencies.showSearchTab,
             showSearchShapeViewController: showShapeSearchViewController,
             showMyPageViewController: showMyPageViewController
         )

@@ -9,6 +9,7 @@
 import UIKit
 import FlexLayout
 import PinLayout
+import Lottie
 
 import BasePresentation
 
@@ -16,10 +17,9 @@ final class SearchResultEmptyView: UIView {
     
     private let rootContainerView = UIView()
     
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .red.withAlphaComponent(0.4)
-        return imageView
+    private let emptyAnimationView: LottieAnimationView = {
+        let lottieView = LottieAnimationView(.emptyResult)
+        return lottieView
     }()
     
     private let label: UILabel = {
@@ -43,6 +43,15 @@ final class SearchResultEmptyView: UIView {
         super.layoutSubviews()
         setupSubviewLayout()
     }
+    
+    func playAnimation() {
+        emptyAnimationView.loopMode = .playOnce
+        emptyAnimationView.play()
+    }
+    
+    func stopAnimation() {
+        emptyAnimationView.stop()
+    }
 }
 
 // MARK: - Layout
@@ -54,7 +63,7 @@ extension SearchResultEmptyView {
             .justifyContent(.center)
             .alignItems(.center)
             .define { rootView in
-                rootView.addItem(imageView)
+                rootView.addItem(emptyAnimationView)
                     .width(50%)
                     .aspectRatio(1)
                 rootView.addItem(label)

@@ -81,11 +81,12 @@ public final class BookmarkViewController: UIViewController, View {
                 confirmButtonInfo: .init(title: Constants.confirm)
             )
     }
-}
-
-// MARK: - Methods
-extension BookmarkViewController {
     
+    private func setupEmptyBookmarkView(_ dataCount: Int) {
+        let isEmptyData = dataCount == 0
+        emptyBookmarkView.flex.display(isEmptyData ? .flex : .none)
+        isEmptyData ? emptyBookmarkView.playAnimation() : emptyBookmarkView.stopAnimation()
+    }
 }
 
 // MARK: - Binding
@@ -95,17 +96,33 @@ extension BookmarkViewController {
             .map { Reactor.Action.loadBookmarkPills }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        bookmarkHeaderView.searchTextField.rx.text.changed
+            .filter { $0 != nil }
+            .map { text in Reactor.Action.filtered(text) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        bookmarkHeaderView.searchTextField.rx.text.changed
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { text in
+                guard let text = text else { return }
+                text.count > 0 ?  self.bookmarkHeaderView.showDeleteButton() : self.bookmarkHeaderView.hideDeleteButton()
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: BookmarkReactor) {
         reactor.pulse(\.$bookmarkPillCount)
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] count in
-                guard let self = self else { return }
-                let height = (bookmarkTableViewHeight * CGFloat(count ?? 0)) + 30
+                guard let self = self,
+                      let count = count else { return }
+                let height = (bookmarkTableViewHeight * CGFloat(count)) + 30
                 self.bookmarkTableView.flex.height(height)
                 self.bookmarkTableView.reloadData()
-                self.emptyBookmarkView.flex.display(count == 0 ? .flex : .none)
+                self.setupEmptyBookmarkView(count)
                 self.updateSubviewLayout()
             })
             .disposed(by: disposeBag)

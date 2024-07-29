@@ -16,18 +16,18 @@ import BasePresentation
 public struct HomeFlowAction {
     let showNoticeDetailViewController: (NoticeModel) -> Void
     let showSearchDetailViewController: (PillInfoModel) -> Void
-    let changeTabIndex: (Int) -> Void
+    let showSearchTab: () -> Void
     let showShapeSearchViewController: () -> Void
     let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
                 showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
-                changeTabIndex: @escaping (Int) -> Void,
+                showSearchTab: @escaping () -> Void,
                 showShapeSearchViewController: @escaping () -> Void,
                 showMyPageViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.showSearchDetailViewController = showSearchDetailViewController
-        self.changeTabIndex = changeTabIndex
+        self.showSearchTab = showSearchTab
         self.showShapeSearchViewController = showShapeSearchViewController
         self.showMyPageViewController = showMyPageViewController
     }
@@ -37,7 +37,7 @@ public final class HomeReactor: Reactor {
     public enum Action {
         case loadNotices
         case loadRecommendPills
-        case changeTab(Int)
+        case didTapSearchTextField
         case didTapShapeSearchButton
         case didTapUserButton
         case didSelectNotice(IndexPath)
@@ -47,7 +47,7 @@ public final class HomeReactor: Reactor {
     public enum Mutation {
         case isLoadedNotices
         case isLoadedRecommendPills
-        case changeTab(Int)
+        case showSearchTab
         case showShapeSearch
         case showMyPage
         case showNoticeDetail(IndexPath)
@@ -124,8 +124,8 @@ extension HomeReactor {
             return loadNotice()
         case .loadRecommendPills:
             return loadRecommendPills()
-        case let .changeTab(index):
-            return .just(.changeTab(index))
+        case .didTapSearchTextField:
+            return .just(.showSearchTab)
         case .didTapShapeSearchButton:
             return .just(.showShapeSearch)
         case .didTapUserButton:
@@ -144,8 +144,8 @@ extension HomeReactor {
             state.noticeCount = notices.count
         case .isLoadedRecommendPills:
             state.recommendPillCount = recommendPills.count
-        case let .changeTab(index):
-            changeTab(index: index)
+        case .showSearchTab:
+            showSearchTab()
         case .showShapeSearch:
             showShapeSearchViewController()
         case .showMyPage:
@@ -172,8 +172,8 @@ extension HomeReactor {
         flowAction.showSearchDetailViewController(pillInfo)
     }
     
-    private func changeTab(index: Int) {
-        flowAction.changeTabIndex(index)
+    private func showSearchTab() {
+        flowAction.showSearchTab()
     }
     
     private func showShapeSearchViewController() {

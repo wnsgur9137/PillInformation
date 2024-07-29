@@ -17,10 +17,9 @@ final class EmptyBookmarkView: UIView {
     
     private let rootContainerView = UIView()
     
-    private let emptyImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private let emptyAnimationView: LottieAnimationView = {
+        let lottieView = LottieAnimationView(.emptyResult)
+        return lottieView
     }()
     
     private let titleLabel: UILabel = {
@@ -55,6 +54,15 @@ final class EmptyBookmarkView: UIView {
         super.layoutSubviews()
         setupSubviewLayout()
     }
+    
+    func playAnimation() {
+        emptyAnimationView.loopMode = .playOnce
+        emptyAnimationView.play()
+    }
+    
+    func stopAnimation() {
+        emptyAnimationView.stop()
+    }
 }
 
 // MARK: - Layout
@@ -69,8 +77,7 @@ extension EmptyBookmarkView {
             .justifyContent(.center)
             .cornerRadius(12.0)
             .define { rootView in
-                rootView.addItem(emptyImageView)
-                    .backgroundColor(.blue.withAlphaComponent(0.2))
+                rootView.addItem(emptyAnimationView)
                     .width(40%)
                     .aspectRatio(1.0)
                     .marginTop(12.0)

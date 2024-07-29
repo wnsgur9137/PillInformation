@@ -284,6 +284,7 @@ extension SearchResultReactor {
             state.reloadItem = indexPath
             
         case .isEmptyResult:
+            state.keyword = keyword
             state.reloadData = Void()
             state.isEmpty = Void()
             

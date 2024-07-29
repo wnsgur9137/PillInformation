@@ -49,6 +49,7 @@ public final class BookmarkReactor: Reactor {
         case didSelectRow(IndexPath)
         case didSelectBookmark(IndexPath)
         case deleteRow(IndexPath)
+        case filtered(String?)
     }
     
     public enum Mutation {
@@ -57,6 +58,7 @@ public final class BookmarkReactor: Reactor {
         case showMyPageViewController
         case showPillDetailViewController(PillInfoModel)
         case error(Error)
+        case skip
     }
     
     public struct State {
@@ -69,6 +71,8 @@ public final class BookmarkReactor: Reactor {
     private let flowAction: BookmarkFlowAction
     private let bookmarkUseCase: BookmarkUseCase
     private var pills: [PillInfoModel] = []
+    private var filteredPills: [PillInfoModel] = []
+    private var isFiltered: Bool = false
     
     public init(bookmarkUseCase: BookmarkUseCase,
                 flowAction: BookmarkFlowAction) {
@@ -127,6 +131,19 @@ public final class BookmarkReactor: Reactor {
             return Disposables.create()
         }
     }
+    
+    private func filterBookmark(_ filterText: String?) -> Observable<Mutation> {
+        guard let filterText = filterText,
+              filterText.count > 0 else {
+            isFiltered = false
+            return .just(.loadedBookmarkPills)
+        }
+        isFiltered = true
+        filteredPills = pills.filter { pill in
+            pill.medicineName.contains(filterText)
+        }
+        return .just(.loadedBookmarkPills)
+    }
 }
 
 // MARK: - React
@@ -146,6 +163,8 @@ extension BookmarkReactor {
             return deleteBookmark(indexPath)
         case let .deleteRow(indexPath):
             return deleteBookmark(indexPath)
+        case let .filtered(filterText):
+            return filterBookmark(filterText)
         }
     }
     
@@ -153,7 +172,7 @@ extension BookmarkReactor {
         var state = state
         switch mutation {
         case .loadedBookmarkPills:
-            state.bookmarkPillCount = pills.count
+            state.bookmarkPillCount = isFiltered ? filteredPills.count : pills.count
         case .showSearchShapeViewController:
             showSearchShapeViewController()
         case .showMyPageViewController:
@@ -162,6 +181,8 @@ extension BookmarkReactor {
             showPillDetailViewController(pillInfo)
         case let .error(error):
             state.alertContent = handle(error)
+        case .skip:
+            break
         }
         return state
     }
@@ -170,11 +191,12 @@ extension BookmarkReactor {
 // MARK: - BookmarkAdapter DataSource
 extension BookmarkReactor: BookmarkAdapterDataSource {
     public func numberOfRows(in: Int) -> Int {
-        return pills.count
+        return isFiltered ? filteredPills.count : pills.count
     }
     
     public func cellForRow(at indexPath: IndexPath) -> PillInfoModel {
-        return pills[indexPath.row]
+        
+        return isFiltered ? filteredPills[indexPath.row] : pills[indexPath.row]
     }
 }
 
