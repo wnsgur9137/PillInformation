@@ -60,7 +60,7 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
         case .shape: headerView.configure(Constants.SearchShape.shape)
         case .line: headerView.configure(Constants.SearchShape.line)
         case .code: headerView.configure(Constants.SearchShape.print)
-        case .searchView: headerView.configure(Constants.SearchShape.selectedShape)
+        case .searchView: return .init()
         }
         
         return headerView
