@@ -30,13 +30,6 @@ public final class PolicyViewController: UIViewController, View {
         return label
     }()
     
-    private let backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(Constants.Image.xmark, for: .normal)
-        button.tintColor = Constants.Color.systemLabel
-        return button
-    }()
-    
     private var webView: WKWebView?
     
     // MARK: - Properties
@@ -160,7 +153,6 @@ extension PolicyViewController {
             return
         }
         view.addSubview(rootContainerView)
-        view.addSubview(backButton)
         
         rootContainerView.flex.define { rootView in
             rootView.addItem(titleLabel)
@@ -173,7 +165,5 @@ extension PolicyViewController {
     private func setupSubviewLayout() {
         rootContainerView.pin.all(view.safeAreaInsets)
         rootContainerView.flex.layout()
-        
-        backButton.pin.top(24.0).right(24.0).width(48.0).height(48.0)
     }
 }
