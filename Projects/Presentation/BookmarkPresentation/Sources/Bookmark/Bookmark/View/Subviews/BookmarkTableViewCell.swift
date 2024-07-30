@@ -146,7 +146,7 @@ final class BookmarkTableViewCell: UITableViewCell {
 extension BookmarkTableViewCell {
     private func setupLayout() {
         contentView.addSubview(rootContainerView)
-//        contentView.addSubview(utilView)
+        contentView.addSubview(utilView)
         
         rootContainerView.flex
             .alignItems(.center)
@@ -168,34 +168,31 @@ extension BookmarkTableViewCell {
                     .marginRight(18.0)
                     .justifyContent(.center)
                     .define { labelStack in
-                        labelStack.addItem()
-                            .direction(.row)
-                            .define {
-                                $0.addItem(titleLabel)
-                                    .width(85%)
-                                $0.addItem(utilView)
-                                    .direction(.row)
-                                    .alignItems(.center)
-                                    .justifyContent(.end)
-                                    .define { utilView in
-                                        utilView.addItem().grow(1.0)
-                                        utilView.addItem(hitsImageView)
-                                            .height(24.0)
-                                            .width(24.0)
-                                        utilView.addItem(hitsLabel)
-                                            .marginLeft(4.0)
-                                            .height(40.0)
-                                        utilView.addItem(bookmarkButton)
-                                            .marginLeft(12.0)
-                                            .width(48.0)
-                                            .height(48.0)
-                                    }
-                            }
+                        labelStack.addItem(titleLabel)
+                            .width(85%)
                         labelStack.addItem().define {
                             $0.addItem(classLabel)
                             $0.addItem(etcOtcLabel)
                         }
                     }
+        }
+        
+        utilView.flex
+            .direction(.row)
+            .alignItems(.center)
+            .justifyContent(.end)
+            .define { view in
+                view.addItem().grow(1.0)
+                view.addItem(hitsImageView)
+                    .height(24.0)
+                    .width(24.0)
+                view.addItem(hitsLabel)
+                    .marginLeft(4.0)
+                    .height(40.0)
+                view.addItem(bookmarkButton)
+                    .marginLeft(12.0)
+                    .width(48.0)
+                    .height(48.0)
         }
     }
     
@@ -206,6 +203,13 @@ extension BookmarkTableViewCell {
             .right(12.0)
             .bottom()
         rootContainerView.flex.layout()
+        
+        utilView.pin
+            .top(8.0)
+            .left(40%)
+            .right(12.0)
+            .height(48.0)
+        utilView.flex.layout()
     }
 }
 
