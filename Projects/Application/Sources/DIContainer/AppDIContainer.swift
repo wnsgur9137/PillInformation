@@ -15,12 +15,15 @@ final class AppDIContainer {
     
     lazy var networkManager: NetworkManager = {
         return NetworkManager(withTest: false,
-                                           withFail: false,
-                                           baseURL: appConfiguration.apiBaseURL)
+                              withFail: false,
+                              baseURL: appConfiguration.apiBaseURL)
     }()
     
     func makeMainSceneDIContainer() -> MainSceneDIContainer {
-        let dependencies = MainSceneDIContainer.Dependencies(networkManager: networkManager)
+        let dependencies = MainSceneDIContainer.Dependencies(
+            networkManager: networkManager,
+            isShowAlarmPrivacy: appConfiguration.isShowAlarmPrivacy
+        )
         return MainSceneDIContainer(dependencies: dependencies)
     }
     
@@ -30,7 +33,10 @@ final class AppDIContainer {
     }
     
     func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
-        let dependencies = OnboardingSceneDIContainer.Dependencies(networkManager: networkManager)
+        let dependencies = OnboardingSceneDIContainer.Dependencies(
+            networkManager: networkManager,
+            isShowAlarmPrivacy: appConfiguration.isShowAlarmPrivacy
+        )
         return OnboardingSceneDIContainer(dependencies: dependencies)
     }
 }

@@ -45,6 +45,7 @@ private struct PolicyChecked {
 
 public final class OnboardingPolicyReactor: Reactor {
     public enum Action {
+        case viewDidLoad
         case didTapBackwardButton
         case didTapAgePolicy
         case didTapAppPolicy
@@ -58,6 +59,7 @@ public final class OnboardingPolicyReactor: Reactor {
     }
     
     public enum Mutation {
+        case checkShowAlarmPrivacy(Bool)
         case dismiss
         case checkAgePolicy
         case checkAppPolicy
@@ -70,6 +72,7 @@ public final class OnboardingPolicyReactor: Reactor {
     }
     
     public struct State {
+        var isShowAlarmPrivacy: Bool?
         var isCheckedAgePolicy: Bool = false
         var isCheckedAppPolicy: Bool = false
         var isCheckedPrivacyPolicy: Bool = false
@@ -86,11 +89,14 @@ public final class OnboardingPolicyReactor: Reactor {
     
     private var policies = PolicyChecked()
     private var user: UserModel?
+    private let isShowAlarmPrivacy: Bool
     
     public init(user: UserModel?,
+                isShowAlarmPrivacy: Bool,
                 userUseCase: UserUseCase,
                 flowAction: OnboardingPolicyFlowAction) {
         self.user = user
+        self.isShowAlarmPrivacy = isShowAlarmPrivacy
         self.userUseCase = userUseCase
         self.flowAction = flowAction
     }
@@ -161,7 +167,10 @@ public final class OnboardingPolicyReactor: Reactor {
 extension OnboardingPolicyReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .didTapBackwardButton: 
+        case .viewDidLoad:
+            return .just(.checkShowAlarmPrivacy(isShowAlarmPrivacy))
+            
+        case .didTapBackwardButton:
             return .just(.dismiss)
             
         case .didTapAgePolicy: 
@@ -197,8 +206,8 @@ extension OnboardingPolicyReactor {
             policies.agePolicy = true
             policies.appPolicy = true
             policies.privacyPolicy = true
-            policies.daytimeNotiPolicy = true
-            policies.nighttimeNotiPolicy = true
+            policies.daytimeNotiPolicy = isShowAlarmPrivacy
+            policies.nighttimeNotiPolicy = isShowAlarmPrivacy
             return updateUserPolicies()
         }
     }
@@ -206,7 +215,10 @@ extension OnboardingPolicyReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .dismiss: 
+        case let .checkShowAlarmPrivacy(isShowAlarmPrivacy):
+            state.isShowAlarmPrivacy = isShowAlarmPrivacy
+            
+        case .dismiss:
             popViewController()
             return state
             

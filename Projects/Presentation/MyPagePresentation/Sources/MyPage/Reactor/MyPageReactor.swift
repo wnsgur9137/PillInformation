@@ -18,6 +18,29 @@ public enum PolicyType {
     case privacy
 }
 
+fileprivate enum MyPageSection: Int, CaseIterable {
+    case appSetting
+    case appInfo
+    case accountOption
+    
+    enum AppSettingRows: Int, CaseIterable {
+        case localization
+        case screenMode
+        case appAlarm
+    }
+    
+    enum AppInfoRows: Int, CaseIterable {
+        case appPolicy
+        case privacyPolicy
+        case opensourceLicence
+    }
+    
+    enum AccountOptionRows: Int, CaseIterable {
+        case signout
+        case withdrawal
+    }
+}
+
 public struct MyPageFlowAction {
     let showAlarmSettingViewController: () -> Void
     let showPolicyViewController: (PolicyType) -> Void
@@ -53,7 +76,9 @@ public final class MyPageReactor: Reactor {
     
     public enum Mutation {
         case reloadTableViewData
-        case showAlarmViewController
+        case showLocalizationSettingViewController
+        case showScreenModeSettingViewController
+        case showAlarmSettingViewController
         case showAppPolicyViewController
         case showPrivacyPolicyViewController
         case showOpensourceLicenseViewController
@@ -67,60 +92,46 @@ public final class MyPageReactor: Reactor {
         @Pulse var dismiss: Bool?
     }
     
-    private enum MyPageSection: Int {
-        case appSetting = 0
-        case appInfo = 1
-        case accountOption = 2
-    }
-    
     public var initialState = State()
     private var isSigned: Bool = false
+    private let isShowAlarmSettingView: Bool
     private let userUseCase: UserUseCase
     private let flowAction: MyPageFlowAction
     private let disposeBag = DisposeBag()
     
-    private var appSettingTitles: [String] = [
-        Constants.MyPage.appAlarmSetting,
-    ]
-    
-    private var appInfoTitles: [String] = [
-        Constants.MyPage.appPolicy,
-        Constants.MyPage.privacyPolicy,
-        Constants.MyPage.opensourceLicense
-    ]
-    
-    private var accountOptionTitles: [String] = [
-        Constants.MyPage.signout,
-        Constants.MyPage.withdrawal
-    ]
-    
     public init(with useCase: UserUseCase,
+                isShowAlarmSettingView: Bool,
                 flowAction: MyPageFlowAction) {
         self.userUseCase = useCase
+        self.isShowAlarmSettingView = isShowAlarmSettingView
         self.flowAction = flowAction
     }
     
     private func didSelectRow(_ indexPath: IndexPath) -> Observable<Mutation>? {
-        switch indexPath.section {
-        case MyPageSection.appSetting.rawValue:
-            return .just(.showAlarmViewController)
-            
-        case MyPageSection.appInfo.rawValue:
-            switch indexPath.row {
-            case 0: return .just(.showAppPolicyViewController)
-            case 1: return .just(.showPrivacyPolicyViewController)
-            case 2: return .just(.showOpensourceLicenseViewController)
-            default: break
+        guard let section = MyPageSection(rawValue: indexPath.section) else { return nil }
+        switch section {
+        case .appSetting:
+            guard let row = MyPageSection.AppSettingRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .localization: return .just(.showLocalizationSettingViewController)
+            case .screenMode: return .just(.showScreenModeSettingViewController)
+            case .appAlarm: return .just(.showAlarmSettingViewController)
             }
             
-        case MyPageSection.accountOption.rawValue:
-            switch indexPath.row {
-            case 0: return .just(.showAlert(.signout))
-            case 1: return .just(.showAlert(.withdrawal))
-            default: break
+        case .appInfo:
+            guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .appPolicy: return .just(.showAppPolicyViewController)
+            case .privacyPolicy: return .just(.showPrivacyPolicyViewController)
+            case .opensourceLicence: return .just(.showOpensourceLicenseViewController)
             }
             
-        default: break
+        case .accountOption:
+            guard let row = MyPageSection.AccountOptionRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .signout: return .just(.showAlert(.signout))
+            case .withdrawal: return .just(.showAlert(.withdrawal))
+            }
         }
         return nil
     }
@@ -196,7 +207,13 @@ extension MyPageReactor {
         case .reloadTableViewData:
             state.reloadTableViewData = Void()
             
-        case .showAlarmViewController:
+        case .showLocalizationSettingViewController:
+            showLocalizationSettingViewController()
+            
+        case .showScreenModeSettingViewController:
+            showScreenModeSettingViewController()
+            
+        case .showAlarmSettingViewController:
             showAlarmViewController()
             
         case .showAppPolicyViewController:
@@ -221,6 +238,14 @@ extension MyPageReactor {
 
 // MARK: - Flow Action
 extension MyPageReactor {
+    private func showLocalizationSettingViewController() {
+        
+    }
+    
+    private func showScreenModeSettingViewController() {
+        
+    }
+    
     private func showAlarmViewController() {
         flowAction.showAlarmSettingViewController()
     }
@@ -241,33 +266,56 @@ extension MyPageReactor {
 // MARK: - MyPageAdapter TableViewDataSource
 extension MyPageReactor: MyPageAdapterDataSource {
     public func numberOfSections() -> Int {
-        return isSigned ? 3 : 2
+        let allCasesCount = MyPageSection.allCases.count
+        return isSigned ? allCasesCount : allCasesCount - 1
     }
     
     public func numberOfRows(in section: Int) -> Int {
+        guard let section = MyPageSection(rawValue: section) else { return 0 }
         switch section {
-        case 0: return appSettingTitles.count
-        case 1: return appInfoTitles.count
-        case 2: return accountOptionTitles.count
-        default: return 0
+        case .appSetting:
+            var count = MyPageSection.AppSettingRows.allCases.count
+            return isShowAlarmSettingView ? count : count - 1
+        case .appInfo: return MyPageSection.AppInfoRows.allCases.count
+        case .accountOption: return MyPageSection.AccountOptionRows.allCases.count
         }
     }
     
-    public func cellForRow(at indexPath: IndexPath) -> String {
-        switch indexPath.section {
-        case 0: return appSettingTitles[indexPath.row]
-        case 1: return appInfoTitles[indexPath.row]
-        case 2: return accountOptionTitles[indexPath.row]
-        default: return ""
+    public func cellForRow(at indexPath: IndexPath) -> String? {
+        guard let section = MyPageSection(rawValue: indexPath.section) else { return nil }
+        switch section {
+        case .appSetting:
+            guard let row = MyPageSection.AppSettingRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .localization: return Constants.MyPage.localizationSetting
+            case .screenMode: return Constants.MyPage.screenModeSetting
+            case .appAlarm: return Constants.MyPage.appAlarmSetting
+            }
+            
+        case .appInfo:
+            guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .appPolicy: return Constants.MyPage.appPolicy
+            case .privacyPolicy: return Constants.MyPage.privacyPolicy
+            case .opensourceLicence: return Constants.MyPage.opensourceLicense
+            }
+            
+        case .accountOption:
+            guard let row = MyPageSection.AccountOptionRows(rawValue: indexPath.row) else { break }
+            switch row {
+            case .signout: return Constants.MyPage.signout
+            case .withdrawal: return Constants.MyPage.withdrawal
+            }
         }
+        return nil
     }
     
-    public func cellForRowTest(at indexPath: IndexPath) -> Observable<String> {
-        switch indexPath.section {
-        case 0: return .of(appSettingTitles[indexPath.row])
-        case 1: return .of(appInfoTitles[indexPath.row])
-        case 2: return .of(accountOptionTitles[indexPath.row])
-        default: return .of("")
+    public func titleForHeader(in section: Int) -> String? {
+        guard let section = MyPageSection(rawValue: section) else { return nil }
+        switch section {
+        case .appSetting: return Constants.MyPage.setting
+        case .appInfo: return Constants.MyPage.policy
+        case .accountOption: return Constants.MyPage.userInfo
         }
     }
 }

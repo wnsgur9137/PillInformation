@@ -19,6 +19,8 @@ extension Constants {
 
 extension Constants.MyPage {
     static let myPage = "마이페이지"
+    static let localizationSetting: String = "언어 설정"
+    static let screenModeSetting: String = "화면 설정"
     static let appAlarmSetting: String = "앱 알림 설정"
     static let appPolicy: String = "이용약관"
     static let privacyPolicy: String = "개인정보 처리방침"
