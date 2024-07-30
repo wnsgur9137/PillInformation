@@ -123,6 +123,11 @@ public final class OnboardingPolicyViewController: UIViewController, View {
 // MARK: - Binding
 extension OnboardingPolicyViewController {
     private func bindAction(_ reactor: OnboardingPolicyReactor) {
+        rx.viewDidLoad
+            .map { Reactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         backwardButton.rx.tap
             .map { Reactor.Action.didTapBackwardButton }
             .bind(to: reactor.action)
@@ -188,6 +193,18 @@ extension OnboardingPolicyViewController {
     }
     
     private func bindState(_ reactor: OnboardingPolicyReactor) {
+        reactor.state
+            .map { $0.isShowAlarmPrivacy }
+            .filter { $0 != nil }
+            .distinctUntilChanged()
+            .bind(onNext: { [weak self] isShowAlarmPrivacy in
+                guard let isShowAlarmPrivacy = isShowAlarmPrivacy else { return }
+                self?.daytimeNotiPolicyCheckBoxView.flex.display(isShowAlarmPrivacy ? .flex : .none)
+                self?.nighttimeNotiPolicyCheckBoxView.flex.display(isShowAlarmPrivacy ? .flex : .none)
+                self?.rootFlexContainerView.flex.layout()
+            })
+            .disposed(by: disposeBag)
+        
         reactor.state
             .map { $0.isCheckedAgePolicy }
             .bind(onNext: { [weak self] isChecked in

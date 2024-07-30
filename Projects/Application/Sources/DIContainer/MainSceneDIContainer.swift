@@ -20,6 +20,7 @@ final class MainSceneDIContainer {
     
     struct Dependencies {
         let networkManager: NetworkManager
+        let isShowAlarmPrivacy: Bool
     }
     
     let dependencies: Dependencies
@@ -45,7 +46,8 @@ final class MainSceneDIContainer {
             networkManager: dependencies.networkManager
         ))
         self.myPageDIContainer = MyPageDIContainer(dependencies: .init(
-            networkManager: dependencies.networkManager
+            networkManager: dependencies.networkManager,
+            isShowAlarmPrivacy: dependencies.isShowAlarmPrivacy
         ))
     }
     

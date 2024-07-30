@@ -14,7 +14,8 @@ import BasePresentation
 public protocol MyPageAdapterDataSource: AnyObject {
     func numberOfSections() -> Int
     func numberOfRows(in section: Int) -> Int
-    func cellForRow(at indexPath: IndexPath) -> String
+    func cellForRow(at indexPath: IndexPath) -> String?
+    func titleForHeader(in section: Int) -> String?
 }
 
 public final class MyPageAdapter: NSObject {
@@ -50,12 +51,7 @@ extension MyPageAdapter: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0: return Constants.MyPage.setting
-        case 1: return Constants.MyPage.policy
-        case 2: return Constants.MyPage.userInfo
-        default: return nil
-        }
+        return dataSource?.titleForHeader(in: section)
     }
 }
 

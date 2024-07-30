@@ -17,9 +17,12 @@ import MyPagePresentation
 public final class MyPageDIContainer {
     public struct Dependencies {
         let networkManager: NetworkManager
+        let isShowAlarmPriavcy: Bool
         
-        public init(networkManager: NetworkManager) {
+        public init(networkManager: NetworkManager,
+                    isShowAlarmPrivacy: Bool) {
             self.networkManager = networkManager
+            self.isShowAlarmPriavcy = isShowAlarmPrivacy
         }
     }
     
@@ -36,7 +39,7 @@ extension MyPageDIContainer: MyPageCoordinatorDependencies {
         return DefaultUserMyPageUseCase(with: makeUserMyPageRepository())
     }
     private func makeMyPageReactor(flowAction: MyPageFlowAction) -> MyPageReactor {
-        return MyPageReactor(with: makeUserUseCase(), flowAction: flowAction)
+        return MyPageReactor(with: makeUserUseCase(), isShowAlarmSettingView: dependencies.isShowAlarmPriavcy, flowAction: flowAction)
     }
     public func makeMyPageViewController(flowAction: MyPageFlowAction) -> MyPageViewController {
         return MyPageViewController.create(with: makeMyPageReactor(flowAction: flowAction))

@@ -18,9 +18,12 @@ import OnboardingPresentation
 public final class OnboardingDIContainer {
     public struct Dependencies {
         let networkManager: NetworkManager
+        let isShowAlarmPrivacy: Bool
         
-        public init(networkManager: NetworkManager) {
+        public init(networkManager: NetworkManager,
+                    isShowAlarmPrivacy: Bool) {
             self.networkManager = networkManager
+            self.isShowAlarmPrivacy = isShowAlarmPrivacy
         }
     }
     
@@ -70,6 +73,7 @@ extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     public func makeOnboardingPolicyReactor(user: UserModel?,
                                             flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
         return OnboardingPolicyReactor(user: user,
+                                       isShowAlarmPrivacy: dependencies.isShowAlarmPrivacy,
                                        userUseCase: makeUserUseCase(),
                                        flowAction: flowAction)
     }
