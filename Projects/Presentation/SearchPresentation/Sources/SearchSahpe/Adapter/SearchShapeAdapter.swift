@@ -130,6 +130,8 @@ extension SearchShapeAdapter: UICollectionViewDelegateFlowLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard let section = SearchShapeCollectionViewSecton(rawValue: section),
+              section != .searchView else { return .init() }
         return CGSize(width: collectionView.bounds.width, height: 80.0)
     }
     
