@@ -22,3 +22,5 @@
 |lottie|4.4.1|UILibraries|
 |AcknowList|3.2.0|UILibraries|
 |kakaoSDK|master|KakaoLibraries|
+
+
