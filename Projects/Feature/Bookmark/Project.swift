@@ -15,5 +15,6 @@ let project: Project = .project(
         .Project.Feature.Data.Bookmark,
         .Project.Feature.Domain.Bookmark,
         .Project.Feature.Presentation.Bookmark
-    ]
+    ],
+    hasDemoApp: true
 )
