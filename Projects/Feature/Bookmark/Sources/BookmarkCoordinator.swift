@@ -33,14 +33,14 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     public var type: CoordinatorType { .bookmark }
     
     private let dependencies: BookmarkCoordinatorDependencies
-    private let tabDependencies: BookmarkTabDependencies
+    private let tabDependencies: BookmarkTabDependencies?
     private weak var bookmarkViewController: BookmarkViewController?
     private weak var pillDetailViewController: SearchDetailViewControllerProtocol?
     private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: BookmarkCoordinatorDependencies,
-                tabDependencies: BookmarkTabDependencies) {
+                tabDependencies: BookmarkTabDependencies?) {
         self.navigationController = navigationController
         self.dependencies = dependencies
         self.tabDependencies = tabDependencies
@@ -62,7 +62,7 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     }
     
     private func showSearchShapeViewController() {
-        tabDependencies.showShapeSearchViewController()
+        tabDependencies?.showShapeSearchViewController()
     }
     
     private func showPillDetailViewController(pillInfo: PillInfoModel) {
@@ -86,7 +86,7 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     }
     
     public func showMyPageViewController() {
-        tabDependencies.showMyPageViewController()
+        tabDependencies?.showMyPageViewController()
     }
     
     private func popViewController(animated: Bool) {
