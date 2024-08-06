@@ -31,9 +31,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = navigationController
         let healthDIContainer = healthDemoAppDIContainer.makeHealthDIContainer()
         healthCoordinator = DefaultHealthCoordinator(
-            tabBarController: nil,
             navigationController: navigationController,
-            dependencies: healthDIContainer
+            dependencies: healthDIContainer,
+            tabDependencies: nil
         )
         healthCoordinator?.start()
         window?.makeKeyAndVisible()

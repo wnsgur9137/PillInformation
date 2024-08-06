@@ -12,7 +12,7 @@ import BasePresentation
 import HealthPresentation
 
 public protocol HealthCoordinatorDependencies {
-    
+    func makeHealthViewController(flowAction: HealthFlowAction) -> HealthViewController
 }
 
 public protocol HealthTabDependencies {
@@ -32,6 +32,8 @@ public final class DefaultHealthCoordinator: HealthCoordinator {
     private let dependencies: HealthCoordinatorDependencies
     private let tabDependencies: HealthTabDependencies?
     
+    private weak var healthViewController: HealthViewController?
+    
     public init(navigationController: UINavigationController,
                 dependencies: HealthCoordinatorDependencies,
                 tabDependencies: HealthTabDependencies?) {
@@ -45,6 +47,9 @@ public final class DefaultHealthCoordinator: HealthCoordinator {
     }
     
     public func showHealthViewController() {
-        
+        let flowAction = HealthFlowAction()
+        let viewController = dependencies.makeHealthViewController(flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: false)
+        healthViewController = viewController
     }
 }

@@ -14,6 +14,7 @@ import Search
 import Alarm
 import MyPage
 import BasePresentation
+import Health
 
 public protocol TabBarCoordinator: Coordinator {
     var tabBarController: UITabBarController? { get set }
@@ -31,6 +32,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     private let searchDIContainer: SearchDIContainer
     private let alarmDIContainer: AlarmDIContainer
     private let myPageDIContainer: MyPageDIContainer
+    private let healthDIContainer: HealthDIContainer
     
     public weak var navigationController: UINavigationController?
     public weak var tabBarController: UITabBarController?
@@ -41,6 +43,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
                 searchDIContainer: SearchDIContainer,
                 alarmDIContainer: AlarmDIContainer,
                 myPageDIContainer: MyPageDIContainer,
+                healthDIContainer: HealthDIContainer,
                 isShowAlarmTab: Bool) {
         self.tabBarController = tabBarController
         self.homeDIContainer = homeDIContainer
@@ -48,6 +51,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         self.searchDIContainer = searchDIContainer
         self.alarmDIContainer = alarmDIContainer
         self.myPageDIContainer = myPageDIContainer
+        self.healthDIContainer = healthDIContainer
         self.isShowAlarmTab = isShowAlarmTab
     }
     
@@ -56,6 +60,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         if isShowAlarmTab {
             pages.append(.alarm)
         }
+        pages.append(.health)
         let controllers: [UINavigationController] = pages.map { getNavigationController($0) }
         prepareTabBarController(with: controllers)
     }
@@ -105,6 +110,16 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
             alarmCoordinator.finishDelegate = self
             alarmCoordinator.start()
             childCoordinators.append(alarmCoordinator)
+            
+        case .health:
+            let healthCoordinator = DefaultHealthCoordinator(
+                navigationController: navigationController,
+                dependencies: healthDIContainer,
+                tabDependencies: self
+            )
+            healthCoordinator.finishDelegate = self
+            healthCoordinator.start()
+            childCoordinators.append(healthCoordinator)
         }
         
         return navigationController
@@ -183,5 +198,10 @@ extension DefaultTabBarCoordinator: BookmarkTabDependencies {
 
 // MARK: - SearchDependencies
 extension DefaultTabBarCoordinator: SearchTabDependencies {
+    
+}
+
+// MARK: - HealthDependencies
+extension DefaultTabBarCoordinator: HealthTabDependencies {
     
 }

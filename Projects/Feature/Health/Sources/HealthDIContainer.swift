@@ -30,3 +30,12 @@ public final class HealthDIContainer {
         self.dependencies = dependencies
     }
 }
+
+extension HealthDIContainer: HealthCoordinatorDependencies {
+    private func makeHealthReactor(flowAction: HealthFlowAction) -> HealthReactor {
+        return HealthReactor(flowAction: flowAction)
+    }
+    public func makeHealthViewController(flowAction: HealthFlowAction) -> HealthViewController {
+        return HealthViewController.create(with: makeHealthReactor(flowAction: flowAction))
+    }
+}
