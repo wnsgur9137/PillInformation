@@ -53,6 +53,7 @@ public extension TargetDependency.Project.Feature {
     static let Search: TargetDependency = .project(layer: .Feature, name: "Search")
     static let Alarm: TargetDependency = .project(layer: .Feature, name: "Alarm")
     static let MyPage: TargetDependency = .project(layer: .Feature, name: "MyPage")
+    static let Health: TargetDependency = .project(layer: .Feature, name: "Health")
 }
 
 // MARK: - Presentation
@@ -65,6 +66,7 @@ public extension TargetDependency.Project.Feature.Presentation {
     static let Search: TargetDependency = .project(layer: .Presentation, name: "SearchPresentation")
     static let Alarm: TargetDependency = .project(layer: .Presentation, name: "AlarmPresentation")
     static let MyPage: TargetDependency = .project(layer: .Presentation, name: "MyPagePresentation")
+    static let Health: TargetDependency = .project(layer: .Presentation, name: "HealthPresentation")
 }
 
 // MARK: - Domain
@@ -77,6 +79,7 @@ public extension TargetDependency.Project.Feature.Domain {
     static let Search: TargetDependency = .project(layer: .Domain, name: "SearchDomain")
     static let Alarm: TargetDependency = .project(layer: .Domain, name: "AlarmDomain")
     static let MyPage: TargetDependency = .project(layer: .Domain, name: "MyPageDomain")
+    static let Health: TargetDependency = .project(layer: .Domain, name: "HealthDomain")
 }
 
 // MARK: - Data
@@ -89,6 +92,7 @@ public extension TargetDependency.Project.Feature.Data {
     static let Search: TargetDependency = .project(layer: .Data, name: "SearchData")
     static let Alarm: TargetDependency = .project(layer: .Data, name: "AlarmData")
     static let MyPage: TargetDependency = .project(layer: .Data, name: "MyPageData")
+    static let Health: TargetDependency = .project(layer: .Data, name: "HealthData")
 }
 
 // MARK: - Infrastructure

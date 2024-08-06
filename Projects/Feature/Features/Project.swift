@@ -19,5 +19,6 @@ let project: Project = .project(
         .Project.Feature.Alarm,
         .Project.Feature.Search,
         .Project.Feature.MyPage,
+        .Project.Feature.Health
     ]
 )
