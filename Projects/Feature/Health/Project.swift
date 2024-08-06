@@ -15,5 +15,6 @@ let project: Project = .project(
         .Project.Feature.Data.Health,
         .Project.Feature.Domain.Health,
         .Project.Feature.Presentation.Health
-    ]
+    ],
+    hasDemoApp: true
 )
