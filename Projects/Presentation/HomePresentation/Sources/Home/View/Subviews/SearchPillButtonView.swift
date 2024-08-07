@@ -19,7 +19,7 @@ final class SearchPillButtonView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = Constants.Color.systemLabel
+        imageView.tintColor = Constants.Color.label
         return imageView
     }()
     
@@ -65,7 +65,7 @@ extension SearchPillButtonView {
             .height(120.0)
             .padding(4.0)
             .cornerRadius(16.0)
-            .border(2.0, Constants.Color.systemLabel)
+            .border(2.0, Constants.Color.label)
             .alignItems(.center)
             .define { rootView in
                 rootView.addItem(imageView)

@@ -24,4 +24,6 @@ public protocol UserUseCase {
     func getEmailToKeychain() -> Single<String>
     func updateEmailToKeychain(_ email: String) -> Single<String>
     func deleteEmailFromKeychain() -> Single<Void>
+    
+    func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool>
 }

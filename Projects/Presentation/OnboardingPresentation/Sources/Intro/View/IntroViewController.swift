@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 import FlexLayout
 import PinLayout
+import Lottie
 
 import BasePresentation
 
@@ -21,15 +22,16 @@ public final class IntroViewController: UIViewController, View {
     
     private let rootContainerView = UIView()
     
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
+    private let animationView: LottieAnimationView = {
+        let view = LottieAnimationView(.pill)
+        view.loopMode = .loop
+        return view
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.appName
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(48.0)
         return label
     }()
@@ -37,7 +39,7 @@ public final class IntroViewController: UIViewController, View {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Onboarding.appDescription
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(24.0)
         return label
     }()
@@ -63,6 +65,7 @@ public final class IntroViewController: UIViewController, View {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
         setupLayout()
+        animationView.play()
     }
     
     public override func viewDidLayoutSubviews() {
@@ -98,11 +101,10 @@ extension IntroViewController {
         rootContainerView.flex
             .alignItems(.center)
             .define { rootView in
-                rootView.addItem(imageView)
+                rootView.addItem(animationView)
                     .marginTop(25.0%)
                     .width(50.0%)
                     .aspectRatio(1.0)
-                    .backgroundColor(.gray)
                 rootView.addItem(titleLabel)
                     .marginTop(12.0)
                 rootView.addItem(descriptionLabel)

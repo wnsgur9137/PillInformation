@@ -18,7 +18,7 @@ final class AlarmSettingTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(24.0)
         label.numberOfLines = 0
         return label

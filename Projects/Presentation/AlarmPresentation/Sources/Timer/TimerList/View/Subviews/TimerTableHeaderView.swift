@@ -20,7 +20,7 @@ final class TimerTableHeaderView: UITableViewHeaderFooterView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.TimerViewController.timer
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(24.0)
         return label
     }()

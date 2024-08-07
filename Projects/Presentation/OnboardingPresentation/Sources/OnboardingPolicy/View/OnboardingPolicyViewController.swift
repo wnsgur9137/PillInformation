@@ -25,16 +25,16 @@ public final class OnboardingPolicyViewController: UIViewController, View {
         let button = UIButton()
         button.setImage(Constants.OnboardingPolicy.Image.backward, for: .normal)
         button.setTitle(Constants.OnboardingPolicy.backward, for: .normal)
-        button.setTitleColor(Constants.Color.systemLabel, for: .normal)
+        button.setTitleColor(Constants.Color.label, for: .normal)
         button.titleLabel?.font = Constants.Font.suiteMedium(20.0)
-        button.tintColor = Constants.Color.systemLabel
+        button.tintColor = Constants.Color.label
         return button
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.OnboardingPolicy.policyTitle
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(36.0)
         label.numberOfLines = 0
         return label
@@ -43,7 +43,7 @@ public final class OnboardingPolicyViewController: UIViewController, View {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.OnboardingPolicy.policyDescription
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         label.numberOfLines = 0
         return label
@@ -199,6 +199,8 @@ extension OnboardingPolicyViewController {
             .distinctUntilChanged()
             .bind(onNext: { [weak self] isShowAlarmPrivacy in
                 guard let isShowAlarmPrivacy = isShowAlarmPrivacy else { return }
+                self?.daytimeNotiPolicyCheckBoxView.isHidden = !isShowAlarmPrivacy
+                self?.nighttimeNotiPolicyCheckBoxView.isHidden = !isShowAlarmPrivacy
                 self?.daytimeNotiPolicyCheckBoxView.flex.display(isShowAlarmPrivacy ? .flex : .none)
                 self?.nighttimeNotiPolicyCheckBoxView.flex.display(isShowAlarmPrivacy ? .flex : .none)
                 self?.rootFlexContainerView.flex.layout()
@@ -275,9 +277,7 @@ extension OnboardingPolicyViewController {
                 rootView.addItem()
                     .direction(.row)
                     .justifyContent(.start)
-                    .marginTop(30.0)
-                    .marginLeft(10.0)
-                    .marginRight(10.0)
+                    .margin(30.0, 10.0, 0, 10.0)
                     .height(.largeButton)
                     .define { buttonStack in
                         buttonStack.addItem(confirmButton)

@@ -65,4 +65,8 @@ extension DefaultUserUseCase {
     public func deleteEmailFromKeychain() -> Single<Void> {
         return userRepository.deleteEmailFromKeychain()
     }
+    
+    public func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
+        return userRepository.setIsShownOnboarding(isShown)
+    }
 }

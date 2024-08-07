@@ -27,7 +27,7 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.suiteBold(32.0)
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.numberOfLines = 0
         return label
     }()
@@ -42,7 +42,7 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let contentLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.suiteRegular(18.0)
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.numberOfLines = 0
         return label
     }()
@@ -51,7 +51,7 @@ public final class NoticeDetailViewController: UIViewController, View {
         let label = UILabel()
         label.text = Constants.NoticeDetailViewController.otherNotice
         label.font = Constants.Font.suiteMedium(18.0)
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         return label
     }()
     
@@ -174,7 +174,7 @@ extension NoticeDetailViewController {
             
             contentView.addItem()
                 .height(1.0)
-                .backgroundColor(Constants.Color.systemLabel)
+                .backgroundColor(Constants.Color.label)
                 .margin(defaultMargin)
             
             contentView.addItem(contentLabel)
@@ -182,7 +182,7 @@ extension NoticeDetailViewController {
             
             contentView.addItem()
                 .height(1.0)
-                .backgroundColor(Constants.Color.systemLabel)
+                .backgroundColor(Constants.Color.label)
                 .margin(defaultMargin)
             
             contentView.addItem(otherNoticeLabel)
@@ -194,7 +194,7 @@ extension NoticeDetailViewController {
             
             contentView.addItem()
                 .height(1.0)
-                .backgroundColor(Constants.Color.systemLabel)
+                .backgroundColor(Constants.Color.label)
                 .margin(defaultMargin)
             
             contentView.addItem(footerView)

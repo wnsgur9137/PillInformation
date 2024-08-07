@@ -24,7 +24,7 @@ public final class SearchShapeViewController: UIViewController, View {
     private let selectedShapeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.SearchShape.selectedShape
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(22.0)
         return label
     }()
@@ -34,7 +34,7 @@ public final class SearchShapeViewController: UIViewController, View {
     
     private let selectedShapeContentLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()

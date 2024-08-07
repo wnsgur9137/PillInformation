@@ -39,7 +39,7 @@ public final class AlarmDetailViewController: UIViewController, View {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.AlarmViewController.title
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(28.0)
         return label
     }()

@@ -16,8 +16,11 @@ import OnboardingDomain
 public struct DefaultUserOnboardingRepository: UserOnboardingRepository {
     
     private let userRepository: UserRepository
+    private let userDefault: UserDefaults
     
-    public init(userRepository: UserRepository) {
+    public init(userDefault: UserDefaults = UserDefaults.standard,
+                userRepository: UserRepository) {
+        self.userDefault = userDefault
         self.userRepository = userRepository
     }
 }
@@ -68,5 +71,15 @@ extension DefaultUserOnboardingRepository {
     
     public func deleteEmailFromKeychain() -> Single<Void> {
         return userRepository.deleteEmailFromKeychain()
+    }
+    
+    public func setIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
+        let key = UserDefaultKey.isShownOnboarding.rawValue
+        userDefault.set(isShown, forKey: key)
+        return .create { single in
+            let isShown = self.userDefault.bool(forKey: key)
+            single(.success(isShown))
+            return Disposables.create()
+        }
     }
 }

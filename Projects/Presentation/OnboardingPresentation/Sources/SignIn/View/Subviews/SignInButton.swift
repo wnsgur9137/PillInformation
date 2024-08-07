@@ -18,7 +18,7 @@ final class SignInButton: UIButton {
         
         var backGroundColor: UIColor {
             switch self {
-            case .apple: return Constants.Color.systemLabel
+            case .apple: return Constants.Color.label
             case .kakao: return Constants.Color.kakaoYellow
             }
         }

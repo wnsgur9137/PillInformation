@@ -21,7 +21,7 @@ final class TimerTableViewCell: UITableViewCell {
     private let remainingTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00"
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(32.0)
         return label
     }()
@@ -29,7 +29,7 @@ final class TimerTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "OOOOOO"
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(18.0)
         return label
     }()
@@ -37,7 +37,7 @@ final class TimerTableViewCell: UITableViewCell {
     private let setTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "15:00"
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(16.0)
         return label
     }()

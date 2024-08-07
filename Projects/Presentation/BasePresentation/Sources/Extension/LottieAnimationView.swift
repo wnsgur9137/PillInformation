@@ -12,6 +12,7 @@ import Lottie
 public enum LottieAnimationType: String {
     case loading = "loadingAnimation"
     case emptyResult = "emptyAnimation"
+    case pill = "pillAnimation"
 }
 
 extension LottieAnimationView {

@@ -19,7 +19,7 @@ final class EmptyTimerView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.AlarmViewController.emptyAlarm
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()
@@ -27,7 +27,7 @@ final class EmptyTimerView: UIView {
     private let addTimerButton: UIButton = {
         let button = UIButton()
         button.setTitle(Constants.AlarmViewController.addTimer, for: .normal)
-        button.setTitleColor(Constants.Color.systemLabel, for: .normal)
+        button.setTitleColor(Constants.Color.label, for: .normal)
         button.titleLabel?.font = Constants.Font.suiteBold(14.0)
         return button
     }()

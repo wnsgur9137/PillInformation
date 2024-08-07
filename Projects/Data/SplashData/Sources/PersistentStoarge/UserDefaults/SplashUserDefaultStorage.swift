@@ -9,28 +9,18 @@
 import Foundation
 import RxSwift
 
+import BaseData
+
 public final class SplashUserDefaultStorage {
     
-    private let userDefault = UserDefaults.standard
+    private let userDefault: UserDefaults
     
-    private let isShownOnboardingKey: String = "isShownOnboarding"
-    
-    public init() {
-        
-    }
-    
-    func setIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
-        let key = isShownOnboardingKey
-        userDefault.set(isShown, forKey: key)
-        return .create { single in
-            let isShwon = self.userDefault.bool(forKey: key)
-            single(.success(isShown))
-            return Disposables.create()
-        }
+    public init(userDefault: UserDefaults = UserDefaults.standard) {
+        self.userDefault = userDefault
     }
     
     func isShownOnbarding() -> Single<Bool> {
-        let key = isShownOnboardingKey
+        let key = UserDefaultKey.isShownOnboarding.rawValue
         return .create { single in
             let isShown = self.userDefault.bool(forKey: key)
             single(.success(isShown))

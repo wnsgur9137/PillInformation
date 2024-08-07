@@ -32,7 +32,7 @@ public final class NavigationView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.appName
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(24.0)
         return label
     }()
@@ -48,7 +48,7 @@ public final class NavigationView: UIView {
     public lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setTitle(Constants.NavigationView.search, for: .normal)
-        button.setTitleColor(Constants.Color.systemLabel, for: .normal)
+        button.setTitleColor(Constants.Color.label, for: .normal)
         return button
     }()
     

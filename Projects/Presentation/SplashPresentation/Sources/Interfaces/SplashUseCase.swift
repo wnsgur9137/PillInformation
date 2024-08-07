@@ -17,6 +17,5 @@ public protocol SplashUseCase {
     func fetchUserStorage() -> Single<UserModel>
     func updateUserStorage(_ user: UserModel) -> Single<UserModel>
     func deleteUserStorage() -> Single<Void>
-    func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool>
     func isShownOnboarding() -> Single<Bool>
 }

@@ -19,7 +19,7 @@ final class BookmarkHeaderView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Bookmark.bookmark
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(32.0)
         return label
     }()
@@ -87,14 +87,14 @@ extension BookmarkHeaderView {
         addSubview(rootContainerView)
         
         rootContainerView.flex
-            .backgroundColor(Constants.Color.systemBackground)
+            .backgroundColor(Constants.Color.background)
             .padding(10.0, 24.0, 10.0, 24.0)
             .define { rootView in
                 rootView.addItem(titleLabel)
                     .margin(12.0)
                 
                 rootView.addItem()
-                    .backgroundColor(Constants.Color.systemBackground)
+                    .backgroundColor(Constants.Color.background)
                     .border(0.5, Constants.Color.systemLightGray)
                     .cornerRadius(12.0)
                     .height(48.0)

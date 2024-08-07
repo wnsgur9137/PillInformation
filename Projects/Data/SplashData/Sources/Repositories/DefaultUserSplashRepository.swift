@@ -47,10 +47,6 @@ extension DefaultUserSplashRepository {
         return userRepository.deleteStorage()
     }
     
-    public func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
-        return splashUserDefaultStoarge.setIsShownOnboarding(isShown)
-    }
-    
     public func isShownOnboarding() -> Single<Bool> {
         return splashUserDefaultStoarge.isShownOnbarding()
     }

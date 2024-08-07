@@ -28,7 +28,7 @@ final class PolicyCheckboxView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(20.0)
         label.isUserInteractionEnabled = false
         return label
@@ -37,7 +37,7 @@ final class PolicyCheckboxView: UIView {
     let seeMoreButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.OnboardingPolicy.Image.forward, for: .normal)
-        button.tintColor = Constants.Color.systemLabel
+        button.tintColor = Constants.Color.label
         return button
     }()
     

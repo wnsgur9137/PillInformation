@@ -17,7 +17,7 @@ public enum OutlineButtonStyle {
     var enableBorderColor: CGColor {
         switch self {
         case .defaultLarge, .defaultMedium: 
-            return Constants.Color.systemLabel.cgColor
+            return Constants.Color.label.cgColor
         case .primaryLarge, .primaryMedium: 
             return Constants.Color.systemBlue.cgColor
         }
@@ -30,7 +30,7 @@ public enum OutlineButtonStyle {
     var selectedBorderColor: CGColor {
         switch self {
         case .defaultLarge, .defaultMedium: 
-            return Constants.Color.systemLabel.cgColor
+            return Constants.Color.label.cgColor
         case .primaryLarge, .primaryMedium: 
             return Constants.Color.buttonHighlightBlue.cgColor
         }
@@ -47,7 +47,7 @@ public enum OutlineButtonStyle {
     var enableTitleColor: UIColor {
         switch self {
         case .defaultLarge, .defaultMedium: 
-            return Constants.Color.systemLabel
+            return Constants.Color.label
         case .primaryLarge, .primaryMedium: 
             return Constants.Color.systemBlue
         }

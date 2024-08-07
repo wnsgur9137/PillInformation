@@ -24,12 +24,7 @@ public final class BookmarkViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let emptyBookmarkView = EmptyBookmarkView()
-    
-    private let bookmarkTableView: UITableView = {
-        let tableView = UITableView()
-        return tableView
-    }()
-    
+    private let bookmarkTableView = UITableView()
     private let footerView = FooterView()
     
     // MARK: - Properties
@@ -47,7 +42,7 @@ public final class BookmarkViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             adapter = BookmarkAdapter(tableView: bookmarkTableView,
@@ -119,6 +114,7 @@ extension BookmarkViewController {
             .subscribe(onNext: { [weak self] count in
                 guard let self = self,
                       let count = count else { return }
+                self.bookmarkTableView.flex.display(count == 0 ? .none : .flex)
                 let height = (bookmarkTableViewHeight * CGFloat(count)) + 30
                 self.bookmarkTableView.flex.height(height)
                 self.bookmarkTableView.reloadData()
@@ -175,15 +171,18 @@ extension BookmarkViewController {
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        contentView.flex.define { contentView in
-            contentView.addItem(bookmarkTableView)
-                .minHeight(40.0)
-            contentView.addItem(emptyBookmarkView)
-                .minHeight(50%)
-                .display(.none)
-            contentView.addItem(footerView)
-                .marginTop(24.0)
-        }
+        contentView.flex
+            .backgroundColor(Constants.Color.background)
+            .define { contentView in
+                contentView.addItem(bookmarkTableView)
+                    .minHeight(40.0)
+                    .backgroundColor(Constants.Color.background)
+                contentView.addItem(emptyBookmarkView)
+                    .minHeight(50%)
+                    .display(.none)
+                contentView.addItem(footerView)
+                    .marginTop(24.0)
+            }
     }
     
     private func setupSubviewLayout() {

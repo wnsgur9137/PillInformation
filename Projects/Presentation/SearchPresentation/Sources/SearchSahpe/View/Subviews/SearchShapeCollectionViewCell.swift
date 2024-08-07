@@ -23,7 +23,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = Constants.Font.suiteSemiBold(18.0)
         label.textAlignment = .center
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         return label
     }()
     
@@ -31,14 +31,14 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = Constants.Font.suiteMedium(16.0)
         label.textAlignment = .center
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         return label
     }()
     
     private let selectedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "checkmark")
-        imageView.tintColor = Constants.Color.systemLabel
+        imageView.tintColor = Constants.Color.label
         imageView.isHidden = true
         return imageView
     }()
@@ -53,7 +53,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private var titleLabelColor: UIColor = Constants.Color.systemLabel {
+    private var titleLabelColor: UIColor = Constants.Color.label {
         didSet {
             selectedImageView.tintColor = titleLabelColor
         }
@@ -219,7 +219,7 @@ extension SearchShapeCollectionViewCell {
             titleLabelColor = Constants.Color.systemWhite
         case .null:
             backgroundColor = Constants.Color.systemBackground
-            titleLabelColor = Constants.Color.systemLabel
+            titleLabelColor = Constants.Color.label
         }
         
         rootContainerView.backgroundColor = backgroundColor
@@ -247,7 +247,7 @@ extension SearchShapeCollectionViewCell {
         addSubview(rootContainerView)
         rootContainerView.addSubview(selectedImageView)
         rootContainerView.flex
-            .border(0.5, Constants.Color.systemLabel)
+            .border(0.5, Constants.Color.label)
             .cornerRadius(24.0)
             .alignItems(.center)
             .justifyContent(.center)

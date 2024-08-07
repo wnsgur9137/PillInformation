@@ -32,7 +32,7 @@ public final class HomeViewController: UIViewController, View {
     private let recommendPillLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.recommendPills
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(32.0)
         return label
     }()
@@ -50,7 +50,7 @@ public final class HomeViewController: UIViewController, View {
     private let noticeLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.HomeViewController.notice
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(32.0)
         return label
     }()
