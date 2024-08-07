@@ -67,7 +67,9 @@ public let defaultInfoPlist: [String: Plist.Value] = [
         "UIInterfaceOrientationLandscapeLeft",
         "UIInterfaceOrientationLandscapeRight"
     ],
-    "NSPhotoLibraryAddUsageDescription": "Test"
+    "NSPhotoLibraryAddUsageDescription": "Test",
+    "NSHealthUpdateUsageDescription": "건강 데이터를 업데이트 하기 위해 필요합니다.",
+    "NSHealthShareUsageDescription": "건강 데이터를 앱에서 보여주기 위해 필요합니다."
 ]
 
 extension Project {

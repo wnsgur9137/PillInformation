@@ -15,6 +15,7 @@ import Bookmark
 import Search
 import Alarm
 import MyPage
+import Health
 
 final class MainSceneDIContainer {
     
@@ -30,6 +31,7 @@ final class MainSceneDIContainer {
     private let searchDIContainer: SearchDIContainer
     private let alarmDIContainer: AlarmDIContainer
     private let myPageDIContainer: MyPageDIContainer
+    private let healthDIContainer: HealthDIContainer
 
     init(dependencies: Dependencies) {
         self.dependencies = dependencies
@@ -49,6 +51,9 @@ final class MainSceneDIContainer {
             networkManager: dependencies.networkManager,
             isShowAlarmPrivacy: dependencies.isShowAlarmPrivacy
         ))
+        self.healthDIContainer = HealthDIContainer(dependencies: .init(
+            networkManager: dependencies.networkManager
+        ))
     }
     
     func makeTabBarCoordinator(tabBarController: UITabBarController,
@@ -60,6 +65,7 @@ final class MainSceneDIContainer {
             searchDIContainer: searchDIContainer,
             alarmDIContainer: alarmDIContainer,
             myPageDIContainer: myPageDIContainer,
+            healthDIContainer: healthDIContainer,
             isShowAlarmTab: isShowAlarmTab
         )
     }
