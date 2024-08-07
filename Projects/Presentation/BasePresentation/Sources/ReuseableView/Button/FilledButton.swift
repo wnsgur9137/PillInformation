@@ -201,7 +201,7 @@ public final class FilledButton: UIButton {
     private func setupButton() {
         backgroundColor = buttonBackgroundColor
         titleLabel?.numberOfLines = 0
-        layer.cornerRadius = .largeButton / 2
+        layer.cornerRadius = self.style == .large ? .largeButton / 2 : .mediumButton / 2
         layer.borderWidth = 1.0
         layer.borderColor = borderColor
         self.buttonShadow = isEnabled

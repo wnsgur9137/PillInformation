@@ -21,6 +21,16 @@ public final class HealthViewController: UIViewController, View {
     
     private let rootContainerView = UIView()
     
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Health"
+        label.textColor = Constants.Color.systemLabel
+        label.font = Constants.Font.suiteBold(32.0)
+        return label
+    }()
+    
+    private let healthAuthView = HealthAuthView()
+    
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
@@ -52,11 +62,20 @@ public final class HealthViewController: UIViewController, View {
 // MARK: - Binding
 extension HealthViewController {
     private func bindAction(_ reactor: HealthReactor) {
-        
+        healthAuthView.authButton.rx.tap
+            .map { Reactor.Action.didTapAuthButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HealthReactor) {
-        
+        reactor.state
+            .map { $0.isHealthAuthenticationRequired }
+            .asDriver(onErrorDriveWith: .never())
+            .drive(onNext: { isAuth in
+                
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -66,12 +85,16 @@ extension HealthViewController {
         view.addSubview(rootContainerView)
         
         rootContainerView.flex.define { rootView in
-            
+            rootView.addItem(titleLabel)
+                .margin(10.0, 24.0, 10.0, 24.0)
+            rootView.addItem(healthAuthView)
+                .backgroundColor(Constants.Color.systemYellow.withAlphaComponent(0.3))
+                .margin(0, 24.0, 10.0, 24.0)
         }
     }
     
     private func setupSubviewLayout() {
-        rootContainerView.pin.all()
+        rootContainerView.pin.all(view.safeAreaInsets)
         rootContainerView.flex.layout()
     }
 }
