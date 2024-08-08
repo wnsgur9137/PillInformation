@@ -97,8 +97,9 @@ extension HomeViewControllerV1 {
         view.addSubview(headerView)
         view.addSubview(rootContainerView)
         
+        view.flex.backgroundColor(Constants.Color.lightGreen.withAlphaComponent(0.1))
+        
         headerView.flex
-            .backgroundColor(.green.withAlphaComponent(0.1))
             .define { headerView in
                 headerView.addItem()
                     .margin(12.0, 24.0, 10.0, 24.0)
@@ -117,9 +118,11 @@ extension HomeViewControllerV1 {
 //                    .margin(12.0, 0, 12.0, 0)
             }
         
-        rootContainerView.flex.define { rootView in
-            rootView.addItem(homeTabViewController.view)
-        }
+        rootContainerView.flex
+            .backgroundColor(Constants.Color.background)
+            .define { rootView in
+                rootView.addItem(homeTabViewController.view)
+            }
     }
     
     private func setupSubviewLayout() {

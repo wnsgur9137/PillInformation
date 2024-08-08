@@ -20,13 +20,21 @@ import BasePresentation
 public final class HomeTabViewController: TabmanViewController {
     
     private let viewControllers: [UIViewController]
+    private let tabTitles: [String]
+    private let isNewTabs: [Bool]
     
-    public static func create(tabViewControllers: [UIViewController]) -> HomeTabViewController {
-        return HomeTabViewController(tabViewControllers: tabViewControllers)
+    let isScrolled: PublishRelay<Float> = .init()
+    
+    public static func create(tabViewControllers: [UIViewController],
+                              tabTitles: [String],
+                              isNewTabs: [Bool]) -> HomeTabViewController {
+        return HomeTabViewController(tabViewControllers: tabViewControllers, tabTitles: tabTitles, isNewTabs: isNewTabs)
     }
     
-    private init(tabViewControllers: [UIViewController]) {
+    private init(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) {
         self.viewControllers = tabViewControllers
+        self.tabTitles = tabTitles
+        self.isNewTabs = isNewTabs
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,6 +46,7 @@ public final class HomeTabViewController: TabmanViewController {
         super.viewDidLoad()
         dataSource = self
         setupTabBar()
+        setupScrollRelay()
     }
     
     private func setupTabBar() {
@@ -49,13 +58,17 @@ public final class HomeTabViewController: TabmanViewController {
         bar.layout.interButtonSpacing = 20.0
         bar.backgroundView.style = .blur(style: .regular)
         bar.buttons.customize { button in
-            button.tintColor = Constants.Color.systemBlack
+            button.tintColor = Constants.Color.label
             button.selectedTintColor = Constants.Color.buttonHighlightBlue
         }
         bar.indicator.tintColor = Constants.Color.buttonHighlightBlue
         bar.indicator.overscrollBehavior = .compress
 //        addBar(bar, dataSource: self, at: .top)
         addBar(bar, dataSource: self, at: .top)
+    }
+    
+    private func setupScrollRelay() {
+        
     }
 }
 
@@ -78,8 +91,8 @@ extension HomeTabViewController: PageboyViewControllerDataSource {
 extension HomeTabViewController: TMBarDataSource {
     public func barItem(for bar: any TMBar, at index: Int) -> any TMBarItemable {
         let item = TMBarItem(title: "")
-        item.title = "Page \(index)"
-        item.badgeValue = "New"
+        item.title = tabTitles[index]
+        item.badgeValue = isNewTabs[index] ? "New" : nil
         return item
     }
 }

@@ -89,8 +89,8 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     public func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController {
         return HomeNoticeViewController.create(with: makeHomeNoticeReactor(flowAction: flowAction))
     }
-    public func makeHomeTabViewController(tabViewControllers: [UIViewController]) -> HomeTabViewController {
-        return HomeTabViewController.create(tabViewControllers: tabViewControllers)
+    public func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController {
+        return HomeTabViewController.create(tabViewControllers: tabViewControllers, tabTitles: tabTitles, isNewTabs: isNewTabs)
     }
     public func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewControllerV1 {
         return HomeViewControllerV1.create(with: makeHomeReactor(flowAction: flowAction), homeTabViewController: homeTabViewController)

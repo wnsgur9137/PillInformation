@@ -13,7 +13,7 @@ import BasePresentation
 
 public protocol HomeCoordinatorDependencies {
     func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewControllerV1
-    func makeHomeTabViewController(tabViewControllers: [UIViewController]) -> HomeTabViewController
+    func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController
     func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController
     func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController
     
@@ -60,22 +60,22 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         showHomeViewControllerV1()
     }
     
-    private func makeHomeRecommendViewController() -> HomeRecommendViewController {
-        let flowAction = HomeRecommendFlowAction()
-        return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
-    }
-    
-    private func makeHomeNoticeViewController() -> HomeNoticeViewController {
-        let flowAction = HomeNoticeFlowAction()
-        return dependencies.makeHomeNoticeViewController(flowAction: flowAction)
+    private func makeHomeTab(_ page: HomeTabBarPage) -> UIViewController {
+        switch page {
+        case .recommend:
+            let flowAction = HomeRecommendFlowAction()
+            return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
+            
+        case .notice:
+            let flowAction = HomeNoticeFlowAction()
+            return dependencies.makeHomeNoticeViewController(flowAction: flowAction)
+        }
     }
     
     private func makeHomeTabViewController() -> HomeTabViewController {
-        let tabViewControllers = [
-            makeHomeRecommendViewController(),
-            makeHomeNoticeViewController()
-        ]
-        return dependencies.makeHomeTabViewController(tabViewControllers: tabViewControllers)
+        let pages: [HomeTabBarPage] = [.recommend, .notice]
+        let controllers: [UIViewController] = pages.map { makeHomeTab($0) }
+        return dependencies.makeHomeTabViewController(tabViewControllers: controllers, tabTitles: pages.map { $0.title() }, isNewTabs: pages.map { $0.isNew() })
     }
     
     public func showHomeViewControllerV1() {
