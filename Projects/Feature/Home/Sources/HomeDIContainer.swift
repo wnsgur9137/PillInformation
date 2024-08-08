@@ -6,7 +6,7 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 import NetworkInfra
 import HomeData
@@ -71,11 +71,29 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     }
     
     // Home
-    public func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
+    private func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
         return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
     }
     public func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController {
         return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
+    }
+    private func makeHomeRecommendReactor(flowAction: HomeRecommendFlowAction) -> HomeRecommendReactor {
+        return HomeRecommendReactor(flowAction: flowAction)
+    }
+    public func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController {
+        return HomeRecommendViewController.create(with: makeHomeRecommendReactor(flowAction: flowAction))
+    }
+    private func makeHomeNoticeReactor(flowAction: HomeNoticeFlowAction) -> HomeNoticeReactor {
+        return HomeNoticeReactor(flowAction: flowAction)
+    }
+    public func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController {
+        return HomeNoticeViewController.create(with: makeHomeNoticeReactor(flowAction: flowAction))
+    }
+    public func makeHomeTabViewController(tabViewControllers: [UIViewController]) -> HomeTabViewController {
+        return HomeTabViewController.create(tabViewControllers: tabViewControllers)
+    }
+    public func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewControllerV1 {
+        return HomeViewControllerV1.create(with: makeHomeReactor(flowAction: flowAction), homeTabViewController: homeTabViewController)
     }
     
     // NoticeDetail
