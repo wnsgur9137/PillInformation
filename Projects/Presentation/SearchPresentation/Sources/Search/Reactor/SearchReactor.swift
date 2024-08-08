@@ -22,14 +22,11 @@ enum SearchError: String, Error {
 
 public struct SearchFlowAction {
     let showSearchResultViewController: (String) -> Void
-    let showMyPageViewController: () -> Void
     let showSearchShapeViewController: () -> Void
     
     public init(showSearchResultViewController: @escaping (String) -> Void,
-                showMyPageViewController: @escaping () -> Void,
                 showSearchShapeViewController: @escaping () -> Void) {
         self.showSearchResultViewController = showSearchResultViewController
-        self.showMyPageViewController = showMyPageViewController
         self.showSearchShapeViewController = showSearchShapeViewController
     }
 }
@@ -41,7 +38,6 @@ public final class SearchReactor: Reactor {
         case loadRecommendKeyword
         case loadRecentKeyword
         case search(String?)
-        case didTapUserButton
         case didSelectCollectionViewItem(IndexPath)
         case didSelectTableViewRow(IndexPath)
         case didSelectTableViewDeleteButton(IndexPath)
@@ -54,7 +50,6 @@ public final class SearchReactor: Reactor {
         case loadedRecommendKeyword
         case loadedRecentKeyword
         case showSearchResultViewController(String)
-        case showMyPageViewController
         case showDeleteAllRecentKeywordAlert
         case showSearchShapeViewController
         case error(Error)
@@ -198,9 +193,6 @@ extension SearchReactor {
             saveRecentKeyword(keyword)
             return .just(.showSearchResultViewController(keyword))
             
-        case .didTapUserButton:
-            return .just(.showMyPageViewController)
-            
         case let .didSelectCollectionViewItem(indexPath):
             let keyword = recommendKeywords[indexPath.item]
             saveRecentKeyword(keyword)
@@ -245,9 +237,6 @@ extension SearchReactor {
         case .showDeleteAllRecentKeywordAlert:
             state.showDeleteAllRecentKeywordAlert = Void()
             
-        case .showMyPageViewController:
-            showMyPageViewController()
-            
         case .showSearchShapeViewController:
             showSearchShapeViewController()
         }
@@ -259,10 +248,6 @@ extension SearchReactor {
 extension SearchReactor {
     private func showSearchResultViewController(keyword: String) {
         flowAction.showSearchResultViewController(keyword)
-    }
-    
-    private func showMyPageViewController() {
-        flowAction.showMyPageViewController()
     }
     
     private func showSearchShapeViewController() {

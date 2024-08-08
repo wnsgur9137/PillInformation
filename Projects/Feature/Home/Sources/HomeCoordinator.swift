@@ -108,8 +108,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
             showNoticeDetailViewController: showNoticeDetailViewController,
             popViewController: popViewController,
             showSearchTab: tabDependencies.showSearchTab,
-            showSearchShapeViewController: showShapeSearchViewController,
-            showMyPageViewController: showMyPageViewController
+            showSearchShapeViewController: showShapeSearchViewController
         )
         let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)

@@ -17,16 +17,13 @@ public struct SearchResultFlowAction {
     let popViewController: (Bool) -> Void
     let showSearchDetailViewController: (PillInfoModel) -> Void
     let showSearchShapeViewController: () -> Void
-    let showMyPageViewController: () -> Void
     
     public init(popViewController: @escaping (Bool) -> Void,
                 showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
-                showSearchShapeViewController: @escaping () -> Void,
-                showMyPageViewController: @escaping () -> Void) {
+                showSearchShapeViewController: @escaping () -> Void) {
         self.popViewController = popViewController
         self.showSearchDetailViewController = showSearchDetailViewController
         self.showSearchShapeViewController = showSearchShapeViewController
-        self.showMyPageViewController = showMyPageViewController
     }
 }
 
@@ -41,7 +38,6 @@ public final class SearchResultReactor: Reactor {
         case didSelectItem(IndexPath)
         case didSelectBookmark(IndexPath)
         case didTapSearchShapeButton
-        case didTapUserButton
     }
     
     public enum Mutation {
@@ -52,7 +48,6 @@ public final class SearchResultReactor: Reactor {
         case error(Error)
         case showSearchDetail(PillInfoModel)
         case showSearchShapeViewController
-        case showMyPageViewController
         case skip
     }
     
@@ -264,9 +259,6 @@ extension SearchResultReactor {
             
         case .didTapSearchShapeButton:
             return .just(.showSearchShapeViewController)
-            
-        case .didTapUserButton:
-            return .just(.showMyPageViewController)
         }
     }
     
@@ -298,9 +290,6 @@ extension SearchResultReactor {
         case .showSearchShapeViewController:
             showSearchShapeViewController()
             
-        case .showMyPageViewController:
-            showMyPageViewController()
-            
         case .skip:
             break
         }
@@ -320,10 +309,6 @@ extension SearchResultReactor {
     
     private func showSearchShapeViewController() {
         flowAction.showSearchShapeViewController()
-    }
-    
-    private func showMyPageViewController() {
-        flowAction.showMyPageViewController()
     }
 }
 

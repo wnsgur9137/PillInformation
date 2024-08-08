@@ -24,6 +24,23 @@ public final class HomeViewControllerV1: UIViewController, View {
     private let rootContainerView = UIView()
     private let headerView = UIView()
     
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Home"
+        label.textColor = Constants.Color.label
+        label.font = Constants.Font.suiteBold(32.0)
+        return label
+    }()
+    private let userButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Image.personFill, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFill
+        button.tintColor = Constants.Color.systemWhite
+        button.backgroundColor = Constants.Color.systemBlue
+        return button
+    }()
+    private let serachTextField = SearchTextFieldView()
+    
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
@@ -79,13 +96,35 @@ extension HomeViewControllerV1 {
     private func setupLayout() {
         view.addSubview(headerView)
         view.addSubview(rootContainerView)
+        
+        headerView.flex
+            .backgroundColor(.green.withAlphaComponent(0.1))
+            .define { headerView in
+                headerView.addItem()
+                    .margin(12.0, 24.0, 10.0, 24.0)
+                    .direction(.row)
+                    .define {
+                        $0.addItem(titleLabel)
+                        $0.addItem()
+                            .grow(1.0)
+                        $0.addItem(userButton)
+                            .width(48.0)
+                            .height(48.0)
+                            .cornerRadius(12.0)
+                    }
+                headerView.addItem(serachTextField)
+                    .marginBottom(12.0)
+//                    .margin(12.0, 0, 12.0, 0)
+            }
+        
         rootContainerView.flex.define { rootView in
             rootView.addItem(homeTabViewController.view)
         }
     }
     
     private func setupSubviewLayout() {
-        headerView.pin.top().left().right().height(120.0)
+        headerView.pin.top(view.safeAreaInsets.top).left().right()
+        headerView.flex.layout(mode: .adjustHeight)
         rootContainerView.pin
             .top(to: headerView.edge.bottom)
             .left(view.safeAreaInsets.left)
