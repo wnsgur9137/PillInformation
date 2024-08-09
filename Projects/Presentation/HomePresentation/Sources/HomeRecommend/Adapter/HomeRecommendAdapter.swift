@@ -15,6 +15,7 @@ import BasePresentation
 public protocol HomeRecommendDataSource: AnyObject {
     func numberOfSection() -> Int
     func numberOfItems(in section: Int) -> Int
+    func shortcutButtonSectionItem(at indexPath: IndexPath) -> HomeShortcutButtonInfo?
     func recommendSecitonItem(at indexPath: IndexPath) -> PillInfoModel?
     func headerTitle(at section: Int) -> String?
 }
@@ -34,8 +35,9 @@ public final class HomeRecommendAdapter: NSObject {
                 collectionView: UICollectionView,
                 dataSource: HomeRecommendDataSource,
                 delegate: HomeRecommendDelegate) {
-        collectionView.register(RecommendCollectionViewCell.self, forCellWithReuseIdentifier: RecommendCollectionViewCell.identifier)
         collectionView.register(HomeRecommendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeRecommendHeaderView.identifier)
+        collectionView.register(ShortcutButtonCell.self, forCellWithReuseIdentifier: ShortcutButtonCell.identifier)
+        collectionView.register(RecommendCollectionViewCell.self, forCellWithReuseIdentifier: RecommendCollectionViewCell.identifier)
         self.scrollView = scrollView
         self.collectionView = collectionView
         self.dataSource = dataSource
@@ -45,6 +47,20 @@ public final class HomeRecommendAdapter: NSObject {
         self.scrollView.delegate = self
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+    }
+    
+    private func makeShortcutCell(_ collectionView: UICollectionView, indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShortcutButtonCell.identifier, for: indexPath) as? ShortcutButtonCell else { return .init() }
+        guard let buttonInfo = dataSource?.shortcutButtonSectionItem(at: indexPath) else { return cell }
+        cell.configure(buttonInfo)
+        return cell
+    }
+    
+    private func makeRecommendCell(_ collectionView: UICollectionView, indexPath: IndexPath) -> RecommendCollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCollectionViewCell.identifier, for: indexPath) as? RecommendCollectionViewCell else { return .init() }
+        guard let data = dataSource?.recommendSecitonItem(at: indexPath) else { return cell }
+        cell.configure(data)
+        return cell
     }
 }
 
@@ -67,10 +83,11 @@ extension HomeRecommendAdapter: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCollectionViewCell.identifier, for: indexPath) as? RecommendCollectionViewCell else { return .init() }
-        guard let data = dataSource?.recommendSecitonItem(at: indexPath) else { return cell }
-        cell.configure(data)
-        return cell
+        guard let section = HomeRecommendSection(rawValue: indexPath.section) else { return .init() }
+        switch section {
+        case .shortcut: return makeShortcutCell(collectionView, indexPath: indexPath)
+        case .pills: return makeRecommendCell(collectionView, indexPath: indexPath)
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -85,6 +102,7 @@ extension HomeRecommendAdapter: UICollectionViewDataSource {
 // MARK: - UICollectionView Delegate
 extension HomeRecommendAdapter: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("didSelectItem: \(indexPath)")
         didSelectItem.accept(indexPath)
     }
 }

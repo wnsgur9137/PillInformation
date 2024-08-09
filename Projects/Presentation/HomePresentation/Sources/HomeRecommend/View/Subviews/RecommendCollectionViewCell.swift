@@ -16,6 +16,7 @@ import BasePresentation
 final class RecommendCollectionViewCell: UICollectionViewCell {
     
     private let rootContainerView = UIView()
+    private let labelView = UIView()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -69,26 +70,28 @@ extension RecommendCollectionViewCell {
         addSubview(rootContainerView)
         
         rootContainerView.flex
+            .direction(.row)
             .cornerRadius(24.0)
             .margin(12.0)
             .backgroundColor(Constants.Color.background)
             .alignItems(.center)
             .define { rootView in
                 rootView.addItem(imageView)
-                    .marginTop(12.0)
-                    .marginBottom(12.0)
-                    .width(90%)
+                    .margin(12.0)
+                    .height(70%)
                     .aspectRatio(1.0)
                     .cornerRadius(12.0)
-                rootView.addItem()
+                rootView.addItem(labelView)
                     .margin(8.0)
-                    .width(90%)
                     .grow(1.0)
-                    .define { labelStack in
-                        labelStack.addItem(titleLabel)
-                        labelStack.addItem(classLabel)
-                    }
             }
+        
+        labelView.flex
+            .shrink(1.0)
+            .define { labelView in
+            labelView.addItem(titleLabel)
+            labelView.addItem(classLabel)
+        }
     }
     
     private func setupSubviewLayout() {

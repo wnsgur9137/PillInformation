@@ -39,6 +39,7 @@ extension Constants {
         public static let background: UIColor = UIColor(named: "background") ?? UIColor()
         public static let buttonHighlightBlue: UIColor = UIColor(hex: "#0055AA") ?? .systemBlue
         public static let textFieldBackground: UIColor = UIColor(hex: "#DDDDDD") ?? .lightGray
+        public static let skyBlue: UIColor = UIColor(hex: "#E6F2FF") ?? .systemBlue
         
         public static let label: UIColor = {
             return UIColor { (traits) -> UIColor in

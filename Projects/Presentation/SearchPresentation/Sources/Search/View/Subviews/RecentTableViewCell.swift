@@ -74,6 +74,7 @@ extension RecentTableViewCell {
                 rootView.addItem(titleLabel)
                     .width(85%)
                     .minHeight(40.0)
+                    .shrink(1.0)
                 rootView.addItem(deleteButton)
                     .width(15%)
         }

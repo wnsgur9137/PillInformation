@@ -14,34 +14,65 @@ import BasePresentation
 
 public struct HomeRecommendFlowAction {
     let showSearchDetailViewController: (PillInfoModel) -> Void
+    let showSearchTab: () -> Void
+    let showShapeSearchViewController: () -> Void
     
-    public init(showSearchDetailViewController: @escaping (PillInfoModel) -> Void) {
+    public init(showSearchDetailViewController: @escaping (PillInfoModel) -> Void,
+                showSearchTab: @escaping () -> Void,
+                showShapeSearchViewController: @escaping () -> Void) {
         self.showSearchDetailViewController = showSearchDetailViewController
+        self.showSearchTab = showSearchTab
+        self.showShapeSearchViewController = showShapeSearchViewController
     }
 }
 
 enum HomeRecommendSection: Int, CaseIterable {
+    case shortcut
     case pills
-    case rank
     
     func title() -> String {
         switch self {
+        case .shortcut: "알약 검색"
         case .pills: "많이 찾는 알약"
-        case .rank: "조회수 순위"
         }
     }
+}
+
+public enum HomeShortcutButtonInfo: Int, CaseIterable {
+    case name
+    case shape
+    
+    func imageString() -> String? {
+        switch self {
+        case .name: return "magnifyingglass.circle.fill"
+        case .shape: return "pills"
+        }
+    }
+    
+    func title() -> String {
+        switch self {
+        case .name: return "이름으로 검색"
+        case .shape: return "모양으로 검색"
+        }
+    }
+}
+
+fileprivate enum HomeRecommendReactorError: Error {
+    case sectionError
 }
 
 public final class HomeRecommendReactor: Reactor {
     public enum Action {
         case loadRecommendPills
-        case didSelectRecommendPills(IndexPath)
+        case didSelectCollecitonViewItem(IndexPath)
     }
     
     public enum Mutation {
         case isLoadedRecommendPills
-        case loadError
-        case showSearchDetail(IndexPath)
+        case error(Error)
+        case showSearchDetail(PillInfoModel)
+        case showSearchTab
+        case showShapeSearch
     }
     
     public struct State {
@@ -71,11 +102,33 @@ public final class HomeRecommendReactor: Reactor {
                     self?.recommendPills = pills
                     observable.onNext(.isLoadedRecommendPills)
                 }, onFailure: { error in
-                    observable.onNext(.loadError)
+                    observable.onNext(.error(error))
                 })
                 .disposed(by: self.disposeBag)
             return Disposables.create()
         }
+    }
+    
+    private func didSelectCollectionViewItem(_ indexPath: IndexPath) -> Observable<Mutation> {
+        guard let section = HomeRecommendSection(rawValue: indexPath.section) else { return .just(.error(HomeRecommendReactorError.sectionError)) }
+        switch section {
+        case .shortcut: return didSelectShortcutButton(indexPath.item)
+        case .pills: return didSelectRecommendPillItem(indexPath.item)
+        }
+    }
+    
+    private func didSelectShortcutButton(_ item: Int) -> Observable<Mutation> {
+        guard let button = HomeShortcutButtonInfo(rawValue: item) else { return .just(.error(HomeRecommendReactorError.sectionError)) }
+        switch button {
+        case .name: return .just(.showSearchTab)
+        case .shape: return .just(.showShapeSearch)
+        }
+    }
+    
+    private func didSelectRecommendPillItem(_ item: Int) -> Observable<Mutation> {
+        guard recommendPills.count >= item else { return .just(.error(HomeRecommendReactorError.sectionError)) }
+        let pillInfo = recommendPills[item]
+        return .just(.showSearchDetail(pillInfo))
     }
 }
 
@@ -85,8 +138,8 @@ extension HomeRecommendReactor {
         switch action {
         case .loadRecommendPills:
             return loadRecommendPills()
-        case let .didSelectRecommendPills(indexPath):
-            return .just(.showSearchDetail(indexPath))
+        case let .didSelectCollecitonViewItem(indexPath):
+            return didSelectCollectionViewItem(indexPath)
         }
     }
     
@@ -95,10 +148,14 @@ extension HomeRecommendReactor {
         switch mutation {
         case .isLoadedRecommendPills:
             state.recommendPillCount = recommendPills.count
-        case .loadError:
+        case let .error(error):
             state.isError = Void()
-        case let .showSearchDetail(indexPath):
-            showSearchDetail(indexPath)
+        case let .showSearchDetail(pillInfo):
+            showSearchDetail(pillInfo)
+        case .showSearchTab:
+            showSearchTab()
+        case .showShapeSearch:
+            showShapeSearchViewController()
         }
         return state
     }
@@ -107,13 +164,22 @@ extension HomeRecommendReactor {
 // MARK: - HomeRecommend DataSource
 extension HomeRecommendReactor: HomeRecommendDataSource {
     public func numberOfSection() -> Int {
-//        return HomeRecommendSection.allCases.count
-        return 1
+        return HomeRecommendSection.allCases.count
     }
     
     public func numberOfItems(in section: Int) -> Int {
-        guard let _ = HomeRecommendSection(rawValue: section) else { return 0 }
-        return recommendPills.count
+        guard let section = HomeRecommendSection(rawValue: section) else { return 0 }
+        switch section {
+        case .shortcut: return HomeShortcutButtonInfo.allCases.count
+        case .pills: return recommendPills.count
+        }
+    }
+    
+    public func shortcutButtonSectionItem(at indexPath: IndexPath) -> HomeShortcutButtonInfo? {
+        guard let section = HomeRecommendSection(rawValue: indexPath.section),
+              section == .shortcut else { return nil }
+        guard let buttonInfo = HomeShortcutButtonInfo(rawValue: indexPath.item) else { return nil }
+        return buttonInfo
     }
     
     public func recommendSecitonItem(at indexPath: IndexPath) -> PillInfoModel? {
@@ -131,9 +197,15 @@ extension HomeRecommendReactor: HomeRecommendDataSource {
 
 // MARK: - Flow action
 extension HomeRecommendReactor {
-    private func showSearchDetail(_ indexPath: IndexPath) {
-        guard recommendPills.count >= indexPath.item else { return }
-        let pill = recommendPills[indexPath.item]
-        flowAction.showSearchDetailViewController(pill)
+    private func showSearchDetail(_ pillInfo: PillInfoModel) {
+        flowAction.showSearchDetailViewController(pillInfo)
+    }
+    
+    private func showSearchTab() {
+        flowAction.showSearchTab()
+    }
+    
+    private func showShapeSearchViewController() {
+        flowAction.showShapeSearchViewController()
     }
 }

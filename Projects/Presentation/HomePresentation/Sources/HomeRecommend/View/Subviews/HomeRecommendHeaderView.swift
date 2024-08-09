@@ -54,7 +54,7 @@ extension HomeRecommendHeaderView {
         
         rootContainerView.flex.define { rootView in
             rootView.addItem(titleLabel)
-                .margin(12.0)
+                .margin(24.0, 24.0, 12.0, 24.0)
         }
     }
     

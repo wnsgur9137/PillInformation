@@ -117,7 +117,7 @@ extension HomeViewController {
         view.addSubview(headerView)
         view.addSubview(rootContainerView)
         
-        view.flex.backgroundColor(Constants.Color.lightGreen.withAlphaComponent(0.1))
+        view.flex.backgroundColor(Constants.Color.skyBlue)
         
         headerView.flex
             .define { headerView in

@@ -87,10 +87,10 @@ extension HomeRecommendViewController {
     private func bindState(_ reactor: HomeRecommendReactor) {
         reactor.pulse(\.$recommendPillCount)
             .bind(onNext: { recommendPillCount in
-                var height = (self.recommendPillCollectionView.bounds.width / 2.1 * 1.6)
-                height = ceil(CGFloat(recommendPillCount) / 2) * height
+                // height = recommendCell height * Cell count + Button section height
+                let height = 180.0 * CGFloat(recommendPillCount) + 200.0
                 self.recommendPillCollectionView.flex.height(height)
-                self.recommendPillCollectionView.reloadSections(.init(integer: HomeRecommendSection.pills.rawValue))
+                self.recommendPillCollectionView.reloadData()
                 self.updateSubviewLayout()
             })
             .disposed(by: disposeBag)
@@ -98,7 +98,7 @@ extension HomeRecommendViewController {
     
     private func bindAdapter(_ reactor: HomeRecommendReactor) {
         adapter?.didSelectItem
-            .map { indexPath in Reactor.Action.didSelectRecommendPills(indexPath)}
+            .map { indexPath in Reactor.Action.didSelectCollecitonViewItem(indexPath)}
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -115,8 +115,8 @@ extension HomeRecommendViewController {
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
             guard let section = HomeRecommendSection(rawValue: section) else { return nil }
             switch section {
+            case .shortcut: return self.makeShortcutSection()
             case .pills: return self.makePillSection()
-            case .rank: return self.makeRankSection()
             }
         }
         return layout
@@ -133,42 +133,45 @@ extension HomeRecommendViewController {
         )
     }
     
-    private func makePillSection() -> NSCollectionLayoutSection {
+    private func makeShortcutSection() -> NSCollectionLayoutSection {
         let headerSupplimentary = makeHeaderBoundaryItem()
         let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(1)
+            widthDimension: .fractionalWidth(1.0 / 2.0),
+            heightDimension: .fractionalHeight(1.0)
         ))
+        item.contentInsets = .init(top: 0, leading: 8.0, bottom: 0, trailing: 8.0)
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1 / 4),
+                widthDimension: .fractionalWidth(1.0),
                 heightDimension: .absolute(120.0)
             ),
             subitems: [item]
         )
-        group.contentInsets = .init(top: 0, leading: 4.0, bottom: 12.0, trailing: 4.0)
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
         section.boundarySupplementaryItems = [headerSupplimentary]
-        section.contentInsets = .init(top: 12.0, leading: 12.0, bottom: 12.0, trailing: 12.0)
+        section.contentInsets = .init(24.0)
+        section.ignoreInset(true)
         return section
     }
     
-    private func makeRankSection() -> NSCollectionLayoutSection {
+    private func makePillSection() -> NSCollectionLayoutSection {
         let headerSupplimentary = makeHeaderBoundaryItem()
         let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(80.0)
+            heightDimension: .absolute(160.0)
         ))
-        let group = NSCollectionLayoutGroup.horizontal(
+        let group = NSCollectionLayoutGroup.vertical(
             layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(120.0)
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(160.0)
             ),
             subitems: [item]
         )
         let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .none
         section.boundarySupplementaryItems = [headerSupplimentary]
+        section.ignoreInset(true)
+        section.contentInsets = .init(top: 12.0, leading: 12.0, bottom: 12.0, trailing: 12.0)
         return section
     }
     
