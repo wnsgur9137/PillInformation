@@ -83,6 +83,12 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     public func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController {
         return HomeRecommendViewController.create(with: makeHomeRecommendReactor(flowAction: flowAction))
     }
+    private func makeHomeMapReactor(flowAction: HomeMapFlowAction) -> HomeMapReactor {
+        return HomeMapReactor(flowAction: flowAction)
+    }
+    public func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController {
+        return HomeMapViewController.create(with: makeHomeMapReactor(flowAction: flowAction))
+    }
     private func makeHomeNoticeReactor(flowAction: HomeNoticeFlowAction) -> HomeNoticeReactor {
         return HomeNoticeReactor(with: makeNoticeUseCase(), flowAction: flowAction)
     }
