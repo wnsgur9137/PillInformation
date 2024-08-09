@@ -74,9 +74,6 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     private func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
         return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
     }
-    public func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController {
-        return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
-    }
     private func makeHomeRecommendReactor(flowAction: HomeRecommendFlowAction) -> HomeRecommendReactor {
         return HomeRecommendReactor(with: makeRecommendPillUseCase(), flowAction: flowAction)
     }
@@ -98,8 +95,8 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     public func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController {
         return HomeTabViewController.create(tabViewControllers: tabViewControllers, tabTitles: tabTitles, isNewTabs: isNewTabs)
     }
-    public func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewControllerV1 {
-        return HomeViewControllerV1.create(with: makeHomeReactor(flowAction: flowAction), homeTabViewController: homeTabViewController)
+    public func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewController {
+        return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction), homeTabViewController: homeTabViewController)
     }
     
     // NoticeDetail

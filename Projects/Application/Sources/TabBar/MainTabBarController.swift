@@ -205,7 +205,7 @@ extension MainTabBarController: UITabBarControllerDelegate {
         
         for viewController in toNavigationViewController?.viewControllers ?? [] {
             switch viewController {
-            case is HomeViewControllerV1: toIndex = 0
+            case is HomeViewController: toIndex = 0
             case is SearchViewController: toIndex = 1
             case is BookmarkViewController: toIndex = 2
             case is AlarmTabBarController: toIndex = 3

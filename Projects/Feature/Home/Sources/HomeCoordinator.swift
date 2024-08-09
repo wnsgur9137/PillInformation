@@ -12,13 +12,12 @@ import HomePresentation
 import BasePresentation
 
 public protocol HomeCoordinatorDependencies {
-    func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewControllerV1
+    func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewController
     func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController
     func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController
     func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController
     func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController
     
-    func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController
     func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
     func makeNoticeDetailViewController(notice: NoticeModel, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
@@ -57,8 +56,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     }
     
     public func start() {
-//        showHomeViewController()
-        showHomeViewControllerV1()
+        showHomeViewController()
     }
     
     private func makeHomeTab(_ page: HomeTabBarPage) -> UIViewController {
@@ -87,7 +85,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         return dependencies.makeHomeTabViewController(tabViewControllers: controllers, tabTitles: pages.map { $0.title() }, isNewTabs: pages.map { $0.isNew() })
     }
     
-    public func showHomeViewControllerV1() {
+    public func showHomeViewController() {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
             showSearchDetailViewController: showSearchDetailViewController,
@@ -97,19 +95,6 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         )
         let viewController = dependencies.makeHomeViewController(flowAction: flowAction, homeTabViewController: makeHomeTabViewController())
         navigationController?.pushViewController(viewController, animated: false)
-    }
-    
-    public func showHomeViewController() {
-        let flowAction = HomeFlowAction(
-            showNoticeDetailViewController: showNoticeDetailViewController,
-            showSearchDetailViewController: showSearchDetailViewController,
-            showSearchTab: tabDependencies.showSearchTab,
-            showShapeSearchViewController: showShapeSearchViewController,
-            showMyPageViewController: showMyPageViewController
-        )
-        let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
-        navigationController?.pushViewController(viewController, animated: false)
-        homeViewController = viewController
     }
     
     private func showNoticeDetailViewController(notice: NoticeModel) {
