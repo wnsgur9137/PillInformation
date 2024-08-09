@@ -85,10 +85,6 @@ public final class SplashReactor: Reactor {
             .disposed(by: disposeBag)
     }
     
-    private func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
-        splashUseCase.updateIsShownOnboarding(isShown)
-    }
-    
     private func checkNeedSignin() -> Observable<Mutation> {
         return .create { [weak self] observable in
             guard let self = self else { return Disposables.create() }
@@ -169,16 +165,10 @@ extension SplashReactor {
     }
     
     private func showOnboardingSceneLoginViewController() {
-        updateIsShownOnboarding(true)
-            .subscribe()
-            .disposed(by: disposeBag)
         flowAction.showOnboardingSceneSigninViewController()
     }
     
     private func showOnboardingScene() {
-        updateIsShownOnboarding(true)
-            .subscribe()
-            .disposed(by: disposeBag)
         flowAction.showOnboardingScene()
     }
 }

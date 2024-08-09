@@ -50,7 +50,7 @@ extension CodeCollectionViewCell {
         rootContainerView.flex
             .backgroundColor(Constants.Color.systemBackground)
             .cornerRadius(12.0)
-            .border(0.5, Constants.Color.systemLabel)
+            .border(0.5, Constants.Color.label)
     }
     
     private func setupSubviewLayout() {

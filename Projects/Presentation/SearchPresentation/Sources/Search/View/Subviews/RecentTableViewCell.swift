@@ -20,7 +20,7 @@ final class RecentTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(14.0)
         return label
     }()
@@ -28,7 +28,7 @@ final class RecentTableViewCell: UITableViewCell {
     let deleteButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.Image.xmark, for: .normal)
-        button.tintColor = Constants.Color.systemLabel
+        button.tintColor = Constants.Color.label
         return button
     }()
     
@@ -74,6 +74,7 @@ extension RecentTableViewCell {
                 rootView.addItem(titleLabel)
                     .width(85%)
                     .minHeight(40.0)
+                    .shrink(1.0)
                 rootView.addItem(deleteButton)
                     .width(15%)
         }

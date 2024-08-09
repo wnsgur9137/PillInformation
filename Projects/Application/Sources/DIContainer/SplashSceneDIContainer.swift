@@ -26,7 +26,7 @@ final class SplashSceneDIContainer {
         self.splashDIContainer = SplashDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
     }
     
-    func makeSplashViewController(navigationController: UINavigationController) -> SplashCoordinator
+    func makeSplashCoordinator(navigationController: UINavigationController) -> SplashCoordinator
     {
         return DefaultSplashCoordinator(
             navigationController: navigationController,

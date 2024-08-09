@@ -25,4 +25,6 @@ public protocol UserOnboardingRepository {
     func getEmailToKeychain() -> Single<String>
     func updateEmailToKeychain(_ email: String) -> Single<String>
     func deleteEmailFromKeychain() -> Single<Void>
+    
+    func setIsShownOnboarding(_ isShown: Bool) -> Single<Bool>
 }

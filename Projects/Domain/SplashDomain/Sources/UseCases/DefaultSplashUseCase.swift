@@ -54,10 +54,6 @@ extension DefaultSplashUseCase {
         return userSplashRepository.deleteUserStorage()
     }
     
-    public func updateIsShownOnboarding(_ isShown: Bool) -> Single<Bool> {
-        return userSplashRepository.updateIsShownOnboarding(isShown)
-    }
-    
     public func isShownOnboarding() -> Single<Bool> {
         return userSplashRepository.isShownOnboarding()
     }

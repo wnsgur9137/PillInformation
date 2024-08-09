@@ -16,18 +16,15 @@ public struct NoticeDetailFlowAction {
     let popViewController: (Bool) -> Void
     let showSearchTab: () -> Void
     let showSearchShapeViewController: () -> Void
-    let showMyPageViewController: () -> Void
     
     public init(showNoticeDetailViewController: @escaping (NoticeModel) -> Void,
                 popViewController: @escaping (Bool) -> Void,
                 showSearchTab: @escaping () -> Void,
-                showSearchShapeViewController: @escaping () -> Void,
-                showMyPageViewController: @escaping () -> Void) {
+                showSearchShapeViewController: @escaping () -> Void) {
         self.showNoticeDetailViewController = showNoticeDetailViewController
         self.popViewController = popViewController
         self.showSearchTab = showSearchTab
         self.showSearchShapeViewController = showSearchShapeViewController
-        self.showMyPageViewController = showMyPageViewController
     }
 }
 
@@ -38,7 +35,6 @@ public final class NoticeDetailReactor: Reactor {
         case popViewController
         case didTapSearchTextField
         case didTapSearchShapeButton
-        case didTapUserButton
         case didSelectNotice(IndexPath)
     }
     public enum Mutation {
@@ -47,7 +43,6 @@ public final class NoticeDetailReactor: Reactor {
         case popViewController
         case showSearchTab
         case showSearchShapeViewController
-        case showMyPageViewController
         case showNoticeDetail(IndexPath)
     }
     public struct State {
@@ -101,9 +96,6 @@ extension NoticeDetailReactor {
         case .didTapSearchShapeButton:
             return .just(.showSearchShapeViewController)
             
-        case .didTapUserButton:
-            return .just(.showMyPageViewController)
-            
         case let .didSelectNotice(indexPath):
             return .just(.showNoticeDetail(indexPath))
         }
@@ -122,8 +114,6 @@ extension NoticeDetailReactor {
             showSearchTab()
         case .showSearchShapeViewController:
             showSearchShapeViewController()
-        case .showMyPageViewController:
-            showMyPageViewController()
         case let .showNoticeDetail(indexPath):
             showNoticeDetailViewController(at: indexPath)
         }
@@ -147,10 +137,6 @@ extension NoticeDetailReactor {
     
     private func showSearchShapeViewController() {
         flowAction.showSearchShapeViewController()
-    }
-    
-    private func showMyPageViewController() {
-        flowAction.showMyPageViewController()
     }
 }
 

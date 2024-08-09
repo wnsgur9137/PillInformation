@@ -23,7 +23,7 @@ public final class SearchDetailView: UIView {
     public let dismissButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.Image.backward, for: .normal)
-        button.tintColor = Constants.Color.systemLabel
+        button.tintColor = Constants.Color.label
         button.setTitleColor(Constants.Color.systemBlue, for: .normal)
         return button
     }()
@@ -31,7 +31,7 @@ public final class SearchDetailView: UIView {
     public let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(18.0)
         label.numberOfLines = 2
         label.alpha = 0

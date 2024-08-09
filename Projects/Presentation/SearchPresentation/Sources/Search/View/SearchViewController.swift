@@ -26,7 +26,7 @@ public final class SearchViewController: UIViewController, View {
     private let recommendLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Search.recommendKeyword
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(24.0)
         return label
     }()
@@ -61,7 +61,7 @@ public final class SearchViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.Color.systemBackground
+        view.backgroundColor = Constants.Color.background
         rootContainerView.backgroundColor = Constants.Color.background
         if let reactor = reactor {
             self.adapter = SearchAdapter(
@@ -114,11 +114,6 @@ extension SearchViewController {
         
         searchTextFieldView.shapeSearchButton.rx.tap
             .map { Reactor.Action.didSelectSearchShapeButton }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        searchTextFieldView.userIconButton.rx.tap
-            .map { Reactor.Action.didTapUserButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         

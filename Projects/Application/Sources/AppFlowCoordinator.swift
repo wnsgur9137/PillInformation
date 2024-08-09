@@ -41,7 +41,7 @@ final class AppFlowCoordinator {
         tabBarController.tabBar.isHidden = true
         tabBarController.viewControllers = [navigationController]
         let splashSceneDIContainer = appDIContainer.makeSplashSceneDIContainer()
-        let flow = splashSceneDIContainer.makeSplashViewController(navigationController: navigationController)
+        let flow = splashSceneDIContainer.makeSplashCoordinator(navigationController: navigationController)
         flow.start()
     }
 }

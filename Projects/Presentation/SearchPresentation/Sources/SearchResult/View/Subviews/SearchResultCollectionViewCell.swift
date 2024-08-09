@@ -28,7 +28,7 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(20.0)
         label.numberOfLines = 2
         return label
@@ -36,14 +36,14 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
     
     private let classLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()
     
     private let etcOtcLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(16.0)
         return label
     }()
@@ -54,13 +54,13 @@ final class SearchResultCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.image = Constants.Image.eye
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = Constants.Color.systemLabel
+        imageView.tintColor = Constants.Color.label
         return imageView
     }()
     
     private let hitsLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()

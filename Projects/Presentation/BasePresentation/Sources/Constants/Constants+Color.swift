@@ -24,7 +24,6 @@ extension Constants {
         public static let systemYellow: UIColor = .systemYellow
         public static let systemBrown: UIColor = .systemBrown
         public static let systemOrange: UIColor = .systemOrange
-        public static let systemPink: UIColor = .systemPink
         public static let systemGreen: UIColor = .systemGreen
         public static let systemPurple: UIColor = .systemPurple
         
@@ -40,5 +39,32 @@ extension Constants {
         public static let background: UIColor = UIColor(named: "background") ?? UIColor()
         public static let buttonHighlightBlue: UIColor = UIColor(hex: "#0055AA") ?? .systemBlue
         public static let textFieldBackground: UIColor = UIColor(hex: "#DDDDDD") ?? .lightGray
+        public static let skyBlue: UIColor = UIColor(hex: "#E6F2FF") ?? .systemBlue
+        
+        public static let label: UIColor = {
+            return UIColor { (traits) -> UIColor in
+                if traits.userInterfaceStyle == .dark {
+                    return systemWhite
+                }
+                return UIColor(hex: "#394346") ?? systemLabel
+            }
+        }()
     }
+}
+
+//MARK: -- Gray Scale
+extension Constants.Color {
+    public static let gray950: UIColor = UIColor(hex: "#101010") ?? UIColor()
+    public static let gray900: UIColor = UIColor(hex: "#22282A") ?? UIColor()
+    public static let gray800: UIColor = UIColor(hex: "#394346") ?? UIColor()
+    public static let gray750: UIColor = UIColor(hex: "#475357") ?? UIColor()
+    public static let gray700: UIColor = UIColor(hex: "#5C6B70") ?? UIColor()
+    public static let gray650: UIColor = UIColor(hex: "#728388") ?? UIColor()
+    public static let gray600: UIColor = UIColor(hex: "#819298") ?? UIColor()
+    public static let gray500: UIColor = UIColor(hex: "#ABB6BA") ?? UIColor()
+    public static let gray400: UIColor = UIColor(hex: "#BDC6C0") ?? UIColor()
+    public static let gray300: UIColor = UIColor(hex: "#CFD5D8") ?? UIColor()
+    public static let gray200: UIColor = UIColor(hex: "#E6EAEB") ?? UIColor()
+    public static let gray100: UIColor = UIColor(hex: "#F2F4F5") ?? UIColor()
+    public static let gray50: UIColor = UIColor(hex: "#F9FAFA") ?? UIColor()
 }

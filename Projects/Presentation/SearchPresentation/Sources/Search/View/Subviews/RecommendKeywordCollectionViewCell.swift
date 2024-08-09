@@ -19,7 +19,7 @@ final class RecommendKeywordCollectionViewCell: UICollectionViewCell {
     private let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(20.0)
         return label
     }()

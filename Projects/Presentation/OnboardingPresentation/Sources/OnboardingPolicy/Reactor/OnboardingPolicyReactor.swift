@@ -260,6 +260,9 @@ extension OnboardingPolicyReactor {
     }
     
     private func showMainScene() {
+        userUseCase.updateIsShownOnboarding(true)
+            .subscribe()
+            .disposed(by: disposeBag)
         flowAction.showMainScene()
     }
     

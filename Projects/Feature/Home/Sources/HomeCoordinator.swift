@@ -12,7 +12,12 @@ import HomePresentation
 import BasePresentation
 
 public protocol HomeCoordinatorDependencies {
-    func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController
+    func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewController
+    func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController
+    func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController
+    func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController
+    func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController
+    
     func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
     func makeNoticeDetailViewController(notice: NoticeModel, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
@@ -54,6 +59,34 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
         showHomeViewController()
     }
     
+    private func makeHomeTab(_ page: HomeTabBarPage) -> UIViewController {
+        switch page {
+        case .recommend:
+            let flowAction = HomeRecommendFlowAction(
+                showSearchDetailViewController: showSearchDetailViewController,
+                showSearchTab: tabDependencies.showSearchTab,
+                showShapeSearchViewController: showShapeSearchViewController
+            )
+            return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
+            
+        case .map:
+            let flowAction = HomeMapFlowAction()
+            return dependencies.makeHomeMapViewController(flowAction: flowAction)
+            
+        case .notice:
+            let flowAction = HomeNoticeFlowAction(
+                showNoticeDetailViewController: showNoticeDetailViewController
+            )
+            return dependencies.makeHomeNoticeViewController(flowAction: flowAction)
+        }
+    }
+    
+    private func makeHomeTabViewController() -> HomeTabViewController {
+        let pages: [HomeTabBarPage] = [.recommend, .map, .notice]
+        let controllers: [UIViewController] = pages.map { makeHomeTab($0) }
+        return dependencies.makeHomeTabViewController(tabViewControllers: controllers, tabTitles: pages.map { $0.title() }, isNewTabs: pages.map { $0.isNew() })
+    }
+    
     public func showHomeViewController() {
         let flowAction = HomeFlowAction(
             showNoticeDetailViewController: showNoticeDetailViewController,
@@ -62,9 +95,8 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
             showShapeSearchViewController: showShapeSearchViewController,
             showMyPageViewController: showMyPageViewController
         )
-        let viewController = dependencies.makeHomeViewController(flowAction: flowAction)
+        let viewController = dependencies.makeHomeViewController(flowAction: flowAction, homeTabViewController: makeHomeTabViewController())
         navigationController?.pushViewController(viewController, animated: false)
-        homeViewController = viewController
     }
     
     private func showNoticeDetailViewController(notice: NoticeModel) {
@@ -72,8 +104,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
             showNoticeDetailViewController: showNoticeDetailViewController,
             popViewController: popViewController,
             showSearchTab: tabDependencies.showSearchTab,
-            showSearchShapeViewController: showShapeSearchViewController,
-            showMyPageViewController: showMyPageViewController
+            showSearchShapeViewController: showShapeSearchViewController
         )
         let viewController = dependencies.makeNoticeDetailViewController(notice: notice, flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)

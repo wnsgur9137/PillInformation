@@ -21,7 +21,7 @@ final class AlarmTableViewCell: UITableViewCell {
     private let timeLabel: UILabel = {
         let label = UILabel()
         label.text = "20:00"
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(32.0)
         return label
     }()
@@ -29,7 +29,7 @@ final class AlarmTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "000000"
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(18.0)
         return label
     }()

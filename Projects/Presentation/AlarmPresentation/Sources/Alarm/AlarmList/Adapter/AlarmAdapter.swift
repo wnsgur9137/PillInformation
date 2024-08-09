@@ -71,7 +71,7 @@ extension AlarmAdapter: UITableViewDataSource {
         guard let data = dataSource?.cellForRow(at: indexPath) else { return cell }
         cell.configure(data)
         cell.toggleButton.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 self?.didSelectToggleButton.onNext(indexPath)
             })

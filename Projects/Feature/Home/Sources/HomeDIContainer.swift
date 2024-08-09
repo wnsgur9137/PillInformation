@@ -6,7 +6,7 @@
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 import NetworkInfra
 import HomeData
@@ -71,11 +71,32 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     }
     
     // Home
-    public func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
+    private func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
         return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
     }
-    public func makeHomeViewController(flowAction: HomeFlowAction) -> HomeViewController {
-        return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
+    private func makeHomeRecommendReactor(flowAction: HomeRecommendFlowAction) -> HomeRecommendReactor {
+        return HomeRecommendReactor(with: makeRecommendPillUseCase(), flowAction: flowAction)
+    }
+    public func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController {
+        return HomeRecommendViewController.create(with: makeHomeRecommendReactor(flowAction: flowAction))
+    }
+    private func makeHomeMapReactor(flowAction: HomeMapFlowAction) -> HomeMapReactor {
+        return HomeMapReactor(flowAction: flowAction)
+    }
+    public func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController {
+        return HomeMapViewController.create(with: makeHomeMapReactor(flowAction: flowAction))
+    }
+    private func makeHomeNoticeReactor(flowAction: HomeNoticeFlowAction) -> HomeNoticeReactor {
+        return HomeNoticeReactor(with: makeNoticeUseCase(), flowAction: flowAction)
+    }
+    public func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController {
+        return HomeNoticeViewController.create(with: makeHomeNoticeReactor(flowAction: flowAction))
+    }
+    public func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController {
+        return HomeTabViewController.create(tabViewControllers: tabViewControllers, tabTitles: tabTitles, isNewTabs: isNewTabs)
+    }
+    public func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewController {
+        return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction), homeTabViewController: homeTabViewController)
     }
     
     // NoticeDetail

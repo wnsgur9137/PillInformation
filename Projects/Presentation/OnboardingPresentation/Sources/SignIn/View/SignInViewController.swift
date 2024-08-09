@@ -41,7 +41,7 @@ public final class SignInViewController: UIViewController, View {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.warningMessage
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteLight(12.0)
         label.numberOfLines = 0
         return label

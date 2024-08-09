@@ -30,7 +30,7 @@ final class BookmarkTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(20.0)
         label.numberOfLines = 2
         return label
@@ -38,14 +38,14 @@ final class BookmarkTableViewCell: UITableViewCell {
     
     private let classLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()
     
     private let etcOtcLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(16.0)
         return label
     }()
@@ -56,13 +56,13 @@ final class BookmarkTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.image = Constants.Image.eye
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = Constants.Color.systemLabel
+        imageView.tintColor = Constants.Color.label
         return imageView
     }()
     
     private let hitsLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         return label
     }()
@@ -89,6 +89,7 @@ final class BookmarkTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         layer.addShadow()
+        backgroundColor = Constants.Color.background
         setupSkeletonable()
         setupLayout()
     }
@@ -151,10 +152,10 @@ extension BookmarkTableViewCell {
         rootContainerView.flex
             .alignItems(.center)
             .direction(.row)
-            .cornerRadius(12.0)
             .padding(4.0)
             .border(0.5, Constants.Color.systemLightGray)
             .backgroundColor(Constants.Color.systemBackground)
+            .cornerRadius(12.0)
             .define { rootView in
                 rootView.addItem(pillImageView)
                     .height(100%)

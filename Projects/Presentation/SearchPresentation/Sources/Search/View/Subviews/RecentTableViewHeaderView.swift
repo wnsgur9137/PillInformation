@@ -21,7 +21,7 @@ final class RecentTableViewHeaderView: UITableViewHeaderFooterView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Search.recentKeyword
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(24.0)
         return label
     }()
@@ -29,7 +29,7 @@ final class RecentTableViewHeaderView: UITableViewHeaderFooterView {
     let deleteAllButton: UIButton = {
         let button = UIButton()
         button.setTitle("모두 삭제", for: .normal)
-        button.setTitleColor(Constants.Color.systemLabel, for: .normal)
+        button.setTitleColor(Constants.Color.label, for: .normal)
         return button
     }()
     

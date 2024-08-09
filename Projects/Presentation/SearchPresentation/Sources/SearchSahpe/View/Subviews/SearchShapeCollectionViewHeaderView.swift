@@ -19,7 +19,7 @@ final class SearchShapeCollectionViewHeaderView: UICollectionReusableView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.suiteBold(32.0)
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         return label
     }()
     

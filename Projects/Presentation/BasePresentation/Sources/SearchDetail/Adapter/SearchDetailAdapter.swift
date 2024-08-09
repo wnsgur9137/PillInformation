@@ -52,7 +52,7 @@ public final class SearchDetailAdapter: NSObject {
         headerView.imageView.kf.setImage(with: imageURL)
         headerView.contentView.layoutMargins = .zero
         headerView.imageView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .subscribe(onNext: { [weak self] _ in
                 self?.didSelectSection.onNext(section)
             })

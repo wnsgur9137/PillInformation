@@ -36,9 +36,17 @@ public final class SearchTextFieldView: UIView {
         let textField = UITextField()
         textField.placeholder = "Search"
         textField.font = Constants.Font.suiteMedium(14.0)
-        textField.textColor = Constants.Color.systemLabel
+        textField.textColor = Constants.Color.label
         textField.returnKeyType = .search
         return textField
+    }()
+    
+    public let searchButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Constants.Color.systemBlue
+        button.setImage(Constants.Image.magnifyingglass, for: .normal)
+        button.tintColor = Constants.Color.systemWhite
+        return button
     }()
     
     public let shapeSearchButton: UIButton = {
@@ -46,14 +54,6 @@ public final class SearchTextFieldView: UIView {
         button.backgroundColor = Constants.Color.systemBlue
         button.setImage(Constants.Image.pills, for: .normal)
         button.tintColor = Constants.Color.systemWhite
-        return button
-    }()
-    
-    public let userIconButton: UIButton = {
-        let button = UIButton()
-        button.setImage(Constants.Image.personFill, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.Color.systemLightGray
         return button
     }()
     
@@ -79,7 +79,6 @@ extension SearchTextFieldView {
         
         rootContainerView.flex
             .direction(.row)
-            .backgroundColor(Constants.Color.systemBackground)
             .padding(10.0, 24.0, 10.0, 24.0)
             .define { rootView in
                 if hasDismiss {
@@ -96,12 +95,14 @@ extension SearchTextFieldView {
                     .grow(1.0)
                     .direction(.row)
                     .define { searchView in
-                        searchView.addItem(searchIconImageView)
-                            .width(24.0)
-                            .height(24.0)
-                            .margin(12.0)
                         searchView.addItem(searchTextField)
+                            .margin(0, 12.0, 0, 12.0)
                             .grow(1.0)
+                        searchView.addItem(searchButton)
+                            .width(36.0)
+                            .height(36.0)
+                            .cornerRadius(8.0)
+                            .margin(6.0)
                     }
                 
                 rootView.addItem(shapeSearchButton)
@@ -109,13 +110,6 @@ extension SearchTextFieldView {
                     .height(48.0)
                     .marginLeft(16.0)
                     .cornerRadius(12.0)
-                
-                rootView.addItem(userIconButton)
-                    .width(48.0)
-                    .height(48.0)
-                    .marginLeft(8.0)
-                    .cornerRadius(24.0)
-                    .border(0.5, Constants.Color.systemLightGray)
         }
     }
     

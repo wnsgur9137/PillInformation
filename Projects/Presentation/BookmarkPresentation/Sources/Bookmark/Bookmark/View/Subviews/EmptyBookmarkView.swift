@@ -25,7 +25,7 @@ final class EmptyBookmarkView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Bookmark.emptyBookmark
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(32.0)
         label.textAlignment = .center
         return label
@@ -34,7 +34,7 @@ final class EmptyBookmarkView: UIView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Bookmark.emptyBookmarkDescription
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(24.0)
         label.textAlignment = .center
         return label
@@ -42,7 +42,7 @@ final class EmptyBookmarkView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = Constants.Color.systemBackground
+        backgroundColor = Constants.Color.background
         setupLayout()
     }
     
@@ -71,7 +71,7 @@ extension EmptyBookmarkView {
         addSubview(rootContainerView)
         
         rootContainerView.flex
-            .backgroundColor(Constants.Color.systemBackground)
+            .backgroundColor(Constants.Color.background)
             .margin(12.0, 0, 42.0, 0)
             .alignItems(.center)
             .justifyContent(.center)

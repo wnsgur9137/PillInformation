@@ -17,7 +17,7 @@ public struct AlertText {
     let alignment: NSTextAlignment
     
     public init(text: String,
-                color: UIColor = Constants.Color.systemLabel,
+                color: UIColor = Constants.Color.label,
                 alignment: NSTextAlignment = .center) {
         self.text = text
         self.color = color

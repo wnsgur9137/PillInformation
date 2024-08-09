@@ -32,7 +32,7 @@ public final class TimerDetailViewController: UIViewController, View {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.TimerDetailViewController.title
-        label.textColor = Constants.Color.systemLabel
+        label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(28.0)
         return label
     }()
