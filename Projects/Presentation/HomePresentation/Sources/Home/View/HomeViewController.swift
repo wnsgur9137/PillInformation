@@ -120,7 +120,7 @@ extension HomeViewController {
             .disposed(by: disposeBag)
         
         searchTextFieldView.searchTextField.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapSearchTextField }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)

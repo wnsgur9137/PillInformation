@@ -52,7 +52,7 @@ public final class HomeTabViewController: TabmanViewController {
     private func setupTabBar() {
         let bar = TMBar.ButtonBar()
         bar.layout.transitionStyle = .snap
-        
+        bar.scrollMode = .none
         bar.layout.contentInset = UIEdgeInsets(top: 0, left: 20.0, bottom: 0, right: 20.0)
         bar.layout.contentMode = .fit
         bar.layout.interButtonSpacing = 20.0

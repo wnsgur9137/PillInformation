@@ -78,7 +78,7 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
         return HomeViewController.create(with: makeHomeReactor(flowAction: flowAction))
     }
     private func makeHomeRecommendReactor(flowAction: HomeRecommendFlowAction) -> HomeRecommendReactor {
-        return HomeRecommendReactor(flowAction: flowAction)
+        return HomeRecommendReactor(with: makeRecommendPillUseCase(), flowAction: flowAction)
     }
     public func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController {
         return HomeRecommendViewController.create(with: makeHomeRecommendReactor(flowAction: flowAction))

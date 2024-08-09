@@ -39,7 +39,7 @@ public final class HomeViewControllerV1: UIViewController, View {
         button.backgroundColor = Constants.Color.systemBlue
         return button
     }()
-    private let serachTextField = SearchTextFieldView()
+    private let searchTextFieldView = SearchTextFieldView()
     
     // MARK: - Properties
     
@@ -69,6 +69,11 @@ public final class HomeViewControllerV1: UIViewController, View {
         setupLayout()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchTextFieldView.searchTextField.resignFirstResponder()
+    }
+    
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
@@ -83,7 +88,22 @@ public final class HomeViewControllerV1: UIViewController, View {
 // MARK: - Bind
 extension HomeViewControllerV1 {
     private func bindAction(_ reactor: HomeReactor) {
+        Observable<Void>.merge(
+            searchTextFieldView.searchTextField.rx.tapGesture().when(.recognized).map { _ in () },
+            searchTextFieldView.searchButton.rx.tap.asObservable()
+        ).map { Reactor.Action.didTapSearchTextField }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        searchTextFieldView.shapeSearchButton.rx.tap
+            .map { Reactor.Action.didTapShapeSearchButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        userButton.rx.tap
+            .map { Reactor.Action.didTapUserButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeReactor) {
@@ -113,9 +133,8 @@ extension HomeViewControllerV1 {
                             .height(48.0)
                             .cornerRadius(12.0)
                     }
-                headerView.addItem(serachTextField)
+                headerView.addItem(searchTextFieldView)
                     .marginBottom(12.0)
-//                    .margin(12.0, 0, 12.0, 0)
             }
         
         rootContainerView.flex

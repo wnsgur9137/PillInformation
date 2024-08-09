@@ -63,7 +63,9 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     private func makeHomeTab(_ page: HomeTabBarPage) -> UIViewController {
         switch page {
         case .recommend:
-            let flowAction = HomeRecommendFlowAction()
+            let flowAction = HomeRecommendFlowAction(
+                showSearchDetailViewController: showSearchDetailViewController
+            )
             return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
             
         case .notice:

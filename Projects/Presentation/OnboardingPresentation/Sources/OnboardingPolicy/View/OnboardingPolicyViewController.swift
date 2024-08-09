@@ -142,31 +142,31 @@ extension OnboardingPolicyViewController {
             .disposed(by: disposeBag)
         
         agePolicyCheckBoxView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapAgePolicy }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         appPolicyCheckBoxView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapAppPolicy }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         privacyPolicyCheckBoxView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapPrivacyPolicy }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         daytimeNotiPolicyCheckBoxView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapDaytimeNotiPolicy }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         nighttimeNotiPolicyCheckBoxView.rx.tapGesture()
-            .skip(1)
+            .when(.recognized)
             .map { _ in Reactor.Action.didTapNighttimeNotiPolicy }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
