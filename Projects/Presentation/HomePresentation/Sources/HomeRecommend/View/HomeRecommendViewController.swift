@@ -22,6 +22,7 @@ public final class HomeRecommendViewController: UIViewController, View {
     private let rootContainerView = UIView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let footerView = FooterView()
     
     private lazy var recommendPillCollectionView: UICollectionView = {
         let layout = makeRecommendPillCompositionalLayout()
@@ -179,6 +180,7 @@ extension HomeRecommendViewController {
         contentView.flex
             .define { contentView in
                 contentView.addItem(recommendPillCollectionView)
+                contentView.addItem(footerView)
             }
     }
     

@@ -69,7 +69,9 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
             return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
             
         case .notice:
-            let flowAction = HomeNoticeFlowAction()
+            let flowAction = HomeNoticeFlowAction(
+                showNoticeDetailViewController: showNoticeDetailViewController
+            )
             return dependencies.makeHomeNoticeViewController(flowAction: flowAction)
         }
     }
