@@ -56,14 +56,13 @@ public final class HomeTabViewController: TabmanViewController {
         bar.layout.contentInset = UIEdgeInsets(top: 0, left: 20.0, bottom: 0, right: 20.0)
         bar.layout.contentMode = .fit
         bar.layout.interButtonSpacing = 20.0
-        bar.backgroundView.style = .blur(style: .regular)
+        bar.backgroundView.style = .blur(style: .light)
         bar.buttons.customize { button in
             button.tintColor = Constants.Color.label
             button.selectedTintColor = Constants.Color.buttonHighlightBlue
         }
         bar.indicator.tintColor = Constants.Color.buttonHighlightBlue
         bar.indicator.overscrollBehavior = .compress
-//        addBar(bar, dataSource: self, at: .top)
         addBar(bar, dataSource: self, at: .top)
     }
     

@@ -49,6 +49,7 @@ public final class BookmarkReactor: Reactor {
         case didSelectRow(IndexPath)
         case didSelectBookmark(IndexPath)
         case deleteRow(IndexPath)
+        case deleteAll
         case filtered(String?)
     }
     
@@ -132,6 +133,21 @@ public final class BookmarkReactor: Reactor {
         }
     }
     
+    private func deleteAll() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            bookmarkUseCase.deleteAll()
+                .subscribe(onSuccess: { [weak self] in
+                    self?.pills = []
+                    observable.onNext(.loadedBookmarkPills)
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: disposeBag)
+            return Disposables.create()
+        }
+    }
+    
     private func filterBookmark(_ filterText: String?) -> Observable<Mutation> {
         guard let filterText = filterText,
               filterText.count > 0 else {
@@ -163,6 +179,8 @@ extension BookmarkReactor {
             return deleteBookmark(indexPath)
         case let .deleteRow(indexPath):
             return deleteBookmark(indexPath)
+        case .deleteAll:
+            return deleteAll()
         case let .filtered(filterText):
             return filterBookmark(filterText)
         }

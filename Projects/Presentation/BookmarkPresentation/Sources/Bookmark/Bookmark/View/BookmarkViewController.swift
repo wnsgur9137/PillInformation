@@ -31,6 +31,7 @@ public final class BookmarkViewController: UIViewController, View {
     private var adapter: BookmarkAdapter?
     public var disposeBag = DisposeBag()
     private lazy var bookmarkTableViewHeight: CGFloat = 120.0
+    private lazy var bookmarkTableHeaderViewHeight: CGFloat = 52.0
     
     // MARK: - Lifecycle
     
@@ -63,7 +64,9 @@ public final class BookmarkViewController: UIViewController, View {
         bindState(reactor)
     }
     
-    private func showSingleAlert(title: String, message: String?) {
+    private func showSingleAlert(title: String, 
+                                 message: String?,
+                                 action: @escaping () -> Void = {}) {
         var messageAlertText: AlertText?
         if let message {
             messageAlertText = AlertText(text: message)
@@ -73,7 +76,7 @@ public final class BookmarkViewController: UIViewController, View {
                 self,
                 title: .init(text: title),
                 message: messageAlertText,
-                confirmButtonInfo: .init(title: Constants.confirm)
+                confirmButtonInfo: .init(title: Constants.confirm, action: action)
             )
     }
     
@@ -92,19 +95,10 @@ extension BookmarkViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        bookmarkHeaderView.searchTextField.rx.text.changed
+        bookmarkHeaderView.searchTextFieldView.searchTextField.rx.text.changed
             .filter { $0 != nil }
             .map { text in Reactor.Action.filtered(text) }
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        bookmarkHeaderView.searchTextField.rx.text.changed
-            .filter { $0 != nil }
-            .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { text in
-                guard let text = text else { return }
-                text.count > 0 ?  self.bookmarkHeaderView.showDeleteButton() : self.bookmarkHeaderView.hideDeleteButton()
-            })
             .disposed(by: disposeBag)
     }
     
@@ -115,7 +109,7 @@ extension BookmarkViewController {
                 guard let self = self,
                       let count = count else { return }
                 self.bookmarkTableView.flex.display(count == 0 ? .none : .flex)
-                let height = (bookmarkTableViewHeight * CGFloat(count)) + 30
+                let height = (bookmarkTableViewHeight * CGFloat(count)) + 30 + bookmarkTableHeaderViewHeight
                 self.bookmarkTableView.flex.height(height)
                 self.bookmarkTableView.reloadData()
                 self.setupEmptyBookmarkView(count)
@@ -153,6 +147,18 @@ extension BookmarkViewController {
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        adapter?.didSelectDeleteAllButton
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.showSingleAlert(title: Constants.Bookmark.askDeleteAll, message: nil, action: {
+                    Observable.just(Void())
+                        .map { Reactor.Action.deleteAll }
+                        .bind(to: reactor.action)
+                        .disposed(by: self.disposeBag)
+                })
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -160,6 +166,10 @@ extension BookmarkViewController {
 extension BookmarkViewController: BookmarkAdapterDelegate {
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         return bookmarkTableViewHeight
+    }
+    
+    public func heightForHeader() -> CGFloat {
+        return bookmarkTableHeaderViewHeight
     }
 }
 
@@ -170,6 +180,9 @@ extension BookmarkViewController {
         view.addSubview(rootContainerView)
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
+        view.flex.backgroundColor(Constants.Color.skyBlue)
+        rootContainerView.flex.backgroundColor(Constants.Color.background)
         
         contentView.flex
             .backgroundColor(Constants.Color.background)

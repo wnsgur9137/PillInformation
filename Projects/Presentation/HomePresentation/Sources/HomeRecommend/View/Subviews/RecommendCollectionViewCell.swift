@@ -43,6 +43,7 @@ final class RecommendCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        layer.addShadow()
         setupLayout()
     }
     
@@ -73,7 +74,7 @@ extension RecommendCollectionViewCell {
             .direction(.row)
             .cornerRadius(24.0)
             .margin(12.0)
-            .backgroundColor(Constants.Color.background)
+            .backgroundColor(Constants.Color.systemBackground)
             .alignItems(.center)
             .define { rootView in
                 rootView.addItem(imageView)

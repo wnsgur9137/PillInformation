@@ -119,6 +119,7 @@ extension HomeRecommendViewController {
             case .pills: return self.makePillSection()
             }
         }
+        layout.register(BackgroundDecorationView.self, forDecorationViewOfKind: BackgroundDecorationView.identifier)
         return layout
     }
     
@@ -148,6 +149,8 @@ extension HomeRecommendViewController {
             subitems: [item]
         )
         let section = NSCollectionLayoutSection(group: group)
+        let backgroundDecorationView = NSCollectionLayoutDecorationItem.background(elementKind: BackgroundDecorationView.identifier)
+        section.decorationItems = [backgroundDecorationView]
         section.boundarySupplementaryItems = [headerSupplimentary]
         section.contentInsets = .init(24.0)
         section.ignoreInset(true)
@@ -168,6 +171,8 @@ extension HomeRecommendViewController {
             subitems: [item]
         )
         let section = NSCollectionLayoutSection(group: group)
+        let backgroundDecorationView = NSCollectionLayoutDecorationItem.background(elementKind: BackgroundDecorationView.identifier)
+        section.decorationItems = [backgroundDecorationView]
         section.orthogonalScrollingBehavior = .none
         section.boundarySupplementaryItems = [headerSupplimentary]
         section.ignoreInset(true)
@@ -183,6 +188,7 @@ extension HomeRecommendViewController {
         contentView.flex
             .define { contentView in
                 contentView.addItem(recommendPillCollectionView)
+                    .backgroundColor(Constants.Color.background)
                 contentView.addItem(footerView)
             }
     }

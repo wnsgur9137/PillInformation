@@ -57,9 +57,10 @@ public final class SearchTextFieldView: UIView {
         return button
     }()
     
-    public init(hasDismiss: Bool = false) {
+    public init(hasDismiss: Bool = false,
+                hasShapeSearchButton: Bool = true) {
         super.init(frame: CGRect(x: 0, y: 0, width: 0, height: SearchTextFieldView.height))
-        setupLayout(hasDismiss)
+        setupLayout(hasDismiss, hasShapeSearchButton)
     }
     
     required init?(coder: NSCoder) {
@@ -74,7 +75,7 @@ public final class SearchTextFieldView: UIView {
 
 // MARK: - Layout
 extension SearchTextFieldView {
-    private func setupLayout(_ hasDismiss: Bool) {
+    private func setupLayout(_ hasDismiss: Bool, _ hasShapeSearchButton: Bool) {
         addSubview(rootContainerView)
         
         rootContainerView.flex
@@ -105,11 +106,13 @@ extension SearchTextFieldView {
                             .margin(6.0)
                     }
                 
-                rootView.addItem(shapeSearchButton)
-                    .width(48.0)
-                    .height(48.0)
-                    .marginLeft(16.0)
-                    .cornerRadius(12.0)
+                if hasShapeSearchButton {
+                    rootView.addItem(shapeSearchButton)
+                        .width(48.0)
+                        .height(48.0)
+                        .marginLeft(16.0)
+                        .cornerRadius(12.0)
+                }
         }
     }
     
