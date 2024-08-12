@@ -1,15 +1,15 @@
 //
-//  PillHitHistoriesStorage.swift
-//  SearchData
+//  PillHitHistoryStorage.swift
+//  BaseData
 //
-//  Created by JunHyeok Lee on 7/11/24.
+//  Created by JunHyeok Lee on 8/12/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 
-public protocol PillHitHistoriesStorage {
+public protocol PillHitHistoryStorage {
     func saveHitHistories(_ hitHistories: [Int])
     func loadHitHistories() -> [Int]
 }

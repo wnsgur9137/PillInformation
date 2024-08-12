@@ -18,7 +18,7 @@ public protocol HomeCoordinatorDependencies {
     func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController
     func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController
     
-    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
+    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
     func makeNoticeDetailViewController(notice: NoticeModel, flowAction: NoticeDetailFlowAction) -> NoticeDetailViewController
 }
@@ -44,7 +44,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     private let tabDependencies: HomeTabDependencies
     private weak var homeViewController: HomeViewController?
     private weak var noticeDetailViewController: NoticeDetailViewController?
-    private weak var searchDetailViewController: SearchDetailViewControllerProtocol?
+    private weak var searchDetailViewController: SearchDetailViewController?
     private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,

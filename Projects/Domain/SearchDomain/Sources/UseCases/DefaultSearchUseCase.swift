@@ -18,10 +18,16 @@ public protocol SearchTabUseCase: SearchUseCase, SearchDetailUseCase { }
 public final class DefaultSearchUseCase: SearchTabUseCase {
     
     private let searchRepository: SearchRepository
+    private let searchDetailRepository: SearchDetailRepository
+    private let bookmarkRepository: BookmarkRepository
     private let disposeBag = DisposeBag()
     
-    public init(with repository: SearchRepository) {
-        self.searchRepository = repository
+    public init(searchRepository: SearchRepository,
+                searchDetailRepository: SearchDetailRepository,
+                bookmarkRepository: BookmarkRepository) {
+        self.searchRepository = searchRepository
+        self.searchDetailRepository = searchDetailRepository
+        self.bookmarkRepository = bookmarkRepository
     }
     
     private func executePillHits(_ medicineSeq: Int) -> Single<PillHitsModel> {
@@ -72,10 +78,26 @@ extension DefaultSearchUseCase {
     }
     
     public func updatePillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsModel> {
-        var histories = searchRepository.loadHitHistories()
-        guard histories.contains(medicineSeq) == false else { return .error(SearchUseCaseError.alreadyHits) }
+        var histories = searchDetailRepository.loadHitHistories()
+        guard histories.contains(medicineSeq) == false else { return .error(SearchDetailUseCaseError.alreadyHits) }
         histories.append(medicineSeq)
-        searchRepository.saveHitHistories(histories)
-        return searchRepository.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toModel() }
+        searchDetailRepository.saveHitHistories(histories)
+        return searchDetailRepository.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toModel() }
+    }
+    
+    public func fetchBookmark(medicineSeq: Int) -> Single<Bool> {
+        return bookmarkRepository.executePillSeqs()
+            .map { $0.contains(medicineSeq) }
+    }
+    
+    public func saveBookmark(pillInfo: PillInfoModel) -> Single<Bool> {
+        let pillInfo = PillInfo.makePillInfo(pillInfo)
+        return bookmarkRepository.savePill(pillInfo: pillInfo)
+            .map { $0.contains(pillInfo.medicineSeq) }
+    }
+    
+    public func deleteBookmark(medicineSeq: Int) -> Single<Bool> {
+        return bookmarkRepository.deletePill(medicineSeq: medicineSeq)
+            .map { $0.contains(medicineSeq) }
     }
 }

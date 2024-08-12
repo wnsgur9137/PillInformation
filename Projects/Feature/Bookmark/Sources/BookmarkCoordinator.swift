@@ -13,7 +13,7 @@ import BasePresentation
 
 public protocol BookmarkCoordinatorDependencies {
     func makeBookmarkViewController(flowAction: BookmarkFlowAction) -> BookmarkViewController
-    func makePillDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol
+    func makePillDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
 }
 
@@ -35,7 +35,7 @@ public final class DefaultBookmarkCoordinator: BookmarkCoordinator {
     private let dependencies: BookmarkCoordinatorDependencies
     private let tabDependencies: BookmarkTabDependencies?
     private weak var bookmarkViewController: BookmarkViewController?
-    private weak var pillDetailViewController: SearchDetailViewControllerProtocol?
+    private weak var pillDetailViewController: SearchDetailViewController?
     private weak var imageDetailViewController: ImageDetailViewController?
     
     public init(navigationController: UINavigationController,

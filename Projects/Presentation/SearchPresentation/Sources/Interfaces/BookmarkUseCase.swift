@@ -12,7 +12,7 @@ import RxSwift
 import BasePresentation
 
 public protocol BookmarkUseCase {
-    func fetchPillSeqs () -> Single<[Int]>
+    func fetchPillSeqs() -> Single<[Int]>
     func savePill(pillInfo: PillInfoModel) -> Single<[Int]>
     func deletePill(medicineSeq: Int) -> Single<[Int]>
     func deleteAll() -> Single<Void>

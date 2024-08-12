@@ -1,39 +1,60 @@
 //
-//  SearchDetailViewController.swift
-//  BasePresentation
+//  DefaultSearchDetailViewController.swift
+//  SearchPresentation
 //
-//  Created by JunHyeok Lee on 7/22/24.
+//  Created by JunHyeok Lee on 5/8/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import UIKit
-import PinLayout
+import ReactorKit
+import RxSwift
+import RxCocoa
+import RxGesture
 import FlexLayout
+import PinLayout
+import Kingfisher
 
-public protocol SearchDetailViewControllerProtocol: UIViewController {
+public final class SearchDetailViewController: UIViewController, View {
     
-    var searchDetailView: SearchDetailView { get set }
-    var capsuleView: CapsuleView? { get set }
+    public var searchDetailView = SearchDetailView()
     
-    var medicineName: String  { get set }
-    var imageHeaderViewHeight: CGFloat { get set }
-    var footerViewHeight: CGFloat { get set }
+    public var capsuleView: CapsuleView?
     
-    func configure(_ pillInfo: PillInfoModel)
-    func showPasteboardCapsule()
-}
-
-public extension SearchDetailViewControllerProtocol {
-    var medicineName: String {
-        return ""
+    public var medicineName: String = ""
+    public var footerViewHeight: CGFloat = 300.0
+    public var imageHeaderViewHeight: CGFloat = 300.0
+    public var disposeBag = DisposeBag()
+    private var adapter: SearchDetailAdapter?
+    
+    public static func create(with reactor: SearchDetailReactor) -> SearchDetailViewController {
+        let viewController = SearchDetailViewController()
+        viewController.reactor = reactor
+        return viewController
     }
     
-    var imageHeaderViewHeight: CGFloat {
-        return 300.0
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = Constants.Color.background
+        if let reactor = reactor {
+            adapter = SearchDetailAdapter(
+                tableView: searchDetailView.contentTableView,
+                dataSource: reactor,
+                delegate: self
+            )
+            bindAdapter(reactor)
+        }
+        setupLayout()
     }
     
-    var footerViewHeight: CGFloat {
-        return 300.0
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupSubviewLayout()
+    }
+    
+    public func bind(reactor: SearchDetailReactor) {
+        bindAction(reactor)
+        bindState(reactor)
     }
     
     func configure(_ pillInfo: PillInfoModel) {
@@ -72,12 +93,121 @@ public extension SearchDetailViewControllerProtocol {
             }
         }
     }
+}
+
+// MARK: - Binding
+extension SearchDetailViewController {
+    private func bindAction(_ reactor: SearchDetailReactor) {
+        rx.viewDidLoad
+            .flatMap {
+                Observable.merge([
+                    Observable.just(Reactor.Action.loadBookmark),
+                    Observable.just(Reactor.Action.loadPillDescription),
+                    Observable.just(Reactor.Action.updateHits)
+                ])
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchDetailView.dismissButton.rx.tap
+            .map { Reactor.Action.popViewController }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchDetailView.bookmarkButton.rx.tap
+            .map { Reactor.Action.didTapBookmarkButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
     
-    func setupLayout() {
+    private func bindState(_ reactor: SearchDetailReactor) {
+        reactor.pulse(\.$pillInfo)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] pillInfo in
+                guard let pillInfo = pillInfo else { return }
+                self?.configure(pillInfo)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$hasPillDescription)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                self.searchDetailView.contentTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$pasteboardString)
+            .filter { $0 != nil }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { pasteboardString in
+                UIPasteboard.general.string = pasteboardString
+                self.showPasteboardCapsule()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$error)
+            .filter { $0 != nil }
+            .subscribe(onNext: { _ in
+                
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.isBookmarked }
+            .subscribe(onNext: { [weak self] isBookmarked in
+                let image = isBookmarked ? Constants.Image.starFill : Constants.Image.star
+                self?.searchDetailView.bookmarkButton.setImage(image, for: .normal)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindAdapter(_ reactor: SearchDetailReactor) {
+        adapter?.didSelectSection
+            .filter { $0 == 0 }
+            .map { _ in
+                Reactor.Action.didTapImageView
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        adapter?.didSelectRow
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - SearchDetail Delegate
+extension SearchDetailViewController: SearchDetailDelegate {
+    public func heightForHeader(in section: Int) -> CGFloat {
+        guard section == 0 else { return 0 }
+        return imageHeaderViewHeight
+    }
+    
+    public func heightForFooter(in section: Int) -> CGFloat {
+        return footerViewHeight
+    }
+    
+    public func scrollViewDidScroll(_ contentOffset: CGPoint) {
+        let isHidden = contentOffset.y <= self.imageHeaderViewHeight - (self.view.safeAreaInsets.top + 30)
+        UIView.animate(withDuration: 0.2) {
+            self.searchDetailView.navigationView.backgroundColor = isHidden ? nil : Constants.Color.background
+            self.searchDetailView.navigationTitleLabel.alpha = isHidden ? 0 : 1
+        }
+    }
+}
+
+// MARK: - Layout
+extension SearchDetailViewController {
+    private func setupLayout() {
         view.addSubview(searchDetailView)
     }
     
-    func setupSubviewLayout() {
+    private func setupSubviewLayout() {
         searchDetailView.pin.all()
         searchDetailView.flex.layout()
     }

@@ -38,6 +38,13 @@ public final class SearchDetailView: UIView {
         return label
     }()
     
+    public let bookmarkButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Image.star, for: .normal)
+        button.tintColor = Constants.Color.systemYellow
+        return button
+    }()
+    
     public let titleLabel: UILabel = {
         let label = UILabel()
         return label
@@ -71,6 +78,7 @@ extension SearchDetailView {
         rootContainerView.addSubview(scrollView)
         rootContainerView.addSubview(navigationView)
         rootContainerView.addSubview(navigationTitleLabel)
+        rootContainerView.addSubview(bookmarkButton)
         rootContainerView.addSubview(dismissButton)
         scrollView.addSubview(contentView)
         contentView.addSubview(contentTableView)
@@ -88,6 +96,10 @@ extension SearchDetailView {
             .width(48.0)
             .height(48.0)
         navigationView.pin.top().left().right().bottom(to: navigationTitleLabel.edge.bottom)
+        bookmarkButton.pin
+            .centerRight(to: navigationTitleLabel.anchor.centerRight).marginRight(12.0)
+            .width(48.0)
+            .height(48.0)
         scrollView.pin.top().horizontally().bottom()
         scrollView.flex.layout()
         contentView.pin.top(to: rootContainerView.edge.top).horizontally()

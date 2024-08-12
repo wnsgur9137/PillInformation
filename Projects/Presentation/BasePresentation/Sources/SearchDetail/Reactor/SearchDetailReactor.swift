@@ -24,9 +24,12 @@ public struct SearchDetailFlowAction {
 
 public final class SearchDetailReactor: Reactor {
     public enum Action {
-        case viewDidLoad
+        case loadBookmark
+        case loadPillDescription
+        case updateHits
         case popViewController
         case didTapImageView
+        case didTapBookmarkButton
         case didSelectRow(IndexPath)
     }
     
@@ -35,12 +38,16 @@ public final class SearchDetailReactor: Reactor {
         case popViewController
         case showImageDetailView(URL?)
         case copyPasteboard(String?)
+        case bookmark(Bool)
+        case error(Error?)
     }
     
     public struct State {
         @Pulse var pillInfo: PillInfoModel?
         @Pulse var hasPillDescription: Bool?
         @Pulse var pasteboardString: String?
+        @Pulse var error: Void?
+        var isBookmarked: Bool = false
     }
     
     public var initialState = State()
@@ -49,6 +56,8 @@ public final class SearchDetailReactor: Reactor {
     private let disposeBag = DisposeBag()
     
     private var pill: PillModel
+    private var isBookmarked: Bool = false
+    private var hasDescription: Bool = false
     
     public init(with useCase: SearchDetailUseCase,
                 pillInfo: PillInfoModel,
@@ -104,18 +113,90 @@ public final class SearchDetailReactor: Reactor {
             self.useCase.executePillDescription(self.pill.info.medicineSeq)
                 .subscribe(onSuccess: { [weak self] pillDescription in
                     guard let self = self else { return }
+                    self.hasDescription = pillDescription != nil
                     guard let pillDescription = pillDescription else {
-                        observable.onNext(.loadPillInfo(self.pill.info, false))
+                        observable.onNext(.loadPillInfo(self.pill.info, self.hasDescription))
                         return
                     }
                     self.pill.addDescription(pillDescription)
-                    observable.onNext(.loadPillInfo(self.pill.info, true))
+                    observable.onNext(.loadPillInfo(self.pill.info, self.hasDescription))
                 }, onFailure: { error in
                     print("error: \(error)")
-                    observable.onNext(.loadPillInfo(self.pill.info, false))
+                    self.hasDescription = false
+                    observable.onNext(.loadPillInfo(self.pill.info, self.hasDescription))
                 })
                 .disposed(by: self.disposeBag)
             
+            return Disposables.create()
+        }
+    }
+    
+    private func loadBookmark() -> Observable<Mutation> {
+        return .create() { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.useCase.fetchBookmark(medicineSeq: self.pill.info.medicineSeq)
+                .subscribe(onSuccess: { [weak self] isBookmarked in
+                    self?.isBookmarked = isBookmarked
+                    observable.onNext(.bookmark(isBookmarked))
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    private func saveBookmark(pillInfo: PillInfoModel) -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            
+            self.useCase.saveBookmark(pillInfo: pillInfo)
+                .subscribe(onSuccess: { [weak self] isBookmarked in
+                    self?.isBookmarked = isBookmarked
+                    observable.onNext(.bookmark(true))
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func deleteBookmark(medicineSeq: Int) -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            
+            self.useCase.deleteBookmark(medicineSeq: medicineSeq)
+                .subscribe(onSuccess: { [weak self] isBookmarked in
+                    self?.isBookmarked = isBookmarked
+                    observable.onNext(.bookmark(isBookmarked))
+                }, onFailure: { error in
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func bookmark() -> Observable<Mutation> {
+        return isBookmarked ? deleteBookmark(medicineSeq: pill.info.medicineSeq) : saveBookmark(pillInfo: pill.info)
+    }
+    
+    private func updateHits() -> Observable<Mutation> {
+        return .create { [weak self] observable in
+            guard let self = self else { return Disposables.create() }
+            self.useCase.updatePillHits(medicineSeq: pill.info.medicineSeq, medicineName: pill.info.medicineName)
+                .subscribe(onSuccess: { [weak self] hitInfo in
+                    guard let self = self else { return }
+                    self.pill.info.hits = hitInfo.hits
+                    observable.onNext(.loadPillInfo(pill.info, self.hasDescription))
+                }, onFailure: { error in
+                    if error is SearchDetailUseCaseError { return }
+                    observable.onNext(.error(error))
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
@@ -125,13 +206,19 @@ public final class SearchDetailReactor: Reactor {
 extension SearchDetailReactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .viewDidLoad:
+        case .loadBookmark:
+            return loadBookmark()
+        case .loadPillDescription:
             return loadPillDescription()
+        case .updateHits:
+            return updateHits()
         case .popViewController:
             return .just(.popViewController)
         case .didTapImageView:
             let url = URL(string: pill.info.medicineImage)
             return .just(.showImageDetailView(url))
+        case .didTapBookmarkButton:
+            return bookmark()
         case let .didSelectRow(indexPath):
             let info = getPasteboardValue(indexPath: indexPath)
             return .just(.copyPasteboard(info))
@@ -154,6 +241,10 @@ extension SearchDetailReactor {
             )
         case let .copyPasteboard(value):
             state.pasteboardString = value
+        case let .bookmark(isBookmarked):
+            state.isBookmarked = isBookmarked
+        case let .error(error):
+            state.error = Void()
         }
         return state
     }

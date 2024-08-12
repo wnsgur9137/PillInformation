@@ -170,6 +170,7 @@ extension BookmarkTableViewCell {
                     .justifyContent(.center)
                     .define { labelStack in
                         labelStack.addItem(titleLabel)
+                            .shrink(1.0)
                             .width(85%)
                         labelStack.addItem().define {
                             $0.addItem(classLabel)

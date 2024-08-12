@@ -11,12 +11,7 @@ import RxSwift
 
 import BasePresentation
 
-public enum SearchUseCaseError: Error {
-    case alreadyHits
-}
-
 public protocol SearchUseCase {
     func executePill(keyword: String) -> Single<[PillInfoModel]>
     func executePill(pillShape: PillShapeModel) -> Single<[PillInfoModel]>
-    func updatePillHits(medicineSeq: Int, medicineName: String) -> Single<PillHitsModel>
 }

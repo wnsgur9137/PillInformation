@@ -15,7 +15,7 @@ public protocol SearchCoordinatorDependencies {
     func makeSearchViewController(flowAction: SearchFlowAction) -> SearchViewController
     func makeSearchResultViewController(keyword: String, flowAction: SearchResultFlowAction) -> SearchResultViewController
     func makeSearchResultViewController(shapeInfo: PillShapeModel, flowAction: SearchResultFlowAction) -> SearchResultViewController
-    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> DefaultSearchDetailViewController
+    func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
     func makeImageDetailViewController(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailViewController
     func makeSearchShapeViewController(flowAction: SearchShapeFlowAction) -> SearchShapeViewController
 }
@@ -39,7 +39,7 @@ public final class DefaultSearchCoordinator: SearchCoordinator {
     private let tabDependencies: SearchTabDependencies?
     private weak var searchViewController: SearchViewController?
     private weak var searchResultViewController: SearchResultViewController?
-    private weak var searchDetailViewController: DefaultSearchDetailViewController?
+    private weak var searchDetailViewController: SearchDetailViewController?
     private weak var imageDetailViewController: ImageDetailViewController?
     private weak var searchShapeViewController: SearchShapeViewController?
     

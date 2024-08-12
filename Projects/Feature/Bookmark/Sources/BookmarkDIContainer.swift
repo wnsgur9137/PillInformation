@@ -33,7 +33,7 @@ public final class BookmarkDIContainer {
 // MARK: - BookmarkCoordinatorDependencies
 extension BookmarkDIContainer: BookmarkCoordinatorDependencies {
     
-    private func makeBookmarkRepository() -> BookmarkRepository {
+    private func makeBookmarkRepository() -> BookmarkDomain.BookmarkRepository {
         return DefaultBookmarkRepository()
     }
     private func makeBookmarkUseCase() -> BookmarkUseCase {
@@ -53,13 +53,13 @@ extension BookmarkDIContainer: BookmarkCoordinatorDependencies {
         return DefaultSearchDetailRepository(networkManager: dependencies.networkManager)
     }
     private func makeSearchDetailUseCase() -> SearchDetailUseCase {
-        return DefaultSearchDetailUseCase(with: makePillDetailRepository())
+        return DefaultSearchDetailUseCase(searchDetailRepository: makePillDetailRepository(), bookmarkRepository: makeBookmarkRepository())
     }
     private func makePillDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
         return SearchDetailReactor(with: makeSearchDetailUseCase(), pillInfo: pillInfo, flowAction: flowAction)
     }
-    public func makePillDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewControllerProtocol {
-        return DefaultSearchDetailViewController.create(with: makePillDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
+    public func makePillDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController {
+        return SearchDetailViewController.create(with: makePillDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
     }
     
     private func makeImageDetailReactor(pillName: String, className: String?, imageURL: URL, flowAction: ImageDetailFlowAction) -> ImageDetailReactor {

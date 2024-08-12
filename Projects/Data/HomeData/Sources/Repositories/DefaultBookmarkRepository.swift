@@ -1,18 +1,19 @@
 //
 //  DefaultBookmarkRepository.swift
-//  BookmarkData
+//  HomeData
 //
-//  Created by JunHyeok Lee on 7/5/24.
+//  Created by JunHyeok Lee on 8/12/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 
-import BookmarkDomain
+import BaseData
 import BaseDomain
+import HomeDomain
 
-public final class DefaultBookmarkRepository: BookmarkDomain.BookmarkRepository {
+public final class DefaultBookmarkRepository: BookmarkRepository {
     private let bookmarkStorage: BookmarkStorage
     
     public init(bookmarkStorage: BookmarkStorage = DefaultBookmarkStorage()) {
@@ -25,12 +26,8 @@ extension DefaultBookmarkRepository {
         return bookmarkStorage.getPillSeqs()
     }
     
-    public func executePills() -> Single<[PillInfo]> {
-        return bookmarkStorage.getPills().map { $0.map { $0.toDomain() } }
-    }
-    
     public func savePill(pillInfo: PillInfo) -> Single<[Int]> {
-        let pillInfoDTO = PillInfoResponseDTO(pillInfo: pillInfo)
+        let pillInfoDTO = PillInfoResponseDTO.create(pillInfo: pillInfo)
         return bookmarkStorage.save(response: pillInfoDTO)
     }
     

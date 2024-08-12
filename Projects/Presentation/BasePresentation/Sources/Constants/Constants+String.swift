@@ -57,6 +57,7 @@ extension Constants.Search {
     public static let markCodeBack: String = "마크코드(뒷면)"
     public static let medicineEngName: String = "품목영문명"
     public static let ediCode: String = "보험코드"
+    public static let hits: String = "조회수"
     
     public static let efcyQestim: String = "효능"
     public static let useMethodQesitm: String = "사용법"

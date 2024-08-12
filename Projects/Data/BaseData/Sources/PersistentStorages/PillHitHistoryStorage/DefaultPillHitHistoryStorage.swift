@@ -1,14 +1,14 @@
 //
-//  PillHitHistoreisStorage.swift
-//  SearchData
+//  DefaultPillHitHistoryStorage.swift
+//  BaseData
 //
-//  Created by JunHyeok Lee on 7/11/24.
+//  Created by JunHyeok Lee on 8/12/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 
-public final class PillHitHistoreisStorage: PillHitHistoriesStorage {
+public final class DefaultPillHitHistoryStorage: PillHitHistoryStorage {
     
     private let cache: NSCache<NSString, NSArray>
     private let hitHistoryKey: NSString = "hitHistory"

@@ -12,17 +12,37 @@ import RxSwift
 import NetworkInfra
 import BaseDomain
 import HomeDomain
+import BaseData
 
 public final class DefaultSearchDetailRepository: SearchDetailRepository {
     private let networkManager: NetworkManager
+    private let hitHistoriesStorage: PillHitHistoryStorage
     
-    public init(networkManager: NetworkManager) {
+    public init(networkManager: NetworkManager,
+                hitHistoriesStorage: PillHitHistoryStorage = DefaultPillHitHistoryStorage()) {
         self.networkManager = networkManager
+        self.hitHistoriesStorage = hitHistoriesStorage
     }
 }
 
 extension DefaultSearchDetailRepository {
     public func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?> {
         return networkManager.requestPillDescription(medicineSeq).map { $0?.toDomain() }
+    }
+    
+    public func executePillHits(medicineSeq: Int) -> Single<PillHits> {
+        return networkManager.requestPillHits(medicineSeq).map { $0.toDomain() }
+    }
+    
+    public func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHits> {
+        return networkManager.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toDomain() }
+    }
+    
+    public func saveHitHistories(_ hitHistoreis: [Int]) {
+        return hitHistoriesStorage.saveHitHistories(hitHistoreis)
+    }
+    
+    public func loadHitHistories() -> [Int] {
+        return hitHistoriesStorage.loadHitHistories()
     }
 }

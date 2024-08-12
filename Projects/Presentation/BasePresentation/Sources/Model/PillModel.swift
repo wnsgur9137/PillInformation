@@ -9,7 +9,7 @@
 import Foundation
 
 public struct PillModel {
-    public let info: PillInfoModel
+    public var info: PillInfoModel
     public var description: PillDescriptionModel?
     
     public init(info: PillInfoModel,

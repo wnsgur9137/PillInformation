@@ -1,15 +1,13 @@
 //
 //  BookmarkRepository.swift
-//  SearchDomain
+//  BaseDomain
 //
-//  Created by JunHyeok Lee on 7/3/24.
+//  Created by JunHyeok Lee on 8/12/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
 import Foundation
 import RxSwift
-
-import BaseDomain
 
 public protocol BookmarkRepository {
     func executePillSeqs() -> Single<[Int]>

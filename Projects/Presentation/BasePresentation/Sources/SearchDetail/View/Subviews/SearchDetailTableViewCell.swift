@@ -11,7 +11,7 @@ import FlexLayout
 import PinLayout
 
 public enum PillInfoModelName: String {
-    case medicineSeq, medicineName, entpSeq, entpName, chart, medicineImage, printFront, printBack, medicineShape, colorClass1, colorClass2, lineFront, lineBack, lengLong, lengShort, thick, imgRegistTs, classNo, className, etcOtcName, medicinePermitDate, formCodeName, markCodeFrontAnal, markCodeBackAnal, markCodeFrontImg, markCodeBackImg, changeDate, markCodeFront, markCodeBack, medicineEngName, ediCode
+    case medicineSeq, medicineName, entpSeq, entpName, chart, medicineImage, printFront, printBack, medicineShape, colorClass1, colorClass2, lineFront, lineBack, lengLong, lengShort, thick, imgRegistTs, classNo, className, etcOtcName, medicinePermitDate, formCodeName, markCodeFrontAnal, markCodeBackAnal, markCodeFrontImg, markCodeBackImg, changeDate, markCodeFront, markCodeBack, medicineEngName, ediCode, hits
 }
 
 public enum PillDescriptionName: String {
@@ -92,6 +92,7 @@ public final class SearchDetailTableViewCell: UITableViewCell {
         case .markCodeBack: return Constants.Search.markCodeBack
         case .medicineEngName: return Constants.Search.medicineEngName
         case .ediCode: return Constants.Search.ediCode
+        case .hits: return Constants.Search.hits
         }
     }
     

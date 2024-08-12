@@ -12,6 +12,7 @@ import NetworkInfra
 import HomeData
 import HomeDomain
 import HomePresentation
+import BaseDomain
 import BasePresentation
 
 public final class HomeDIContainer {
@@ -52,14 +53,17 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     private func makeSearchDetailRepository() -> SearchDetailRepository {
         return DefaultSearchDetailRepository(networkManager: dependencies.networkManager)
     }
+    private func makeBookmarkRepository() -> BaseDomain.BookmarkRepository {
+        return DefaultBookmarkRepository()
+    }
     private func makeSearchDetailUseCase() -> SearchDetailUseCase {
-        return DefaultSearchDetailUseCase(with: makeSearchDetailRepository())
+        return DefaultSearchDetailUseCase(searchDetailRepository: makeSearchDetailRepository(), bookmarkRepository: makeBookmarkRepository())
     }
     private func makeSearchDetailReactor(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailReactor {
         return SearchDetailReactor(with: makeSearchDetailUseCase(), pillInfo: pillInfo, flowAction: flowAction)
     }
-    public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> any SearchDetailViewControllerProtocol {
-        return DefaultSearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
+    public func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController {
+        return SearchDetailViewController.create(with: makeSearchDetailReactor(pillInfo: pillInfo, flowAction: flowAction))
     }
     
     // Recommend Pills
