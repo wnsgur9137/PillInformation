@@ -177,21 +177,7 @@ extension BookmarkTableViewCell {
                             $0.addItem(etcOtcLabel)
                         }
                     }
-        }
-        
-        utilView.flex
-            .direction(.row)
-            .alignItems(.center)
-            .justifyContent(.end)
-            .define { view in
-                view.addItem().grow(1.0)
-                view.addItem(hitsImageView)
-                    .height(24.0)
-                    .width(24.0)
-                view.addItem(hitsLabel)
-                    .marginLeft(4.0)
-                    .height(40.0)
-                view.addItem(bookmarkButton)
+                rootView.addItem(bookmarkButton)
                     .marginLeft(12.0)
                     .width(48.0)
                     .height(48.0)

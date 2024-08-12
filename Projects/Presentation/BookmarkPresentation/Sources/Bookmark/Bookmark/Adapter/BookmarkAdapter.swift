@@ -82,7 +82,7 @@ extension BookmarkAdapter: UITableViewDelegate {
         if editingStyle == .delete {
             tableView.beginUpdates()
             deleteRow.onNext(indexPath)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.endUpdates()
         }
     }
