@@ -9,7 +9,13 @@ import ProjectDescriptionHelpers
 let packageSettings = PackageSettings(
     productTypes: [
         "IQKeyboardManagerSwift": .framework,
-        "SkeletonView": .framework
+        "SkeletonView": .framework,
+//        "FlexLayout": .framework,
+//        "PinLayout": .framework,
+        "RxCocoa": .framework,
+        "RxCocoaRuntime": .framework,
+        "Alamofire": .framework,
+        "RxRelay": .framework,
     ],
     baseSettings: Settings.settings(
         configurations: [

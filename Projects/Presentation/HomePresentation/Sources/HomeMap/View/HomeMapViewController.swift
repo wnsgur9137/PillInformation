@@ -21,8 +21,6 @@ public final class HomeMapViewController: UIViewController, View {
     // MARK: - UI Instances
     
     private let rootContainerView = UIView()
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
     private let mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.showsUserLocation = true
@@ -248,11 +246,17 @@ extension HomeMapViewController: CLLocationManagerDelegate {
 // MARK: - Layout
 extension HomeMapViewController {
     private func setupLayout() {
-        view.addSubview(mapView)
+        view.addSubview(rootContainerView)
+        
+        rootContainerView.flex.define { rootView in
+            rootView.addItem(mapView)
+            rootView.addItem(infoView)
+        }
     }
     
     private func setupSubviewLayout() {
-        mapView.pin.all(view.safeAreaInsets)
+        rootContainerView.pin.all(view.safeAreaInsets)
+        rootContainerView.flex.layout()
     }
     
     private func updateSubviewLayout() {

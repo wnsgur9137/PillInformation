@@ -7,6 +7,9 @@
 
 import ProjectDescription
 
+let appVersion: Plist.Value = "0.1.2"
+let bundleVersion: Plist.Value = "1"
+
 public let defaultInfoPlist: [String: Plist.Value] = [
     "UILaunchStoryboardName": "LaunchScreen",
     "UIApplicationSceneManifest": [
@@ -20,6 +23,8 @@ public let defaultInfoPlist: [String: Plist.Value] = [
             ]
         ]
     ],
+    "CFBundleShortVersionString": appVersion,
+    "CFBundleVersion": bundleVersion,
     "UIAppFonts": [
         "SUITE-Bold.otf",
         "SUITE-ExtraBold.otf",
@@ -83,7 +88,8 @@ extension Project {
                                hasDemoApp: Bool = false) -> Project {
         let settings: Settings = .settings(
             base: [
-                "OTHER_LDFLAGS": ["-lc++", "-Objc"]
+                "OTHER_LDFLAGS": ["-lc++", "-Objc"],
+                "GCC_PREPROCESSOR_DEFINITIONS": ["FLEXLAYOUT_SWIFT_PACKAGE=1"]
             ],
             configurations: [
                 .debug(name: .DEV),

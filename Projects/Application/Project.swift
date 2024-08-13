@@ -9,9 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let projectName = "PillInformation"
-
 let organizationName = "com.junhyeok.PillInformation"
-
 let deploymentTargets: DeploymentTargets = .iOS("14.0")
 
 // MARK: - Settings
@@ -50,7 +48,10 @@ let targets: [Target] = [
             .Project.InjectionManager.Infrastructure
         ],
         settings: .settings(
-            base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+            base: [
+                "OTHER_LDFLAGS": ["-lc++", "-Objc"],
+                "GCC_PREPROCESSOR_DEFINITIONS": ["FLEXLAYOUT_SWIFT_PACKAGE=1"]
+            ],
             configurations: [
                 .debug(
                     name: .DEV,
@@ -91,7 +92,10 @@ let targets: [Target] = [
             .target(name: projectName)
         ],
         settings: .settings(
-            base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+            base: [
+                "OTHER_LDFLAGS": ["-lc++", "-Objc"],
+                "GCC_PREPROCESSOR_DEFINITIONS": ["FLEXLAYOUT_SWIFT_PACKAGE=1"]
+            ],
             configurations: [
                 .debug(
                     name: .TEST_DEV,
