@@ -15,7 +15,8 @@ let deploymentTargets: DeploymentTargets = .iOS("14.0")
 // MARK: - Settings
 let settings: Settings = .settings(
     base: [
-        "DEVELOPMENT_TEAM": "VW2UR5Y845"
+        "DEVELOPMENT_TEAM": "VW2UR5Y845",
+        "GCC_PREPROCESSOR_DEFINITIONS": ["FLEXLAYOUT_SWIFT_PACKAGE=1"]
     ],
     configurations: [
         .debug(name: .DEV),
