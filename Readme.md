@@ -2,6 +2,24 @@
 
 ![graph](graph.png)
 
+<br>
+
+## Commend LIne Tool (Generating Xcode project)
+
+|Name|Version|
+|:--:|--|
+|Tuist|4.9.0|
+
+```
+brew tap tuist/tuist
+brew install --formula tuist@4.9.0
+
+# 만약 tuist가 설치되어 있는 경우
+brew link --overwrite tuist@4.9.0
+```
+
+<br>
+
 ## Third-party libraries
 
 |Name|Version|-|
