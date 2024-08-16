@@ -16,7 +16,7 @@ import MapKit
 
 import BasePresentation
 
-public final class HomeMapViewController: UIViewController, View {
+public final class HomeMapViewController: UIViewController {
     
     // MARK: - UI Instances
     
@@ -26,19 +26,16 @@ public final class HomeMapViewController: UIViewController, View {
         mapView.showsUserLocation = true
         return mapView
     }()
-    private let infoView = UIView()
+    private lazy var infoView = MapInfoView()
     
     // MARK: - Properties
     
-    public var disposeBag = DisposeBag()
     private let locationManager = CLLocationManager()
     private var isSearched: Bool = false
     
     // MARK: - Life cycle
-    public static func create(with reactor: HomeMapReactor) -> HomeMapViewController {
-        let viewController = HomeMapViewController()
-        viewController.reactor = reactor
-        return viewController
+    public static func create() -> HomeMapViewController {
+        return HomeMapViewController()
     }
     
     private init() {
@@ -70,11 +67,6 @@ public final class HomeMapViewController: UIViewController, View {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupSubviewLayout()
-    }
-    
-    public func bind(reactor: HomeMapReactor) {
-        bindAction(reactor)
-        bindState(reactor)
     }
     
     private func checkLocationAuthorizationStatus() {
@@ -128,8 +120,14 @@ public final class HomeMapViewController: UIViewController, View {
         }
     }
     
-    private func configureInfoView(_ item: MKMapItem) {
-        
+    private func configureInfoView(_ annotation: MKPointAnnotation) {
+        infoView.configure(
+            title: annotation.title,
+            subtitle: annotation.subtitle,
+            description: annotation.description
+        )
+        infoView.flex.height(30%)
+        rootContainerView.flex.layout()
     }
     
     private func findRoute(from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) {
@@ -158,17 +156,6 @@ public final class HomeMapViewController: UIViewController, View {
     }
 }
 
-// MARK: - Bind
-extension HomeMapViewController {
-    private func bindAction(_ reactor: HomeMapReactor) {
-        
-    }
-    
-    private func bindState(_ reactor: HomeMapReactor) {
-        
-    }
-}
-
 // MARK: - MKMapView Delegate
 extension HomeMapViewController: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -178,18 +165,6 @@ extension HomeMapViewController: MKMapViewDelegate {
             var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
             
             if annotationView == nil {
-//                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//                annotationView?.image = UIImage(named: "pin_image") // 핀 이미지 설정
-//                
-//                // 제목 레이블 추가
-//                let titleLabel = UILabel()
-//                titleLabel.backgroundColor = UIColor.white.withAlphaComponent(0.8)
-//                titleLabel.textColor = .black
-//                titleLabel.textAlignment = .center
-//                titleLabel.font = UIFont.systemFont(ofSize: 12)
-//                
-//                annotationView?.addSubview(titleLabel)
-                
                 annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView?.canShowCallout = true
                 annotationView?.addSubview(infoView)
@@ -209,11 +184,13 @@ extension HomeMapViewController: MKMapViewDelegate {
     }
     
     public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if let annotation = view.annotation as? MKPointAnnotation {
-            let sourceCoordinate = mapView.userLocation.coordinate
-            let destinationCoordinate = annotation.coordinate
-            findRoute(from: sourceCoordinate, to: destinationCoordinate)
-        }
+        guard let annotation = view.annotation as? MKPointAnnotation else { return }
+        
+        configureInfoView(annotation)
+        
+        let sourceCoordinate = mapView.userLocation.coordinate
+        let destinationCoordinate = annotation.coordinate
+        findRoute(from: sourceCoordinate, to: destinationCoordinate)
     }
     
     public func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
@@ -249,7 +226,7 @@ extension HomeMapViewController {
         view.addSubview(rootContainerView)
         
         rootContainerView.flex.define { rootView in
-            rootView.addItem(mapView)
+            rootView.addItem(mapView).grow(1.0)
             rootView.addItem(infoView)
         }
     }
