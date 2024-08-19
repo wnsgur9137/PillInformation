@@ -10,7 +10,7 @@ import ProjectDescriptionHelpers
 
 let project: Project = .project(
     name: "DataLibraries",
-    product: .framework,
+    product: .staticFramework,
     dependencies: [
         .SPM.Data.RealmSwift
     ]

@@ -176,7 +176,7 @@ extension DefaultUserStorage: UserStorage {
     }
     
     public func getEmailFromKeychain() -> Single<String> {
-        guard let bundleID = Bundle.main.bundleIdentifier else {
+        guard let _ = Bundle.main.bundleIdentifier else {
             return .error(KeychainError.isNullAppBundleID)
         }
         
