@@ -72,7 +72,9 @@ public let defaultInfoPlist: [String: Plist.Value] = [
         "UIInterfaceOrientationLandscapeLeft",
         "UIInterfaceOrientationLandscapeRight"
     ],
-    "NSPhotoLibraryAddUsageDescription": "Test"
+    "NSPhotoLibraryAddUsageDescription": "Test",
+    "NSLocationWhenInUseUsageDescription": "Test Test",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Test12345"
 ]
 
 extension Project {

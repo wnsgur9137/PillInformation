@@ -126,8 +126,19 @@ public final class HomeMapViewController: UIViewController {
             subtitle: annotation.subtitle,
             description: annotation.description
         )
-        infoView.flex.height(30%)
-        rootContainerView.flex.layout()
+        infoView.flex
+            .height(30%)
+            .display(.flex)
+        UIView.animate(withDuration: 0.2) {
+            self.rootContainerView.flex.layout()
+        }
+    }
+    
+    private func removeInfoView() {
+        infoView.flex.display(.none)
+        UIView.animate(withDuration: 0.2) {
+            self.rootContainerView.flex.layout()
+        }
     }
     
     private func findRoute(from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) {
@@ -160,27 +171,32 @@ public final class HomeMapViewController: UIViewController {
 extension HomeMapViewController: MKMapViewDelegate {
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "PlacePin"
+        guard let annotation = annotation as? MKPointAnnotation else { return nil }
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
         
-        if annotation is MKPointAnnotation {
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
             
-            if annotationView == nil {
-                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-                annotationView?.canShowCallout = true
-                annotationView?.addSubview(infoView)
-                infoView.backgroundColor = .orange.withAlphaComponent(0.5)
-                
-                // 오른쪽에 디스크로저 버튼 추가
-                let rightButton = UIButton(type: .detailDisclosure)
-                annotationView?.rightCalloutAccessoryView = rightButton
-            } else {
-                annotationView?.annotation = annotation
-            }
-            
-            return annotationView
+            // 오른쪽에 디스크로저 버튼 추가
+            let rightButton = UIButton(type: .detailDisclosure)
+            annotationView?.rightCalloutAccessoryView = rightButton
+        } else {
+            annotationView?.annotation = annotation
         }
         
-        return nil
+        return annotationView
+    }
+    
+    public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("🚨didSelect")
+        guard let annotation = view.annotation as? MKPointAnnotation else { return }
+        configureInfoView(annotation)
+    }
+    
+    public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        print("🚨didDeselect")
+        removeInfoView()
     }
     
     public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {

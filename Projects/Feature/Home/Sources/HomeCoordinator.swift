@@ -15,7 +15,7 @@ public protocol HomeCoordinatorDependencies {
     func makeHomeViewController(flowAction: HomeFlowAction, homeTabViewController: HomeTabViewController) -> HomeViewController
     func makeHomeTabViewController(tabViewControllers: [UIViewController], tabTitles: [String], isNewTabs: [Bool]) -> HomeTabViewController
     func makeHomeRecommendViewController(flowAction: HomeRecommendFlowAction) -> HomeRecommendViewController
-    func makeHomeMapViewController(flowAction: HomeMapFlowAction) -> HomeMapViewController
+    func makeHomeMapViewController() -> HomeMapViewController
     func makeHomeNoticeViewController(flowAction: HomeNoticeFlowAction) -> HomeNoticeViewController
     
     func makeSearchDetailViewController(pillInfo: PillInfoModel, flowAction: SearchDetailFlowAction) -> SearchDetailViewController
@@ -70,8 +70,7 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
             return dependencies.makeHomeRecommendViewController(flowAction: flowAction)
             
         case .map:
-            let flowAction = HomeMapFlowAction()
-            return dependencies.makeHomeMapViewController(flowAction: flowAction)
+            return dependencies.makeHomeMapViewController()
             
         case .notice:
             let flowAction = HomeNoticeFlowAction(
