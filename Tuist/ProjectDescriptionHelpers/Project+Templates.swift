@@ -87,6 +87,7 @@ extension Project {
                                deploymentTarget: DeploymentTargets? = .iOS("14.0"),
                                dependencies: [TargetDependency] = [],
                                infoPlist: [String: Plist.Value] = [:],
+                               hasResource: Bool = false,
                                hasDemoApp: Bool = false) -> Project {
         let settings: Settings = .settings(
             base: [
@@ -110,7 +111,7 @@ extension Project {
             deploymentTargets: deploymentTarget,
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Sources/**"],
-            resources: ["Resources/**"],
+            resources: hasResource ? ["Resources/**"] : nil,
             dependencies: dependencies
         )
         
