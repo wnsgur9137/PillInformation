@@ -1788,7 +1788,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "We are not responsible for any problems that may arise if you use the PillInformation app's PillInformation app to take your medication. This app provides information only for general reference purposes and does not replace the advice of healthcare professionals.\\n\\nYou are responsible for any issues that arise with drug selection or ingestion, relying on the information provided through the app. Be sure to consult a qualified medical professional if you are taking drugs or in need of professional medical assistance under any circumstances."
           }
         },

@@ -28,15 +28,15 @@ public final class PolicyReactor: Reactor {
         
         var title: String {
             switch self {
-            case .privacy: Constants.MyPage.appPolicyTitle
-            case .app: Constants.MyPage.privacyPolicyTitle
+            case .privacy: Constants.Onboarding.appPolicy
+            case .app: Constants.Onboarding.privacyPolicyTitle
             }
         }
         
         var policy: String {
             switch self {
-            case .privacy: Constants.MyPage.appPolicy
-            case .app: Constants.MyPage.privacyPolicy
+            case .privacy: Constants.Onboarding.appPolicy
+            case .app: Constants.Onboarding.privacyPolicy
             }
         }
     }
