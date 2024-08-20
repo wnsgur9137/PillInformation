@@ -12,8 +12,8 @@ import BasePresentation
 
 extension Constants.Home {
     static let home: String = "home".localized
-    static let searchPillByShape: String = "searchPillByShape".localized
-    static let searchPillByPhoto: String = "searchPillByPhoto".localized
+    static let searchPillByNameShort: String = "searchPillByNameShort".localized
+    static let searchPillByShapeShort: String = "searchPillByShapeShort".localized
     static let notice: String = "notice".localized
     static let recommendPills: String = "recommendPills".localized
     static let otherNotice: String = "otherNotice".localized

@@ -14,7 +14,6 @@ let project: Project = .project(
     dependencies: [
         .Project.LibraryManager.ReactiveLibraries,
         .Project.LibraryManager.DataLibraries,
-        .Project.Infrastructure.Network,
-        .Project.Common
+        .Project.Infrastructure.Network
     ]
 )

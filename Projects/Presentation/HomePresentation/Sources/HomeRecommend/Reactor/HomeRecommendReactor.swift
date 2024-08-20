@@ -51,8 +51,8 @@ public enum HomeShortcutButtonInfo: Int, CaseIterable {
     
     var title: String {
         switch self {
-        case .name: return Constants.Home.searchPillByName
-        case .shape: return Constants.Home.searchPillByShape
+        case .name: return Constants.Home.searchPillByNameShort
+        case .shape: return Constants.Home.searchPillByShapeShort
         }
     }
 }

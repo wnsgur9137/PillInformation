@@ -17,6 +17,5 @@ let project: Project = .project(
         .Project.LibraryManager.LayoutLibraries,
         .Project.LibraryManager.UILibraries,
         .Project.Infrastructure.Notification,
-        .Project.Common
     ]
 )
