@@ -190,9 +190,9 @@ extension HomeMapViewController: MKMapViewDelegate {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             
-            // 오른쪽에 디스크로저 버튼 추가
-            let rightButton = UIButton(type: .detailDisclosure)
-            annotationView?.rightCalloutAccessoryView = rightButton
+//            // 오른쪽에 디스크로저 버튼 추가
+//            let rightButton = UIButton(type: .detailDisclosure)
+//            annotationView?.rightCalloutAccessoryView = rightButton
         } else {
             annotationView?.annotation = annotation
         }
