@@ -26,7 +26,7 @@ public final class HomeNoticeViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.HomeViewController.notice
+        label.text = Constants.Home.notice
         label.font = Constants.Font.suiteSemiBold(24.0)
         label.textColor = Constants.Color.label
         return label

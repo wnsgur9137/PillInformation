@@ -9,7 +9,7 @@
 import Foundation
 
 extension Constants {
-    public static let appName: String = "PillInformation"
+    public static let appName: String = "appName".localized
     
     public static let warningMessage: String = "warningMessage".localized
     

@@ -60,7 +60,7 @@ public final class AlarmDetailViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Alarm"
+        title = Constants.Alarm.alarm
         view.backgroundColor = Constants.Color.background
         setupLayout()
     }

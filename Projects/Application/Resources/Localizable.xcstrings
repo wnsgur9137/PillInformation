@@ -67,6 +67,17 @@
         }
       }
     },
+    "appName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PillInformation"
+          }
+        }
+      }
+    },
     "askDeleteAll" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -397,6 +408,17 @@
         }
       }
     },
+    "home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "홈"
+          }
+        }
+      }
+    },
     "imgRegistTs" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -617,6 +639,28 @@
         }
       }
     },
+    "notice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공지"
+          }
+        }
+      }
+    },
+    "otherNotice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 공지사항"
+          }
+        }
+      }
+    },
     "printBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -646,6 +690,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이전 타이머 기록"
+          }
+        }
+      }
+    },
+    "recommendPills" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "많이 찾는 알약"
           }
         }
       }
@@ -690,6 +745,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "검색"
+          }
+        }
+      }
+    },
+    "searchPillByPhoto" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약 사진으로 검색하기"
+          }
+        }
+      }
+    },
+    "searchPillByShape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약 모양으로 검색하기"
           }
         }
       }
