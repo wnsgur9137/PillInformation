@@ -67,6 +67,17 @@
         }
       }
     },
+    "askDeleteAll" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 삭제하시겠습니까?"
+          }
+        }
+      }
+    },
     "atpnQesitm" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -96,6 +107,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "뒤로"
+          }
+        }
+      }
+    },
+    "bookmark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "즐겨찾기"
+          }
+        }
+      }
+    },
+    "bookmarkLoadErrorMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "불러오기에 실패했습니다."
+          }
+        }
+      }
+    },
+    "bookmarkSaveErrorMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장에 실패했습니다."
           }
         }
       }
@@ -199,6 +243,17 @@
         }
       }
     },
+    "deleteAll" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 삭제하기"
+          }
+        }
+      }
+    },
     "depositMethodQesitm" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -239,6 +294,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "타이머가 설정되지 않았어요"
+          }
+        }
+      }
+    },
+    "emptyBookmark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "즐겨찾기한 알약이 없어요"
+          }
+        }
+      }
+    },
+    "emptyBookmarkDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약을 검색하고 즐겨찾기를 추가해보세요"
           }
         }
       }
@@ -624,6 +701,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "부작용"
+          }
+        }
+      }
+    },
+    "serverErrorMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서버 오류가 발생했습니다."
           }
         }
       }
