@@ -19,7 +19,7 @@ final class MapInfoView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "TEST Title"
-        label.font = Constants.Font.suiteSemiBold(24.0)
+        label.font = Constants.Font.suiteSemiBold(32.0)
         label.textColor = Constants.Color.label
         return label
     }()
@@ -84,13 +84,14 @@ extension MapInfoView {
             .backgroundColor(Constants.Color.background)
             .define { rootView in
                 rootView.addItem(titleLabel)
+                    .margin(12.0, 12.0, 8.0, 12.0)
                 rootView.addItem(subtitleLabel)
-                    .marginBottom(12.0)
+                    .margin(0, 12.0, 12.0, 12.0)
                 
                 rootView.addItem(routeLabel)
+                    .margin(12.0, 12.0, 8.0, 12.0)
                 rootView.addItem()
                     .width(100%)
-//                    .shrink(1.0)
                     .direction(.row)
                     .define { buttonStack in
                         buttonStack.addItem(walkButton)
