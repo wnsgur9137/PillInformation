@@ -71,7 +71,7 @@ extension BookmarkTableHeaderView {
         
         deleteButton.flex
             .direction(.row)
-            .backgroundColor(Constants.Color.skyBlue)
+            .backgroundColor(Constants.Color.skyBlueBackground)
             .cornerRadius(8.0)
             .define { button in
                 button.addItem(deleteLabel)

@@ -19,4 +19,7 @@ extension Constants.Home {
     static let otherNotice: String = "otherNotice".localized
     static let searchPills: String = "searchPills".localized
     static let searchPillByName: String = "searchPillByName".localized
+    static let findRoute: String = "findRoute".localized
+    static let walk: String = "walk".localized
+    static let vehicle: String = "vehicle".localized
 }

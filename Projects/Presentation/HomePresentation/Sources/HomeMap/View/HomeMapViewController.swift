@@ -26,12 +26,14 @@ public final class HomeMapViewController: UIViewController {
         mapView.showsUserLocation = true
         return mapView
     }()
-    private lazy var infoView = MapInfoView()
+    private let infoView = MapInfoView()
     
     // MARK: - Properties
     
+    private let disposeBag = DisposeBag()
     private let locationManager = CLLocationManager()
     private var isSearched: Bool = false
+    private var selectedAnnotation: MKAnnotation?
     
     // MARK: - Life cycle
     public static func create() -> HomeMapViewController {
@@ -50,6 +52,7 @@ public final class HomeMapViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        bindInfoView()
         setupLocationManager()
         setupLayout()
     }
@@ -123,47 +126,56 @@ public final class HomeMapViewController: UIViewController {
     private func configureInfoView(_ annotation: MKPointAnnotation) {
         infoView.configure(
             title: annotation.title,
-            subtitle: annotation.subtitle,
-            description: annotation.description
+            subtitle: annotation.subtitle
         )
-        infoView.flex
-            .height(30%)
-            .display(.flex)
         UIView.animate(withDuration: 0.2) {
-            self.rootContainerView.flex.layout()
+            self.setupSubviewLayout()
+            self.infoView.flex.layout()
         }
     }
     
     private func removeInfoView() {
-        infoView.flex.display(.none)
         UIView.animate(withDuration: 0.2) {
-            self.rootContainerView.flex.layout()
+            self.setupSubviewLayout()
         }
     }
     
-    private func findRoute(from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) {
-        let existingOverlays = mapView.overlays
-        mapView.removeOverlays(existingOverlays)
+    private func findRoute(_ transportType: MKDirectionsTransportType) {
+        guard let selectedAnnotation = selectedAnnotation else { return }
+        mapView.removeOverlays(mapView.overlays)
         
-        let sourcePlacemark = MKPlacemark(coordinate: source)
-        let destinationPlacemark = MKPlacemark(coordinate: destination)
+        let destinationPlacemark = MKPlacemark(coordinate: selectedAnnotation.coordinate)
+        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
         
-        let directionRequest = MKDirections.Request()
-        directionRequest.source = MKMapItem(placemark: sourcePlacemark)
-        directionRequest.destination = MKMapItem(placemark: destinationPlacemark)
-        directionRequest.transportType = .automobile
+        let request = MKDirections.Request()
+        let currentLocation = MKMapItem.forCurrentLocation()
+        request.source = currentLocation
+        request.destination = destinationMapItem
+        request.transportType = .automobile
         
-        let directions = MKDirections(request: directionRequest)
-        directions.calculate { [weak self] response, error in
-            if let error = error {
-                print("🚨Error: \(error)")
-                return
-            }
-            guard let self = self,
-                  let response = response else { return }
-            let route = response.routes[0]
-            self.mapView.addOverlay(route.polyline, level: .aboveRoads)
+        let directions = MKDirections(request: request)
+        directions.calculate { (response, error) in
+            guard let route = response?.routes.first else { return }
+            self.mapView.addOverlay(route.polyline)
+            self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
         }
+    }
+}
+
+// MARK: - Binding
+extension HomeMapViewController {
+    private func bindInfoView() {
+        infoView.walkButton.rx.tap
+            .subscribe(onNext: {
+                self.findRoute(.walking)
+            })
+            .disposed(by: disposeBag)
+        
+        infoView.vehicleButton.rx.tap
+            .subscribe(onNext: {
+                self.findRoute(.automobile)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -189,24 +201,19 @@ extension HomeMapViewController: MKMapViewDelegate {
     }
     
     public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("🚨didSelect")
         guard let annotation = view.annotation as? MKPointAnnotation else { return }
+        selectedAnnotation = annotation
         configureInfoView(annotation)
     }
     
     public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        print("🚨didDeselect")
+        selectedAnnotation = nil
         removeInfoView()
     }
     
     public func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         guard let annotation = view.annotation as? MKPointAnnotation else { return }
-        
         configureInfoView(annotation)
-        
-        let sourceCoordinate = mapView.userLocation.coordinate
-        let destinationCoordinate = annotation.coordinate
-        findRoute(from: sourceCoordinate, to: destinationCoordinate)
     }
     
     public func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
@@ -240,16 +247,19 @@ extension HomeMapViewController: CLLocationManagerDelegate {
 extension HomeMapViewController {
     private func setupLayout() {
         view.addSubview(rootContainerView)
-        
-        rootContainerView.flex.define { rootView in
-            rootView.addItem(mapView).grow(1.0)
-            rootView.addItem(infoView)
-        }
+        rootContainerView.addSubview(mapView)
+        rootContainerView.addSubview(infoView)
     }
     
     private func setupSubviewLayout() {
         rootContainerView.pin.all(view.safeAreaInsets)
-        rootContainerView.flex.layout()
+        
+        let mapViewHeight: Percent = selectedAnnotation == nil ? 100% : 60%
+        let infoViewHeight: Percent = selectedAnnotation == nil ? 0% : 40%
+        mapView.pin.left().top().right()
+            .height(mapViewHeight)
+        infoView.pin.left().right().bottom()
+            .height(infoViewHeight)
     }
     
     private func updateSubviewLayout() {

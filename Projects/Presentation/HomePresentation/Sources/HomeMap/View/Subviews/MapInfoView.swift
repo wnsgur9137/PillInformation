@@ -18,6 +18,7 @@ final class MapInfoView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.text = "TEST Title"
         label.font = Constants.Font.suiteSemiBold(24.0)
         label.textColor = Constants.Color.label
         return label
@@ -25,16 +26,36 @@ final class MapInfoView: UIView {
     
     private let subtitleLabel: UILabel = {
         let label = UILabel()
+        label.text = "TEST Subtitle"
         label.font = Constants.Font.suiteMedium(18.0)
         label.textColor = Constants.Color.label
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
+    private let routeLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.suiteRegular(16.0)
+        label.text = Constants.Home.findRoute
         label.textColor = Constants.Color.label
+        label.font = Constants.Font.suiteSemiBold(22.0)
         return label
+    }()
+    
+    let walkButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Constants.Home.walk, for: .normal)
+        button.titleLabel?.textColor = Constants.Color.systemWhite
+        button.titleLabel?.font = Constants.Font.suiteMedium(16.0)
+        button.backgroundColor = Constants.Color.systemBlue
+        return button
+    }()
+    
+    let vehicleButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(Constants.Home.vehicle, for: .normal)
+        button.titleLabel?.textColor = Constants.Color.systemWhite
+        button.titleLabel?.font = Constants.Font.suiteMedium(16.0)
+        button.backgroundColor = Constants.Color.systemBlue
+        return button
     }()
     
     override init(frame: CGRect) {
@@ -48,11 +69,9 @@ final class MapInfoView: UIView {
     }
     
     func configure(title: String?,
-                   subtitle: String?,
-                   description: String? = nil) {
+                   subtitle: String?) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        descriptionLabel.text = description
     }
 }
 
@@ -61,10 +80,26 @@ extension MapInfoView {
     private func setupLayout() {
         addSubview(rootContainerView)
         
-        rootContainerView.flex.define { rootView in
-            rootView.addItem(titleLabel)
-            rootView.addItem(subtitleLabel)
-            rootView.addItem(descriptionLabel)
+        rootContainerView.flex
+            .backgroundColor(Constants.Color.background)
+            .define { rootView in
+                rootView.addItem(titleLabel)
+                rootView.addItem(subtitleLabel)
+                    .marginBottom(12.0)
+                
+                rootView.addItem(routeLabel)
+                rootView.addItem()
+                    .width(100%)
+//                    .shrink(1.0)
+                    .direction(.row)
+                    .define { buttonStack in
+                        buttonStack.addItem(walkButton)
+                            .margin(8.0)
+                            .grow(1.0)
+                        buttonStack.addItem(vehicleButton)
+                            .margin(8.0)
+                            .grow(1.0)
+                    }
         }
     }
     

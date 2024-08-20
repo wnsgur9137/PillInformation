@@ -639,6 +639,17 @@
         }
       }
     },
+    "findRoute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "길찾기"
+          }
+        }
+      }
+    },
     "formCodeName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1845,6 +1856,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "내 정보"
+          }
+        }
+      }
+    },
+    "vehicle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "차량"
+          }
+        }
+      }
+    },
+    "walk" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도보"
           }
         }
       }

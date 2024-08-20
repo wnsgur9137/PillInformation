@@ -181,7 +181,7 @@ extension BookmarkViewController {
         rootContainerView.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        view.flex.backgroundColor(Constants.Color.skyBlue)
+        view.flex.backgroundColor(Constants.Color.skyBlueBackground)
         rootContainerView.flex.backgroundColor(Constants.Color.background)
         
         contentView.flex
