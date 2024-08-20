@@ -130,7 +130,7 @@ extension SearchViewController {
                 guard let contents = contents else { return }
                 let title = AlertText(text: contents.title)
                 let message = AlertText(text: contents.message ?? "")
-                let confirmButtonInfo = AlertButtonInfo(title: "확인")
+                let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
                 AlertViewer()
                     .showSingleButtonAlert(self, 
                                            title: title,

@@ -18,7 +18,7 @@ final class CodeCollectionViewCell: UICollectionViewCell {
     
     private let textField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = Constants.SearchShape.printPlaceholder
+        textField.placeholder = Constants.Search.printPlaceholder
         return textField
     }()
     

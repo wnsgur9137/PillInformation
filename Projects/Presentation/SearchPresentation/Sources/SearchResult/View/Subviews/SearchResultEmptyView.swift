@@ -24,7 +24,7 @@ final class SearchResultEmptyView: UIView {
     
     private let label: UILabel = {
         let label = UILabel()
-        label.text = Constants.SearchResult.isEmpty
+        label.text = Constants.Search.isEmpty
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(32.0)
         return label

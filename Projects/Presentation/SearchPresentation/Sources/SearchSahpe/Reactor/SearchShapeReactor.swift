@@ -24,45 +24,92 @@ public enum SearchShapeCollectionViewSecton: Int, CaseIterable {
     case searchView
 }
 
-public enum SearchShapeItems: String, CaseIterable {
-    case rectangle = "장방형"
-    case oval = "타원형"
-    case circular = "원형"
-    case semicircular = "반원형"
-    case rhombus = "마름모형"
-    case triangle = "삼각형"
-    case square = "사각형"
-    case pentagon = "오각형"
-    case hexagon = "육각형"
-    case octagon = "팔각형"
-    case other = "기타"
+public enum SearchShapeItems: CaseIterable {
+    case rectangle
+    case oval
+    case circular
+    case semicircular
+    case rhombus
+    case triangle
+    case square
+    case pentagon
+    case hexagon
+    case octagon
+    case other
+    
+    var string: String {
+        switch self {
+        case .rectangle: return Constants.Search.rectangle
+        case .oval: return Constants.Search.oval
+        case .circular: return Constants.Search.circular
+        case .semicircular: return Constants.Search.semicircular
+        case .rhombus: return Constants.Search.rhombus
+        case .triangle: return Constants.Search.triangle
+        case .square: return Constants.Search.square
+        case .pentagon: return Constants.Search.pentagon
+        case .hexagon: return Constants.Search.hexagon
+        case .octagon: return Constants.Search.octagon
+        case .other: return Constants.Search.other
+        }
+    }
 }
 
-public enum SearchColorItems: String, CaseIterable {
-    case clear = "투명"
-    case white = "하양"
-    case pink = "분홍"
-    case red = "빨강"
-    case orange = "주황"
-    case yellow = "노랑"
-    case lightGreen = "연두"
-    case green = "초록"
-    case turquoise = "청록"
-    case blue = "파랑"
-    case darkBlue = "남색"
-    case purple = "보라"
-    case wine = "자주"
-    case brown = "갈색"
-    case gray = "회색"
-    case black = "검정"
-    case null = "NULL"
+public enum SearchColorItems: CaseIterable {
+    case clear
+    case white
+    case pink
+    case red
+    case orange
+    case yellow
+    case lightGreen
+    case green
+    case turquoise
+    case blue
+    case darkBlue
+    case purple
+    case wine
+    case brown
+    case gray
+    case black
+    case null
+    
+    var string: String {
+        switch self {
+        case .clear: return Constants.Search.clear
+        case .white: return Constants.Search.white
+        case .pink: return Constants.Search.pink
+        case .red: return Constants.Search.red
+        case .orange: return Constants.Search.orange
+        case .yellow: return Constants.Search.yellow
+        case .lightGreen: return Constants.Search.lightGreen
+        case .green: return Constants.Search.green
+        case .turquoise: return Constants.Search.turquoise
+        case .blue: return Constants.Search.blue
+        case .darkBlue: return Constants.Search.darkBlue
+        case .purple: return Constants.Search.purple
+        case .wine: return Constants.Search.wine
+        case .brown: return Constants.Search.brown
+        case .gray: return Constants.Search.gray
+        case .black: return Constants.Search.black
+        case .null: return Constants.Search.null
+        }
+    }
 }
 
-public enum SearchLineItems: String, CaseIterable {
-    case minuse = "-"
-    case plus = "+"
-    case other = "기타"
-    case null = "NULL"
+public enum SearchLineItems: CaseIterable {
+    case minuse
+    case plus
+    case other
+    case null
+    
+    var string: String {
+        switch self {
+        case .minuse: return Constants.Search.minuse
+        case .plus: return Constants.Search.plus
+        case .other: return Constants.Search.other
+        case .null: return Constants.Search.null
+        }
+    }
 }
 
 public struct SearchShapeFlowAction {
@@ -109,7 +156,7 @@ public final class SearchShapeReactor: Reactor {
         }
         switch error {
         case .emptyShape:
-            return (title: Constants.SearchShape.emptyErrorTitle, message: nil)
+            return (title: Constants.Search.emptyErrorTitle, message: nil)
             
         case .default:
             return (title: Constants.alert,
@@ -221,19 +268,19 @@ extension SearchShapeReactor: SearchShapeAdapterDataSource {
     
     public func colorCellForItem(at item: Int) -> (item: SearchColorItems, isSelected: Bool) {
         let item = SearchColorItems.allCases[item]
-        let isSelected = shapeInfo.colors.contains(item.rawValue)
+        let isSelected = shapeInfo.colors.contains(item.string)
         return (item, isSelected)
     }
     
     public func shapeCellForItem(at item: Int) -> (item: SearchShapeItems, isSelected: Bool) {
         let item = SearchShapeItems.allCases[item]
-        let isSelected = shapeInfo.shapes.contains(item.rawValue)
+        let isSelected = shapeInfo.shapes.contains(item.string)
         return (item, isSelected)
     }
     
     public func lineCellForItem(at item: Int) -> (item: SearchLineItems, isSelected: Bool) {
         let item = SearchLineItems.allCases[item]
-        let isSelected = shapeInfo.shapes.contains(item.rawValue)
+        let isSelected = shapeInfo.shapes.contains(item.string)
         return (item, isSelected)
     }
 }

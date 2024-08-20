@@ -210,6 +210,28 @@
         }
       }
     },
+    "black" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검정"
+          }
+        }
+      }
+    },
+    "blue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파랑"
+          }
+        }
+      }
+    },
     "bookmark" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -239,6 +261,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "저장에 실패했습니다."
+          }
+        }
+      }
+    },
+    "brown" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "갈색"
           }
         }
       }
@@ -320,6 +353,17 @@
         }
       }
     },
+    "circular" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "원형"
+          }
+        }
+      }
+    },
     "className" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -338,6 +382,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "분류번호"
+          }
+        }
+      }
+    },
+    "clearColor" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "투명"
+          }
+        }
+      }
+    },
+    "color" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "색상"
           }
         }
       }
@@ -386,6 +452,17 @@
         }
       }
     },
+    "darkBlue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "남색"
+          }
+        }
+      }
+    },
     "dayNotiDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -415,6 +492,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "모두 삭제하기"
+          }
+        }
+      }
+    },
+    "deleteAllShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 삭제"
           }
         }
       }
@@ -485,6 +573,17 @@
         }
       }
     },
+    "emptyShapeError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 개 이상을 선택해 주세요"
+          }
+        }
+      }
+    },
     "entpName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -551,6 +650,39 @@
         }
       }
     },
+    "gray" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회색"
+          }
+        }
+      }
+    },
+    "green" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초록"
+          }
+        }
+      }
+    },
+    "hexagon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "육각형"
+          }
+        }
+      }
+    },
     "hits" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -595,6 +727,17 @@
         }
       }
     },
+    "isEmptySearchHistory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 결과가 없어요"
+          }
+        }
+      }
+    },
     "kakaoLogin" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -624,6 +767,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "크기(단축)"
+          }
+        }
+      }
+    },
+    "lightGreen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연두"
+          }
+        }
+      }
+    },
+    "line" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구분선"
           }
         }
       }
@@ -859,6 +1024,28 @@
         }
       }
     },
+    "noHaveRecentKeyword" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제할 검색 기록이 없습니다."
+          }
+        }
+      }
+    },
+    "none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "없음"
+          }
+        }
+      }
+    },
     "notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -877,6 +1064,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "알림 설정"
+          }
+        }
+      }
+    },
+    "octagon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "팔각형"
           }
         }
       }
@@ -958,6 +1156,28 @@
         }
       }
     },
+    "orange" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주황"
+          }
+        }
+      }
+    },
+    "other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기타"
+          }
+        }
+      }
+    },
     "otherNotice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -965,6 +1185,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "다른 공지사항"
+          }
+        }
+      }
+    },
+    "oval" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타원형"
+          }
+        }
+      }
+    },
+    "pentagon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오각형"
+          }
+        }
+      }
+    },
+    "pink" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분홍"
           }
         }
       }
@@ -987,6 +1240,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "서비스 이용을 위해\\n약관에 동의해주세요."
+          }
+        }
+      }
+    },
+    "print" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "문구"
           }
         }
       }
@@ -1035,6 +1299,28 @@
         }
       }
     },
+    "purple" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보라"
+          }
+        }
+      }
+    },
+    "recentKeyword" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 검색 기록"
+          }
+        }
+      }
+    },
     "recentTimer" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1046,6 +1332,17 @@
         }
       }
     },
+    "recommendKeyword" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추천 검색어"
+          }
+        }
+      }
+    },
     "recommendPills" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1053,6 +1350,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "많이 찾는 알약"
+          }
+        }
+      }
+    },
+    "rectangle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장방형"
+          }
+        }
+      }
+    },
+    "red" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨강"
+          }
+        }
+      }
+    },
+    "rhombus" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마름모형"
           }
         }
       }
@@ -1134,6 +1464,39 @@
         }
       }
     },
+    "searchPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약에 그려진 문구를 입력해 보세요!"
+          }
+        }
+      }
+    },
+    "selectedShape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 옵션"
+          }
+        }
+      }
+    },
+    "semicircular" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "반원형"
+          }
+        }
+      }
+    },
     "seQesitm" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1167,6 +1530,17 @@
         }
       }
     },
+    "shape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모양"
+          }
+        }
+      }
+    },
     "signout" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1185,6 +1559,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "로그아웃에 실패했습니다."
+          }
+        }
+      }
+    },
+    "square" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사각형"
           }
         }
       }
@@ -1310,6 +1695,28 @@
         }
       }
     },
+    "tooShortKeywordError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약명을 두 글자 이상 입력해주세요."
+          }
+        }
+      }
+    },
+    "triangle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삼각형"
+          }
+        }
+      }
+    },
     "trietuesday" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1339,6 +1746,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "화"
+          }
+        }
+      }
+    },
+    "turquoise" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "청록"
           }
         }
       }
@@ -1404,6 +1822,28 @@
         }
       }
     },
+    "white" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하양"
+          }
+        }
+      }
+    },
+    "wine" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "자주"
+          }
+        }
+      }
+    },
     "withdraw" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1444,6 +1884,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "회원 탈퇴시 복구할 수 없습니다."
+          }
+        }
+      }
+    },
+    "yellow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노랑"
           }
         }
       }
