@@ -102,8 +102,8 @@ extension SignInViewController {
     
     private func showCanNotSignInAlert(_ type: SignInType) {
         var title: AlertText?
-        let message = AlertText(text: Constants.SignIn.tryAgainLater)
-        let confirmButtonInfo = AlertButtonInfo(title: Constants.SignIn.ok)
+        let message = AlertText(text: Constants.Onboarding.tryAgainLater)
+        let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
         
         switch type {
         case .saveAppleEmail:
@@ -113,13 +113,13 @@ extension SignInViewController {
             print("Error: loadAppleEmail")
             
         case .apple:
-            title = AlertText(text: Constants.SignIn.canNotAppleSignInTitle)
+            title = AlertText(text: Constants.Onboarding.canNotAppleSignInTitle)
             
         case .kakao:
-            title = AlertText(text: Constants.SignIn.canNotKakaoSignInTitle)
+            title = AlertText(text: Constants.Onboarding.canNotKakaoSignInTitle)
             
         case .signin:
-            title = AlertText(text: Constants.SignIn.canNotSignInTitle)
+            title = AlertText(text: Constants.Onboarding.canNotSignInTitle)
         }
         
         AlertViewer()

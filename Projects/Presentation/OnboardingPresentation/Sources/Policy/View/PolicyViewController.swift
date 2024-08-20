@@ -24,8 +24,8 @@ public final class PolicyViewController: UIViewController, View {
     
     private let backwardButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.OnboardingPolicy.Image.backward, for: .normal)
-        button.setTitle(Constants.OnboardingPolicy.backward, for: .normal)
+        button.setImage(Constants.Onboarding.Image.backward, for: .normal)
+        button.setTitle(Constants.Onboarding.backward, for: .normal)
         button.setTitleColor(Constants.Color.systemBlack, for: .normal)
         button.titleLabel?.font = Constants.Font.suiteMedium(20.0)
         button.tintColor = Constants.Color.systemBlack

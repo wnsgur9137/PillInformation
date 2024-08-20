@@ -23,8 +23,8 @@ public final class OnboardingPolicyViewController: UIViewController, View {
     
     private let backwardButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.OnboardingPolicy.Image.backward, for: .normal)
-        button.setTitle(Constants.OnboardingPolicy.backward, for: .normal)
+        button.setImage(Constants.Onboarding.Image.backward, for: .normal)
+        button.setTitle(Constants.Onboarding.backward, for: .normal)
         button.setTitleColor(Constants.Color.label, for: .normal)
         button.titleLabel?.font = Constants.Font.suiteMedium(20.0)
         button.tintColor = Constants.Color.label
@@ -33,7 +33,7 @@ public final class OnboardingPolicyViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.OnboardingPolicy.policyTitle
+        label.text = Constants.Onboarding.policy
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(36.0)
         label.numberOfLines = 0
@@ -42,7 +42,7 @@ public final class OnboardingPolicyViewController: UIViewController, View {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.OnboardingPolicy.policyDescription
+        label.text = Constants.Onboarding.policyDescription
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteRegular(18.0)
         label.numberOfLines = 0
@@ -51,43 +51,43 @@ public final class OnboardingPolicyViewController: UIViewController, View {
     
     private let agePolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: false)
-        view.title = Constants.OnboardingPolicy.agePolicy
+        view.title = Constants.Onboarding.agePolicy
         return view
     }()
     
     private let appPolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: true)
-        view.title = Constants.OnboardingPolicy.policy
+        view.title = Constants.Onboarding.policy
         return view
     }()
     
     private let privacyPolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: true)
-        view.title = Constants.OnboardingPolicy.privacyPolicy
+        view.title = Constants.Onboarding.privacyPolicy
         return view
     }()
     
     private let daytimeNotiPolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: false)
-        view.title = Constants.OnboardingPolicy.daytimeNotificationPolicy
+        view.title = Constants.Onboarding.daytimeNotificationPolicy
         return view
     }()
     
     private let nighttimeNotiPolicyCheckBoxView: PolicyCheckboxView = {
         let view = PolicyCheckboxView(hasMoreButton: false)
-        view.title = Constants.OnboardingPolicy.nighttimeNotificationPolicy
+        view.title = Constants.Onboarding.nighttimeNotificationPolicy
         return view
     }()
     
     private let confirmButton: FilledButton = {
         let button = FilledButton(style: .large, isEnabled: false)
-        button.title = Constants.OnboardingPolicy.confirm
+        button.title = Constants.Onboarding.start
         return button
     }()
     
     private let allAgreeButton: FilledButton = {
         let button = FilledButton(style: .large)
-        button.title = Constants.OnboardingPolicy.allAgreeAndConfirm
+        button.title = Constants.Onboarding.allAgreeAndConfirm
         return button
     }()
     

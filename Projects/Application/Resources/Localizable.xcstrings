@@ -67,6 +67,17 @@
         }
       }
     },
+    "allAgreeAndConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 동의하고 시작"
+          }
+        }
+      }
+    },
     "appAlarmSetting" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -74,6 +85,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "앱 알림 설정"
+          }
+        }
+      }
+    },
+    "appDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약 검색 앱"
+          }
+        }
+      }
+    },
+    "appleLogin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple 로그인"
           }
         }
       }
@@ -96,6 +129,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "이용약관"
+          }
+        }
+      }
+    },
+    "appPolicyContents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이용약관이용약관이용약관이용약관이용약관이용약관이용약관이용약관이용약관이용약관이용약관"
           }
         }
       }
@@ -206,6 +250,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "취소"
+          }
+        }
+      }
+    },
+    "canNotAppleSignInTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일시적으로 애플 로그인을 사용할 수 없습니다."
+          }
+        }
+      }
+    },
+    "canNotKakaoSignInTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일시적으로 카카오 로그인을 사용할 수 없습니다."
+          }
+        }
+      }
+    },
+    "canNotSignInTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일시적으로 로그인을 할 수 없습니다."
           }
         }
       }
@@ -518,6 +595,17 @@
         }
       }
     },
+    "kakaoLogin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kakao 로그인"
+          }
+        }
+      }
+    },
     "lengLong" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -749,17 +837,6 @@
         }
       }
     },
-    "myPage" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "마이페이지"
-          }
-        }
-      }
-    },
     "nightNotiDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -804,6 +881,72 @@
         }
       }
     },
+    "onboardingAgePolicy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(필수) 만 14세 이상입니다."
+          }
+        }
+      }
+    },
+    "onboardingDaytimeNoti" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(선택) 주간 알림 수신 동의"
+          }
+        }
+      }
+    },
+    "onboardingNighttimeNoti" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(선택) 야간 알림 수신 동의"
+          }
+        }
+      }
+    },
+    "onboardingPolicy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(필수) 이용약관 동의"
+          }
+        }
+      }
+    },
+    "onboardingPrivacyPolicy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(선택) 개인정보 처리 방침"
+          }
+        }
+      }
+    },
+    "onboardingStart" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시작하기"
+          }
+        }
+      }
+    },
     "opensourceLicense" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -837,6 +980,17 @@
         }
       }
     },
+    "policyDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "서비스 이용을 위해\\n약관에 동의해주세요."
+          }
+        }
+      }
+    },
     "printBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -866,6 +1020,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "개인정보 처리방침"
+          }
+        }
+      }
+    },
+    "privacyPolicyContents" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보처리방침개인정보처리방침개인정보처리방침개인정보처리방침개인정보처리방침개인정보처리방침개인정보처리방침"
           }
         }
       }
@@ -1024,6 +1189,17 @@
         }
       }
     },
+    "st" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마이페이지"
+          }
+        }
+      }
+    },
     "start" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1151,7 +1327,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다시 시도해주세요"
+            "value" : "잠시 후 다시 시도해주세요."
           }
         }
       }

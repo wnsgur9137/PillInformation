@@ -10,15 +10,15 @@ import UIKit
 
 import BasePresentation
 
-// MARK: - SignIn
-extension Constants.SignIn.Image {
+extension Constants.Onboarding {
+    struct Image { }
+}
+
+extension Constants.Onboarding.Image {
     static let appleLogo: UIImage = UIImage(named: "appleLogo") ?? UIImage()
     static let kakaoLogo: UIImage = UIImage(named: "kakaoLogo") ?? UIImage()
     static let googleLogo: UIImage = UIImage(named: "googleLogo") ?? UIImage()
-}
 
-// MARK: - OnboardingPolicy
-extension Constants.OnboardingPolicy.Image {
     static let backward: UIImage = UIImage(systemName: "chevron.backward") ?? UIImage()
     static let forward: UIImage = UIImage(systemName: "chevron.forward") ?? UIImage()
     static let checkboxOn: UIImage = UIImage(named: "checkboxOn") ?? UIImage()
