@@ -11,8 +11,5 @@ import Foundation
 import BasePresentation
 
 extension Constants {
-    struct AlarmTabBarController { }
-    struct AlarmViewController { }
-    struct TimerViewController { }
-    struct TimerDetailViewController { }
+    struct Alarm { }
 }

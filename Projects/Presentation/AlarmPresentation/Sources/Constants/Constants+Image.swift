@@ -10,9 +10,11 @@ import UIKit
 
 import BasePresentation
 
-extension Constants.TimerViewController {
-    public struct Image {
-        static let play: UIImage = UIImage(systemName: "play.fill") ?? UIImage()
-        static let pause: UIImage = UIImage(systemName: "pause.fill") ?? UIImage()
-    }
+extension Constants.Alarm {
+    public struct Image { }
+}
+
+extension Constants.Alarm.Image {
+    static let play: UIImage = UIImage(systemName: "play.fill") ?? UIImage()
+    static let pause: UIImage = UIImage(systemName: "pause.fill") ?? UIImage()
 }

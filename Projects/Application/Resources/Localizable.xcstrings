@@ -1,6 +1,61 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "addTimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타이머 설정하기"
+          }
+        }
+      }
+    },
+    "alarm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알람"
+          }
+        }
+      }
+    },
+    "alarmNotificationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타이머가 종료되었어요"
+          }
+        }
+      }
+    },
+    "alarmSaveErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알람 등록에 실패했습니다"
+          }
+        }
+      }
+    },
+    "alarmTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알람 이름"
+          }
+        }
+      }
+    },
     "alert" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -177,6 +232,17 @@
         }
       }
     },
+    "emptyAlarm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타이머가 설정되지 않았어요"
+          }
+        }
+      }
+    },
     "entpName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -217,6 +283,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "제형코드이름"
+          }
+        }
+      }
+    },
+    "friday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "금요일"
+          }
+        }
+      }
+    },
+    "fridayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "금"
           }
         }
       }
@@ -430,6 +518,28 @@
         }
       }
     },
+    "modanyShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "월"
+          }
+        }
+      }
+    },
+    "monday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "월요일"
+          }
+        }
+      }
+    },
     "printBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -448,6 +558,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "앞면"
+          }
+        }
+      }
+    },
+    "recentTimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이전 타이머 기록"
+          }
+        }
+      }
+    },
+    "saturday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "토요일"
+          }
+        }
+      }
+    },
+    "saturdayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "토"
+          }
+        }
+      }
+    },
+    "save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장"
           }
         }
       }
@@ -474,6 +628,50 @@
         }
       }
     },
+    "start" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시작"
+          }
+        }
+      }
+    },
+    "stop" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "중단"
+          }
+        }
+      }
+    },
+    "sunday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일요일"
+          }
+        }
+      }
+    },
+    "sundayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일"
+          }
+        }
+      }
+    },
     "thick" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -481,6 +679,94 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "크기(두께)"
+          }
+        }
+      }
+    },
+    "thursday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "목요일"
+          }
+        }
+      }
+    },
+    "thursdayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "목"
+          }
+        }
+      }
+    },
+    "timer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타이머"
+          }
+        }
+      }
+    },
+    "timerNotificationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알람시간이에요"
+          }
+        }
+      }
+    },
+    "timerTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "타이머 이름"
+          }
+        }
+      }
+    },
+    "trietuesday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화요일"
+          }
+        }
+      }
+    },
+    "tryAgain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 시도해주세요"
+          }
+        }
+      }
+    },
+    "tuesdayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화"
           }
         }
       }
@@ -509,6 +795,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PillInformation 앱의 알약 검색 앱을 사용하여 약물을 섭취하는 경우 발생할 수 있는 문제에 대해 책임을 지지 않습니다. 이 앱은 오직 일반적인 참고 목적으로만 정보를 제공하며, 의료 전문가의 조언을 대체하지 않습니다.\\n\\n앱을 통해 제공되는 정보에 의존하여 약물을 선택하거나 섭취하는 행위에 대해 발생하는 모든 문제에 대한 책임은 사용자 본인에게 있습니다. 어떠한 상황에서도 약물을 복용하거나 전문 의료 도움이 필요한 경우 반드시 자격 있는 의료 전문가와 상담하십시오."
+          }
+        }
+      }
+    },
+    "wednesday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수요일"
+          }
+        }
+      }
+    },
+    "wednesdayShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수"
           }
         }
       }

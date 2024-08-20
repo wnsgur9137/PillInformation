@@ -10,36 +10,36 @@ import Foundation
 
 import BasePresentation
 
-extension Constants.AlarmTabBarController {
-    static let alarm = "알람"
-    static let timer = "타이머"
-}
-
-extension Constants.AlarmViewController {
-    static let alarm = "알람"
-    static let emptyAlarm = "타이머가 설정되지 않았어요"
-    static let addTimer = "타이머 설정하기"
-    static let sunday = "일"
-    static let monday = "월"
-    static let tuesday = "화"
-    static let wednesday = "수"
-    static let thursday = "목"
-    static let friday = "금"
-    static let saturday = "토"
-    static let title = "알람 이름"
-    static let save = "저장"
-    static let saveErrorTitle = "알람 등록에 실패했습니다."
-    static let tryAgain = "다시 시도해주세요."
-    static let notificationTitle = "알람시간이에요!"
-}
-
-extension Constants.TimerViewController {
-    static let timer = "타이머"
-    static let recentTimer = "이전 타이머 기록"
-    static let notificationTitle = "타이머가 종료되었어요!"
-}
-
-extension Constants.TimerDetailViewController {
-    static let timer = "타이머"
-    static let title = "타이머 이름"
+extension Constants.Alarm {
+    static let alarm: String = "alarm".localized
+    static let timer: String = "timer".localized
+    static let emptyAlarm: String = "emptyAlarm".localized
+    static let addTimer: String = "addTimer".localized
+    static let save: String = "save".localized
+    static let alarmSaveErrorTitle: String = "alarmSaveErrorTitle".localized
+    static let tryAgain: String = "tryAgain".localized
+    static let alarmNotificationTitle: String = "alarmNotificationTitle".localized
+    static let recentTimer: String = "recentTimer".localized
+    static let timerNotificationTitle: String = "timerNotificatonTitle".localized
+    static let timerTitle: String = "timerTitle".localized
+    static let start: String = "start".localized
+    static let stop: String = "stop".localized
+    
+    static let sunday: String = "sunday".localized
+    static let monday: String = "monday".localized
+    static let tuesday: String = "tuesday".localized
+    static let wednesday: String = "wednesday".localized
+    static let thursday: String = "thursday".localized
+    static let friday: String = "friday".localized
+    static let saturday: String = "saturday".localized
+    static let alarmTitle: String = "alarmTitle".localized
+    
+    static let sundayShort: String = "sundayShort".localized
+    static let mondayShort: String = "mondayShort".localized
+    static let tuesdayShort: String = "tuesdayShort".localized
+    static let wednesdayShort: String = "wednesdayShort".localized
+    static let thursdayShort: String = "thursdayShort".localized
+    static let fridayShort: String = "fridayShort".localized
+    static let saturdayShort: String = "saturdayShort".localized
+    static let alarmTitleShort: String = "alarmTitleShort".localized
 }
