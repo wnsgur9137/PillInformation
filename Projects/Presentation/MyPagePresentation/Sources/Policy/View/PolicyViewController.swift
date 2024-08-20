@@ -24,7 +24,7 @@ public final class PolicyViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Policy"
+        label.text = Constants.MyPage.policy
         label.textColor = .label
         label.font = Constants.Font.suiteBold(32.0)
         return label

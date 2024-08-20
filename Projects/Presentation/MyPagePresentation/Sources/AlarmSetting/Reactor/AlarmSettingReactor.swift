@@ -111,14 +111,14 @@ public final class AlarmSettingReactor: Reactor {
         switch error {
         case .load:
             return ((
-                title: Constants.AlarmSetting.loadErrorTitle,
-                message: Constants.AlarmSetting.tryAgain
+                title: Constants.MyPage.loadErrorTitle,
+                message: Constants.MyPage.tryAgain
             ), needDismiss: true)
             
         case .change:
             return ((
-                title: Constants.AlarmSetting.changeErrorTitle,
-                message: Constants.AlarmSetting.tryAgain
+                title: Constants.MyPage.changeErrorTitle,
+                message: Constants.MyPage.tryAgain
             ), needDismiss: false)
         }
     }
@@ -171,14 +171,14 @@ extension AlarmSettingReactor: AlarmSettingAdapterDataSource {
     public func cellForRow(at indexPath: IndexPath) -> AlarmSettingCellInfo {
         if indexPath.row == 0 {
             return .init(
-                title: Constants.AlarmSetting.dayNotiTitle,
-                content: Constants.AlarmSetting.dayNotiDescription,
+                title: Constants.MyPage.dayNotiTitle,
+                content: Constants.MyPage.dayNotiDescription,
                 isAgree: userAlarmSetting?.isAgreeDaytimeNoti ?? false
             )
         } else {
             return .init(
-                title: Constants.AlarmSetting.nightNotiTitle,
-                content: Constants.AlarmSetting.nightNotiDescription,
+                title: Constants.MyPage.nightNotiTitle,
+                content: Constants.MyPage.nightNotiDescription,
                 isAgree: userAlarmSetting?.isAgreeNighttimeNoti ?? false
             )
         }

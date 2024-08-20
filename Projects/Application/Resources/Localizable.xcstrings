@@ -67,6 +67,17 @@
         }
       }
     },
+    "appAlarmSetting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 알림 설정"
+          }
+        }
+      }
+    },
     "appName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -78,6 +89,17 @@
         }
       }
     },
+    "appPolicy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이용약관"
+          }
+        }
+      }
+    },
     "askDeleteAll" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -85,6 +107,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "모두 삭제하시겠습니까?"
+          }
+        }
+      }
+    },
+    "askSignout" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃 하시겠습니까?"
+          }
+        }
+      }
+    },
+    "askWithdrawal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원탈퇴 하시겠습니까?"
           }
         }
       }
@@ -177,6 +221,17 @@
         }
       }
     },
+    "changeErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "변경에 실패했습니다."
+          }
+        }
+      }
+    },
     "chart" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -250,6 +305,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "복사 완료"
+          }
+        }
+      }
+    },
+    "dayNotiDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제공하는 주간 알림을 받습니다."
+          }
+        }
+      }
+    },
+    "dayNotiTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주간 알림 수신 동의"
           }
         }
       }
@@ -485,6 +562,39 @@
         }
       }
     },
+    "loadError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "불러오기에 실패했습니다."
+          }
+        }
+      }
+    },
+    "loadErrorTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "불러오기에 실패했습니다."
+          }
+        }
+      }
+    },
+    "localizationSetting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "언어 설정"
+          }
+        }
+      }
+    },
     "markCodeBack" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -639,6 +749,39 @@
         }
       }
     },
+    "myPage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마이페이지"
+          }
+        }
+      }
+    },
+    "nightNotiDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제공하는 야간 알림을 받습니다."
+          }
+        }
+      }
+    },
+    "nightNotiTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "야간 알림 수신 동의"
+          }
+        }
+      }
+    },
     "notice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -650,6 +793,28 @@
         }
       }
     },
+    "notificationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알림 설정"
+          }
+        }
+      }
+    },
+    "opensourceLicense" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오픈소스 라이센스"
+          }
+        }
+      }
+    },
     "otherNotice" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -657,6 +822,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "다른 공지사항"
+          }
+        }
+      }
+    },
+    "policy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이용 약관"
           }
         }
       }
@@ -679,6 +855,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "앞면"
+          }
+        }
+      }
+    },
+    "privacyPolicy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
           }
         }
       }
@@ -738,6 +925,17 @@
         }
       }
     },
+    "screenModeSetting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면 설정"
+          }
+        }
+      }
+    },
     "search" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -789,6 +987,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "서버 오류가 발생했습니다."
+          }
+        }
+      }
+    },
+    "setting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        }
+      }
+    },
+    "signout" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃"
+          }
+        }
+      }
+    },
+    "signoutError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로그아웃에 실패했습니다."
           }
         }
       }
@@ -947,6 +1178,17 @@
         }
       }
     },
+    "userInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 정보"
+          }
+        }
+      }
+    },
     "warningMessage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -982,6 +1224,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "수"
+          }
+        }
+      }
+    },
+    "withdraw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탈퇴"
+          }
+        }
+      }
+    },
+    "withdrawal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원 탈퇴"
+          }
+        }
+      }
+    },
+    "withdrawalError" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원 탈퇴에 실패했습니다."
+          }
+        }
+      }
+    },
+    "withdrawalMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원 탈퇴시 복구할 수 없습니다."
           }
         }
       }
