@@ -133,6 +133,10 @@ let schemes: [Scheme] = [
 let project: Project = .init(
     name: "Application",
     organizationName: organizationName,
+    options: .options(
+        defaultKnownRegions: ["en", "ko"],
+        developmentRegion: "ko"
+    ),
     settings: settings,
     targets: targets,
     schemes: schemes,
