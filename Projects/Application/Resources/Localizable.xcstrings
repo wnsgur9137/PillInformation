@@ -1,7 +1,518 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
-
+    "alert" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알림"
+          }
+        }
+      }
+    },
+    "atpnQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주의사항"
+          }
+        }
+      }
+    },
+    "atpnWarnQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "경고"
+          }
+        }
+      }
+    },
+    "backward" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "뒤로"
+          }
+        }
+      }
+    },
+    "cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        }
+      }
+    },
+    "changeDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "변경일자"
+          }
+        }
+      }
+    },
+    "chart" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성상"
+          }
+        }
+      }
+    },
+    "className" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분류명"
+          }
+        }
+      }
+    },
+    "classNo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분류번호"
+          }
+        }
+      }
+    },
+    "colorClass1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "색상(앞면)"
+          }
+        }
+      }
+    },
+    "colorClass2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "색상(뒷면)"
+          }
+        }
+      }
+    },
+    "confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        }
+      }
+    },
+    "copyComplete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "복사 완료"
+          }
+        }
+      }
+    },
+    "depositMethodQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관법"
+          }
+        }
+      }
+    },
+    "ediCode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보험코드"
+          }
+        }
+      }
+    },
+    "efcyQestim" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "효능"
+          }
+        }
+      }
+    },
+    "entpName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업체명"
+          }
+        }
+      }
+    },
+    "entpSeq" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업체 일련번호"
+          }
+        }
+      }
+    },
+    "etcOtcName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전문/일반"
+          }
+        }
+      }
+    },
+    "formCodeName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제형코드이름"
+          }
+        }
+      }
+    },
+    "hits" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "조회수"
+          }
+        }
+      }
+    },
+    "imgRegistTs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "약학정보원 이미지 생성일"
+          }
+        }
+      }
+    },
+    "intrcQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "상호작용"
+          }
+        }
+      }
+    },
+    "lengLong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크기(장축)"
+          }
+        }
+      }
+    },
+    "lengShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크기(단축)"
+          }
+        }
+      }
+    },
+    "lineBack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분할선(뒷면)"
+          }
+        }
+      }
+    },
+    "lineFront" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분할선(앞면)"
+          }
+        }
+      }
+    },
+    "markCodeBack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크코드(뒷면)"
+          }
+        }
+      }
+    },
+    "markCodeBackAnal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크내용(뒷면)"
+          }
+        }
+      }
+    },
+    "markCodeBackImg" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크이미지(뒷면)"
+          }
+        }
+      }
+    },
+    "markCodeFront" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크코드(앞면)"
+          }
+        }
+      }
+    },
+    "markCodeFrontAnal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크내용(앞면)"
+          }
+        }
+      }
+    },
+    "markCodeFrontImg" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마크이미지(앞면)"
+          }
+        }
+      }
+    },
+    "medicineEngName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "품목영문명"
+          }
+        }
+      }
+    },
+    "medicineImage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "약 이미지"
+          }
+        }
+      }
+    },
+    "medicineName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "품목명"
+          }
+        }
+      }
+    },
+    "medicinePermitDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "품목허가일자"
+          }
+        }
+      }
+    },
+    "medicineSeq" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "품목 일련번호"
+          }
+        }
+      }
+    },
+    "medicineShape" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모양"
+          }
+        }
+      }
+    },
+    "printBack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "뒷면"
+          }
+        }
+      }
+    },
+    "printFrot" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앞면"
+          }
+        }
+      }
+    },
+    "search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색"
+          }
+        }
+      }
+    },
+    "seQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "부작용"
+          }
+        }
+      }
+    },
+    "thick" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크기(두께)"
+          }
+        }
+      }
+    },
+    "useMethodQesitm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용법"
+          }
+        }
+      }
+    },
+    "warningMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "We are not responsible for any problems that may arise if you use the PillInformation app's PillInformation app to take your medication. This app provides information only for general reference purposes and does not replace the advice of healthcare professionals.\\n\\nYou are responsible for any issues that arise with drug selection or ingestion, relying on the information provided through the app. Be sure to consult a qualified medical professional if you are taking drugs or in need of professional medical assistance under any circumstances."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PillInformation 앱의 알약 검색 앱을 사용하여 약물을 섭취하는 경우 발생할 수 있는 문제에 대해 책임을 지지 않습니다. 이 앱은 오직 일반적인 참고 목적으로만 정보를 제공하며, 의료 전문가의 조언을 대체하지 않습니다.\\n\\n앱을 통해 제공되는 정보에 의존하여 약물을 선택하거나 섭취하는 행위에 대해 발생하는 모든 문제에 대한 책임은 사용자 본인에게 있습니다. 어떠한 상황에서도 약물을 복용하거나 전문 의료 도움이 필요한 경우 반드시 자격 있는 의료 전문가와 상담하십시오."
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }
