@@ -10,7 +10,6 @@ import ProjectDescription
 
 public enum ProjectLayer: String {
     case Application
-    case InjectionManager
     case Feature
     case Presentation
     case Domain
@@ -22,7 +21,6 @@ public enum ProjectLayer: String {
 // MARK: - Projects
 extension TargetDependency {
     public struct Project {
-        public struct InjectionManager { }
         public struct Feature {
             public struct Presentation { }
             public struct Domain { }
@@ -36,11 +34,6 @@ extension TargetDependency {
 // MARK: - Project
 public extension TargetDependency.Project {
     static let Common: TargetDependency = .project(target: "Common", path: .relativeToProject(name: "Common"))
-}
-
-// MARK: - InjectionManager
-public extension TargetDependency.Project.InjectionManager {
-    static let Infrastructure: TargetDependency = .project(layer: .InjectionManager, name: "InfraInjectionManager")
 }
 
 // MARK: - Feature

@@ -91,7 +91,7 @@ public final class AlarmDetailReactor: Reactor {
             var targetDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarm.alarmTime)
             targetDate.weekday = weekday
             NotificationService.addTriggerNotification(id: id,
-                                                       title: Constants.AlarmViewController.notificationTitle,
+                                                       title: Constants.Alarm.alarmNotificationTitle,
                                                        body: alarm.title ?? "",
                                                        date: targetDate,
                                                        repeats: true) { [weak self] error in

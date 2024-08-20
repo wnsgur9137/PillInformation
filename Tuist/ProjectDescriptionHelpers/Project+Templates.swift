@@ -72,9 +72,9 @@ public let defaultInfoPlist: [String: Plist.Value] = [
         "UIInterfaceOrientationLandscapeLeft",
         "UIInterfaceOrientationLandscapeRight"
     ],
-    "NSPhotoLibraryAddUsageDescription": "Test",
-    "NSLocationWhenInUseUsageDescription": "Test Test",
-    "NSLocationAlwaysAndWhenInUseUsageDescription": "Test12345"
+    "NSPhotoLibraryAddUsageDescription": "알약 사진을 저장하기 위해 권한이 필요합니다.",
+    "NSLocationWhenInUseUsageDescription": "주변 약국을 검색하기 위해 권한이 필요합니다.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "주변 약국을 검색하기 위해 권한이 필요합니다."
 ]
 
 extension Project {
@@ -163,6 +163,10 @@ extension Project {
         
         return Project(name: name,
                        organizationName: organizationName,
+                       options: .options(
+                           defaultKnownRegions: ["en", "ko"],
+                           developmentRegion: "ko"
+                       ),
                        packages: packages,
                        settings: settings,
                        targets: targets,

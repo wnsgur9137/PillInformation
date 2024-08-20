@@ -25,7 +25,7 @@ final class CircularProgressView: UIView {
     
     private let backgroundLayer = CAShapeLayer()
     private let progressLayer = CAShapeLayer()
-    private let animationName = "progressAnimation"
+    private let animationName = Constants.Animation.progress
     
     private lazy var circularPath: UIBezierPath = {
         return UIBezierPath(

@@ -77,8 +77,8 @@ extension AlarmTabBarController: TMBarDataSource {
     public func barItem(for bar: any TMBar, at index: Int) -> any TMBarItemable {
         var title: String = ""
         switch index {
-        case 0: title = Constants.AlarmTabBarController.alarm
-        case 1: title = Constants.AlarmTabBarController.timer
+        case 0: title = Constants.Alarm.alarm
+        case 1: title = Constants.Alarm.timer
         default: break
         }
         return TMBarItem(title: title)

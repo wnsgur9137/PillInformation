@@ -25,13 +25,13 @@ public final class TimerDetailViewController: UIViewController, View {
     
     private let operationButton: FilledButton = {
         let button = FilledButton(style: .large)
-        button.title = "start"
+        button.title = Constants.Alarm.start
         return button
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.TimerDetailViewController.title
+        label.text = Constants.Alarm.timerTitle
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(28.0)
         return label
@@ -54,7 +54,7 @@ public final class TimerDetailViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Timer"
+        title = Constants.Alarm.timer
         view.backgroundColor = Constants.Color.background
         setupLayout()
     }
@@ -89,7 +89,7 @@ public final class TimerDetailViewController: UIViewController, View {
 extension TimerDetailViewController {
     private func start(timerModel: TimerModel) {
         let duration = timerModel.duration
-        operationButton.title = "Stop"
+        operationButton.title = Constants.Alarm.stop
         remainingSeconds = duration
         timer?.invalidate()
         let startDate = timerModel.startedDate ?? Date()
@@ -115,7 +115,7 @@ extension TimerDetailViewController {
     }
     
     private func stop() {
-        operationButton.title = "Start"
+        operationButton.title = Constants.Alarm.start
         timer?.invalidate()
         circularProgressView.stop()
     }
@@ -124,7 +124,7 @@ extension TimerDetailViewController {
         // TODO: - Make Push notification
         let title = AlertText(text: "123")
         let message = AlertText(text: "456")
-        let confirmButtonInfo = AlertButtonInfo(title: "확인")
+        let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
         AlertViewer()
             .showSingleButtonAlert(
                 self,

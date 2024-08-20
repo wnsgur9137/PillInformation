@@ -23,7 +23,7 @@ public final class SearchShapeViewController: UIViewController, View {
     
     private let selectedShapeLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.SearchShape.selectedShape
+        label.text = Constants.Search.selectedShape
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteMedium(22.0)
         return label
@@ -64,7 +64,7 @@ public final class SearchShapeViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = Constants.SearchShape.title
+        title = Constants.Search.title
         view.backgroundColor = Constants.Color.background
         navigationItem.rightBarButtonItem = navigationSearchButton
         if let reactor = reactor {

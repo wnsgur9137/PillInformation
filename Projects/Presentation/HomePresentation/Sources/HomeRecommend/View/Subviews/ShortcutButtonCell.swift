@@ -55,8 +55,8 @@ public final class ShortcutButtonCell: UICollectionViewCell {
     }
     
     func configure(_ type: HomeShortcutButtonInfo) {
-        titleLabel.text = type.title()
-        guard let imageString = type.imageString() else { return }
+        titleLabel.text = type.title
+        guard let imageString = type.imageString else { return }
         var titleImage: UIImage?
         if let image = UIImage(named: imageString) {
             titleImage = image

@@ -18,43 +18,43 @@ final class WeekSelectionView: UIView {
     
     let sundayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.sunday, for: .normal)
+        button.setTitle(Constants.Alarm.sundayShort, for: .normal)
         return button
     }()
     
     let mondayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.monday, for: .normal)
+        button.setTitle(Constants.Alarm.mondayShort, for: .normal)
         return button
     }()
     
     let tuesdayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.tuesday, for: .normal)
+        button.setTitle(Constants.Alarm.tuesdayShort, for: .normal)
         return button
     }()
     
     let wednesdayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.wednesday, for: .normal)
+        button.setTitle(Constants.Alarm.wednesdayShort, for: .normal)
         return button
     }()
     
     let thursdayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.thursday, for: .normal)
+        button.setTitle(Constants.Alarm.thursdayShort, for: .normal)
         return button
     }()
     
     let fridayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.friday, for: .normal)
+        button.setTitle(Constants.Alarm.fridayShort, for: .normal)
         return button
     }()
     
     let saturdayButton: WeekButton = {
         let button = WeekButton()
-        button.setTitle(Constants.AlarmViewController.saturday, for: .normal)
+        button.setTitle(Constants.Alarm.saturdayShort, for: .normal)
         return button
     }()
     

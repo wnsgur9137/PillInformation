@@ -28,7 +28,7 @@ final class RecentTableViewHeaderView: UITableViewHeaderFooterView {
     
     let deleteAllButton: UIButton = {
         let button = UIButton()
-        button.setTitle("모두 삭제", for: .normal)
+        button.setTitle(Constants.Search.deleteAll, for: .normal)
         button.setTitleColor(Constants.Color.label, for: .normal)
         return button
     }()

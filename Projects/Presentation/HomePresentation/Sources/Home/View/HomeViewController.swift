@@ -26,7 +26,7 @@ public final class HomeViewController: UIViewController, View {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Home"
+        label.text = Constants.Home.home
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteBold(32.0)
         return label

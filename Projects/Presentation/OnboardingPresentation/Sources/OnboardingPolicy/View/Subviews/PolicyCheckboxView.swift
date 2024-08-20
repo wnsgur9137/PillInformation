@@ -21,7 +21,7 @@ final class PolicyCheckboxView: UIView {
     private let checkBoxImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = Constants.OnboardingPolicy.Image.checkboxOff
+        imageView.image = Constants.Onboarding.Image.checkboxOff
         imageView.isUserInteractionEnabled = false
         return imageView
     }()
@@ -36,7 +36,7 @@ final class PolicyCheckboxView: UIView {
     
     let seeMoreButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.OnboardingPolicy.Image.forward, for: .normal)
+        button.setImage(Constants.Onboarding.Image.forward, for: .normal)
         button.tintColor = Constants.Color.label
         return button
     }()
@@ -45,7 +45,7 @@ final class PolicyCheckboxView: UIView {
     
     var isChecked: Bool = false {
         didSet {
-            checkBoxImageView.image = isChecked ? Constants.OnboardingPolicy.Image.checkboxOn : Constants.OnboardingPolicy.Image.checkboxOff
+            checkBoxImageView.image = isChecked ? Constants.Onboarding.Image.checkboxOn : Constants.Onboarding.Image.checkboxOff
         }
     }
     

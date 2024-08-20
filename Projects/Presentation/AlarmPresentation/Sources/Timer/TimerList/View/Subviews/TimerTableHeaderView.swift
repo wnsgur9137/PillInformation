@@ -19,7 +19,7 @@ final class TimerTableHeaderView: UITableViewHeaderFooterView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.TimerViewController.timer
+        label.text = Constants.Alarm.timer
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(24.0)
         return label
@@ -47,7 +47,7 @@ final class TimerTableHeaderView: UITableViewHeaderFooterView {
     func configure(isOperationHeader: Bool = false) {
         setupLayout(isOperationHeader)
         addButton.isHidden = !isOperationHeader
-        titleLabel.text = isOperationHeader ? Constants.TimerViewController.timer : Constants.TimerViewController.recentTimer
+        titleLabel.text = isOperationHeader ? Constants.Alarm.timer : Constants.Alarm.recentTimer
     }
     
     override func layoutSubviews() {

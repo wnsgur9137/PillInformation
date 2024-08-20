@@ -10,7 +10,11 @@ import UIKit
 
 import BasePresentation
 
-extension Constants.HomeViewController.Image {
+extension Constants.Home {
+    struct Image { }
+}
+
+extension Constants.Home.Image {
     static let pills: UIImage = .init(systemName: "pills.fill") ?? UIImage()
     static let camera: UIImage = .init(systemName: "camera") ?? UIImage()
 }

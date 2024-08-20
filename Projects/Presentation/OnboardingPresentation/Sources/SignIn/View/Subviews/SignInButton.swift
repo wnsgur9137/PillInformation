@@ -32,15 +32,15 @@ final class SignInButton: UIButton {
         
         var text: String {
             switch self {
-            case .apple: return Constants.SignIn.appleLogin
-            case .kakao: return Constants.SignIn.kakaoLogin
+            case .apple: return Constants.Onboarding.appleLogin
+            case .kakao: return Constants.Onboarding.kakaoLogin
             }
         }
         
         var image: UIImage {
             switch self {
-            case .apple: return Constants.SignIn.Image.appleLogo
-            case .kakao: return Constants.SignIn.Image.kakaoLogo
+            case .apple: return Constants.Onboarding.Image.appleLogo
+            case .kakao: return Constants.Onboarding.Image.kakaoLogo
             }
         }
     }

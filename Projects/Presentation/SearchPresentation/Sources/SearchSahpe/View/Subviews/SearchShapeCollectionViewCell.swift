@@ -37,7 +37,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     
     private let selectedImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "checkmark")
+        imageView.image = Constants.Search.Image.checkmark
         imageView.tintColor = Constants.Color.label
         imageView.isHidden = true
         return imageView
@@ -97,16 +97,16 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
         guard shape != .other else { return }
         var image: UIImage?
         switch shape {
-        case .rectangle: image = Constants.SearchShape.Image.rectangle
-        case .oval: image = Constants.SearchShape.Image.oval
-        case .circular: image = Constants.SearchShape.Image.circle
-        case .semicircular: image = Constants.SearchShape.Image.semiCircle
-        case .rhombus: image = Constants.SearchShape.Image.rhombus
-        case .triangle: image = Constants.SearchShape.Image.triangle
-        case .square: image = Constants.SearchShape.Image.square
-        case .pentagon: image = Constants.SearchShape.Image.pentagon
-        case .hexagon: image = Constants.SearchShape.Image.hexagon
-        case .octagon: image = Constants.SearchShape.Image.octagon
+        case .rectangle: image = Constants.Search.Image.rectangle
+        case .oval: image = Constants.Search.Image.oval
+        case .circular: image = Constants.Search.Image.circle
+        case .semicircular: image = Constants.Search.Image.semiCircle
+        case .rhombus: image = Constants.Search.Image.rhombus
+        case .triangle: image = Constants.Search.Image.triangle
+        case .square: image = Constants.Search.Image.square
+        case .pentagon: image = Constants.Search.Image.pentagon
+        case .hexagon: image = Constants.Search.Image.hexagon
+        case .octagon: image = Constants.Search.Image.octagon
         case .other: return
         }
         let attributedString = NSMutableAttributedString(string: "")
@@ -122,13 +122,13 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     /// 모양(텍스트)
     private func setupTextAttributedString(_ shape: SearchShapeItems) {
         guard shape == .other else { return }
-        titleLabel.text = Constants.SearchShape.other
+        titleLabel.text = Constants.Search.other
     }
     
     /// 구분선(이미지)
     private func setupImageAttributedString(_ line: SearchLineItems) {
         guard line == .minuse || line == .plus else { return }
-        let image = line == .minuse ? Constants.SearchShape.Image.minus : Constants.SearchShape.Image.plus
+        let image = line == .minuse ? Constants.Search.Image.minus : Constants.Search.Image.plus
         let attributedString = NSMutableAttributedString(string: "")
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = image
@@ -140,7 +140,7 @@ final class SearchShapeCollectionViewCell: UICollectionViewCell {
     /// 구분선(텍스트)
     private func setupTextAttributedString(_ line: SearchLineItems) {
         guard line == .other || line == .null else { return }
-        let text = line == .other ? Constants.SearchShape.other : Constants.SearchShape.null
+        let text = line == .other ? Constants.Search.other : Constants.Search.null
         titleLabel.text = text
     }
 }
@@ -150,14 +150,14 @@ extension SearchShapeCollectionViewCell {
     
     /// 모양
     func configure(_ shape: SearchShapeItems, isSelected: Bool = false) {
-        content = shape.rawValue
+        content = shape.string
         self.isSelectedCell = isSelected
         if shape == .other {
             titleLabel.font = Constants.Font.suiteSemiBold(24.0)
             setupTextAttributedString(shape)
         } else {
             setupImageAttributedString(shape)
-            subTitleLabel.text = shape.rawValue
+            subTitleLabel.text = shape.string
             subTitleLabel.flex.markDirty()
         }
         rootContainerView.flex.layout()
@@ -165,7 +165,7 @@ extension SearchShapeCollectionViewCell {
     
     /// 색상
     func configure(_ color: SearchColorItems, isSelected: Bool = false) {
-        content = color.rawValue
+        content = color.string
         self.isSelectedCell = isSelected
         var backgroundColor: UIColor? = Constants.Color.background
         switch color {
@@ -224,13 +224,13 @@ extension SearchShapeCollectionViewCell {
         
         rootContainerView.backgroundColor = backgroundColor
         titleLabel.textColor = titleLabelColor
-        titleLabel.text = color != .null ? color.rawValue : Constants.SearchShape.null
+        titleLabel.text = color != .null ? color.string : Constants.Search.null
     }
     
     
     /// 구분선
     func configure(_ line: SearchLineItems, isSelected: Bool = false) {
-        content = line.rawValue
+        content = line.string
         self.isSelectedCell = isSelected
         switch line {
         case .minuse: fallthrough

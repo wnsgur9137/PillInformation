@@ -63,7 +63,7 @@ public final class TimerDetailReactor: Reactor {
         let endDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: targetDate)
         let id = NotificationIdentifier.timer(id: timerModel.id)
         NotificationService.addTriggerNotification(id: id,
-                                                   title: Constants.TimerViewController.notificationTitle,
+                                                   title: Constants.Alarm.timerNotificationTitle,
                                                    body: timerModel.title ?? "",
                                                    date: endDate,
                                                    repeats: true) { [weak self] error in

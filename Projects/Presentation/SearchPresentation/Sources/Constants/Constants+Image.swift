@@ -10,7 +10,11 @@ import UIKit
 
 import BasePresentation
 
-extension Constants.SearchShape.Image {
+extension Constants.Search {
+    struct Image { }
+}
+
+extension Constants.Search.Image {
     static let minus: UIImage = UIImage(systemName: "minus") ?? UIImage()
     static let plus: UIImage = UIImage(systemName: "plus") ?? UIImage()
     static let rectangle: UIImage = UIImage(systemName: "rectangle") ?? UIImage()
@@ -23,4 +27,5 @@ extension Constants.SearchShape.Image {
     static let pentagon: UIImage = UIImage(systemName: "pentagon") ?? UIImage()
     static let hexagon: UIImage = UIImage(systemName: "hexagon") ?? UIImage()
     static let octagon: UIImage = UIImage(systemName: "octagon") ?? UIImage()
+    static let checkmark: UIImage = UIImage(systemName: "checkmark") ?? UIImage()
 }

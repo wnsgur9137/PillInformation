@@ -45,8 +45,7 @@ let targets: [Target] = [
         entitlements: "../../SupportingFiles/PillInformation.entitlements",
         scripts: scripts,
         dependencies: [
-            .Project.Feature.Features,
-            .Project.InjectionManager.Infrastructure
+            .Project.Feature.Features
         ],
         settings: .settings(
             base: [
@@ -133,6 +132,10 @@ let schemes: [Scheme] = [
 let project: Project = .init(
     name: "Application",
     organizationName: organizationName,
+    options: .options(
+        defaultKnownRegions: ["en", "ko"],
+        developmentRegion: "ko"
+    ),
     settings: settings,
     targets: targets,
     schemes: schemes,

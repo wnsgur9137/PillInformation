@@ -30,10 +30,10 @@ enum HomeRecommendSection: Int, CaseIterable {
     case shortcut
     case pills
     
-    func title() -> String {
+    var title: String {
         switch self {
-        case .shortcut: "알약 검색"
-        case .pills: "많이 찾는 알약"
+        case .shortcut: Constants.Home.searchPills
+        case .pills: Constants.Home.recommendPills
         }
     }
 }
@@ -42,17 +42,17 @@ public enum HomeShortcutButtonInfo: Int, CaseIterable {
     case name
     case shape
     
-    func imageString() -> String? {
+    var imageString: String? {
         switch self {
         case .name: return "magnifyingglass.circle.fill"
         case .shape: return "pills"
         }
     }
     
-    func title() -> String {
+    var title: String {
         switch self {
-        case .name: return "이름으로 검색"
-        case .shape: return "모양으로 검색"
+        case .name: return Constants.Home.searchPillByName
+        case .shape: return Constants.Home.searchPillByShape
         }
     }
 }
@@ -191,7 +191,7 @@ extension HomeRecommendReactor: HomeRecommendDataSource {
     
     public func headerTitle(at section: Int) -> String? {
         guard let section = HomeRecommendSection(rawValue: section) else { return nil }
-        return section.title()
+        return section.title
     }
 }
 

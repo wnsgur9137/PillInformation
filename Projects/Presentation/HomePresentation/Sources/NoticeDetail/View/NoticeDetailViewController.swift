@@ -49,7 +49,7 @@ public final class NoticeDetailViewController: UIViewController, View {
     
     private let otherNoticeLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.NoticeDetailViewController.otherNotice
+        label.text = Constants.Home.otherNotice
         label.font = Constants.Font.suiteMedium(18.0)
         label.textColor = Constants.Color.label
         return label

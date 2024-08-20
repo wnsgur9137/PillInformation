@@ -10,14 +10,13 @@ import Foundation
 
 import BasePresentation
 
-extension Constants.HomeViewController {
-    public static let title: String = "PillInformation"
-    public static let searchPillByShape: String = "알약 모양으로 검색하기"
-    public static let searchPillByPhoto: String = "알약 사진으로 검색하기"
-    public static let notice: String = "공지"
-    public static let recommendPills: String = "많이 찾는 알약"
-}
-
-extension Constants.NoticeDetailViewController {
-    public static let otherNotice: String = "다른 공지사항"
+extension Constants.Home {
+    static let home: String = "home".localized
+    static let searchPillByShape: String = "searchPillByShape".localized
+    static let searchPillByPhoto: String = "searchPillByPhoto".localized
+    static let notice: String = "notice".localized
+    static let recommendPills: String = "recommendPills".localized
+    static let otherNotice: String = "otherNotice".localized
+    static let searchPills: String = "searchPills".localized
+    static let searchPillByName: String = "searchPillByName".localized
 }

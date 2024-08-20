@@ -32,13 +32,13 @@ public final class AlarmDetailViewController: UIViewController, View {
     
     private let saveButton: FilledButton = {
         let button = FilledButton()
-        button.title = Constants.AlarmViewController.save
+        button.title = Constants.Alarm.save
         return button
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.AlarmViewController.title
+        label.text = Constants.Alarm.alarmTitle
         label.textColor = Constants.Color.label
         label.font = Constants.Font.suiteSemiBold(28.0)
         return label
@@ -60,7 +60,7 @@ public final class AlarmDetailViewController: UIViewController, View {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Alarm"
+        title = Constants.Alarm.alarm
         view.backgroundColor = Constants.Color.background
         setupLayout()
     }
@@ -105,8 +105,8 @@ extension AlarmDetailViewController {
     }
     
     private func showErrorAlert(_ error: Error?) {
-        let title = AlertText(text: Constants.AlarmViewController.saveErrorTitle)
-        let message = AlertText(text: Constants.AlarmViewController.tryAgain)
+        let title = AlertText(text: Constants.Alarm.alarmSaveErrorTitle)
+        let message = AlertText(text: Constants.Alarm.tryAgain)
         let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
         AlertViewer()
             .showSingleButtonAlert(

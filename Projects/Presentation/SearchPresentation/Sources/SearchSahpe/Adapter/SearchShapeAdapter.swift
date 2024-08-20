@@ -56,10 +56,10 @@ extension SearchShapeAdapter: UICollectionViewDataSource {
               let section = SearchShapeCollectionViewSecton(rawValue: indexPath.section) else { return .init() }
         
         switch section {
-        case .color: headerView.configure(Constants.SearchShape.color)
-        case .shape: headerView.configure(Constants.SearchShape.shape)
-        case .line: headerView.configure(Constants.SearchShape.line)
-        case .code: headerView.configure(Constants.SearchShape.print)
+        case .color: headerView.configure(Constants.Search.color)
+        case .shape: headerView.configure(Constants.Search.shape)
+        case .line: headerView.configure(Constants.Search.line)
+        case .code: headerView.configure(Constants.Search.print)
         case .searchView: return .init()
         }
         

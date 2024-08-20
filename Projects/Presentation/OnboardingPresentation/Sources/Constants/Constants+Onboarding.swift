@@ -11,16 +11,5 @@ import Foundation
 import BasePresentation
 
 extension Constants {
-    struct Onboarding {
-        
-    }
-    struct SignIn {
-        struct Image { }
-    }
-    
-    struct OnboardingPolicy {
-        struct Image { }
-    }
-    
-    struct Policy { }
+    struct Onboarding { }
 }
