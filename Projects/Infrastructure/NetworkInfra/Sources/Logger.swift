@@ -1,8 +1,8 @@
 //
-//  Foundation+.swift
-//  Common
+//  Logger.swift
+//  NetworkInfra
 //
-//  Created by JunHyeok Lee on 2/16/24.
+//  Created by JunHyoek Lee on 8/20/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 

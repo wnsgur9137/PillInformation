@@ -31,11 +31,6 @@ extension TargetDependency {
     }
 }
 
-// MARK: - Project
-public extension TargetDependency.Project {
-    static let Common: TargetDependency = .project(target: "Common", path: .relativeToProject(name: "Common"))
-}
-
 // MARK: - Feature
 public extension TargetDependency.Project.Feature {
     static let Features: TargetDependency = .project(layer: .Feature, name: "Features")

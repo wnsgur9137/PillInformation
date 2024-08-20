@@ -1475,6 +1475,17 @@
         }
       }
     },
+    "searchPillByNameShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약 이름으로 검색"
+          }
+        }
+      }
+    },
     "searchPillByPhoto" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1493,6 +1504,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "알약 모양으로 검색하기"
+          }
+        }
+      }
+    },
+    "searchPillByShapeShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알약 모양으로 검색"
           }
         }
       }
