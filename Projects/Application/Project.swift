@@ -45,8 +45,7 @@ let targets: [Target] = [
         entitlements: "../../SupportingFiles/PillInformation.entitlements",
         scripts: scripts,
         dependencies: [
-            .Project.Feature.Features,
-            .Project.InjectionManager.Infrastructure
+            .Project.Feature.Features
         ],
         settings: .settings(
             base: [
