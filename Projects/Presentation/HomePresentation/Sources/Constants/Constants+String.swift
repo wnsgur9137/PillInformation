@@ -11,10 +11,12 @@ import Foundation
 import BasePresentation
 
 extension Constants.Home {
-    public static let home: String = "home".localized
-    public static let searchPillByShape: String = "searchPillByShape".localized
-    public static let searchPillByPhoto: String = "searchPillByPhoto".localized
-    public static let notice: String = "notice".localized
-    public static let recommendPills: String = "recommendPills".localized
-    public static let otherNotice: String = "otherNotice".localized
+    static let home: String = "home".localized
+    static let searchPillByShape: String = "searchPillByShape".localized
+    static let searchPillByPhoto: String = "searchPillByPhoto".localized
+    static let notice: String = "notice".localized
+    static let recommendPills: String = "recommendPills".localized
+    static let otherNotice: String = "otherNotice".localized
+    static let searchPills: String = "searchPills".localized
+    static let searchPillByName: String = "searchPillByName".localized
 }

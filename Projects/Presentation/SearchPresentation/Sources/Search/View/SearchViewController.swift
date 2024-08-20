@@ -194,12 +194,12 @@ extension SearchViewController {
         AlertViewer()
             .showDualButtonAlert(
                 self,
-                title: .init(text: "최근 검색 결과를\n모두 삭제하시겠습니까?"),
+                title: .init(text: Constants.Search.askDeleteAll),
                 message: nil,
-                confirmButtonInfo: .init(title: "삭제") {
+                confirmButtonInfo: .init(title: Constants.Search.delete) {
                     self.deleteAllRecentKeywords.accept(Void())
                 },
-                cancelButtonInfo: .init(title: "취소")
+                cancelButtonInfo: .init(title: Constants.cancel)
             )
     }
 }

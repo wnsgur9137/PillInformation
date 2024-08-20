@@ -30,6 +30,8 @@ extension Constants.Search {
     static let printPlaceholder: String = "searchPlaceholder".localized
     static let emptyErrorTitle: String = "emptyShapeError".localized
     static let deleteAll: String = "deleteAllShort".localized
+    static let delete: String = "delete".localized
+    static let askDeleteAll: String = "askDeleteAllRecentKeyword".localized
     
     static let rectangle: String = "rectangle".localized
     static let oval: String = "oval".localized
