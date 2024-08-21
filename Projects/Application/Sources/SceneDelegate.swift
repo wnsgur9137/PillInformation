@@ -8,6 +8,7 @@
 
 import UIKit
 
+import InjectionManager
 import KakaoLibraries
 import NotificationInfra
 
