@@ -112,7 +112,8 @@ extension Project {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Sources/**"],
             resources: hasResource ? ["Resources/**"] : nil,
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: .settings(base: ["ENABLE_TESTABILITY": "YES"])
         )
         
         let demoAppTarget: Target = .target(
@@ -126,7 +127,10 @@ extension Project {
             resources: ["Demo/Resources/**"],
             dependencies: [.target(name: name)],
             settings: .settings(
-                base: ["OTHER_LDFLAGS": ["-lc++", "-Objc"]],
+                base: [
+                    "OTHER_LDFLAGS": ["-lc++", "-Objc"],
+                    "ENABLE_TESTABILITY": "YES"
+                ],
                 configurations: [
                     .debug(
                         name: .DEV,
@@ -150,7 +154,7 @@ extension Project {
             deploymentTargets: deploymentTarget,
             infoPlist: .default,
             sources: ["Tests/**"],
-            dependencies: testTargetDependencies
+            dependencies: testTargetDependencies + [.SPM.Test.RxTest, .SPM.Test.RxBlocking, .SPM.Test.RxNimble]
         )
         
         let schemes: [Scheme] = hasDemoApp
