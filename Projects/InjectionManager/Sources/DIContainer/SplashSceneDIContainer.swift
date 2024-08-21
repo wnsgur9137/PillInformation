@@ -1,8 +1,8 @@
 //
 //  SplashSceneDIContainer.swift
-//  PillInformation
+//  InjectionManager
 //
-//  Created by JunHyeok Lee on 4/12/24.
+//  Created by JunHyoek Lee on 8/21/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import Features
 import NetworkInfra
 import Splash
 
-final class SplashSceneDIContainer {
+public final class SplashSceneDIContainer {
     struct Dependencies {
         let networkManager: NetworkManager
     }
@@ -26,7 +26,7 @@ final class SplashSceneDIContainer {
         self.splashDIContainer = SplashDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
     }
     
-    func makeSplashCoordinator(navigationController: UINavigationController) -> SplashCoordinator
+    public func makeSplashCoordinator(navigationController: UINavigationController) -> SplashCoordinator
     {
         return DefaultSplashCoordinator(
             navigationController: navigationController,

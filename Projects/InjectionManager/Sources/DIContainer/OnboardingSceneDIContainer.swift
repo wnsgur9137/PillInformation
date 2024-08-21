@@ -1,8 +1,8 @@
 //
 //  OnboardingSceneDIContainer.swift
-//  PillInformation
+//  InjectionManager
 //
-//  Created by JunHyeok Lee on 3/28/24.
+//  Created by JunHyoek Lee on 8/21/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import Features
 import NetworkInfra
 import Onboarding
 
-final class OnboardingSceneDIContainer {
+public final class OnboardingSceneDIContainer {
     struct Dependencies {
         let networkManager: NetworkManager
         let isShowAlarmPrivacy: Bool
@@ -30,7 +30,7 @@ final class OnboardingSceneDIContainer {
         ))
     }
     
-    func makeOnboardingCoordinator(navigationController: UINavigationController) -> OnboardingCoordinator {
+    public func makeOnboardingCoordinator(navigationController: UINavigationController) -> OnboardingCoordinator {
         return DefaultOnboardingCoordinator(
             navigationController: navigationController,
             dependencies: onboardingDIContainer

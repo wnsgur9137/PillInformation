@@ -8,6 +8,7 @@
 
 import UIKit
 
+import InjectionManager
 import Features
 
 final class AppFlowCoordinator {

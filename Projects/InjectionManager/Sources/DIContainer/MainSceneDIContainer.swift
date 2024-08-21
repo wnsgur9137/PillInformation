@@ -1,8 +1,8 @@
 //
 //  MainSceneDIContainer.swift
-//  PillInformation
+//  InjectionManager
 //
-//  Created by JunHyeok Lee on 3/20/24.
+//  Created by JunHyoek Lee on 8/21/24.
 //  Copyright © 2024 com.junhyeok.PillInformation. All rights reserved.
 //
 
@@ -16,7 +16,7 @@ import Search
 import Alarm
 import MyPage
 
-final class MainSceneDIContainer {
+public final class MainSceneDIContainer {
     
     struct Dependencies {
         let networkManager: NetworkManager
@@ -51,7 +51,7 @@ final class MainSceneDIContainer {
         ))
     }
     
-    func makeTabBarCoordinator(tabBarController: UITabBarController,
+    public func makeTabBarCoordinator(tabBarController: UITabBarController,
                                isShowAlarmTab: Bool) -> TabBarCoordinator {
         return DefaultTabBarCoordinator(
             tabBarController: tabBarController,
