@@ -13,7 +13,11 @@ import RealmSwift
 public final class DefaultBookmarkStorage {
     private let realm: Realm
     
-    public init() {
+    public init(testRealm: Realm? = nil) {
+        if let testRealm = testRealm {
+            self.realm = testRealm
+            return
+        }
         self.realm = try! Realm()
     }
     
