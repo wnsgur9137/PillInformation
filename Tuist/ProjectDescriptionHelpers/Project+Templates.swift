@@ -154,7 +154,12 @@ extension Project {
             deploymentTargets: deploymentTarget,
             infoPlist: .default,
             sources: ["Tests/**"],
-            dependencies: testTargetDependencies + [.SPM.Test.RxTest, .SPM.Test.RxBlocking, .SPM.Test.RxNimble]
+            dependencies: testTargetDependencies + [
+                .SPM.Test.RxTest,
+                .SPM.Test.RxBlocking,
+                .SPM.Test.RxNimble,
+                .SPM.Test.Quick
+            ]
         )
         
         let schemes: [Scheme] = hasDemoApp

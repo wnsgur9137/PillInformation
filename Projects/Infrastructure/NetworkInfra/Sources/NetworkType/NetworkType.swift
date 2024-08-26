@@ -10,8 +10,6 @@ import Foundation
 import Moya
 import RxSwift
 
-import Common
-
 protocol NetworkType {
     associatedtype T: MoyaErrorHandleable
     var provider: NetworkProvider<T> { get }

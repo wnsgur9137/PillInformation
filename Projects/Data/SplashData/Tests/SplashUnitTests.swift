@@ -19,7 +19,7 @@ import RealmSwift
 
 final class SplashUnitTests: XCTestCase {
     
-    var schedular: TestScheduler!
+    var scheduler: TestScheduler!
     var disposeBag: DisposeBag!
     
     var realm: Realm!
@@ -28,7 +28,7 @@ final class SplashUnitTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        schedular = TestScheduler(initialClock: 1000)
+        scheduler = TestScheduler(initialClock: 1000)
         disposeBag = DisposeBag()
         
         let configuration = Realm.Configuration(inMemoryIdentifier: "TestRealm")
@@ -48,11 +48,12 @@ final class SplashUnitTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        schedular = nil
+        scheduler = nil
         disposeBag = nil
         realm = nil
         userRepository = nil
         userSplashRepository = nil
+        try super.tearDownWithError()
     }
     
     func test_SaveUser() {

@@ -92,40 +92,33 @@ extension NoticeTargetType {
         case .getAllNotices:
             return Data(
                 """
-                {
-                    "noticeList": [
-                        {
-                            "writer": "testNickname1",
-                            "title": "TestTitle1",
-                            "content": "TestContent1"
-                        },
-                        {
-                            "writer": "testNickname2",
-                            "title": "TestTitle2",
-                            "content": "TestContent2"
-                        },
-                        {
-                            "writer": "testNickname3",
-                            "title": "TestTitle3",
-                            "content": "TestContent3"
-                        },
-                        {
-                            "writer": "testNickname4",
-                            "title": "TestTitle4",
-                            "content": "TestContent4"
-                        },
-                        {
-                            "writer": "testNickname5",
-                            "title": "TestTitle5",
-                            "content": "TestContent5"
-                        },
-                        {
-                            "writer": "testNickname6",
-                            "title": "TestTitle6",
-                            "content": "TestContent6"
-                        },
-                    ]
-                }
+                [
+                    {
+                        "writer": "TestNickname1",
+                        "title": "TestTitle1",
+                        "content": "TestContent1"
+                    },
+                    {
+                        "writer": "TestNickname2",
+                        "title": "TestTitle2",
+                        "content": "TestContent2"
+                    },
+                    {
+                        "writer": "TestNickname3",
+                        "title": "TestTitle3",
+                        "content": "TestContent3"
+                    },
+                    {
+                        "writer": "TestNickname4",
+                        "title": "TestTitle4",
+                        "content": "TestContent4"
+                    },
+                    {
+                        "writer": "TestNickname5",
+                        "title": "TestTitle5",
+                        "content": "TestContent5"
+                    }
+                ]
                 """.utf8
             )
             

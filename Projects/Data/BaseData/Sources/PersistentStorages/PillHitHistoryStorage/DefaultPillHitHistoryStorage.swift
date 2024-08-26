@@ -16,11 +16,45 @@ public final class DefaultPillHitHistoryStorage: PillHitHistoryStorage {
         cache = .init()
     }
     
-    public func saveHitHistories(_ hitHistories: [Int]) {
-        cache.setObject(hitHistories as NSArray, forKey: hitHistoryKey)
+    private func save(_ hitHistories: [Int]) {
+        var object = fetch()
+        object += hitHistories
+        object = object.compactMap { $0 }
+        cache.setObject(object as NSArray, forKey: hitHistoryKey)
+    }
+    
+    private func fetch() -> [Int] {
+        return cache.object(forKey: hitHistoryKey) as? [Int] ?? []
+    }
+    
+    private func delete(_ hit: Int) {
+        var object = fetch()
+        guard let index = object.firstIndex(of: hit) else { return }
+        object.remove(at: index)
+        cache.setObject(object as NSArray, forKey: hitHistoryKey)
+    }
+    
+    private func delete() {
+        cache.setObject(NSArray(), forKey: hitHistoryKey)
+    }
+}
+    
+extension DefaultPillHitHistoryStorage {
+    public func saveHitHistories(_ hitHistories: [Int]) -> [Int] {
+        save(hitHistories)
+        return fetch()
     }
     
     public func loadHitHistories() -> [Int] {
         return cache.object(forKey: hitHistoryKey) as? [Int] ?? []
+    }
+    
+    public func deleteHitHistory(_ hit: Int) -> [Int] {
+        delete(hit)
+        return fetch()
+    }
+    
+    public func deleteAll() {
+        return delete()
     }
 }
