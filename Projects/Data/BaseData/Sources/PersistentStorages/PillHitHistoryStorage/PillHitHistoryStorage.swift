@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 public protocol PillHitHistoryStorage {
-    func saveHitHistories(_ hitHistories: [Int])
+    func saveHitHistories(_ hitHistories: [Int]) -> [Int]
     func loadHitHistories() -> [Int]
+    func deleteHitHistory(_ hit: Int) -> [Int]
+    func deleteAll()
 }

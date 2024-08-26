@@ -15,6 +15,8 @@ public protocol SearchDetailRepository {
     func executePillDescription(_ medicineSeq: Int) -> Single<PillDescription?>
     func executePillHits(medicineSeq: Int) -> Single<PillHits>
     func postPillHits(medicineSeq: Int, medicineName: String) -> Single<PillHits>
-    func saveHitHistories(_ hitHistoreis: [Int])
+    func saveHitHistories(_ hitHistoreis: [Int]) -> [Int]
     func loadHitHistories() -> [Int]
+    func deleteHitHistory(_ hit: Int) -> [Int]
+    func deleteAllHitHistories()
 }

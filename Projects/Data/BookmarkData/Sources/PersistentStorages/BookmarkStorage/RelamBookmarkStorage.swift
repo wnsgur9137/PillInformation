@@ -98,7 +98,7 @@ extension DefaultBookmarkStorage: BookmarkStorage {
     
     public func delete(medicineSeq: Int) -> Single<[Int]> {
         guard let pillInfoObject = fetch(for: medicineSeq) else {
-            return .error(RealmError.fetch)
+            return .just(fetchSeqs())
         }
         guard delete(for: pillInfoObject) else {
             return .error(RealmError.delete)

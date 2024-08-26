@@ -38,11 +38,19 @@ extension DefaultSearchDetailRepository {
         return networkManager.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toDomain() }
     }
     
-    public func saveHitHistories(_ hitHistoreis: [Int]) {
+    public func saveHitHistories(_ hitHistoreis: [Int]) -> [Int] {
         return hitHistoryStorage.saveHitHistories(hitHistoreis)
     }
     
     public func loadHitHistories() -> [Int] {
         return hitHistoryStorage.loadHitHistories()
+    }
+    
+    public func deleteHitHistory(_ hit: Int) -> [Int] {
+        return hitHistoryStorage.deleteHitHistory(hit)
+    }
+    
+    public func deleteAllHitHistories() {
+        return hitHistoryStorage.deleteAll()
     }
 }

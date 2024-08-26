@@ -62,4 +62,5 @@ public extension TargetDependency.SPM.Test {
     static let RxBlocking: TargetDependency = .external(name: "RxBlocking")
     static let RxTest: TargetDependency = .external(name: "RxTest")
     static let RxNimble: TargetDependency = .external(name: "RxNimble")
+    static let Quick: TargetDependency = .external(name: "Quick")
 }
