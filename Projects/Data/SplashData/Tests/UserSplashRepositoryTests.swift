@@ -103,8 +103,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUserDTO)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -162,8 +161,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUserDTO)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -226,8 +224,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUserDTO)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)

@@ -9,9 +9,6 @@
 import XCTest
 import Quick
 import Nimble
-import RxSwift
-import RxTest
-import RxNimble
 
 @testable import HomeData
 @testable import BaseData
@@ -19,22 +16,16 @@ import RxNimble
 
 final class HomeSearchDetailRepositoryTests: QuickSpec {
     override class func spec() {
-        var scheduler: TestScheduler!
-        var disposeBag: DisposeBag!
         var searchDetailRepository: SearchDetailRepository!
         
         describe("📦 Create HomeSearchDetailRepository") {
             beforeEach {
-                scheduler = TestScheduler(initialClock: 0)
-                disposeBag = DisposeBag()
                 let networkManager = test_NetworkManager(withFail: false).networkManager
                 let hitHistoriesStorage = DefaultPillHitHistoryStorage()
                 searchDetailRepository = DefaultSearchDetailRepository(networkManager: networkManager, hitHistoriesStorage: hitHistoriesStorage)
             }
             
             afterEach {
-                scheduler = nil
-                disposeBag = nil
                 searchDetailRepository = nil
             }
             

@@ -15,7 +15,11 @@ import BaseData
 public final class DefaultKeywordStorage {
     private let realm: Realm
     
-    public init() {
+    public init(testRealm: Realm? = nil) {
+        if let testRealm = testRealm {
+            self.realm = try! Realm()
+            return
+        }
         self.realm = try! Realm()
     }
     

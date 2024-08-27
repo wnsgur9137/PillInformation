@@ -185,8 +185,7 @@ final class MyPageUserRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUser)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -244,8 +243,7 @@ final class MyPageUserRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUser)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -303,8 +301,7 @@ final class MyPageUserRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUser)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -368,8 +365,7 @@ final class MyPageUserRepositoryTests: QuickSpec {
                         social: "apple"
                     )
                     userRepository.saveStorage(expectedUser)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
