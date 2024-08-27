@@ -126,8 +126,7 @@ final class AlarmRepositoryTests: QuickSpec {
                         let expectedAlarm = Alarm(id: id, title: "AlarmTitle", alarmTime: Date(), week: WeekDomain(sunday: true, tuesday: true, friday: true), isActive: true)
                         
                         alarmRepository.save(expectedAlarm)
-                            .subscribe(onSuccess: { _ in },
-                                       onFailure: { error in
+                            .subscribe(onFailure: { error in
                                 XCTFail("Error: \(error)")
                             })
                             .disposed(by: disposeBag)
@@ -178,8 +177,7 @@ final class AlarmRepositoryTests: QuickSpec {
                         let expectedAlarm = Alarm(id: id, title: "AlarmTitle", alarmTime: Date(), week: WeekDomain(sunday: true, tuesday: true, friday: true), isActive: true)
                         
                         alarmRepository.save(expectedAlarm)
-                            .subscribe(onSuccess: { _ in },
-                                       onFailure: { error in
+                            .subscribe(onFailure: { error in
                                 XCTFail("Error: \(error)")
                             })
                             .disposed(by: disposeBag)
@@ -228,8 +226,7 @@ final class AlarmRepositoryTests: QuickSpec {
                     let expectedAlarm = Alarm(id: 10, title: "AlarmTitle", alarmTime: Date(), week: WeekDomain(sunday: true, tuesday: true, friday: true), isActive: true)
                     
                     alarmRepository.save(expectedAlarm)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -284,8 +281,7 @@ final class AlarmRepositoryTests: QuickSpec {
                     let expectedAlarm = Alarm(id: 10, title: "AlarmTitle", alarmTime: Date(), week: WeekDomain(sunday: true, tuesday: true, friday: true), isActive: true)
                     
                     alarmRepository.save(expectedAlarm)
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
@@ -314,8 +310,7 @@ final class AlarmRepositoryTests: QuickSpec {
                 it("✅ Load Alarms") {
                     let observer = scheduler.createObserver([Alarm].self)
                     alarmRepository.deleteAll()
-                        .subscribe(onSuccess: { _ in },
-                                   onFailure: { error in
+                        .subscribe(onFailure: { error in
                             XCTFail("Error: \(error)")
                         })
                         .disposed(by: disposeBag)
