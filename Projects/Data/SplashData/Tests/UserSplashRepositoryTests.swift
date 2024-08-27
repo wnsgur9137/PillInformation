@@ -34,7 +34,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                 let realm = try! Realm(configuration: configuration)
                 let networkManager = test_NetworkManager(withFail: false).networkManager
                 let userStorage = DefaultUserStorage(testRealm: realm)
-                userRepository: UserRepository = DefaultUserRepository(networkManager: networkManager, userStorage: userStorage)
+                userRepository = DefaultUserRepository(networkManager: networkManager, userStorage: userStorage)
                 let splashUserDefaultStorage = SplashUserDefaultStorage()
                 userSplashRepository = DefaultUserSplashRepository(networkManager: networkManager, userRepository: userRepository, splashUserDefaultStorage: splashUserDefaultStorage)
             }
@@ -55,7 +55,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                 }
                 
                 it("✅ Load User") {
-                    let observer = scheduler.createObserver(User.self)
+                    let observer = scheduler.createObserver(BaseDomain.User.self)
                     
                     let expectedToken: String = "Token"
                     
@@ -88,10 +88,10 @@ final class UserSplashRepositoryTests: QuickSpec {
                 }
                 
                 it("✅ Load User") {
-                    let observer = scheduler.createObserver(User.self)
+                    let observer = scheduler.createObserver(BaseDomain.User.self)
                     
                     // Save expected user
-                    let expectedUser = User(
+                    let expectedUserDTO = UserDTO(
                         id: 123,
                         isAgreeAppPolicy: true,
                         isAgreeAgePolicy: true,
@@ -102,7 +102,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         refreshToken: "refreshToken",
                         social: "apple"
                     )
-                    userRepository.saveStorage(expectedUser)
+                    userRepository.saveStorage(expectedUserDTO)
                         .subscribe(onSuccess: { _ in },
                                    onFailure: { error in
                             XCTFail("Error: \(error)")
@@ -121,15 +121,15 @@ final class UserSplashRepositoryTests: QuickSpec {
                     switch result {
                     case let .next(user):
                         expect(user).toNot(beNil())
-                        expect(user.id).to(equal(expectedUser.id))
-                        expect(user.isAgreeAppPolicy).to(equal(expectedUser.isAgreeAppPolicy))
-                        expect(user.isAgreeAgePolicy).to(equal(expectedUser.isAgreeAgePolicy))
-                        expect(user.isAgreePrivacyPolicy).to(equal(expectedUser.isAgreePrivacyPolicy))
-                        expect(user.isAgreeDaytimeNoti).to(equal(expectedUser.isAgreeDaytimeNoti))
-                        expect(user.isAgreeNighttimeNoti).to(equal(expectedUser.isAgreeNighttimeNoti))
-                        expect(user.accessToken).to(equal(expectedUser.accessToken))
-                        expect(user.refreshToken).to(equal(expectedUser.refreshToken))
-                        expect(user.social).to(equal(expectedUser.social))
+                        expect(user.id).to(equal(expectedUserDTO.id))
+                        expect(user.isAgreeAppPolicy).to(equal(expectedUserDTO.isAgreeAppPolicy))
+                        expect(user.isAgreeAgePolicy).to(equal(expectedUserDTO.isAgreeAgePolicy))
+                        expect(user.isAgreePrivacyPolicy).to(equal(expectedUserDTO.isAgreePrivacyPolicy))
+                        expect(user.isAgreeDaytimeNoti).to(equal(expectedUserDTO.isAgreeDaytimeNoti))
+                        expect(user.isAgreeNighttimeNoti).to(equal(expectedUserDTO.isAgreeNighttimeNoti))
+                        expect(user.accessToken).to(equal(expectedUserDTO.accessToken))
+                        expect(user.refreshToken).to(equal(expectedUserDTO.refreshToken))
+                        expect(user.social).to(equal(expectedUserDTO.social))
                     case let .error(error):
                         XCTFail("Error: \(error)")
                     default: return
@@ -147,10 +147,10 @@ final class UserSplashRepositoryTests: QuickSpec {
                 }
                 
                 it("✅ Load User") {
-                    let observer = scheduler.createObserver(User.self)
+                    let observer = scheduler.createObserver(BaseDomain.User.self)
                     
                     // Save expected user
-                    let expectedUser = User(
+                    let expectedUserDTO = UserDTO(
                         id: 123,
                         isAgreeAppPolicy: true,
                         isAgreeAgePolicy: true,
@@ -161,7 +161,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         refreshToken: "refreshToken",
                         social: "apple"
                     )
-                    userRepository.saveStorage(expectedUser)
+                    userRepository.saveStorage(expectedUserDTO)
                         .subscribe(onSuccess: { _ in },
                                    onFailure: { error in
                             XCTFail("Error: \(error)")
@@ -214,7 +214,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                     let observer = scheduler.createObserver(Void.self)
                     
                     // Save expected user
-                    let expectedUser = User(
+                    let expectedUserDTO = UserDTO(
                         id: 123,
                         isAgreeAppPolicy: true,
                         isAgreeAgePolicy: true,
@@ -225,7 +225,7 @@ final class UserSplashRepositoryTests: QuickSpec {
                         refreshToken: "refreshToken",
                         social: "apple"
                     )
-                    userRepository.saveStorage(expectedUser)
+                    userRepository.saveStorage(expectedUserDTO)
                         .subscribe(onSuccess: { _ in },
                                    onFailure: { error in
                             XCTFail("Error: \(error)")
