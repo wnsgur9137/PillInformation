@@ -29,7 +29,11 @@ brew link --overwrite tuist@4.9.0
 |ReactorKit|3.2.0|ReactiveLibraries|
 |Alamofire|5.9.1|NetworkLibraries|
 |Moya|15.0.0|NetworkLibraries|
-|realm|10.49.1|DataLibraries|
+|RealmSwift|10.49.1|DataLibraries|
+|Quick|7.6.2|TestLibraries|
+|RxTests|(RxSwift)|TestLibraries|
+|RxBlocking|(RxSwift)|TestLibraries|
+|RxNimble|6.3.1|TestLibraries|
 |FlexLayout|2.0.07|LayoutLibraries|
 |PinLayout|1.10.5|LayoutLibraries|
 |SkeletonView|1.30.4|UILibraries|

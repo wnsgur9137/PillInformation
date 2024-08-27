@@ -212,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RxSwiftCommunity/RxNimble",
       "state" : {
-        "branch" : "master",
-        "revision" : "c21ba0cc2b5a73f7d5f79f0efde00b70c4364f70"
+        "revision" : "c21ba0cc2b5a73f7d5f79f0efde00b70c4364f70",
+        "version" : "6.3.1"
       }
     },
     {
