@@ -10,5 +10,6 @@ import ProjectDescriptionHelpers
 
 let project: Project = .project(
     name: "NotificationInfra",
-    product: .framework
+    product: .framework,
+    hasTest: true
 )

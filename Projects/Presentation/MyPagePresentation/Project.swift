@@ -14,5 +14,6 @@ let project: Project = .project(
     dependencies: [
         .Project.Feature.Presentation.Base,
         .SPM.UI.AcknowList
-    ]
+    ],
+    hasTest: true
 )

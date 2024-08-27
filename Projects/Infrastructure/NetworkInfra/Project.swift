@@ -14,5 +14,6 @@ let project: Project = .project(
     dependencies: [
         .Project.LibraryManager.ReactiveLibraries,
         .Project.LibraryManager.NetworkLibraries
-    ]
+    ],
+    hasTest: true
 )

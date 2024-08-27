@@ -88,6 +88,7 @@ extension Project {
                                dependencies: [TargetDependency] = [],
                                infoPlist: [String: Plist.Value] = [:],
                                hasResource: Bool = false,
+                               hasTest: Bool = false,
                                hasDemoApp: Bool = false) -> Project {
         let settings: Settings = .settings(
             base: [
@@ -166,9 +167,10 @@ extension Project {
         ? [.makeScheme(target: .DEV, name: name), .makeDemoScheme(target: .DEV, name: name)]
         : [.makeScheme(target: .DEV, name: name)]
         
-        let targets: [Target] = hasDemoApp
-        ? [target, testTarget, demoAppTarget]
-        : [target, testTarget]
+        var targets: [Target] = []
+        targets.append(target)
+        if hasTest { targets.append(testTarget) }
+        if hasDemoApp { targets.append(demoAppTarget) }
         
         return Project(name: name,
                        organizationName: organizationName,

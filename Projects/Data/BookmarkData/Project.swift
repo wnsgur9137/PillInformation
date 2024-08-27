@@ -14,5 +14,6 @@ let project: Project = .project(
     dependencies: [
         .Project.Feature.Data.Base,
         .Project.Feature.Domain.Bookmark
-    ]
+    ],
+    hasTest: true
 )
