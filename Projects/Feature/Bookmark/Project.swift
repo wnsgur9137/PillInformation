@@ -16,5 +16,6 @@ let project: Project = .project(
         .Project.Feature.Domain.Bookmark,
         .Project.Feature.Presentation.Bookmark
     ],
+    hasTest: true,
     hasDemoApp: true
 )

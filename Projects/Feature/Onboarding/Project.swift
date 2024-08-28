@@ -15,5 +15,7 @@ let project: Project = .project(
         .Project.Feature.Data.Onboarding,
         .Project.Feature.Domain.Onboarding,
         .Project.Feature.Presentation.Onboarding
-    ]
+    ],
+    hasTest: true,
+    hasDemoApp: true
 )

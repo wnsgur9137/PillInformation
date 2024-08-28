@@ -16,5 +16,6 @@ let project: Project = .project(
         .Project.Feature.Domain.MyPage,
         .Project.Feature.Presentation.MyPage
     ],
+    hasTest: true,
     hasDemoApp: true
 )

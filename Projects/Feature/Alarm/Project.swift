@@ -16,5 +16,6 @@ let project: Project = .project(
         .Project.Feature.Domain.Alarm,
         .Project.Feature.Presentation.Alarm
     ],
+    hasTest: true,
     hasDemoApp: true
 )

@@ -15,5 +15,6 @@ let project: Project = .project(
         .Project.Feature.Data.Splash,
         .Project.Feature.Domain.Splash,
         .Project.Feature.Presentation.Splash
-    ]
+    ],
+    hasTest: true
 )
