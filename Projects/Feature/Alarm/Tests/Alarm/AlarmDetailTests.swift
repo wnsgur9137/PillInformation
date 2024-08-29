@@ -47,7 +47,6 @@ final class AlarmDetailTests: QuickSpec {
             }
             
             afterEach {
-                realm.deleteAll()
                 scheduler = nil
                 disposeBag = nil
                 useCase = nil
@@ -322,7 +321,7 @@ final class AlarmDetailTests: QuickSpec {
                 
                 beforeEach {
                     let observable = scheduler.createColdObservable([
-                        .next(20, ())
+                        .next(0, ())
                     ])
                     
                     observable
@@ -348,8 +347,11 @@ final class AlarmDetailTests: QuickSpec {
                     
                     useCase.executeAll()
                         .asObservable()
+                        .skip(1)
                         .subscribe(observer)
                         .disposed(by: disposeBag)
+                    
+                    scheduler.start()
                     
                     guard let result = observer.events.first?.value else {
                         XCTFail("No .next event found")
