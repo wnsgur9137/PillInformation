@@ -8,7 +8,17 @@
 
 import Foundation
 
-public struct AlarmModel {
+public struct AlarmModel: Equatable {
+    public static func == (lhs: AlarmModel, rhs: AlarmModel) -> Bool {
+        return (
+            lhs.id == rhs.id &&
+            lhs.title == rhs.title &&
+            lhs.alarmTime == rhs.alarmTime &&
+            lhs.week == rhs.week &&
+            lhs.isActive == rhs.isActive
+        )
+    }
+    
     public let id: Int
     public let title: String?
     public let alarmTime: Date
@@ -24,7 +34,7 @@ public struct AlarmModel {
     }
 }
 
-public struct WeekModel {
+public struct WeekModel: Equatable {
     public var sunday: Bool
     public var monday: Bool
     public var tuesday: Bool

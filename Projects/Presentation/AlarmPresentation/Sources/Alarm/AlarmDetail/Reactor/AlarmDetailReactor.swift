@@ -127,18 +127,22 @@ public final class AlarmDetailReactor: Reactor {
             guard let self = self else { return Disposables.create() }
             self.useCase.executeCount()
                 .subscribe(onSuccess: { count in
-                    let weekModel = WeekModel(sunday: alarmData.isSelectedDays.sunday,
-                                              monday: alarmData.isSelectedDays.monday,
-                                              tuesday: alarmData.isSelectedDays.tuesday,
-                                              wednesday: alarmData.isSelectedDays.wednesday,
-                                              thursday: alarmData.isSelectedDays.thursday,
-                                              friday: alarmData.isSelectedDays.friday,
-                                              saturday: alarmData.isSelectedDays.saturday)
-                    let alarmModel = AlarmModel(id: count,
-                                                title: alarmData.title,
-                                                alarmTime: alarmData.time,
-                                                week: weekModel,
-                                                isActive: true)
+                    let weekModel = WeekModel(
+                        sunday: alarmData.isSelectedDays.sunday,
+                        monday: alarmData.isSelectedDays.monday,
+                        tuesday: alarmData.isSelectedDays.tuesday,
+                        wednesday: alarmData.isSelectedDays.wednesday,
+                        thursday: alarmData.isSelectedDays.thursday,
+                        friday: alarmData.isSelectedDays.friday,
+                        saturday: alarmData.isSelectedDays.saturday
+                    )
+                    let alarmModel = AlarmModel(
+                        id: count,
+                        title: alarmData.title,
+                        alarmTime: alarmData.time,
+                        week: weekModel,
+                        isActive: true
+                    )
                     single(.success(alarmModel))
                 }, onFailure: { error in
                     single(.failure(error))
