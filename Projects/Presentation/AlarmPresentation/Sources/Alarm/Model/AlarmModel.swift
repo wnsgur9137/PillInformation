@@ -24,7 +24,7 @@ public struct AlarmModel {
     }
 }
 
-public struct WeekModel {
+public struct WeekModel: Equatable {
     public var sunday: Bool
     public var monday: Bool
     public var tuesday: Bool

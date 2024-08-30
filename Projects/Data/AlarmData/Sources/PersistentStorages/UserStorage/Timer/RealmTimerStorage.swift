@@ -21,11 +21,15 @@ public final class DefaultTimerStorage {
     
     private let realm: Realm
     
-    public init() {
-        self.realm = try! Realm()
+    public init(testRealm: Realm? = nil) {
         #if DEBUG
         print("🚨Realm fileURL: \(Realm.Configuration.defaultConfiguration.fileURL)")
         #endif
+        if let testRealm = testRealm {
+            self.realm = testRealm
+            return
+        }
+        self.realm = try! Realm()
     }
     
     private func save(for timerObject: TimerObject) -> Bool {
