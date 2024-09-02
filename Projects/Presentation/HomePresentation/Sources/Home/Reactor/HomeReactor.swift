@@ -45,17 +45,8 @@ public final class HomeReactor: Reactor {
     public var initialState = State()
     public let flowAction: HomeFlowAction
     private let disposeBag = DisposeBag()
-    private let noticeUseCase: NoticeUseCase
-    private let recommendPillUseCase: RecommendPillUseCase
     
-    private var notices: [NoticeModel] = []
-    private var recommendPills: [PillInfoModel] = []
-    
-    public init(noticeUseCase: NoticeUseCase,
-                recommendPillUseCase: RecommendPillUseCase,
-                flowAction: HomeFlowAction) {
-        self.noticeUseCase = noticeUseCase
-        self.recommendPillUseCase = recommendPillUseCase
+    public init(flowAction: HomeFlowAction) {
         self.flowAction = flowAction
     }
 }

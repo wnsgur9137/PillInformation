@@ -76,7 +76,7 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
     
     // Home
     private func makeHomeReactor(flowAction: HomeFlowAction) -> HomeReactor {
-        return HomeReactor(noticeUseCase: makeNoticeUseCase(), recommendPillUseCase: makeRecommendPillUseCase(), flowAction: flowAction)
+        return HomeReactor(flowAction: flowAction)
     }
     private func makeHomeRecommendReactor(flowAction: HomeRecommendFlowAction) -> HomeRecommendReactor {
         return HomeRecommendReactor(with: makeRecommendPillUseCase(), flowAction: flowAction)

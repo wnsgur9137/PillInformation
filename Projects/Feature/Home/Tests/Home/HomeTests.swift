@@ -17,7 +17,6 @@ import RxTest
 @testable import HomeData
 @testable import HomeDomain
 @testable import HomePresentation
-@testable import BasePresentation
 
 final class HomeTests: QuickSpec {
     override class func spec() {
@@ -33,21 +32,12 @@ final class HomeTests: QuickSpec {
             beforeEach {
                 scheduler = TestScheduler(initialClock: 0)
                 disposeBag = DisposeBag()
-                let network = test_NetworkManager(withFail: false).networkManager
-                let noticeRepository = DefaultNoticeRepository(networkManager: network)
-                let recommendPillRepository = DefaultRecommendPillRepository(networkManager: network)
-                let noticeUseCase = DefaultNoticeUseCase(with: noticeRepository)
-                let recommendPillUseCase = DefaultRecommendPillUseCase(with: recommendPillRepository)
                 let flowAction = HomeFlowAction(
                     showSearchTab: test_showSearchTab,
                     showShapeSearchViewController: test_showShapeSearchViewController,
                     showMyPageViewController: test_showMyPageViewController
                 )
-                reactor = HomeReactor(
-                    noticeUseCase: noticeUseCase,
-                    recommendPillUseCase: recommendPillUseCase,
-                    flowAction: flowAction
-                )
+                reactor = HomeReactor(flowAction: flowAction)
             }
             
             afterEach {
