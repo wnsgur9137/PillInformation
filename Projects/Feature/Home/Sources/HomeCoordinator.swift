@@ -88,8 +88,6 @@ public final class DefaultHomeCoordinator: HomeCoordinator {
     
     public func showHomeViewController() {
         let flowAction = HomeFlowAction(
-            showNoticeDetailViewController: showNoticeDetailViewController,
-            showSearchDetailViewController: showSearchDetailViewController,
             showSearchTab: tabDependencies.showSearchTab,
             showShapeSearchViewController: showShapeSearchViewController,
             showMyPageViewController: showMyPageViewController
