@@ -112,25 +112,74 @@ extension UserTargetType: MoyaErrorHandleable {
 extension UserTargetType {
     public var sampleData: Data {
         switch self {
-        case .signup:
-            return Data()
-            
-        case .signin:
-            return Data()
-            
-        case .getUser:
+        case let .signup(identifier, social):
             return Data(
                 """
                 {
-                    "email": "test@test.com",
-                    "nickname": "testNickname",
-                    "updateDate": "updateDate"
+                    "id": 0,
+                    "is_agree_app_policy": false,
+                    "is_agree_age_policy": false,
+                    "is_agree_privacy_policy": false,
+                    "is_agree_daytime_noti": false,
+                    "is_agree_nighttime_noti": false,
+                    "access_token": "\(identifier)",
+                    "refresh_token": "\(identifier)",
+                    "social": "\(social)"
                 }
-                """.utf8
-            )
+                """.utf8)
             
-        case .updateUser:
-            return Data()
+        case let .signin(accessToken):
+            return Data(
+                """
+                {
+                    "id": 0,
+                    "is_agree_app_policy": false,
+                    "is_agree_age_policy": false,
+                    "is_agree_privacy_policy": false,
+                    "is_agree_daytime_noti": false,
+                    "is_agree_nighttime_noti": false,
+                    "access_token": "\(accessToken)",
+                    "refresh_token": "\(accessToken)",
+                    "social": "TestSocial"
+                }
+                """.utf8)
+            
+        case let .getUser(token):
+            return Data(
+                """
+                {
+                    "id": 0,
+                    "is_agree_app_policy": false,
+                    "is_agree_age_policy": false,
+                    "is_agree_privacy_policy": false,
+                    "is_agree_daytime_noti": false,
+                    "is_agree_nighttime_noti": false,
+                    "access_token": "\(token)",
+                    "refresh_token": "\(token)",
+                    "social": "TestSocial"
+                }
+                """.utf8)
+            
+        case let .updateUser(appPolicy,
+                             agePolicy,
+                             privacyPolicy,
+                             daytimeNoti,
+                             nighttimeNoti,
+                             token):
+            return Data(
+                """
+                {
+                    "id": 0,
+                    "is_agree_app_policy": \(appPolicy),
+                    "is_agree_age_policy": \(agePolicy),
+                    "is_agree_privacy_policy": \(privacyPolicy),
+                    "is_agree_daytime_noti": \(daytimeNoti),
+                    "is_agree_nighttime_noti": \(nighttimeNoti),
+                    "access_token": "\(token)",
+                    "refresh_token": "\(token)",
+                    "social": "TestSocial"
+                }
+                """.utf8)
             
         case .deviceCheck:
             return Data(
