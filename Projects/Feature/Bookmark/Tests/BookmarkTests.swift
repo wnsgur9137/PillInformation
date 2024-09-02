@@ -32,40 +32,6 @@ final class BookmarkTests: QuickSpec {
         func test_showMypageViewController() { }
         
         describe("📦 Create BookmarkReactor") {
-            let expectedPillInfoModel = PillInfoModel(
-                medicineSeq: 0,
-                medicineName: "medicineName",
-                entpSeq: 1,
-                entpName: "entpName",
-                chart: nil,
-                medicineImage: "medicineImage",
-                printFront: nil,
-                printBack: nil,
-                medicineShape: "medicineShape",
-                colorClass1: nil,
-                colorClass2: nil,
-                lineFront: nil,
-                lineBack: nil,
-                lengLong: nil,
-                lengShort: nil,
-                thick: nil,
-                imgRegistTs: 1,
-                classNo: nil,
-                className: nil,
-                etcOtcName: "ectOtcName",
-                medicinePermitDate: 123,
-                formCodeName: nil,
-                markCodeFrontAnal: nil,
-                markCodeBackAnal: nil,
-                markCodeFrontImg: nil,
-                markCodeBackImg: nil,
-                changeDate: nil,
-                markCodeFront: nil,
-                markCodeBack: nil,
-                medicineEngName: nil,
-                ediCode: nil
-            )
-            
             beforeEach {
                 scheduler = TestScheduler(initialClock: 0)
                 disposeBag = DisposeBag()
@@ -240,14 +206,84 @@ final class BookmarkTests: QuickSpec {
             }
             
             context("🟢 Delete") {
-                it("✅ Load bookmark count") {
+                beforeEach {
+                    let deleteObservable = scheduler.createColdObservable([
+                        .next(100, (IndexPath(row: 0, section: 0)))
+                    ])
+                    deleteObservable
+                        .map { indexPath in
+                            BookmarkReactor.Action.deleteRow(indexPath)
+                        }
+                        .bind(to: reactor.action)
+                        .disposed(by: disposeBag)
                     
+                    let loadObservable = scheduler.createColdObservable([
+                        .next(80, ()),
+                    ])
+                    loadObservable
+                        .map { BookmarkReactor.Action.loadBookmarkPills }
+                        .bind(to: reactor.action)
+                        .disposed(by: disposeBag)
+                }
+                
+                it("✅ Load bookmark count") {
+                    let observer = scheduler.createObserver(Int.self)
+                    
+                    reactor.state
+                        .filter { $0.bookmarkPillCount != nil }
+                        .map { $0.bookmarkPillCount! }
+                        .asObservable()
+                        .subscribe(observer)
+                        .disposed(by: disposeBag)
+                    
+                    let expectedEvents: [Recorded<Event<Int>>] = [
+                        .next(80, 3),
+                        .next(100, 2)
+                    ]
+                    
+                    scheduler.start()
+                    
+                    expect(observer.events).to(equal(expectedEvents))
                 }
             }
             
             context("🟢 Delete all") {
-                it("✅ Load bookmark count") {
+                beforeEach {
+                    let loadObservable = scheduler.createColdObservable([
+                        .next(80, ())
+                    ])
+                    loadObservable
+                        .map { BookmarkReactor.Action.loadBookmarkPills }
+                        .bind(to: reactor.action)
+                        .disposed(by: disposeBag)
                     
+                    let deleteAllObservable = scheduler.createColdObservable([
+                        .next(100, ())
+                    ])
+                    deleteAllObservable
+                        .map { BookmarkReactor.Action.deleteAll }
+                        .bind(to: reactor.action)
+                        .disposed(by: disposeBag)
+                }
+                
+                it("✅ Load bookmark count") {
+                    let observer = scheduler.createObserver(Int.self)
+                    
+                    reactor.state
+                        .filter { $0.bookmarkPillCount != nil }
+                        .map { $0.bookmarkPillCount! }
+                        .asObservable()
+                        .subscribe(observer)
+                        .disposed(by: disposeBag)
+                    
+                    let expectedEvents: [Recorded<Event<Int>>] = [
+                        .next(80, 3),
+                        .next(100, 0)
+                    ]
+                    
+                    scheduler.start()
+                    
+                    expect(observer.events).to(equal(expectedEvents))
                 }
             }
         } // describe
