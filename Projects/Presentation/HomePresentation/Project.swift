@@ -13,6 +13,5 @@ let project: Project = .project(
     product: .staticFramework,
     dependencies: [
         .Project.Feature.Presentation.Base,
-    ],
-    hasTest: true
+    ]
 )
