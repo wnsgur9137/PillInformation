@@ -23,20 +23,20 @@ public struct PolicyFlowAction {
 
 public final class PolicyReactor: Reactor {
     public enum PolicyType {
-        case privacy
         case app
+        case privacy
         
         var title: String {
             switch self {
-            case .privacy: Constants.Onboarding.appPolicy
-            case .app: Constants.Onboarding.privacyPolicyTitle
+            case .app: Constants.Onboarding.appPolicy
+            case .privacy: Constants.Onboarding.privacyPolicyTitle
             }
         }
         
         var policy: String {
             switch self {
-            case .privacy: Constants.Onboarding.appPolicy
-            case .app: Constants.Onboarding.privacyPolicy
+            case .app: Constants.Onboarding.appPolicyContents
+            case .privacy: Constants.Onboarding.privacyPolicyContents
             }
         }
     }

@@ -93,12 +93,7 @@ public final class SignInReactor: Reactor {
         return .create { observable in
             self.userUseCase.signin(identifier: identifier, social: social)
                 .subscribe(onSuccess: { userModel in
-                    if userModel.isAgreeRequredPolicies {
-                        observable(.success(.signin))
-                    } else {
-                        observable(.success(.signup(userModel)))
-                    }
-                    
+                    observable(.success(userModel.isAgreeRequredPolicies ? .signin : .signup(userModel)))
                 }, onFailure: { error in
                     observable(.success(.signInError(.signin)))
                 })
