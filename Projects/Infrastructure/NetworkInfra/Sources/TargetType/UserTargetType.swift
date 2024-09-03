@@ -133,9 +133,9 @@ extension UserTargetType {
                 """
                 {
                     "id": 0,
-                    "is_agree_app_policy": false,
-                    "is_agree_age_policy": false,
-                    "is_agree_privacy_policy": false,
+                    "is_agree_app_policy": true,
+                    "is_agree_age_policy": true,
+                    "is_agree_privacy_policy": true,
                     "is_agree_daytime_noti": false,
                     "is_agree_nighttime_noti": false,
                     "access_token": "\(accessToken)",

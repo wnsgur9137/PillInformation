@@ -28,7 +28,7 @@ final class PolicyTests: QuickSpec {
         
         func test_popViewController(_: Bool) { }
         
-        describe("") {
+        describe("📦 Create policy reactor") {
             beforeEach {
                 scheduler = TestScheduler(initialClock: 0)
                 disposeBag = DisposeBag()
