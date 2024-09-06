@@ -23,6 +23,7 @@ public final class HomeRecommendViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let footerView = FooterView()
+    private lazy var loadingView = LoadingView()
     
     private lazy var recommendPillCollectionView: UICollectionView = {
         let layout = makeRecommendPillCompositionalLayout()
@@ -62,6 +63,7 @@ public final class HomeRecommendViewController: UIViewController, View {
             delegate: self
         )
         bindAdapter(reactor)
+        loadingView.show(in: self.view)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -89,9 +91,14 @@ extension HomeRecommendViewController {
             .bind(onNext: { recommendPillCount in
                 // height = recommendCell height * Cell count + Button section height
                 let height = 180.0 * CGFloat(recommendPillCount) + 200.0
-                self.recommendPillCollectionView.flex.height(height)
-                self.recommendPillCollectionView.reloadData()
-                self.updateSubviewLayout()
+                UIView.animate(withDuration: 0.5,
+                               animations: {
+                    self.recommendPillCollectionView.flex.height(height)
+                    self.recommendPillCollectionView.reloadData()
+                    self.updateSubviewLayout()
+                }, completion: { _ in
+                    self.loadingView.hide()
+                })
             })
             .disposed(by: disposeBag)
     }

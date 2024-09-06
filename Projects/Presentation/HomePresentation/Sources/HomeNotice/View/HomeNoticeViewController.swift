@@ -23,6 +23,7 @@ public final class HomeNoticeViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let footerView = FooterView()
+    private lazy var loadingView = LoadingView()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -63,6 +64,7 @@ public final class HomeNoticeViewController: UIViewController, View {
             delegate: self
         )
         bindAdapter(reactor)
+        loadingView.show(in: self.view)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -91,15 +93,21 @@ extension HomeNoticeViewController {
             .bind(onNext: { noticeCount in
                 guard let noticeCount = noticeCount else { return }
                 let height = self.noticeTableRowHeight * CGFloat(noticeCount)
-                self.noticeTableView.flex.height(height)
-                self.noticeTableView.reloadData()
-                self.updateSubviewLayout()
+                UIView.animate(withDuration: 0.5,
+                               animations: {
+                    self.noticeTableView.flex.height(height)
+                    self.noticeTableView.reloadData()
+                    self.updateSubviewLayout()
+                }, completion: { _ in
+                    self.loadingView.hide()
+                })
             })
             .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.isFailedLoadNotices }
             .bind(onNext: {
+                self.loadingView.hide()
                 // MARK: - TODO: - Load Error Popup
             })
             .disposed(by: disposeBag)

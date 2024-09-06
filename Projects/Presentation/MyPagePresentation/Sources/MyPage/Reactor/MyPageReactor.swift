@@ -30,8 +30,8 @@ fileprivate enum MyPageSection: Int, CaseIterable {
     }
     
     enum AppInfoRows: Int, CaseIterable {
-        case appPolicy
-        case privacyPolicy
+//        case appPolicy
+//        case privacyPolicy
         case opensourceLicence
     }
     
@@ -121,8 +121,8 @@ public final class MyPageReactor: Reactor {
         case .appInfo:
             guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
             switch row {
-            case .appPolicy: return .just(.showAppPolicyViewController)
-            case .privacyPolicy: return .just(.showPrivacyPolicyViewController)
+//            case .appPolicy: return .just(.showAppPolicyViewController)
+//            case .privacyPolicy: return .just(.showPrivacyPolicyViewController)
             case .opensourceLicence: return .just(.showOpensourceLicenseViewController)
             }
             
@@ -295,8 +295,8 @@ extension MyPageReactor: MyPageAdapterDataSource {
         case .appInfo:
             guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
             switch row {
-            case .appPolicy: return Constants.MyPage.appPolicy
-            case .privacyPolicy: return Constants.MyPage.privacyPolicy
+//            case .appPolicy: return Constants.MyPage.appPolicy
+//            case .privacyPolicy: return Constants.MyPage.privacyPolicy
             case .opensourceLicence: return Constants.MyPage.opensourceLicense
             }
             
