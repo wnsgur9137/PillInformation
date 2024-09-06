@@ -331,6 +331,28 @@
         }
       }
     },
+    "cautionDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 사용 전에 주의할 내용을 확인해주세요"
+          }
+        }
+      }
+    },
+    "cautions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주의사항"
+          }
+        }
+      }
+    },
     "changeDate" : {
       "extractionState" : "manual",
       "localizations" : {

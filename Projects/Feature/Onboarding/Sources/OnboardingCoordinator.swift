@@ -16,6 +16,7 @@ public protocol OnboardingCoordinatorDependencies {
     func makeIntroViewController(flowAction: IntroFlowAction) -> IntroViewController
     func makeOnboardingPolicyViewController(user: UserModel?,
                                             flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController
+    func makeOnboardViewController(flowAction: OnboardFlowAction) -> OnboardViewController
 }
 
 public protocol OnboardingCoordinator: Coordinator {
@@ -35,6 +36,7 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     private weak var introViewController: IntroViewController?
     private weak var onboardingPolicyViewController: OnboardingPolicyViewController?
     private weak var policyViewController: PolicyViewController?
+    private weak var onboardViewController: OnboardViewController?
     
     public init(navigationController: UINavigationController,
                 dependencies: OnboardingCoordinatorDependencies) {
@@ -64,7 +66,7 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
     
     public func showIntroViewController() {
         let flowAction = IntroFlowAction(
-            showOnboardingPolicyViewController: showOnboardingPolicyViewController
+            showOnboardingPolicyViewController: showOnboardingPolicyViewController, showOnboardViewController: showOnboardViewController
         )
         let viewController = dependencies.makeIntroViewController(flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: false)
@@ -81,6 +83,16 @@ public final class DefaultOnboardingCoordinator: OnboardingCoordinator {
                                                                              flowAction: flowAction)
         navigationController?.pushViewController(viewController, animated: true)
         onboardingPolicyViewController = viewController
+    }
+    
+    public func showOnboardViewController() {
+        let flowAction = OnboardFlowAction(
+            popViewController: popViewController,
+            showMainScene: showMainScene
+        )
+        let viewController = dependencies.makeOnboardViewController(flowAction: flowAction)
+        navigationController?.pushViewController(viewController, animated: true)
+        onboardViewController = viewController
     }
     
     private func popViewController(animated: Bool = true) {
