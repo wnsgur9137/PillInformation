@@ -42,15 +42,20 @@ fileprivate enum MyPageSection: Int, CaseIterable {
 }
 
 public struct MyPageFlowAction {
+    let showLocalizationSettingViewController: () -> Void
+    let showScreenModeSettingViewController: () -> Void
     let showAlarmSettingViewController: () -> Void
     let showPolicyViewController: (PolicyType) -> Void
     let showOpenSourceLicenseViewController: () -> Void
     let showOnboardingScene: () -> Void
     
-    public init(showAlarmSettingViewController: @escaping(()->Void),
+    public init(showLocalizationSettingViewController: @escaping(()->Void),
+                showScreenModeSettingViewController: @escaping(()->Void),
+                showAlarmSettingViewController: @escaping(()->Void),
                 showPolicyViewController: @escaping((PolicyType)->Void),
                 showOpenSourceLicenseViewController: @escaping(()->Void),
                 showOnboardingScene: @escaping(()->Void)) {
+        self.showLocalizationSettingViewController = showLocalizationSettingViewController
         self.showAlarmSettingViewController = showAlarmSettingViewController
         self.showPolicyViewController = showPolicyViewController
         self.showOpenSourceLicenseViewController = showOpenSourceLicenseViewController
@@ -239,11 +244,11 @@ extension MyPageReactor {
 // MARK: - Flow Action
 extension MyPageReactor {
     private func showLocalizationSettingViewController() {
-        
+        flowAction.showLocalizationSettingViewController()
     }
     
     private func showScreenModeSettingViewController() {
-        
+        flowAction.showScreenModeSettingViewController()
     }
     
     private func showAlarmViewController() {
@@ -274,7 +279,7 @@ extension MyPageReactor: MyPageAdapterDataSource {
         guard let section = MyPageSection(rawValue: section) else { return 0 }
         switch section {
         case .appSetting:
-            var count = MyPageSection.AppSettingRows.allCases.count
+            let count = MyPageSection.AppSettingRows.allCases.count
             return isShowAlarmSettingView ? count : count - 1
         case .appInfo: return MyPageSection.AppInfoRows.allCases.count
         case .accountOption: return MyPageSection.AccountOptionRows.allCases.count

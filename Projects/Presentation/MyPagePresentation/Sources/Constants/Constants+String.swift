@@ -41,4 +41,6 @@ extension Constants.MyPage {
     static let dayNotiDescription: String = "\("appName".localized)이 \("dayNotiDescription".localized)"
     static let nightNotiTitle: String = "nightNotiTitle".localized
     static let nightNotiDescription: String = "\("appName".localized)이 \("nightNotiDescription".localized)"
+    
+    static let askCheckLocalization: String = "변경?"
 }
