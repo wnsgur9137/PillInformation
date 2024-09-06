@@ -37,50 +37,61 @@ public final class OnboardingDIContainer {
 // MARK: - OnboardingCoordinator Dependencies
 extension OnboardingDIContainer: OnboardingCoordinatorDependencies {
     
-    public func makeUserRepository() -> UserRepository {
+    private func makeUserRepository() -> UserRepository {
         return DefaultUserRepository(networkManager: dependencies.networkManager)
     }
-    
-    public func makeUserOnboardingRepository() -> UserOnboardingRepository {
+    private func makeUserOnboardingRepository() -> UserOnboardingRepository {
         return DefaultUserOnboardingRepository(userRepository: makeUserRepository())
     }
-    
     public func makeUserUseCase() -> UserUseCase {
         return DefaultUserUseCase(with: makeUserOnboardingRepository())
     }
     
     // MARK: - SignIn
-    public func makeSignInReactor(flowAction: SignInFlowAction) -> SignInReactor {
-        return SignInReactor(with: makeUserUseCase(),
-                             flowAction: flowAction)
+    private func makeSignInReactor(flowAction: SignInFlowAction) -> SignInReactor {
+        return SignInReactor(
+            with: makeUserUseCase(),
+            flowAction: flowAction
+        )
     }
-    
     public func makeSignInViewController(flowAction: SignInFlowAction) -> SignInViewController {
-        return SignInViewController.create(with:
-                                            makeSignInReactor(flowAction: flowAction))
+        return SignInViewController.create(with: makeSignInReactor(flowAction: flowAction))
     }
     
     // MARK: - Intro
-    public func makeIntroReactor(flowAction: IntroFlowAction) -> IntroReactor {
+    private func makeIntroReactor(flowAction: IntroFlowAction) -> IntroReactor {
         return IntroReactor(flowAction: flowAction)
     }
-    
     public func makeIntroViewController(flowAction: IntroFlowAction) -> IntroViewController {
         return IntroViewController.create(with: makeIntroReactor(flowAction: flowAction))
     }
     
-    // MARK: - OnboardingPolicy
-    public func makeOnboardingPolicyReactor(user: UserModel?,
+    // MARK: - OnboardingPolicy(User)
+    private func makeOnboardingPolicyReactor(user: UserModel?,
                                             flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyReactor {
-        return OnboardingPolicyReactor(user: user,
-                                       isShowAlarmPrivacy: dependencies.isShowAlarmPrivacy,
-                                       userUseCase: makeUserUseCase(),
-                                       flowAction: flowAction)
+        return OnboardingPolicyReactor(
+            user: user,
+            isShowAlarmPrivacy: dependencies.isShowAlarmPrivacy,
+            userUseCase: makeUserUseCase(),
+            flowAction: flowAction
+        )
     }
-    
     public func makeOnboardingPolicyViewController(user: UserModel?,
                                                    flowAction: OnboardingPolicyFlowAction) -> OnboardingPolicyViewController {
-        return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(user: user,
-                                                                                       flowAction: flowAction))
+        return OnboardingPolicyViewController.create(with: makeOnboardingPolicyReactor(
+            user: user,
+            flowAction: flowAction
+        ))
+    }
+
+    // MARK: - Onboard
+    private func makeOnboardReactor(flowAction: OnboardFlowAction) -> OnboardReactor {
+        return OnboardReactor(
+            with: makeUserUseCase(),
+            flowAction: flowAction
+        )
+    }
+    public func makeOnboardViewController(flowAction: OnboardFlowAction) -> OnboardViewController {
+        return OnboardViewController.create(with: makeOnboardReactor(flowAction: flowAction))
     }
 }

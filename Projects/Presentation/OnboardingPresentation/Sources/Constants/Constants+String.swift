@@ -35,4 +35,7 @@ extension Constants.Onboarding {
     static let privacyPolicyTitle: String = "privacyPolicy".localized
     static let appPolicyContents: String = "appPolicyContents".localized
     static let privacyPolicyContents: String = "privacyPolicyContents".localized
+    
+    static let cautions: String = "cautions".localized
+    static let cautionDescription: String = "cautionDescription".localized
 }

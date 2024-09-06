@@ -81,7 +81,7 @@ extension DefaultSearchUseCase {
         var histories = searchDetailRepository.loadHitHistories()
         guard histories.contains(medicineSeq) == false else { return .error(SearchDetailUseCaseError.alreadyHits) }
         histories.append(medicineSeq)
-        searchDetailRepository.saveHitHistories(histories)
+        _ = searchDetailRepository.saveHitHistories(histories)
         return searchDetailRepository.postPillHits(medicineSeq: medicineSeq, medicineName: medicineName).map { $0.toModel() }
     }
     

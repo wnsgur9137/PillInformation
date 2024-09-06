@@ -15,9 +15,12 @@ import KakaoLibraries
 
 public struct IntroFlowAction {
     let showOnboardingPolicyViewController: (UserModel?) -> Void
+    let showOnboardViewController: () -> Void
     
-    public init(showOnboardingPolicyViewController: @escaping (UserModel?) -> Void) {
+    public init(showOnboardingPolicyViewController: @escaping (UserModel?) -> Void,
+                showOnboardViewController: @escaping () -> Void) {
         self.showOnboardingPolicyViewController = showOnboardingPolicyViewController
+        self.showOnboardViewController = showOnboardViewController
     }
 }
 
@@ -55,7 +58,8 @@ extension IntroReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         switch mutation {
         case .showPolicyViewController:
-            showOnboardingPolicyViewController()
+//            showOnboardingPolicyViewController()
+            flowAction.showOnboardViewController()
         }
         return state
     }
@@ -65,5 +69,9 @@ extension IntroReactor {
 extension IntroReactor {
     private func showOnboardingPolicyViewController() {
         flowAction.showOnboardingPolicyViewController(nil)
+    }
+    
+    private func showOnboardViewController() {
+        flowAction.showOnboardViewController()
     }
 }
