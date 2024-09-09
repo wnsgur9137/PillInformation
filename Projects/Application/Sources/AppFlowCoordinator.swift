@@ -10,6 +10,7 @@ import UIKit
 
 import InjectionManager
 import Features
+import BasePresentation
 
 final class AppFlowCoordinator {
     
@@ -24,7 +25,7 @@ final class AppFlowCoordinator {
     
     func start() {
         tabBarController.tabBar.isHidden = false
-        let mainSceneDIContainer = appDIContainer.makeMainSceneDIContainer()
+        let mainSceneDIContainer = appDIContainer.makeMainSceneDIContainer(appFlowDependencies: self)
         let flow = mainSceneDIContainer.makeTabBarCoordinator(tabBarController: tabBarController, isShowAlarmTab: appDIContainer.appConfiguration.isShowAlarmTab)
         flow.start()
     }
@@ -33,7 +34,7 @@ final class AppFlowCoordinator {
                          navigationController: UINavigationController) {
         tabBarController.tabBar.isHidden = true
         tabBarController.viewControllers = [navigationController]
-        let onboardingSceneDIContainer = appDIContainer.makeOnboardingSceneDIContainer()
+        let onboardingSceneDIContainer = appDIContainer.makeOnboardingSceneDIContainer(appFlowDependencies: self)
         let flow = onboardingSceneDIContainer.makeOnboardingCoordinator(navigationController: navigationController)
         isNeedSignin ? flow.start() : flow.startNonSignin()
     }
@@ -41,8 +42,23 @@ final class AppFlowCoordinator {
     func startSplashView(navigationController: UINavigationController) {
         tabBarController.tabBar.isHidden = true
         tabBarController.viewControllers = [navigationController]
-        let splashSceneDIContainer = appDIContainer.makeSplashSceneDIContainer()
+        let splashSceneDIContainer = appDIContainer.makeSplashSceneDIContainer(appFlowDependencies: self)
         let flow = splashSceneDIContainer.makeSplashCoordinator(navigationController: navigationController)
         flow.start()
+    }
+}
+
+extension AppFlowCoordinator: AppFlowDependencies {
+    func showMain() {
+        start()
+    }
+    
+    func showOnboarding(isNeedSignin: Bool) {
+        startOnboarding(isNeedSignin: isNeedSignin,
+                        navigationController: UINavigationController())
+    }
+    
+    func showSplash() {
+        startSplashView(navigationController: UINavigationController())
     }
 }

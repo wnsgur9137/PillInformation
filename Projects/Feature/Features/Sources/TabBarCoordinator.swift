@@ -25,6 +25,8 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     public var childCoordinators: [Coordinator] = []
     public var type: CoordinatorType { .tab }
     
+    private let appFlowDependencies: AppFlowDependencies
+    
     private var isShowAlarmTab: Bool = false
     private let homeDIContainer: HomeDIContainer
     private let bookmarkDIContainer: BookmarkDIContainer
@@ -36,6 +38,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
     public weak var tabBarController: UITabBarController?
     
     public init(tabBarController: UITabBarController,
+                appFlowDependencies: AppFlowDependencies,
                 homeDIContainer: HomeDIContainer,
                 bookmarkDIContainer: BookmarkDIContainer,
                 searchDIContainer: SearchDIContainer,
@@ -43,6 +46,7 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
                 myPageDIContainer: MyPageDIContainer,
                 isShowAlarmTab: Bool) {
         self.tabBarController = tabBarController
+        self.appFlowDependencies = appFlowDependencies
         self.homeDIContainer = homeDIContainer
         self.bookmarkDIContainer = bookmarkDIContainer
         self.searchDIContainer = searchDIContainer
@@ -122,7 +126,8 @@ public final class DefaultTabBarCoordinator: TabBarCoordinator {
         let myPageCoordinator = DefaultMyPageCoordinator(
             tabBarController: tabBarController,
             navigationController: navigationController,
-            dependencies: myPageDIContainer
+            dependencies: myPageDIContainer,
+            appFlowDependencies: appFlowDependencies
         )
         myPageCoordinator.finishDelegate = self
         myPageCoordinator.start()

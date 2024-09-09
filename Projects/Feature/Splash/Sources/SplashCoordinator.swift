@@ -26,12 +26,15 @@ public final class DefaultSplashCoordinator: SplashCoordinator {
     public var type: CoordinatorType { .splash }
     
     private let dependencies: SplashCoordinatorDependencies
+    private let appFlowDependencies: AppFlowDependencies
     private weak var splashViewController: SplashViewController?
     
     public init(navigationController: UINavigationController,
-                dependencies: SplashCoordinatorDependencies) {
+                dependencies: SplashCoordinatorDependencies,
+                appFlowDependencies: AppFlowDependencies) {
         self.navigationController = navigationController
         self.dependencies = dependencies
+        self.appFlowDependencies = appFlowDependencies
         navigationController.view.backgroundColor = Constants.Color.background
         navigationController.navigationBar.isHidden = true
     }
@@ -43,7 +46,6 @@ public final class DefaultSplashCoordinator: SplashCoordinator {
     public func showSplashViewController() {
         let flowAction = SplashFlowAction(
             showMainScene: showMainScene,
-            showOnboardingSceneSigninViewController: showOnboardingSceneSigninViewController,
             showOnboardingScene: showOnboardingScene
         )
         let viewController = dependencies.makeSplashViewController(flowAction: flowAction)
@@ -56,14 +58,10 @@ public final class DefaultSplashCoordinator: SplashCoordinator {
     }
     
     public func showMainScene() {
-        NotificationCenter.default.post(name: Notification.Name("showMainScene"), object: nil)
+        appFlowDependencies.showMain()
     }
     
-    public func showOnboardingSceneSigninViewController() {
-        NotificationCenter.default.post(name: Notification.Name("showOnboardingSceneSignin"), object: nil)
-    }
-    
-    public func showOnboardingScene() {
-        NotificationCenter.default.post(name: Notification.Name("showOnboardingScene"), object: nil)
+    public func showOnboardingScene(withSignin: Bool) {
+        appFlowDependencies.showOnboarding(isNeedSignin: withSignin)
     }
 }

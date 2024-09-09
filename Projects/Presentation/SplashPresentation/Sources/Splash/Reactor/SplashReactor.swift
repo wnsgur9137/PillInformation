@@ -14,14 +14,11 @@ import DeviceCheck
 
 public struct SplashFlowAction {
     let showMainScene: () -> Void
-    let showOnboardingSceneSigninViewController: () -> Void
-    let showOnboardingScene: () -> Void
+    let showOnboardingScene: (Bool) -> Void
 
     public init(showMainScene: @escaping () -> Void,
-                showOnboardingSceneSigninViewController: @escaping () -> Void,
-                showOnboardingScene: @escaping () -> Void) {
+                showOnboardingScene: @escaping (Bool) -> Void) {
         self.showMainScene = showMainScene
-        self.showOnboardingSceneSigninViewController = showOnboardingSceneSigninViewController
         self.showOnboardingScene = showOnboardingScene
     }
 }
@@ -148,11 +145,11 @@ extension SplashReactor {
             showMainScene()
             
         case .isNotSignin:
-            showOnboardingSceneLoginViewController()
+            showOnboardingScene(withSignin: true)
             
         case .checkOnboarding:
             isShownOnboarding { isShown in
-                isShown ? self.showMainScene() : self.showOnboardingScene()
+                isShown ? self.showMainScene() : self.showOnboardingScene(withSignin: false)
             }
         }
         return state
@@ -164,11 +161,7 @@ extension SplashReactor {
         flowAction.showMainScene()
     }
     
-    private func showOnboardingSceneLoginViewController() {
-        flowAction.showOnboardingSceneSigninViewController()
-    }
-    
-    private func showOnboardingScene() {
-        flowAction.showOnboardingScene()
+    private func showOnboardingScene(withSignin: Bool) {
+        flowAction.showOnboardingScene(withSignin)
     }
 }
