@@ -25,9 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 #if DEBUG
 //        Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
 #endif
-        NotificationCenter.default.addObserver(self, selector: #selector(showMainScene), name: Notification.Name("showMainScene"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showOnboardingSceneSignin), name: Notification.Name("showOnboardingSceneSignin"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showOnboardingScene), name: Notification.Name("showOnboardingScene"), object: nil)
         
         let tabBarController = MainTabBarController.create()
         window?.rootViewController = tabBarController
@@ -54,17 +51,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
            KakaoService.isKakaoTalkLoginUrl(url) {
             _ = KakaoService.handleOpenURL(url)
         }
-    }
-    
-    @objc private func showMainScene() {
-        appFlowCoordinator?.start()
-    }
-    
-    @objc private func showOnboardingSceneSignin() {
-        appFlowCoordinator?.startOnboarding(isNeedSignin: true, navigationController: UINavigationController())
-    }
-    
-    @objc private func showOnboardingScene() {
-        appFlowCoordinator?.startOnboarding(isNeedSignin: false, navigationController: UINavigationController())
     }
 }

@@ -15,6 +15,7 @@ import Bookmark
 import Search
 import Alarm
 import MyPage
+import BasePresentation
 
 public final class MainSceneDIContainer {
     
@@ -24,6 +25,7 @@ public final class MainSceneDIContainer {
     }
     
     let dependencies: Dependencies
+    private let appFlowDependencies: AppFlowDependencies
 
     private let homeDIContainer: HomeDIContainer
     private let bookmarkDIContainer: BookmarkDIContainer
@@ -31,8 +33,10 @@ public final class MainSceneDIContainer {
     private let alarmDIContainer: AlarmDIContainer
     private let myPageDIContainer: MyPageDIContainer
 
-    init(dependencies: Dependencies) {
+    init(dependencies: Dependencies,
+         appFlowDependencies: AppFlowDependencies) {
         self.dependencies = dependencies
+        self.appFlowDependencies = appFlowDependencies
         self.homeDIContainer = HomeDIContainer(dependencies: .init(
             networkManager: dependencies.networkManager
         ))
@@ -55,6 +59,7 @@ public final class MainSceneDIContainer {
                                isShowAlarmTab: Bool) -> TabBarCoordinator {
         return DefaultTabBarCoordinator(
             tabBarController: tabBarController,
+            appFlowDependencies: appFlowDependencies,
             homeDIContainer: homeDIContainer,
             bookmarkDIContainer: bookmarkDIContainer,
             searchDIContainer: searchDIContainer,

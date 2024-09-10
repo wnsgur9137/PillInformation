@@ -30,16 +30,20 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     public var type: CoordinatorType { .myPage }
     
     private let dependencies: MyPageCoordinatorDependencies
+    private let appFlowDependencies: AppFlowDependencies
+    
     private weak var myPageViewController: MyPageViewController?
     private weak var alarmSettingViewController: AlarmSettingViewController?
     private weak var policyViewController: PolicyViewController?
     
     public init(tabBarController: UITabBarController?,
                 navigationController: UINavigationController,
-                dependencies: MyPageCoordinatorDependencies) {
+                dependencies: MyPageCoordinatorDependencies,
+                appFlowDependencies: AppFlowDependencies) {
         self.tabBarController = tabBarController
         self.navigationController = navigationController
         self.dependencies = dependencies
+        self.appFlowDependencies = appFlowDependencies
     }
     
     public func start() {
@@ -96,6 +100,6 @@ public final class DefaultMyPageCoordinator: MyPageCoordinator {
     }
     
     private func showOnboardingScene() {
-        NotificationCenter.default.post(name: Notification.Name("showOnboardingSceneSignin"), object: nil)
+        appFlowDependencies.showOnboarding(isNeedSignin: true)
     }
 }

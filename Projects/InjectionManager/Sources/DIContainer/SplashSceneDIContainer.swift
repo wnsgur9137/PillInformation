@@ -11,6 +11,7 @@ import UIKit
 import Features
 import NetworkInfra
 import Splash
+import BasePresentation
 
 public final class SplashSceneDIContainer {
     struct Dependencies {
@@ -18,11 +19,14 @@ public final class SplashSceneDIContainer {
     }
     
     let dependencies: Dependencies
+    private let appFlowDependencies: AppFlowDependencies
     
     private let splashDIContainer: SplashDIContainer
     
-    init(dependencies: Dependencies) {
+    init(dependencies: Dependencies,
+         appFlowDependencies: AppFlowDependencies) {
         self.dependencies = dependencies
+        self.appFlowDependencies = appFlowDependencies
         self.splashDIContainer = SplashDIContainer(dependencies: .init(networkManager: dependencies.networkManager))
     }
     
@@ -30,7 +34,8 @@ public final class SplashSceneDIContainer {
     {
         return DefaultSplashCoordinator(
             navigationController: navigationController,
-            dependencies: splashDIContainer
+            dependencies: splashDIContainer,
+            appFlowDependencies: appFlowDependencies
         )
     }
 }

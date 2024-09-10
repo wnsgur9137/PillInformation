@@ -9,6 +9,7 @@
 import Foundation
 
 import NetworkInfra
+import BasePresentation
 
 public final class AppDIContainer {
     public lazy var appConfiguration = AppConfiguration()
@@ -19,28 +20,29 @@ public final class AppDIContainer {
                               baseURL: appConfiguration.apiBaseURL)
     }()
     
-    public init() {
-        
-    }
+    public init() { }
     
-    public func makeMainSceneDIContainer() -> MainSceneDIContainer {
+    public func makeMainSceneDIContainer(appFlowDependencies: AppFlowDependencies) -> MainSceneDIContainer {
         let dependencies = MainSceneDIContainer.Dependencies(
             networkManager: networkManager,
             isShowAlarmPrivacy: appConfiguration.isShowAlarmPrivacy
         )
-        return MainSceneDIContainer(dependencies: dependencies)
+        return MainSceneDIContainer(dependencies: dependencies,
+                                    appFlowDependencies: appFlowDependencies)
     }
     
-    public func makeSplashSceneDIContainer() -> SplashSceneDIContainer {
+    public func makeSplashSceneDIContainer(appFlowDependencies: AppFlowDependencies) -> SplashSceneDIContainer {
         let dependencies = SplashSceneDIContainer.Dependencies(networkManager: networkManager)
-        return SplashSceneDIContainer(dependencies: dependencies)
+        return SplashSceneDIContainer(dependencies: dependencies,
+                                      appFlowDependencies: appFlowDependencies)
     }
     
-    public func makeOnboardingSceneDIContainer() -> OnboardingSceneDIContainer {
+    public func makeOnboardingSceneDIContainer(appFlowDependencies: AppFlowDependencies) -> OnboardingSceneDIContainer {
         let dependencies = OnboardingSceneDIContainer.Dependencies(
             networkManager: networkManager,
             isShowAlarmPrivacy: appConfiguration.isShowAlarmPrivacy
         )
-        return OnboardingSceneDIContainer(dependencies: dependencies)
+        return OnboardingSceneDIContainer(dependencies: dependencies,
+                                          appFlowDependencies: appFlowDependencies)
     }
 }
