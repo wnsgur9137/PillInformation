@@ -9,19 +9,18 @@
 import UIKit
 
 extension UIView {
-    //MARK: -- Apply
     
-    /// 좌우, 상하 - safeArea
-    /// - Parameters:
-    ///   - target: target
-    ///   - constant: constant
-    func fitSafeArea(target:UIView, constant:CGFloat = 0){
-        fitWidth(target: target, constant: constant)
-        NSLayoutConstraint.activate([
-            self.safeAreaLayoutGuide.topAnchor.constraint(equalTo: target.topAnchor, constant: constant),
-            self.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: target.bottomAnchor, constant: constant)
-        ])
-    }
+//    /// 좌우, 상하 - safeArea
+//    /// - Parameters:
+//    ///   - target: target
+//    ///   - constant: constant
+//    func fitSafeArea(target:UIView, constant:CGFloat = 0){
+//        fitWidth(target: target, constant: constant)
+//        NSLayoutConstraint.activate([
+//            self.safeAreaLayoutGuide.topAnchor.constraint(equalTo: target.topAnchor, constant: constant),
+//            self.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: target.bottomAnchor, constant: constant)
+//        ])
+//    }
     
     /// 좌우, 상하
     /// - Parameters:
@@ -50,41 +49,41 @@ extension UIView {
         addBottomConstraint(target: target, constant: constant)
     }
     
-    /// 상, 좌, 우
-    /// - Parameters:
-    ///   - target: target
-    ///   - constant: constant
-    func fitUpside(target:UIView, constant:CGFloat = 0){
-        addTopConstraint(target: target, constant: constant)
-        fitWidth(target: target, constant: constant)
-    }
+//    /// 상, 좌, 우
+//    /// - Parameters:
+//    ///   - target: target
+//    ///   - constant: constant
+//    func fitUpside(target:UIView, constant:CGFloat = 0){
+//        addTopConstraint(target: target, constant: constant)
+//        fitWidth(target: target, constant: constant)
+//    }
     
-    /// 하, 좌, 우
-    /// - Parameters:
-    ///   - target: target
-    ///   - constant: constant
-    func fitDown(target:UIView, constant:CGFloat = 0){
-        addBottomConstraint(target: target, constant: constant)
-        fitWidth(target: target, constant: constant)
-    }
+//    /// 하, 좌, 우
+//    /// - Parameters:
+//    ///   - target: target
+//    ///   - constant: constant
+//    func fitDown(target:UIView, constant:CGFloat = 0){
+//        addBottomConstraint(target: target, constant: constant)
+//        fitWidth(target: target, constant: constant)
+//    }
     
-    /// 좌, 상, 하
-    /// - Parameters:
-    ///   - target: target
-    ///   - constant: constant
-    func fitLeft(target:UIView, constant:CGFloat = 0){
-        addLeftConstraint(target: target, constant: constant)
-        fitHeight(target: target, constant: constant)
-    }
+//    /// 좌, 상, 하
+//    /// - Parameters:
+//    ///   - target: target
+//    ///   - constant: constant
+//    func fitLeft(target:UIView, constant:CGFloat = 0){
+//        addLeftConstraint(target: target, constant: constant)
+//        fitHeight(target: target, constant: constant)
+//    }
     
-    /// 우, 상, 하
-    /// - Parameters:
-    ///   - target: target
-    ///   - constant: constant
-    func fitRight(target:UIView, constant:CGFloat = 0){
-        addRightConstraint(target: target, constant: constant)
-        fitHeight(target: target, constant: constant)
-    }
+//    /// 우, 상, 하
+//    /// - Parameters:
+//    ///   - target: target
+//    ///   - constant: constant
+//    func fitRight(target:UIView, constant:CGFloat = 0){
+//        addRightConstraint(target: target, constant: constant)
+//        fitHeight(target: target, constant: constant)
+//    }
     
     //MARK: - Add Constraint
     func addLeftConstraint(target:UIView, constant:CGFloat){
