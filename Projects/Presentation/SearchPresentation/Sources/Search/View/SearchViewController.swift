@@ -132,10 +132,12 @@ extension SearchViewController {
                 let message = AlertText(text: contents.message ?? "")
                 let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
                 AlertViewer()
-                    .showSingleButtonAlert(self, 
-                                           title: title,
-                                           message: message,
-                                           confirmButtonInfo: confirmButtonInfo)
+                    .showSingleButtonAlert(
+                        in: self.view,
+                        title: title,
+                        message: message,
+                        confirmButtonInfo: confirmButtonInfo
+                    )
             })
             .disposed(by: disposeBag)
         
@@ -193,7 +195,7 @@ extension SearchViewController {
     private func showDeleteAllAlert() {
         AlertViewer()
             .showDualButtonAlert(
-                self,
+                in: view,
                 title: .init(text: Constants.Search.askDeleteAll),
                 message: nil,
                 confirmButtonInfo: .init(title: Constants.Search.delete) {

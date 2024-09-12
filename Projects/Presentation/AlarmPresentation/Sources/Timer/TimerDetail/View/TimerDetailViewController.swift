@@ -127,7 +127,7 @@ extension TimerDetailViewController {
         let confirmButtonInfo = AlertButtonInfo(title: Constants.confirm)
         AlertViewer()
             .showSingleButtonAlert(
-                self,
+                in: view,
                 title: title,
                 message: message,
                 confirmButtonInfo: confirmButtonInfo

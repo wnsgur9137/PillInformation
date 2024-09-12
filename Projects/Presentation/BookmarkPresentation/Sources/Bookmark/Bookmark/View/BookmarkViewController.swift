@@ -73,7 +73,7 @@ public final class BookmarkViewController: UIViewController, View {
         }
         AlertViewer()
             .showSingleButtonAlert(
-                self,
+                in: view,
                 title: .init(text: title),
                 message: messageAlertText,
                 confirmButtonInfo: .init(title: Constants.confirm, action: action)

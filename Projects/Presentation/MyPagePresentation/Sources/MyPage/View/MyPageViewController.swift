@@ -104,7 +104,7 @@ public final class MyPageViewController: UIViewController, View {
         
         AlertViewer()
             .showSingleButtonAlert(
-                self,
+                in: view,
                 title: .init(text: title),
                 message: .init(text: Constants.MyPage.tryAgain),
                 confirmButtonInfo: .init(title: Constants.confirm) {
@@ -131,7 +131,7 @@ public final class MyPageViewController: UIViewController, View {
         
         AlertViewer()
             .showDualButtonAlert(
-                self,
+                in: view,
                 title: .init(text: title),
                 message: message,
                 confirmButtonInfo: .init(title: confirm) {

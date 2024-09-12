@@ -138,7 +138,7 @@ public final class ImageDetailViewController: UIViewController, View {
     private func showPermissionAlert() {
         AlertViewer()
             .showDualButtonAlert(
-                self,
+                in: view,
                 title: .init(text: "알약 이미지 저장을 위해 설정에서 사진 접근을 허용해주세요."),
                 message: nil,
                 confirmButtonInfo: .init(title: "설정") {

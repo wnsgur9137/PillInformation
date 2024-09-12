@@ -123,10 +123,12 @@ extension SignInViewController {
         }
         
         AlertViewer()
-            .showSingleButtonAlert(self,
-                                   title: title,
-                                   message: message,
-                                   confirmButtonInfo: confirmButtonInfo)
+            .showSingleButtonAlert(
+                in: view,
+                title: title,
+                message: message,
+                confirmButtonInfo: confirmButtonInfo
+            )
     }
 }
 

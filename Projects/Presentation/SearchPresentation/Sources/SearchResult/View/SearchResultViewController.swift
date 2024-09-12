@@ -78,10 +78,12 @@ public final class SearchResultViewController: UIViewController, View {
         let message = AlertText(text: message ?? "")
         let confirmButton = AlertButtonInfo(title: Constants.confirm)
         AlertViewer()
-            .showSingleButtonAlert(self,
-                                   title: title,
-                                   message: message,
-                                   confirmButtonInfo: confirmButton)
+            .showSingleButtonAlert(
+                in: view,
+                title: title,
+                message: message,
+                confirmButtonInfo: confirmButton
+            )
     }
 }
 
