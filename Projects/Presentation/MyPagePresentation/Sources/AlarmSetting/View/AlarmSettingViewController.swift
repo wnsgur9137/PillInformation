@@ -87,7 +87,7 @@ public final class AlarmSettingViewController: UIViewController, View {
     private func showErrorAlert(_ contents: (title: String, message: String?), needDismiss: Bool) {
         AlertViewer()
             .showSingleButtonAlert(
-                self,
+                in: view,
                 title: AlertText(text: contents.title),
                 message: AlertText(text: contents.message ?? ""),
                 confirmButtonInfo: AlertButtonInfo(title: Constants.confirm, action: { [weak self] in

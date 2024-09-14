@@ -18,16 +18,15 @@ public struct AlertViewer {
         return view
     }()
     
-    public func attachAlert(viewController: UIViewController,
+    public func attachAlert(in view: UIView,
                              alert: AlertView) {
-        viewController.view.addSubview(dimmed)
-        viewController.view.fit(target: dimmed)
+        view.addSubview(dimmed)
+        view.fit(target: dimmed)
         
-        viewController.view.addSubview(alert)
-        viewController.view.addCenterXConstraint(target: alert, constant: 0)
-        viewController.view.addCenterYConstraint(target: alert, constant: 0)
-        
-        alert.widthAnchor.constraint(equalTo: viewController.view.widthAnchor, multiplier: 0.8).isActive = true
+        view.addSubview(alert)
+        alert.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        alert.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        alert.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
     }
     
     public init() {
@@ -46,7 +45,7 @@ extension AlertViewer {
     ///   - title: 타이틀
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
-    public func showSingleButtonAlert(_ viewController: UIViewController,
+    public func showSingleButtonAlert(in view: UIView,
                                image: UIImage? = nil,
                                title: AlertText?,
                                message: AlertText? = nil,
@@ -62,10 +61,10 @@ extension AlertViewer {
                 confirmButtonInfo.action()
             }))
         
-        attachAlert(viewController: viewController, alert: alertBuilder.alert)
+        attachAlert(in: view, alert: alertBuilder.alert)
     }
     
-    public func showSingleButtonAlert(_ viewController: UIViewController,
+    public func showSingleButtonAlert(in view: UIView,
                                image: UIImage? = nil,
                                title: AlertText?,
                                message: AlertAttributedText,
@@ -81,7 +80,7 @@ extension AlertViewer {
                 confirmButtonInfo.action()
             }))
         
-        attachAlert(viewController: viewController, alert: alertBuilder.alert)
+        attachAlert(in: view, alert: alertBuilder.alert)
     }
 }
 
@@ -96,7 +95,7 @@ extension AlertViewer {
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
     ///   - cancelButtonInfo: 취소 버튼 설정 정보
-    public func showDualButtonAlert(_ viewController: UIViewController,
+    public func showDualButtonAlert(in view: UIView,
                              image: UIImage? = nil,
                              title: AlertText?,
                              message: AlertText?,
@@ -119,7 +118,7 @@ extension AlertViewer {
                 confirmButtonInfo.action()
             }))
         
-        attachAlert(viewController: viewController, alert: alertBuilder.alert)
+        attachAlert(in: view, alert: alertBuilder.alert)
     }
     
     /// Default Dual button Alert
@@ -130,7 +129,7 @@ extension AlertViewer {
     ///   - message: 메세지
     ///   - confirmButtonInfo: 확인 버튼 설정 정보
     ///   - cancelButtonInfo: 취소 버튼 설정 정보
-    public func showDualButtonAlert(_ viewController: UIViewController,
+    public func showDualButtonAlert(in view: UIView,
                             image: UIImage? = nil,
                             title: AlertText?,
                             attributedMessage: AlertAttributedText? = nil,
@@ -153,6 +152,6 @@ extension AlertViewer {
                 confirmButtonInfo.action()
             }))
         
-        attachAlert(viewController: viewController, alert: alertBuilder.alert)
+        attachAlert(in: view, alert: alertBuilder.alert)
     }
 }

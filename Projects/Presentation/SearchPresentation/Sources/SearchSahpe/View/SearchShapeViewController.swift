@@ -99,7 +99,7 @@ public final class SearchShapeViewController: UIViewController, View {
         }
         AlertViewer()
             .showSingleButtonAlert(
-                self,
+                in: view,
                 title: .init(text: title),
                 message: messageText,
                 confirmButtonInfo: .init(title: Constants.confirm)
