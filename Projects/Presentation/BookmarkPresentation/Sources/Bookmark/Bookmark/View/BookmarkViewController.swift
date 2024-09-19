@@ -54,6 +54,8 @@ public final class BookmarkViewController: UIViewController, View {
         view.backgroundColor = Constants.Color.background
         rootContainerView.backgroundColor = Constants.Color.background
         setupLayout()
+        bookmarkTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -110,9 +112,6 @@ public final class BookmarkViewController: UIViewController, View {
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
-        bookmarkTableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
         rx.viewWillAppear
             .map { Reactor.Action.loadBookmarkPills }
             .bind(to: reactor.action)
