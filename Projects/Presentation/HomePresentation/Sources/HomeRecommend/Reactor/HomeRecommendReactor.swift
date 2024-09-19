@@ -58,6 +58,7 @@ public enum HomeShortcutButtonInfo: Int, CaseIterable {
 }
 
 fileprivate enum HomeRecommendReactorError: Error {
+    case loadRecommendPills
     case sectionError
 }
 
@@ -76,6 +77,7 @@ public final class HomeRecommendReactor: Reactor {
     }
     
     public struct State {
+        @Pulse var items: [RecommendCollectionViewSectionModel] = []
         var isLoading: Bool = true
         @Pulse var isError: Void?
         @Pulse var recommendPillCount: Int = 0
@@ -102,7 +104,8 @@ public final class HomeRecommendReactor: Reactor {
                     self?.recommendPills = pills
                     observable.onNext(.isLoadedRecommendPills)
                 }, onFailure: { error in
-                    observable.onNext(.error(error))
+                    print("Error: \(error)")
+                    observable.onNext(.error(HomeRecommendReactorError.loadRecommendPills))
                 })
                 .disposed(by: self.disposeBag)
             return Disposables.create()
@@ -147,8 +150,27 @@ extension HomeRecommendReactor {
         var state = state
         switch mutation {
         case .isLoadedRecommendPills:
+            state.items = [
+                .init(
+                    headerTitle: HomeRecommendSection.shortcut.title,
+                    items: HomeShortcutButtonInfo.allCases.map { RecommendCollectionViewSectionModel.Item.shortcut($0) }
+                ),
+                .init(
+                    headerTitle: HomeRecommendSection.pills.title,
+                    items: recommendPills.map { RecommendCollectionViewSectionModel.Item.recommendPills($0) }
+                )
+            ]
             state.recommendPillCount = recommendPills.count
         case let .error(error):
+            if let error = error as? HomeRecommendReactorError,
+               error == .loadRecommendPills {
+                state.items = [
+                    .init(
+                        headerTitle: HomeRecommendSection.shortcut.title,
+                        items: HomeShortcutButtonInfo.allCases.map { RecommendCollectionViewSectionModel.Item.shortcut($0) }
+                    ),
+                ]
+            }
             state.isError = Void()
         case let .showSearchDetail(pillInfo):
             showSearchDetail(pillInfo)
@@ -158,40 +180,6 @@ extension HomeRecommendReactor {
             showShapeSearchViewController()
         }
         return state
-    }
-}
-
-// MARK: - HomeRecommend DataSource
-extension HomeRecommendReactor: HomeRecommendDataSource {
-    public func numberOfSection() -> Int {
-        return HomeRecommendSection.allCases.count
-    }
-    
-    public func numberOfItems(in section: Int) -> Int {
-        guard let section = HomeRecommendSection(rawValue: section) else { return 0 }
-        switch section {
-        case .shortcut: return HomeShortcutButtonInfo.allCases.count
-        case .pills: return recommendPills.count
-        }
-    }
-    
-    public func shortcutButtonSectionItem(at indexPath: IndexPath) -> HomeShortcutButtonInfo? {
-        guard let section = HomeRecommendSection(rawValue: indexPath.section),
-              section == .shortcut else { return nil }
-        guard let buttonInfo = HomeShortcutButtonInfo(rawValue: indexPath.item) else { return nil }
-        return buttonInfo
-    }
-    
-    public func recommendSecitonItem(at indexPath: IndexPath) -> PillInfoModel? {
-        guard let section = HomeRecommendSection(rawValue: indexPath.section),
-              section == .pills else {
-            return nil }
-        return recommendPills[indexPath.item]
-    }
-    
-    public func headerTitle(at section: Int) -> String? {
-        guard let section = HomeRecommendSection(rawValue: section) else { return nil }
-        return section.title
     }
 }
 

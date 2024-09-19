@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -28,13 +29,15 @@ public final class HomeRecommendViewController: UIViewController, View {
     private lazy var recommendPillCollectionView: UICollectionView = {
         let layout = makeRecommendPillCompositionalLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(HomeRecommendHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeRecommendHeaderView.identifier)
+        collectionView.register(ShortcutButtonCell.self, forCellWithReuseIdentifier: ShortcutButtonCell.identifier)
+        collectionView.register(RecommendCollectionViewCell.self, forCellWithReuseIdentifier: RecommendCollectionViewCell.identifier)
         return collectionView
     }()
     
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
-    private var adapter: HomeRecommendAdapter?
     
     // MARK: - Life cycle
     
@@ -55,14 +58,6 @@ public final class HomeRecommendViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
-        guard let reactor = reactor else { return }
-        adapter = HomeRecommendAdapter(
-            scrollView: scrollView,
-            collectionView: recommendPillCollectionView,
-            dataSource: reactor,
-            delegate: self
-        )
-        bindAdapter(reactor)
         loadingView.show(in: self.view)
     }
     
@@ -75,6 +70,31 @@ public final class HomeRecommendViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func createDataSource() -> RxCollectionViewSectionedAnimatedDataSource<RecommendCollectionViewSectionModel> {
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<RecommendCollectionViewSectionModel> { _, collectionView, indexPath, item in
+            switch item {
+            case .shortcut(let buttonInfo):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShortcutButtonCell.identifier, for: indexPath) as? ShortcutButtonCell else { return .init() }
+                cell.configure(buttonInfo)
+                return cell
+                
+            case .recommendPills(let pill):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCollectionViewCell.identifier, for: indexPath) as? RecommendCollectionViewCell else { return .init() }
+                cell.configure(pill)
+                return cell
+            }
+        }
+        
+        dataSource.configureSupplementaryView = { dataSource, collectionView, kind, indexPath in
+            guard kind == UICollectionView.elementKindSectionHeader else { return .init() }
+            guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeRecommendHeaderView.identifier, for: indexPath) as? HomeRecommendHeaderView else { return .init() }
+            view.configure(title: dataSource[indexPath.section].headerTitle)
+            return view
+        }
+        
+        return dataSource
+    }
 }
 
 // MARK: - Bind
@@ -84,12 +104,21 @@ extension HomeRecommendViewController {
             .map { Reactor.Action.loadRecommendPills }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        recommendPillCollectionView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectCollecitonViewItem(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeRecommendReactor) {
+        reactor.pulse(\.$items)
+            .bind(to: recommendPillCollectionView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$recommendPillCount)
             .bind(onNext: { recommendPillCount in
-                // height = recommendCell height * Cell count + Button section height
+                /// height = recommendCell height * Cell count + Button section height
                 let height = 180.0 * CGFloat(recommendPillCount) + 200.0
                 UIView.animate(withDuration: 0.5,
                                animations: {
@@ -102,18 +131,6 @@ extension HomeRecommendViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: HomeRecommendReactor) {
-        adapter?.didSelectItem
-            .map { indexPath in Reactor.Action.didSelectCollecitonViewItem(indexPath)}
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-    }
-}
-
-// MARK: - HomeRecommend Delegate
-extension HomeRecommendViewController: HomeRecommendDelegate {
-    
 }
 
 // MARK: - Layout
