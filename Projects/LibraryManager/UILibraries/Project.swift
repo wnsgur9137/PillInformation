@@ -17,6 +17,9 @@ let project: Project = .project(
         .SPM.UI.SkeletonView,
         .SPM.UI.Lottie,
         .SPM.UI.Tabman,
-        .SPM.UI.IQKeyboardManager
+        .SPM.UI.IQKeyboardManager,
+        .SPM.Reactive.RxCocoa,
+        .SPM.Reactive.RxGesture,
+        .SPM.Reactive.RxDataSources
     ]
 )

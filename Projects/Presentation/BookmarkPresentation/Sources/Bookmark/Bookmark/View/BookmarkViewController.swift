@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -24,14 +25,21 @@ public final class BookmarkViewController: UIViewController, View {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let emptyBookmarkView = EmptyBookmarkView()
-    private let bookmarkTableView = UITableView()
+    private let bookmarkTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(BookmarkTableHeaderView.self, forHeaderFooterViewReuseIdentifier: BookmarkTableHeaderView.identifier)
+        tableView.register(BookmarkTableViewCell.self, forCellReuseIdentifier: BookmarkTableViewCell.identifier)
+        return tableView
+    }()
     private let footerView = FooterView()
     
     // MARK: - Properties
-    private var adapter: BookmarkAdapter?
     public var disposeBag = DisposeBag()
     private lazy var bookmarkTableViewHeight: CGFloat = 120.0
     private lazy var bookmarkTableHeaderViewHeight: CGFloat = 52.0
+    
+    private let didSelectBookmarkButton: PublishRelay<IndexPath> = .init()
+    private let didSelectDeleteAllButton: PublishRelay<Void> = .init()
     
     // MARK: - Lifecycle
     
@@ -45,12 +53,6 @@ public final class BookmarkViewController: UIViewController, View {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
         rootContainerView.backgroundColor = Constants.Color.background
-        if let reactor = reactor {
-            adapter = BookmarkAdapter(tableView: bookmarkTableView,
-                                      dataSource: reactor,
-                                      delegate: self)
-            bindAdapter(reactor)
-        }
         setupLayout()
     }
     
@@ -85,11 +87,32 @@ public final class BookmarkViewController: UIViewController, View {
         emptyBookmarkView.flex.display(isEmptyData ? .flex : .none)
         isEmptyData ? emptyBookmarkView.playAnimation() : emptyBookmarkView.stopAnimation()
     }
+    
+    private func createDataSource() -> RxTableViewSectionedAnimatedDataSource<BookmarkTableViewSectionModel> {
+        let dataSource = RxTableViewSectionedAnimatedDataSource<BookmarkTableViewSectionModel> { _, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: BookmarkTableViewCell.identifier, for: indexPath) as? BookmarkTableViewCell else { return .init() }
+            cell.configure(item)
+            cell.bookmarkButton.rx.tap
+                .map { return indexPath }
+                .bind(to: self.didSelectBookmarkButton)
+                .disposed(by: cell.disposeBag)
+            return cell
+        }
+        
+        dataSource.canEditRowAtIndexPath = { _, _ in
+            return true
+        }
+        
+        return dataSource
+    }
 }
 
 // MARK: - Binding
 extension BookmarkViewController {
     private func bindAction(_ reactor: BookmarkReactor) {
+        bookmarkTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
         rx.viewWillAppear
             .map { Reactor.Action.loadBookmarkPills }
             .bind(to: reactor.action)
@@ -100,9 +123,46 @@ extension BookmarkViewController {
             .map { text in Reactor.Action.filtered(text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        bookmarkTableView.rx.itemSelected
+            .map { indexPath in
+                Reactor.Action.didSelectRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        bookmarkTableView.rx.itemDeleted
+            .map { indexPath in
+                Reactor.Action.deleteRow(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectBookmarkButton
+            .map { indexPath in
+                Reactor.Action.didSelectBookmark(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectDeleteAllButton
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.showSingleAlert(title: Constants.Bookmark.askDeleteAll, message: nil, action: {
+                    Observable.just(Void())
+                        .map { Reactor.Action.deleteAll }
+                        .bind(to: reactor.action)
+                        .disposed(by: self.disposeBag)
+                })
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: BookmarkReactor) {
+        reactor.pulse(\.$pills)
+            .bind(to: bookmarkTableView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$bookmarkPillCount)
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] count in
@@ -125,50 +185,27 @@ extension BookmarkViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: BookmarkReactor) {
-        adapter?.didSelectRow
-            .map { indexPath in
-                Reactor.Action.didSelectRow(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectBookmark
-            .map { indexPath in
-                Reactor.Action.didSelectBookmark(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.deleteRow
-            .map { indexPath in
-                Reactor.Action.deleteRow(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectDeleteAllButton
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.showSingleAlert(title: Constants.Bookmark.askDeleteAll, message: nil, action: {
-                    Observable.just(Void())
-                        .map { Reactor.Action.deleteAll }
-                        .bind(to: reactor.action)
-                        .disposed(by: self.disposeBag)
-                })
-            })
-            .disposed(by: disposeBag)
-    }
 }
 
-// MARK: - BookmarkAdapter Delegate
-extension BookmarkViewController: BookmarkAdapterDelegate {
-    public func heightForRow(at indexPath: IndexPath) -> CGFloat {
+// MARK: - UITableView Delegate
+extension BookmarkViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: BookmarkTableHeaderView.identifier) as? BookmarkTableHeaderView else { return .init() }
+        view.deleteButton.rx.tap
+            .bind(to: didSelectDeleteAllButton)
+            .disposed(by: view.disposeBag)
+        return view
+    }
+    
+    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return bookmarkTableViewHeight
     }
     
-    public func heightForHeader() -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return bookmarkTableHeaderViewHeight
     }
 }

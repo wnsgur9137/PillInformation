@@ -76,8 +76,10 @@ brew link --overwrite tuist@4.9.0
 |Name|Version|-|
 |:--:|-------|---|
 |RxSwift|6.6.0|ReactiveLibraries|
-|RxGesture|4.0.4|ReactiveLibraries|
 |ReactorKit|3.2.0|ReactiveLibraries|
+|RxCocoa|(RxSwift)|UILibraries|
+|RxGesture|4.0.4|UILibraries|
+|RxDataSources|5.0.0|UILibraries|
 |Alamofire|5.9.1|NetworkLibraries|
 |Moya|15.0.0|NetworkLibraries|
 |RealmSwift|10.49.1|DataLibraries|
