@@ -31,6 +31,7 @@ public final class HomeNoticeReactor: Reactor {
     }
     
     public struct State {
+        @Pulse var notices: [NoticeTableViewSectionModel] = []
         @Pulse var noticeCount: Int?
         @Pulse var isFailedLoadNotices: Void?
     }
@@ -80,6 +81,7 @@ extension HomeNoticeReactor {
         var state = state
         switch mutation {
         case .isLoadedNotices:
+            state.notices = [NoticeTableViewSectionModel(items: notices)]
             state.noticeCount = notices.count
         case .loadError:
             state.isFailedLoadNotices = Void()
@@ -89,18 +91,6 @@ extension HomeNoticeReactor {
             showNoticeDetailViewController(notice)
         }
         return state
-    }
-}
-
-// MARK: - HomeNotice DataSource
-extension HomeNoticeReactor: HomeNoticeDataSource {
-    public func numberOfRows(in section: Int) -> Int {
-        return notices.count
-    }
-    
-    public func cellForRow(at indexPath: IndexPath) -> NoticeModel? {
-        guard notices.count >= indexPath.row else { return nil }
-        return notices[indexPath.row]
     }
 }
 

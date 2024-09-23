@@ -14,7 +14,5 @@ let project: Project = .project(
     dependencies: [
         .SPM.Reactive.ReactorKit,
         .SPM.Reactive.RxSwift,
-        .SPM.Reactive.RxCocoa,
-        .SPM.Reactive.RxGesture
     ]
 )

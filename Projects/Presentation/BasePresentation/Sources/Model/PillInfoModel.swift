@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import RxDataSources
 
-public struct PillInfoModel {
+public struct PillInfoModel: IdentifiableType, Equatable {
     public let medicineSeq: Int
     public let medicineName: String
     public let entpSeq: Int
@@ -41,6 +42,7 @@ public struct PillInfoModel {
     public let medicineEngName: String?
     public let ediCode: Int?
     public var hits: Int
+    public var identity: String
     
     public init(medicineSeq: Int, medicineName: String, entpSeq: Int, entpName: String, chart: String?, medicineImage: String, printFront: String?, printBack: String?, medicineShape: String, colorClass1: String?, colorClass2: String?, lineFront: String?, lineBack: String?, lengLong: Float?, lengShort: Float?, thick: Float?, imgRegistTs: Int, classNo: Int?, className: String?, etcOtcName: String, medicinePermitDate: Int, formCodeName: String?, markCodeFrontAnal: String?, markCodeBackAnal: String?, markCodeFrontImg: String?, markCodeBackImg: String?, changeDate: Int?, markCodeFront: String?, markCodeBack: String?, medicineEngName: String?, ediCode: Int?, hits: Int = 0) {
         self.medicineSeq = medicineSeq
@@ -75,5 +77,6 @@ public struct PillInfoModel {
         self.medicineEngName = medicineEngName
         self.ediCode = ediCode
         self.hits = hits
+        self.identity = UUID().uuidString
     }
 }

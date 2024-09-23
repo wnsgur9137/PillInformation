@@ -39,15 +39,15 @@ public final class NoticeDetailReactor: Reactor {
     }
     public enum Mutation {
         case loadNotice(NoticeModel)
-        case loadOtherNotices
+        case loadOtherNotices([NoticeTableViewSectionModel])
         case popViewController
         case showSearchTab
         case showSearchShapeViewController
         case showNoticeDetail(IndexPath)
     }
     public struct State {
+        @Pulse var otherNoticeItems: [NoticeTableViewSectionModel] = []
         var notice: NoticeModel?
-        var isLoadedOtherNotices: Void = ()
     }
     
     public var initialState = State()
@@ -81,10 +81,11 @@ extension NoticeDetailReactor {
         case .loadOtherNotices:
             return loadOtherNotices()
                 .flatMap { [weak self] notices -> Observable<Mutation> in
-                    guard let currentNotice = self?.notice else { return .just(.loadOtherNotices)}
+                    guard let currentNotice = self?.notice else { return .just(.loadOtherNotices([]))}
                     let filteredNotices = notices.filter { $0.title != currentNotice.title }
-                    self?.otherNotices = Array(filteredNotices.shuffled().prefix(3))
-                    return .just(.loadOtherNotices)
+                    let otherNotices = Array(filteredNotices.shuffled().prefix(3))
+                    let sectionModels = NoticeTableViewSectionModel(items: otherNotices)
+                    return .just(.loadOtherNotices([sectionModels]))
                 }
             
         case .popViewController:
@@ -106,8 +107,8 @@ extension NoticeDetailReactor {
         switch mutation {
         case let .loadNotice(notice):
             state.notice = notice
-        case .loadOtherNotices:
-            state.isLoadedOtherNotices = Void()
+        case .loadOtherNotices(let otherNotices):
+            state.otherNoticeItems = otherNotices
         case .popViewController:
             popViewController(animated: true)
         case .showSearchTab:
@@ -137,16 +138,5 @@ extension NoticeDetailReactor {
     
     private func showSearchShapeViewController() {
         flowAction.showSearchShapeViewController()
-    }
-}
-
-// MARK: - NoticeDetail DataSource
-extension NoticeDetailReactor: NoticeDetailAdapterDataSource {
-    public func numberOfRows(in section: Int) -> Int {
-        return otherNotices.count
-    }
-    
-    public func cellForRow(at indexPath: IndexPath) -> NoticeModel? {
-        return otherNotices[indexPath.row]
     }
 }

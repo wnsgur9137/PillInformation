@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -37,13 +38,13 @@ public final class HomeNoticeViewController: UIViewController, View {
         let tableView = UITableView()
         tableView.isScrollEnabled = false
         tableView.layer.addShadow()
+        tableView.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
         return tableView
     }()
     
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
-    private var adapter: HomeNoticeAdapter?
     private let noticeTableRowHeight: CGFloat = 50.0
     
     // MARK: - Life cycle
@@ -58,13 +59,9 @@ public final class HomeNoticeViewController: UIViewController, View {
         super.viewDidLoad()
         setupLayout()
         guard let reactor = reactor else { return }
-        adapter = HomeNoticeAdapter(
-            tableView: noticeTableView,
-            dataSource: reactor,
-            delegate: self
-        )
-        bindAdapter(reactor)
         loadingView.show(in: self.view)
+        noticeTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     public override func viewDidLayoutSubviews() {
@@ -76,6 +73,15 @@ public final class HomeNoticeViewController: UIViewController, View {
         bindAction(reactor)
         bindState(reactor)
     }
+    
+    private func createDataSource() -> RxTableViewSectionedAnimatedDataSource<NoticeTableViewSectionModel> {
+        let dataSource = RxTableViewSectionedAnimatedDataSource<NoticeTableViewSectionModel> { _, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeTableViewCell.identifier, for: indexPath) as? NoticeTableViewCell else { return .init() }
+            cell.configure(title: item.title)
+            return cell
+        }
+        return dataSource
+    }
 }
 
 // MARK: - Bind
@@ -85,9 +91,18 @@ extension HomeNoticeViewController {
             .map { Reactor.Action.loadNotices }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        noticeTableView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectNotice(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: HomeNoticeReactor) {
+        reactor.pulse(\.$notices)
+            .bind(to: noticeTableView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+        
         reactor.pulse(\.$noticeCount)
             .filter { $0 != nil }
             .bind(onNext: { noticeCount in
@@ -112,18 +127,11 @@ extension HomeNoticeViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: HomeNoticeReactor) {
-        adapter?.didSelectRow
-            .map { indexPath in Reactor.Action.didSelectNotice(indexPath) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-    }
 }
 
-// MARK: - HomeNotice Delegate
-extension HomeNoticeViewController: HomeNoticeDelegate {
-    public func heightForRow(at indexPath: IndexPath) -> CGFloat {
+// MARK: - UITableView Delegate
+extension HomeNoticeViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return noticeTableRowHeight
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -21,8 +22,6 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let searchTextFieldView = SearchTextFieldView(hasDismiss: true)
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
-//    private lazy var navigationView = NavigationView(useTextField: false, isShowBackwardButton: true)
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -58,13 +57,13 @@ public final class NoticeDetailViewController: UIViewController, View {
     private let otherNoticeTableView: UITableView = {
         let tableView = UITableView()
         tableView.isScrollEnabled = false
+        tableView.register(NoticeTableViewCell.self, forCellReuseIdentifier: NoticeTableViewCell.identifier)
         return tableView
     }()
     
     private let footerView = FooterView()
     
     public var disposeBag = DisposeBag()
-    private var adapter: NoticeDetailAdapter?
     
     // MARK: - LifeCycle
     
@@ -77,11 +76,6 @@ public final class NoticeDetailViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
-        if let reactor = reactor {
-            self.adapter = NoticeDetailAdapter(tableView: otherNoticeTableView,
-                                               dataSource: reactor)
-            bindAdapter(reactor)
-        }
         setupLayout()
     }
     
@@ -93,6 +87,16 @@ public final class NoticeDetailViewController: UIViewController, View {
     public func bind(reactor: NoticeDetailReactor) {
         bindAction(reactor)
         bindState(reactor)
+    }
+    
+    private func createDataSource() -> RxTableViewSectionedAnimatedDataSource<NoticeTableViewSectionModel> {
+        let dataSource = RxTableViewSectionedAnimatedDataSource<NoticeTableViewSectionModel> { _, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeTableViewCell.identifier, for: indexPath) as? NoticeTableViewCell else { return .init() }
+            cell.configure(title: item.title)
+            cell.selectionStyle = .none
+            return cell
+        }
+        return dataSource
     }
 }
 
@@ -118,9 +122,26 @@ extension NoticeDetailViewController {
             .map { Reactor.Action.didTapSearchShapeButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        otherNoticeTableView.rx.itemSelected
+            .map { indexPath in
+                Reactor.Action.didSelectNotice(indexPath)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: NoticeDetailReactor) {
+        reactor.pulse(\.$otherNoticeItems)
+            .bind(to: otherNoticeTableView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$otherNoticeItems)
+            .bind(onNext: { [weak self] _ in
+                self?.updateSubviewLayout()
+            })
+            .disposed(by: disposeBag)
+        
         reactor.state
             .map { $0.notice }
             .filter { $0 != nil }
@@ -130,23 +151,6 @@ extension NoticeDetailViewController {
                 self?.writerLabel.text = notice.writer
                 self?.contentLabel.text = notice.content
             })
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.isLoadedOtherNotices }
-            .bind(onNext: { _ in
-                self.otherNoticeTableView.reloadData()
-                self.updateSubviewLayout()
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindAdapter(_ reactor: NoticeDetailReactor) {
-        adapter?.didSelectRow
-            .map { indexPath in
-                Reactor.Action.didSelectNotice(indexPath)
-            }
-            .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
 }

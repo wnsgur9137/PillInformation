@@ -63,6 +63,7 @@ public final class BookmarkReactor: Reactor {
     }
     
     public struct State {
+        @Pulse var pills: [BookmarkTableViewSectionModel] = []
         @Pulse var bookmarkPillCount: Int?
         @Pulse var alertContent: (title: String, message: String?)?
     }
@@ -190,6 +191,7 @@ extension BookmarkReactor {
         var state = state
         switch mutation {
         case .loadedBookmarkPills:
+            state.pills = [BookmarkTableViewSectionModel(items: pills)]
             state.bookmarkPillCount = isFiltered ? filteredPills.count : pills.count
         case .showSearchShapeViewController:
             showSearchShapeViewController()
@@ -203,18 +205,6 @@ extension BookmarkReactor {
             break
         }
         return state
-    }
-}
-
-// MARK: - BookmarkAdapter DataSource
-extension BookmarkReactor: BookmarkAdapterDataSource {
-    public func numberOfRows(in: Int) -> Int {
-        return isFiltered ? filteredPills.count : pills.count
-    }
-    
-    public func cellForRow(at indexPath: IndexPath) -> PillInfoModel {
-        
-        return isFiltered ? filteredPills[indexPath.row] : pills[indexPath.row]
     }
 }
 

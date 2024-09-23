@@ -48,6 +48,7 @@ public extension TargetDependency.SPM.Reactive {
     static let RxCocoa: TargetDependency = .external(name: "RxCocoa")
     static let RxGesture: TargetDependency = .external(name: "RxGesture")
     static let ReactorKit: TargetDependency = .external(name: "ReactorKit")
+    static let RxDataSources: TargetDependency = .external(name: "RxDataSources")
 }
 public extension TargetDependency.SPM.UI {
     static let SkeletonView: TargetDependency = .external(name: "SkeletonView")
