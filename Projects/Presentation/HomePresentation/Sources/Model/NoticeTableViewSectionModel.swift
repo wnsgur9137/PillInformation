@@ -9,9 +9,9 @@
 import Foundation
 import RxDataSources
 
-struct NoticeTableViewSectionModel {
-    var identity: String
-    var items: [Item]
+public struct NoticeTableViewSectionModel {
+    public var identity: String
+    public var items: [Item]
     
     init(items: [Item]) {
         self.identity = UUID().uuidString
@@ -20,9 +20,9 @@ struct NoticeTableViewSectionModel {
 }
 
 extension NoticeTableViewSectionModel: AnimatableSectionModelType {
-    typealias Item = NoticeModel
+    public typealias Item = NoticeModel
     
-    init(original: NoticeTableViewSectionModel,
+    public init(original: NoticeTableViewSectionModel,
          items: [NoticeModel]) {
         self = original
         self.items = items
