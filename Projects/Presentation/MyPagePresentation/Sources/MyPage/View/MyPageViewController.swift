@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import PinLayout
 import FlexLayout
 
@@ -39,6 +40,7 @@ public final class MyPageViewController: UIViewController, View {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isScrollEnabled = false
+        tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: MyPageTableViewCell.identifier)
         return tableView
     }()
     
@@ -46,7 +48,6 @@ public final class MyPageViewController: UIViewController, View {
     
     public var didDisappear: (() -> Void)?
     public var disposeBag = DisposeBag()
-    private var adapter: MyPageAdapter?
     
     private let signout = PublishSubject<Void>()
     private let withdraw = PublishSubject<Void>()
@@ -60,13 +61,6 @@ public final class MyPageViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
-        if let reactor = reactor {
-            self.adapter = MyPageAdapter(
-                tableView: tableView,
-                dataSource: reactor
-            )
-            bindAdapter(reactor)
-        }
         setupLayout()
     }
     
@@ -88,6 +82,21 @@ public final class MyPageViewController: UIViewController, View {
     public func bind(reactor: MyPageReactor) {
         bindAction(reactor)
         bindState(reactor)
+    }
+    
+    private func createDataSource() -> RxTableViewSectionedReloadDataSource<MyPageSectionItem> {
+        let dataSource = RxTableViewSectionedReloadDataSource<MyPageSectionItem> { _, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MyPageTableViewCell.identifier, for: indexPath) as? MyPageTableViewCell else { return .init() }
+            guard let title = item else { return cell }
+            cell.configure(title: title)
+            return cell
+        }
+        
+        dataSource.titleForHeaderInSection = { dataSource, index in
+            return dataSource.sectionModels[index].header
+        }
+        
+        return dataSource
     }
     
     private func showWarningAlert(_ type: MyPageReactor.MyPageAlert) {
@@ -169,9 +178,20 @@ extension MyPageViewController {
             .map { Reactor.Action.withdrawal }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectRow(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: MyPageReactor) {
+        reactor.pulse(\.$tableViewSections)
+            .filter { !$0.isEmpty }
+            .bind(to: tableView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
+            
+        
         reactor.pulse(\.$alert)
             .filter { $0 != nil }
             .asDriver(onErrorDriveWith: .never())
@@ -192,14 +212,12 @@ extension MyPageViewController {
             }
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: MyPageReactor) {
-        adapter?.didSelectRow
-            .map { indexPath in
-                Reactor.Action.didSelectRow(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+}
+
+// MARK: - UITableViewDelegate
+extension MyPageViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 
