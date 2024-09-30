@@ -11,6 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import RxGesture
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -35,20 +36,24 @@ public final class SearchViewController: UIViewController, View {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(RecommendKeywordCollectionViewCell.self, forCellWithReuseIdentifier: RecommendKeywordCollectionViewCell.identifier)
         return collectionView
     }()
     
     private let recentTableView: UITableView = {
         let tableView = UITableView()
+        tableView.register(RecentTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: RecentTableViewHeaderView.identifier)
+        tableView.register(RecentTableViewCell.self, forCellReuseIdentifier: RecentTableViewCell.identifier)
         return tableView
     }()
     
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
-    private var adapter: SearchAdapter?
     
     private let searchRelay: PublishRelay<String?> = .init()
+    private let didSelectTableViewDeleteButton: PublishRelay<IndexPath> = .init()
+    private let didSelectRecentDeleteAllKeywordButton: PublishRelay<Void> = .init()
     private let deleteAllRecentKeywords: PublishRelay<Void> = .init()
     
     // MARK: - LifeCycle
@@ -63,15 +68,6 @@ public final class SearchViewController: UIViewController, View {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
         rootContainerView.backgroundColor = Constants.Color.background
-        if let reactor = reactor {
-            self.adapter = SearchAdapter(
-                collectionView: recommendCollectionView,
-                tableView: recentTableView,
-                textField: searchTextFieldView.searchTextField,
-                dataSource: reactor
-            )
-            bindAdapter(reactor)
-        }
         setupLayout()
     }
     
@@ -87,13 +83,57 @@ public final class SearchViewController: UIViewController, View {
     }
     
     public func bind(reactor: SearchReactor) {
+        bindDelegate()
         bindAction(reactor)
         bindState(reactor)
+    }
+    
+    private func createCollectionViewDataSource() -> RxCollectionViewSectionedAnimatedDataSource<RecommendCollectionViewSectionModel> {
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<RecommendCollectionViewSectionModel> { _, collectionView, indexPath, item in
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendKeywordCollectionViewCell.identifier, for: indexPath) as? RecommendKeywordCollectionViewCell else { return .init() }
+            cell.configure(text: item)
+            return cell
+        }
+        return dataSource
+    }
+    
+    private func createTableViewDataSource() -> RxTableViewSectionedReloadDataSource<RecentTableViewSectionModel> {
+        let dataSource = RxTableViewSectionedReloadDataSource<RecentTableViewSectionModel> { [weak self] _, tableView, indexPath, item in
+            guard let self = self,
+                  let cell = tableView.dequeueReusableCell(withIdentifier: RecentTableViewCell.identifier, for: indexPath) as? RecentTableViewCell else { return .init() }
+            cell.configure(text: item)
+            cell.deleteButton.rx.tap
+                .map { _ in return indexPath}
+                .bind(to: self.didSelectTableViewDeleteButton)
+                .disposed(by: cell.disposeBag)
+            return cell
+        }
+        return dataSource
+    }
+    
+    private func showDeleteAllAlert() {
+        AlertViewer()
+            .showDualButtonAlert(
+                in: view,
+                title: .init(text: Constants.Search.askDeleteAll),
+                message: nil,
+                confirmButtonInfo: .init(title: Constants.Search.delete) {
+                    self.deleteAllRecentKeywords.accept(Void())
+                },
+                cancelButtonInfo: .init(title: Constants.cancel)
+            )
     }
 }
 
 // MARK: - Binding
 extension SearchViewController {
+    private func bindDelegate() {
+        recommendCollectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        recentTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
+    
     private func bindAction(_ reactor: SearchReactor) {
         rx.viewDidLoad
             .map { Reactor.Action.loadRecommendKeyword }
@@ -105,20 +145,38 @@ extension SearchViewController {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        searchRelay
-            .map { text in
-                Reactor.Action.search(text)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
         searchTextFieldView.shapeSearchButton.rx.tap
             .map { Reactor.Action.didSelectSearchShapeButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        didSelectRecentDeleteAllKeywordButton
+            .map { Reactor.Action.didSelectTableViewDeleteAllButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         deleteAllRecentKeywords
             .map { Reactor.Action.deleteAllRecentKeywords }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectTableViewDeleteButton
+            .map { indexPath in Reactor.Action.didSelectTableViewDeleteButton(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        recommendCollectionView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectCollectionViewItem(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        recentTableView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectTableViewRow(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        searchTextFieldView.searchTextField.rx.controlEvent(.editingDidEndOnExit)
+            .map {  Reactor.Action.search(self.searchTextFieldView.searchTextField.text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -141,18 +199,12 @@ extension SearchViewController {
             })
             .disposed(by: disposeBag)
         
-        reactor.pulse(\.$reloadCollectionViewData)
-            .filter { $0 != nil }
-            .subscribe(onNext: { _ in
-                self.recommendCollectionView.reloadData()
-            })
+        reactor.pulse(\.$collectionViewItems)
+            .bind(to: recommendCollectionView.rx.items(dataSource: createCollectionViewDataSource()))
             .disposed(by: disposeBag)
         
-        reactor.pulse(\.$reloadTableViewData)
-            .filter { $0 != nil }
-            .subscribe(onNext: { _ in
-                self.recentTableView.reloadData()
-            })
+        reactor.pulse(\.$tableViewItems)
+            .bind(to: recentTableView.rx.items(dataSource: createTableViewDataSource()))
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$showDeleteAllRecentKeywordAlert)
@@ -162,47 +214,41 @@ extension SearchViewController {
             })
             .disposed(by: disposeBag)
     }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let text = reactor?.recommendKeywords[indexPath.item] else { return .init() }
+        let textSize = (text as NSString).size(withAttributes: [
+            NSAttributedString.Key.font: Constants.Font.suiteMedium(20.0)
+        ])
+        let width = ceil(textSize.width) + 24.0
+        let height = 40.0
+        return CGSize(width: width, height: height)
+    }
     
-    private func bindAdapter(_ reactor: SearchReactor) {
-        adapter?.shouldReturn
-            .map { keyword in Reactor.Action.search(keyword) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectCollectionViewItem
-            .map { indexPath in Reactor.Action.didSelectCollectionViewItem(indexPath) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectTableViewRow
-            .map { indexPath in Reactor.Action.didSelectTableViewRow(indexPath) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectTableViewDeleteButton
-            .map { indexPath in Reactor.Action.didSelectTableViewDeleteButton(indexPath) }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectTableViewDeleteAllButton
-            .map { Reactor.Action.didSelectTableViewDeleteAllButton }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 4.0, left: 12.0, bottom: 4.0, right: 12.0)
     }
 }
 
-extension SearchViewController {
-    private func showDeleteAllAlert() {
-        AlertViewer()
-            .showDualButtonAlert(
-                in: view,
-                title: .init(text: Constants.Search.askDeleteAll),
-                message: nil,
-                confirmButtonInfo: .init(title: Constants.Search.delete) {
-                    self.deleteAllRecentKeywords.accept(Void())
-                },
-                cancelButtonInfo: .init(title: Constants.cancel)
-            )
+// MARK: - UITableViewDelegate
+extension SearchViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentTableViewHeaderView.identifier) as? RecentTableViewHeaderView else { return nil }
+        view.deleteAllButton.rx.tap
+            .bind(to: didSelectRecentDeleteAllKeywordButton)
+            .disposed(by: view.disposeBag)
+        return view
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 80.0
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 

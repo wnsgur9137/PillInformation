@@ -56,8 +56,8 @@ public final class SearchReactor: Reactor {
     }
     
     public struct State {
-        @Pulse var reloadCollectionViewData: Void?
-        @Pulse var reloadTableViewData: Void?
+        @Pulse var collectionViewItems: [RecommendCollectionViewSectionModel] = []
+        @Pulse var tableViewItems: [RecentTableViewSectionModel] = []
         @Pulse var alertContents: AlertContents?
         @Pulse var showDeleteAllRecentKeywordAlert: Void?
     }
@@ -66,7 +66,7 @@ public final class SearchReactor: Reactor {
     public let flowAction: SearchFlowAction
     private let keywordUseCase: KeywordUseCase
     private let disposeBag = DisposeBag()
-    private var recommendKeywords: [String] = []
+    private(set) var recommendKeywords: [String] = []
     private var recentKeywords: [String] = []
     
     public init(with keywordUseCase: KeywordUseCase,
@@ -223,10 +223,14 @@ extension SearchReactor {
         var state = state
         switch mutation {
         case .loadedRecommendKeyword:
-            state.reloadCollectionViewData = Void()
+            state.collectionViewItems = [
+                .init(items: recommendKeywords)
+            ]
             
         case .loadedRecentKeyword:
-            state.reloadTableViewData = Void()
+            state.tableViewItems = [
+                .init(items: recentKeywords)
+            ]
             
         case let .showSearchResultViewController(keyword):
             showSearchResultViewController(keyword: keyword)
@@ -252,24 +256,5 @@ extension SearchReactor {
     
     private func showSearchShapeViewController() {
         flowAction.showSearchShapeViewController()
-    }
-}
-
-// MARK: - SearchAdapter DataSource
-extension SearchReactor: SearchAdapterDataSource {
-    public func collectionViewNumberOfItems(in section: Int) -> Int {
-        return recommendKeywords.count
-    }
-    
-    public func collectionViewCellForItem(at indexPath: IndexPath) -> String {
-        return recommendKeywords[indexPath.item]
-    }
-    
-    public func tableViewNumberOfRows(in section: Int) -> Int {
-        return recentKeywords.count
-    }
-    
-    public func tableViewCellForRow(at indexPath: IndexPath) -> String {
-        return recentKeywords[indexPath.row]
     }
 }
