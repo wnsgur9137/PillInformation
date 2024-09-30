@@ -27,17 +27,52 @@ fileprivate enum MyPageSection: Int, CaseIterable {
         case localization
         case screenMode
         case appAlarm
+        
+        static func header() -> String {
+            Constants.MyPage.setting
+        }
+        
+        func title() -> String {
+            switch self {
+            case .localization: Constants.MyPage.localizationSetting
+            case .screenMode: Constants.MyPage.screenModeSetting
+            case .appAlarm: Constants.MyPage.appAlarmSetting
+            }
+        }
     }
     
     enum AppInfoRows: Int, CaseIterable {
 //        case appPolicy
 //        case privacyPolicy
         case opensourceLicence
+        
+        static func header() -> String {
+            Constants.MyPage.policy
+        }
+        
+        func title() -> String {
+            switch self {
+//            case .appPolicy: return Constants.MyPage.appPolicy
+//            case .screenMode: return Constants.MyPage.privacyPolicy
+            case .opensourceLicence: return Constants.MyPage.opensourceLicense
+            }
+        }
     }
     
     enum AccountOptionRows: Int, CaseIterable {
         case signout
         case withdrawal
+        
+        static func header() -> String {
+            Constants.MyPage.userInfo
+        }
+        
+        func title() -> String {
+            switch self {
+            case .signout: Constants.MyPage.signout
+            case .withdrawal: Constants.MyPage.withdrawal
+            }
+        }
     }
 }
 
@@ -87,6 +122,7 @@ public final class MyPageReactor: Reactor {
     }
     
     public struct State {
+        @Pulse var tableViewSections: [MyPageSectionItem] = []
         @Pulse var reloadTableViewData: Void?
         @Pulse var alert: MyPageAlert?
         @Pulse var dismiss: Bool?
@@ -181,6 +217,31 @@ public final class MyPageReactor: Reactor {
             return Disposables.create()
         }
     }
+    
+    private func makeTableViewSections() -> [MyPageSectionItem] {
+        let sections: [MyPageSection] = isSigned ? [.appSetting, .appInfo, .accountOption] : [.appSetting, .appInfo]
+        return sections.map { section in
+            switch section {
+            case .appSetting:
+                return MyPageSectionItem(
+                    header: MyPageSection.AppSettingRows.header(),
+                    items: MyPageSection.AppSettingRows.allCases.map {
+                        $0.title()
+                    }
+                )
+            case .appInfo:
+                return MyPageSectionItem(
+                    header: MyPageSection.AppInfoRows.header(),
+                    items: MyPageSection.AppInfoRows.allCases.map { $0.title() }
+                )
+            case .accountOption:
+                return MyPageSectionItem(
+                    header: MyPageSection.AccountOptionRows.header(),
+                    items: MyPageSection.AccountOptionRows.allCases.map { $0.title() }
+                )
+            }
+        }
+    }
 }
 
 // MARK: - Reactor
@@ -205,6 +266,7 @@ extension MyPageReactor {
         var state = state
         switch mutation {
         case .reloadTableViewData:
+            state.tableViewSections = makeTableViewSections()
             state.reloadTableViewData = Void()
             
         case .showLocalizationSettingViewController:
@@ -263,59 +325,59 @@ extension MyPageReactor {
     }
 }
 
-// MARK: - MyPageAdapter TableViewDataSource
-extension MyPageReactor: MyPageAdapterDataSource {
-    public func numberOfSections() -> Int {
-        let allCasesCount = MyPageSection.allCases.count
-        return isSigned ? allCasesCount : allCasesCount - 1
-    }
-    
-    public func numberOfRows(in section: Int) -> Int {
-        guard let section = MyPageSection(rawValue: section) else { return 0 }
-        switch section {
-        case .appSetting:
-            var count = MyPageSection.AppSettingRows.allCases.count
-            return isShowAlarmSettingView ? count : count - 1
-        case .appInfo: return MyPageSection.AppInfoRows.allCases.count
-        case .accountOption: return MyPageSection.AccountOptionRows.allCases.count
-        }
-    }
-    
-    public func cellForRow(at indexPath: IndexPath) -> String? {
-        guard let section = MyPageSection(rawValue: indexPath.section) else { return nil }
-        switch section {
-        case .appSetting:
-            guard let row = MyPageSection.AppSettingRows(rawValue: indexPath.row) else { break }
-            switch row {
-            case .localization: return Constants.MyPage.localizationSetting
-            case .screenMode: return Constants.MyPage.screenModeSetting
-            case .appAlarm: return Constants.MyPage.appAlarmSetting
-            }
-            
-        case .appInfo:
-            guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
-            switch row {
-//            case .appPolicy: return Constants.MyPage.appPolicy
-//            case .privacyPolicy: return Constants.MyPage.privacyPolicy
-            case .opensourceLicence: return Constants.MyPage.opensourceLicense
-            }
-            
-        case .accountOption:
-            guard let row = MyPageSection.AccountOptionRows(rawValue: indexPath.row) else { break }
-            switch row {
-            case .signout: return Constants.MyPage.signout
-            case .withdrawal: return Constants.MyPage.withdrawal
-            }
-        }
-        return nil
-    }
-    
-    public func titleForHeader(in section: Int) -> String? {
-        guard let section = MyPageSection(rawValue: section) else { return nil }
-        switch section {
-        case .appSetting: return Constants.MyPage.setting
-        case .appInfo: return Constants.MyPage.policy
-        case .accountOption: return Constants.MyPage.userInfo
-        }
-    }
-}
+//// MARK: - MyPageAdapter TableViewDataSource
+//extension MyPageReactor: MyPageAdapterDataSource {
+//    public func numberOfSections() -> Int {
+//        let allCasesCount = MyPageSection.allCases.count
+//        return isSigned ? allCasesCount : allCasesCount - 1
+//    }
+//    
+//    public func numberOfRows(in section: Int) -> Int {
+//        guard let section = MyPageSection(rawValue: section) else { return 0 }
+//        switch section {
+//        case .appSetting:
+//            var count = MyPageSection.AppSettingRows.allCases.count
+//            return isShowAlarmSettingView ? count : count - 1
+//        case .appInfo: return MyPageSection.AppInfoRows.allCases.count
+//        case .accountOption: return MyPageSection.AccountOptionRows.allCases.count
+//        }
+//    }
+//    
+//    public func cellForRow(at indexPath: IndexPath) -> String? {
+//        guard let section = MyPageSection(rawValue: indexPath.section) else { return nil }
+//        switch section {
+//        case .appSetting:
+//            guard let row = MyPageSection.AppSettingRows(rawValue: indexPath.row) else { break }
+//            switch row {
+//            case .localization: return Constants.MyPage.localizationSetting
+//            case .screenMode: return Constants.MyPage.screenModeSetting
+//            case .appAlarm: return Constants.MyPage.appAlarmSetting
+//            }
+//            
+//        case .appInfo:
+//            guard let row = MyPageSection.AppInfoRows(rawValue: indexPath.row) else { break }
+//            switch row {
+////            case .appPolicy: return Constants.MyPage.appPolicy
+////            case .privacyPolicy: return Constants.MyPage.privacyPolicy
+//            case .opensourceLicence: return Constants.MyPage.opensourceLicense
+//            }
+//            
+//        case .accountOption:
+//            guard let row = MyPageSection.AccountOptionRows(rawValue: indexPath.row) else { break }
+//            switch row {
+//            case .signout: return Constants.MyPage.signout
+//            case .withdrawal: return Constants.MyPage.withdrawal
+//            }
+//        }
+//        return nil
+//    }
+//    
+//    public func titleForHeader(in section: Int) -> String? {
+//        guard let section = MyPageSection(rawValue: section) else { return nil }
+//        switch section {
+//        case .appSetting: return Constants.MyPage.setting
+//        case .appInfo: return Constants.MyPage.policy
+//        case .accountOption: return Constants.MyPage.userInfo
+//        }
+//    }
+//}
