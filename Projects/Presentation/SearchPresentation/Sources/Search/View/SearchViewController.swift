@@ -183,7 +183,7 @@ extension SearchViewController {
     
     private func bindState(_ reactor: SearchReactor) {
         reactor.pulse(\.$alertContents)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { contents in
                 guard let contents = contents else { return }
                 let title = AlertText(text: contents.title)
@@ -208,7 +208,7 @@ extension SearchViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$showDeleteAllRecentKeywordAlert)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { _ in
                 self.showDeleteAllAlert()
             })

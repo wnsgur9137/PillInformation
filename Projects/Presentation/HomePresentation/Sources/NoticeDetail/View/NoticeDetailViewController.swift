@@ -144,7 +144,7 @@ extension NoticeDetailViewController {
         
         reactor.state
             .map { $0.notice }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(onNext: { [weak self] notice in
                 guard let notice = notice else { return }
                 self?.titleLabel.text = notice.title

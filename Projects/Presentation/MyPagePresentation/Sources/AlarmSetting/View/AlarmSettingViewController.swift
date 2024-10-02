@@ -131,12 +131,12 @@ extension AlarmSettingViewController {
     
     private func bindState(_ reactor: AlarmSettingReactor) {
         reactor.pulse(\.$tableViewItems)
-            .filter { !$0.isEmpty }
+            .filter { $0.isNotEmpty }
             .bind(to: tableView.rx.items(dataSource: createTableViewDataSource()))
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$errorAlertContents)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .asDriver(onErrorDriveWith: .never())
             .drive { [weak self] errorContents in
                 guard let errorContents = errorContents else { return }

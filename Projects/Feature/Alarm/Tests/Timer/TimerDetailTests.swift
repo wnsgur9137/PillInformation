@@ -94,7 +94,7 @@ final class TimerDetailTests: QuickSpec {
                         .disposed(by: disposeBag)
                     
                     reactor.state
-                        .filter { $0.timerData != nil }
+                        .filter { $0.timerData.isNotNull }
                         .map { $0.timerData! }
                         .asObservable()
                         .skip(1)
@@ -174,7 +174,7 @@ final class TimerDetailTests: QuickSpec {
                     let observer = scheduler.createObserver(TimerModel.self)
                     
                     reactor.state
-                        .filter { $0.timerData != nil }
+                        .filter { $0.timerData.isNotNull }
                         .map { $0.timerData! }
                         .asObservable()
                         .subscribe(observer)

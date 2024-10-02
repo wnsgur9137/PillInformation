@@ -125,7 +125,7 @@ final class OnboardingPolicyTests: QuickSpec {
                     let observer = scheduler.createObserver(Bool.self)
                     
                     reactor.state
-                        .filter { $0.isShowAlarmPrivacy != nil }
+                        .filter { $0.isShowAlarmPrivacy.isNotNull }
                         .map { $0.isShowAlarmPrivacy! }
                         .asObservable()
                         .subscribe(observer)

@@ -104,7 +104,7 @@ extension HomeNoticeViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$noticeCount)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(onNext: { noticeCount in
                 guard let noticeCount = noticeCount else { return }
                 let height = self.noticeTableRowHeight * CGFloat(noticeCount)

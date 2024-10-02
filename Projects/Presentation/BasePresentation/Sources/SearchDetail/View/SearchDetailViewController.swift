@@ -64,7 +64,7 @@ public final class SearchDetailViewController: UIViewController, View {
     }
     
     func showPasteboardCapsule() {
-        if capsuleView == nil {
+        if capsuleView.isNull {
             capsuleView = CapsuleView(Constants.Search.copyComplete)
             capsuleView?.translatesAutoresizingMaskIntoConstraints = false
             guard let capsuleView = capsuleView else { return }
@@ -122,7 +122,7 @@ extension SearchDetailViewController {
     
     private func bindState(_ reactor: SearchDetailReactor) {
         reactor.pulse(\.$pillInfo)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] pillInfo in
                 guard let pillInfo = pillInfo else { return }
@@ -131,7 +131,7 @@ extension SearchDetailViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$hasPillDescription)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 self.searchDetailView.contentTableView.reloadData()
@@ -139,7 +139,7 @@ extension SearchDetailViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$pasteboardString)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { pasteboardString in
                 UIPasteboard.general.string = pasteboardString
@@ -148,7 +148,7 @@ extension SearchDetailViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$error)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { _ in
                 
             })

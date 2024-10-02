@@ -87,7 +87,7 @@ final class NoticeDetailTests: QuickSpec {
                     let observer = scheduler.createObserver(NoticeModel.self)
                     
                     reactor.state
-                        .filter { $0.notice != nil }
+                        .filter { $0.notice.isNotNull }
                         .map { $0.notice! }
                         .asObservable()
                         .subscribe(observer)
