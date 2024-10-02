@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import PinLayout
 import FlexLayout
 
@@ -34,14 +35,15 @@ public final class AlarmSettingViewController: UIViewController, View {
         tableView.isScrollEnabled = false
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
+        tableView.register(AlarmSettingTableViewCell.self, forCellReuseIdentifier: AlarmSettingTableViewCell.identifier)
         return tableView
     }()
     
     // MARK: - Properties
     
     public var disposeBag = DisposeBag()
-    private var adapter: AlarmSettingAdapter?
-    private let popViewController = PublishSubject<Void>()
+    private let popViewController: PublishRelay<Void> = .init()
+    private let didSelectAlarmSwitch: PublishRelay<IndexPath> = .init()
     
     // MARK: - Life cycle
     
@@ -54,13 +56,6 @@ public final class AlarmSettingViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.background
-        if let reactor = reactor {
-            adapter = AlarmSettingAdapter(
-                tableView: tableView,
-                dataSource: reactor
-            )
-            bindAdapter(reactor)
-        }
         setupLayout()
     }
     
@@ -84,15 +79,32 @@ public final class AlarmSettingViewController: UIViewController, View {
         bindState(reactor)
     }
     
+    private func createTableViewDataSource() -> RxTableViewSectionedReloadDataSource<AlarmSettingTableViewSectionItem> {
+        let dataSource = RxTableViewSectionedReloadDataSource<AlarmSettingTableViewSectionItem> { [weak self] _, tableView, indexPath, item in
+            guard let self = self,
+                  let cell = tableView.dequeueReusableCell(withIdentifier: AlarmSettingTableViewCell.identifier, for: indexPath) as? AlarmSettingTableViewCell else { return .init() }
+            cell.configure(item)
+            cell.toggleButton.rx.isOn
+                .skip(1)
+                .map { _ in return indexPath }
+                .bind(to: self.didSelectAlarmSwitch)
+                .disposed(by: cell.disposeBag)
+            return cell
+        }
+        return dataSource
+    }
+    
     private func showErrorAlert(_ contents: (title: String, message: String?), needDismiss: Bool) {
         AlertViewer()
             .showSingleButtonAlert(
                 in: view,
                 title: AlertText(text: contents.title),
                 message: AlertText(text: contents.message ?? ""),
-                confirmButtonInfo: AlertButtonInfo(title: Constants.confirm, action: { [weak self] in
-                    guard needDismiss else { return }
-                    self?.popViewController.onNext(Void())
+                confirmButtonInfo: AlertButtonInfo(
+                    title: Constants.confirm,
+                    action: { [weak self] in
+                        guard needDismiss else { return }
+                        self?.popViewController.accept(Void())
                 })
             )
     }
@@ -110,15 +122,17 @@ extension AlarmSettingViewController {
             .map { Reactor.Action.popViewController }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        didSelectAlarmSwitch
+            .map { indexPath in Reactor.Action.didSelectRow(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: AlarmSettingReactor) {
-        reactor.state
-            .map { $0.reloadData }
-            .filter { $0 != nil }
-            .subscribe(onNext: { [weak self] _ in
-                self?.tableView.reloadData()
-            })
+        reactor.pulse(\.$tableViewItems)
+            .filter { !$0.isEmpty }
+            .bind(to: tableView.rx.items(dataSource: createTableViewDataSource()))
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$errorAlertContents)
@@ -130,14 +144,12 @@ extension AlarmSettingViewController {
             }
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: AlarmSettingReactor) {
-        adapter?.didSelectSwitch
-            .map { indexPath in
-                Reactor.Action.didSelectRow(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+}
+
+// MARK: - UITableView Delegate
+extension AlarmSettingViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 

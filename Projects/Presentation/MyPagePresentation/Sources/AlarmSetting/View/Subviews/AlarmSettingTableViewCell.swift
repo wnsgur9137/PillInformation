@@ -9,6 +9,7 @@
 import UIKit
 import PinLayout
 import FlexLayout
+import RxSwift
 
 import BasePresentation
 
@@ -45,6 +46,8 @@ final class AlarmSettingTableViewCell: UITableViewCell {
         setupSubviewLayout()
     }
     
+    var disposeBag = DisposeBag()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -64,6 +67,11 @@ final class AlarmSettingTableViewCell: UITableViewCell {
         self.contentView.bounds.size.width = size.width
         self.contentView.flex.layout(mode: .adjustHeight)
         return self.contentView.frame.size
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
     }
 }
 
