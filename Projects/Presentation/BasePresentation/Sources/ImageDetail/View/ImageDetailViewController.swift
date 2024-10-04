@@ -256,7 +256,7 @@ extension ImageDetailViewController {
     private func bindState(_ reactor: ImageDetailReactor) {
         reactor.state
             .map { $0.imageURL }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(onNext: { [weak self] url in
                 self?.imageView.kf.setImage(with: url)
             })
@@ -264,26 +264,26 @@ extension ImageDetailViewController {
         
         reactor.state
             .map { $0.pillName }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.className }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(to: classLabel.rx.text)
             .disposed(by: disposeBag)
         
         reactor.state
             .map { $0.isDeniedPermission }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { _ in
                 self.showPermissionAlert()
             })
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$download)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { _ in
                 self.downloadImage()
             })

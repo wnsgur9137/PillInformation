@@ -113,7 +113,7 @@ public final class SearchDetailReactor: Reactor {
             self.useCase.executePillDescription(self.pill.info.medicineSeq)
                 .subscribe(onSuccess: { [weak self] pillDescription in
                     guard let self = self else { return }
-                    self.hasDescription = pillDescription != nil
+                    self.hasDescription = pillDescription.isNotNull
                     guard let pillDescription = pillDescription else {
                         observable.onNext(.loadPillInfo(self.pill.info, self.hasDescription))
                         return
@@ -253,7 +253,7 @@ extension SearchDetailReactor {
 // MARK: - SearchDetail DataSource
 extension SearchDetailReactor: SearchDetailDataSource {
     public func numberOfSection() -> Int {
-        return pill.description != nil ? 3 : 2
+        return pill.description.isNotNull ? 3 : 2
     }
     
     public func numberOfRows(in section: Int) -> Int {
@@ -274,7 +274,7 @@ extension SearchDetailReactor: SearchDetailDataSource {
     }
     
     public func cellForRow(at indexPath: IndexPath) -> (pillInfoType: PillInfoType, name: String?, value: String?)? {
-        guard pill.description != nil else {
+        guard pill.description.isNotNull else {
             return getPillInfo(indexPath, type: .pillInfo)
         }
         switch indexPath.section {
@@ -285,7 +285,7 @@ extension SearchDetailReactor: SearchDetailDataSource {
     }
     
     public func hasPillDescription() -> Bool {
-        return pill.description != nil
+        return pill.description.isNotNull
     }
 }
 

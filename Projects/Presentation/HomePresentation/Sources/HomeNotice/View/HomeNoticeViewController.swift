@@ -58,7 +58,6 @@ public final class HomeNoticeViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
-        guard let reactor = reactor else { return }
         loadingView.show(in: self.view)
         noticeTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
@@ -104,7 +103,7 @@ extension HomeNoticeViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$noticeCount)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(onNext: { noticeCount in
                 guard let noticeCount = noticeCount else { return }
                 let height = self.noticeTableRowHeight * CGFloat(noticeCount)

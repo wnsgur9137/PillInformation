@@ -195,7 +195,7 @@ extension OnboardingPolicyViewController {
     private func bindState(_ reactor: OnboardingPolicyReactor) {
         reactor.state
             .map { $0.isShowAlarmPrivacy }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .distinctUntilChanged()
             .bind(onNext: { [weak self] isShowAlarmPrivacy in
                 guard let isShowAlarmPrivacy = isShowAlarmPrivacy else { return }

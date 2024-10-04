@@ -187,13 +187,13 @@ extension MyPageViewController {
     
     private func bindState(_ reactor: MyPageReactor) {
         reactor.pulse(\.$tableViewSections)
-            .filter { !$0.isEmpty }
+            .filter { $0.isNotEmpty }
             .bind(to: tableView.rx.items(dataSource: createDataSource()))
             .disposed(by: disposeBag)
             
         
         reactor.pulse(\.$alert)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .asDriver(onErrorDriveWith: .never())
             .drive { type in
                 guard let type = type else { return }
@@ -205,7 +205,7 @@ extension MyPageViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$dismiss)
-            .filter { $0 != nil}
+            .filter { $0.isNotNull}
             .asDriver(onErrorDriveWith: .never())
             .drive { animated in
                 self.dismiss(animated: animated ?? true)

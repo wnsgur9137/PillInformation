@@ -131,7 +131,7 @@ extension PolicyViewController {
     private func bindState(_ reactor: PolicyReactor) {
         reactor.state
             .map { $0.url }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .bind(onNext: { url in
                 guard let url = url else { return }
                 self.loadWebView(url)

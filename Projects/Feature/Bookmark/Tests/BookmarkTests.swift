@@ -186,7 +186,7 @@ final class BookmarkTests: QuickSpec {
                     let observer = scheduler.createObserver(Int.self)
                     
                     reactor.state
-                        .filter { $0.bookmarkPillCount != nil }
+                        .filter { $0.bookmarkPillCount.isNotNull }
                         .map { $0.bookmarkPillCount! }
                         .asObservable()
                         .subscribe(observer)
@@ -230,7 +230,7 @@ final class BookmarkTests: QuickSpec {
                     let observer = scheduler.createObserver(Int.self)
                     
                     reactor.state
-                        .filter { $0.bookmarkPillCount != nil }
+                        .filter { $0.bookmarkPillCount.isNotNull }
                         .map { $0.bookmarkPillCount! }
                         .asObservable()
                         .subscribe(observer)
@@ -270,7 +270,7 @@ final class BookmarkTests: QuickSpec {
                     let observer = scheduler.createObserver(Int.self)
                     
                     reactor.state
-                        .filter { $0.bookmarkPillCount != nil }
+                        .filter { $0.bookmarkPillCount.isNotNull }
                         .map { $0.bookmarkPillCount! }
                         .asObservable()
                         .subscribe(observer)

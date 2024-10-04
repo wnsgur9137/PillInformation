@@ -118,7 +118,7 @@ extension BookmarkViewController {
             .disposed(by: disposeBag)
         
         bookmarkHeaderView.searchTextFieldView.searchTextField.rx.text.changed
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .map { text in Reactor.Action.filtered(text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -163,7 +163,7 @@ extension BookmarkViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$bookmarkPillCount)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { [weak self] count in
                 guard let self = self,
                       let count = count else { return }

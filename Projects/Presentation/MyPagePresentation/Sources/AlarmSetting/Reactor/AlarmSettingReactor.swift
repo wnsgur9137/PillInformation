@@ -36,12 +36,12 @@ public final class AlarmSettingReactor: Reactor {
     
     public enum Mutation {
         case error(AlarmSettingError)
-        case reloadData
+        case loadedAlarmSetting
         case popViewController
     }
     
     public struct State {
-        var reloadData: Void?
+        @Pulse var tableViewItems: [AlarmSettingTableViewSectionItem] = []
         @Pulse var errorAlertContents: (contents: ErrorContents, needDismiss: Bool)?
     }
     
@@ -69,7 +69,7 @@ public final class AlarmSettingReactor: Reactor {
             self.alarmSettingUseCase.fetchAlarmSetting()
                 .subscribe(onSuccess: { [weak self] userAlarmSetting in
                     self?.userAlarmSetting = userAlarmSetting
-                    observable.onNext(.reloadData)
+                    observable.onNext(.loadedAlarmSetting)
                 }, onFailure: { [weak self] error in
                     self?.userAlarmSetting = nil
                     observable.onNext(.error(.load))
@@ -98,7 +98,7 @@ public final class AlarmSettingReactor: Reactor {
             self.alarmSettingUseCase.updateAlarmSetting(userAlarmSetting)
                 .subscribe(onSuccess: { [weak self] userAlarmSetting in
                     self?.userAlarmSetting = userAlarmSetting
-                    return observable.onNext(.reloadData)
+                    return observable.onNext(.loadedAlarmSetting)
                 }, onFailure: { error in
                     return observable.onNext(.error(.change))
                 })
@@ -122,6 +122,22 @@ public final class AlarmSettingReactor: Reactor {
             ), needDismiss: false)
         }
     }
+    
+    private func makeAlarmSettingSectionModel() -> [AlarmSettingTableViewSectionItem] {
+        let cellInfos: [AlarmSettingCellInfo] = [
+            .init(
+                title: Constants.MyPage.dayNotiTitle,
+                content: Constants.MyPage.dayNotiDescription,
+                isAgree: userAlarmSetting?.isAgreeDaytimeNoti ?? false
+            ),
+            .init(
+                title: Constants.MyPage.nightNotiTitle,
+                content: Constants.MyPage.nightNotiDescription,
+                isAgree: userAlarmSetting?.isAgreeNighttimeNoti ?? false
+            )
+        ]
+        return [.init(items: cellInfos)]
+    }
 }
 
 // MARK: - React
@@ -142,8 +158,8 @@ extension AlarmSettingReactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case .reloadData:
-            state.reloadData = Void()
+        case .loadedAlarmSetting:
+            state.tableViewItems = makeAlarmSettingSectionModel()
             
         case let .error(error):
             state.errorAlertContents = makeErrorAlertContents(error)
@@ -159,28 +175,5 @@ extension AlarmSettingReactor {
 extension AlarmSettingReactor {
     private func popViewController(_ animated: Bool = true) {
         flowAction.popViewController(animated)
-    }
-}
-
-// MARK: - AlarmSettingAdapter DataSource
-extension AlarmSettingReactor: AlarmSettingAdapterDataSource {
-    public func numberOfRows(in section: Int) -> Int {
-        return 2
-    }
-    
-    public func cellForRow(at indexPath: IndexPath) -> AlarmSettingCellInfo {
-        if indexPath.row == 0 {
-            return .init(
-                title: Constants.MyPage.dayNotiTitle,
-                content: Constants.MyPage.dayNotiDescription,
-                isAgree: userAlarmSetting?.isAgreeDaytimeNoti ?? false
-            )
-        } else {
-            return .init(
-                title: Constants.MyPage.nightNotiTitle,
-                content: Constants.MyPage.nightNotiDescription,
-                isAgree: userAlarmSetting?.isAgreeNighttimeNoti ?? false
-            )
-        }
     }
 }

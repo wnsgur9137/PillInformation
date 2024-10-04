@@ -62,7 +62,7 @@ public final class AppConfiguration {
         guard let isShowAlarmTabString = appConfigurations["IS_SHOW_ALARM_TAB"] else {
             fatalError("IS_SHOW_ALARM_TAB must not be empty in plist")
         }
-        return Bool(isShowAlarmTabString) ?? false
+        return false
     }()
     
     public lazy var isShowAlarmPrivacy: Bool = {

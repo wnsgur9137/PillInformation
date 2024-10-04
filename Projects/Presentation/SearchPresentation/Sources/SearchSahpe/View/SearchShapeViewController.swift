@@ -118,7 +118,7 @@ extension SearchShapeViewController {
     
     private func bindState(_ reactor: SearchShapeReactor) {
         reactor.pulse(\.$errorAlertContents)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { contents in
                 guard let contents = contents else { return }
                 self.showAlert(title: contents.title, message: contents.message)
@@ -127,7 +127,7 @@ extension SearchShapeViewController {
         
         reactor.state
             .map { $0.selectedOptions }
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .distinctUntilChanged()
             .map { selectedOptions -> String? in
                 return selectedOptions?.joined(separator: ", ")

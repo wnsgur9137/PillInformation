@@ -176,14 +176,14 @@ extension SearchViewController {
             .disposed(by: disposeBag)
         
         searchTextFieldView.searchTextField.rx.controlEvent(.editingDidEndOnExit)
-            .map {  Reactor.Action.search(self.searchTextFieldView.searchTextField.text) }
+            .map { [weak self] in Reactor.Action.search(self?.searchTextFieldView.searchTextField.text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchReactor) {
         reactor.pulse(\.$alertContents)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { contents in
                 guard let contents = contents else { return }
                 let title = AlertText(text: contents.title)
@@ -208,7 +208,7 @@ extension SearchViewController {
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$showDeleteAllRecentKeywordAlert)
-            .filter { $0 != nil }
+            .filter { $0.isNotNull }
             .subscribe(onNext: { _ in
                 self.showDeleteAllAlert()
             })

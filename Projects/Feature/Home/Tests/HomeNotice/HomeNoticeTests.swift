@@ -60,7 +60,7 @@ final class HomeNoticeTests: QuickSpec {
                 it("✅ Load notices") {
                     let observer = scheduler.createObserver(Int.self)
                     reactor.state
-                        .filter { $0.noticeCount != nil }
+                        .filter { $0.noticeCount.isNotNull }
                         .map { $0.noticeCount! }
                         .asObservable()
                         .subscribe(observer)

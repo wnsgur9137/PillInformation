@@ -186,7 +186,7 @@ extension HomeMapViewController: MKMapViewDelegate {
         guard let annotation = annotation as? MKPointAnnotation else { return nil }
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
         
-        if annotationView == nil {
+        if annotationView.isNull {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             
@@ -254,8 +254,8 @@ extension HomeMapViewController {
     private func setupSubviewLayout() {
         rootContainerView.pin.all(view.safeAreaInsets)
         
-        let mapViewHeight: Percent = selectedAnnotation == nil ? 100% : 60%
-        let infoViewHeight: Percent = selectedAnnotation == nil ? 0% : 40%
+        let mapViewHeight: Percent = selectedAnnotation.isNull ? 100% : 60%
+        let infoViewHeight: Percent = selectedAnnotation.isNull ? 0% : 40%
         mapView.pin.left().top().right()
             .height(mapViewHeight)
         infoView.pin.left().right().bottom()
