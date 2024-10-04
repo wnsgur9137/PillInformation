@@ -11,6 +11,7 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import RxGesture
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -29,6 +30,7 @@ public final class SearchResultViewController: UIViewController, View {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = Constants.Color.background
+        collectionView.register(SearchResultCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultCollectionViewCell.identifier)
         return collectionView
     }()
     
@@ -38,6 +40,7 @@ public final class SearchResultViewController: UIViewController, View {
     
     public var disposeBag = DisposeBag()
     private var adapter: SearchResultAdapter?
+    private let didSelectBookmark: PublishRelay<IndexPath> = .init()
     
     // MARK: - LifeCycle
     public static func create(with reactor: SearchResultReactor) -> SearchResultViewController {
@@ -49,12 +52,6 @@ public final class SearchResultViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.Color.systemBackground
-        if let reactor = reactor {
-            self.adapter = SearchResultAdapter(collectionView: collectionView,
-                                               textField: searchTextFieldView.searchTextField,
-                                               collectionViewDataSource: reactor)
-            bindAdapter(reactor)
-        }
         addSubviews()
     }
     
@@ -69,8 +66,26 @@ public final class SearchResultViewController: UIViewController, View {
     }
     
     public func bind(reactor: SearchResultReactor) {
+        bindDelegate()
         bindAction(reactor)
         bindState(reactor)
+    }
+    
+    private func createDataSource() -> RxCollectionViewSectionedReloadDataSource<SearchResultSectionedItem> {
+        let dataSource = RxCollectionViewSectionedReloadDataSource<SearchResultSectionedItem> { [weak self] _, collectionView, indexPath, item in
+            guard let self = self,
+                  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchResultCollectionViewCell.identifier, for: indexPath) as? SearchResultCollectionViewCell else { return .init() }
+            cell.showAnimatedGradientSkeleton()
+            cell.configure(item.pill, isBookmarked: item.isBookmarked)
+            cell.bookmarkButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    cell.isBookmarked = !cell.isBookmarked
+                    self?.didSelectBookmark.accept(indexPath)
+                })
+                .disposed(by: cell.disposeBag)
+            return cell
+        }
+        return dataSource
     }
     
     private func showAlert(title: String?, message: String?) {
@@ -89,6 +104,11 @@ public final class SearchResultViewController: UIViewController, View {
 
 // MARK: - Binding
 extension SearchResultViewController {
+    private func bindDelegate() {
+        collectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
+    
     private func bindAction(_ reactor: SearchResultReactor) {
         rx.viewDidLoad
             .map { Reactor.Action.loadPills }
@@ -109,6 +129,24 @@ extension SearchResultViewController {
             .map { Reactor.Action.didTapSearchShapeButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        searchTextFieldView.searchTextField.rx
+            .controlEvent(.editingDidEndOnExit)
+            .map { [weak self] in
+                Reactor.Action.search(self?.searchTextFieldView.searchTextField.text)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        collectionView.rx.itemSelected
+            .map { indexPath in Reactor.Action.didSelectItem(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        didSelectBookmark
+            .map { indexPath in Reactor.Action.didSelectBookmark(indexPath) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(_ reactor: SearchResultReactor) {
@@ -117,13 +155,13 @@ extension SearchResultViewController {
             .bind(to: searchTextFieldView.searchTextField.rx.text)
             .disposed(by: disposeBag)
         
-        reactor.pulse(\.$reloadData)
-            .filter { $0.isNotNull }
-            .subscribe(onNext: { [weak self] _ in
+        reactor.pulse(\.$searchResultItems)
+            .map { [weak self] items in
                 self?.searchResultEmptyView.isHidden = true
                 self?.searchResultEmptyView.stopAnimation()
-                self?.collectionView.reloadData()
-            })
+                return items
+            }
+            .bind(to: collectionView.rx.items(dataSource: createDataSource()))
             .disposed(by: disposeBag)
         
         reactor.pulse(\.$reloadItem)
@@ -151,28 +189,11 @@ extension SearchResultViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-    private func bindAdapter(_ reactor: SearchResultReactor) {
-        adapter?.didSelectItem
-            .map { indexPath in
-                Reactor.Action.didSelectItem(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.didSelectBookmark
-            .map { indexPath in
-                Reactor.Action.didSelectBookmark(indexPath)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        adapter?.shouldReturn
-            .map { keyword in
-                Reactor.Action.search(keyword)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+}
+
+extension SearchResultViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 160)
     }
 }
 

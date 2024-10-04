@@ -53,7 +53,7 @@ public final class SearchResultReactor: Reactor {
     
     public struct State {
         var keyword: String?
-        @Pulse var reloadData: Void?
+        @Pulse var searchResultItems: [SearchResultSectionedItem] = []
         @Pulse var reloadItem: IndexPath?
         @Pulse var isEmpty: Void?
         @Pulse var alertContents: AlertContents?
@@ -199,6 +199,13 @@ public final class SearchResultReactor: Reactor {
         
         return isBookmarked ? deleteBookmark(medicineSeq: pillInfo.medicineSeq) : saveBookmark(pillInfo: pillInfo)
     }
+    
+    private func createSectionItems() -> [SearchResultSectionedItem] {
+        let items = results.map { result in
+            return (result, bookmarkSeqs.contains(result.medicineSeq))
+        }
+        return [.init(items: items)]
+    }
 }
 
 // MARK: - React
@@ -250,14 +257,14 @@ extension SearchResultReactor {
             
         case .reloadData:
             state.keyword = keyword
-            state.reloadData = Void()
+            state.searchResultItems = createSectionItems()
             
         case let .reloadItem(indexPath):
             state.reloadItem = indexPath
             
         case .isEmptyResult:
             state.keyword = keyword
-            state.reloadData = Void()
+            state.searchResultItems = createSectionItems()
             state.isEmpty = Void()
             
         case let .error(error):
@@ -289,18 +296,5 @@ extension SearchResultReactor {
     
     private func showSearchShapeViewController() {
         flowAction.showSearchShapeViewController()
-    }
-}
-
-// MARK: - SearchResultAdapter DataSource
-extension SearchResultReactor: SearchResultCollectionViewDataSource {
-    public func numberOfItems(in section: Int) -> Int {
-        return results.count
-    }
-    
-    public func cellForItem(at indexPath: IndexPath) -> (pill: PillInfoModel, isBookmarked: Bool) {
-        let pill = results[indexPath.item]
-        let isBookmarked = bookmarkSeqs.contains(pill.medicineSeq)
-        return (pill, isBookmarked)
     }
 }

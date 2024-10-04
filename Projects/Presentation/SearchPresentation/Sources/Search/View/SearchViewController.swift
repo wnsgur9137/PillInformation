@@ -176,7 +176,7 @@ extension SearchViewController {
             .disposed(by: disposeBag)
         
         searchTextFieldView.searchTextField.rx.controlEvent(.editingDidEndOnExit)
-            .map {  Reactor.Action.search(self.searchTextFieldView.searchTextField.text) }
+            .map { [weak self] in Reactor.Action.search(self?.searchTextFieldView.searchTextField.text) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }

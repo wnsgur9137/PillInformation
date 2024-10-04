@@ -58,7 +58,6 @@ public final class HomeNoticeViewController: UIViewController, View {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
-        guard let reactor = reactor else { return }
         loadingView.show(in: self.view)
         noticeTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
