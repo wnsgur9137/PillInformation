@@ -10,6 +10,7 @@ import UIKit
 import ReactorKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import FlexLayout
 import PinLayout
 
@@ -90,6 +91,29 @@ public final class SearchShapeViewController: UIViewController, View {
     public func bind(reactor: SearchShapeReactor) {
         bindAction(reactor)
         bindState(reactor)
+    }
+    
+    private func createDataSource() -> RxCollectionViewSectionedReloadDataSource<SearchShapeSectionModel> {
+        let dataSource = RxCollectionViewSectionedReloadDataSource<SearchShapeSectionModel> { _, collectionView, indexPath, item in
+            
+            switch item {
+            case .shape(let detail):
+                switch detail {
+                case let .color(color, isSelected):
+                    return .init()
+                case let .shape(shape, isSelected):
+                    return .init()
+                case let .line(line, isSelected):
+                    return .init()
+                }
+            case .code:
+                return .init()
+            case .search:
+                return .init()
+            }
+        }
+        
+        return dataSource
     }
     
     private func showAlert(title: String, message: String?) {
