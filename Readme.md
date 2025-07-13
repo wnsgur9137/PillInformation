@@ -6,6 +6,13 @@
 
 <br>
 
+## CLAUDE.md
+
+* [CLAUDE](CLAUDE.md)
+* [CLAUDE-KO](CLAUDE-KO.md)
+
+<br>
+
 ## 개발 현황
 
 https://github.com/wnsgur9137/PillInformation/issues/67
